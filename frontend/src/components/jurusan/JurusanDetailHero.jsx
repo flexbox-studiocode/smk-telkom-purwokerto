@@ -17,29 +17,39 @@ export default function JurusanDetailHero({ item, design }) {
   const name = title.replace(/\s*\([^)]+\)$/, '');
   const lastSpace = name.lastIndexOf(' ');
   return (
-    <section className="school-hero" aria-labelledby="jurusan-detail-title">
+    <section className="school-hero school-hero--department-detail" aria-labelledby="jurusan-detail-title">
       <div className="hero-container">
         <div className={`hero-panel hero-panel--bleed hero-panel--background hero-panel--detail hero-panel--detail-${item.slug}`}>
           <div className="hero-copy">
             <nav aria-label={t('Jejak navigasi')} className="flex flex-wrap items-center gap-1 text-[10px] leading-relaxed text-dark-500">
-              <Link to="/jurusan" className="text-primary hover:underline">{t('Jurusan')}</Link>
+              <Link to="/jurusan" className="hover:text-primary hover:underline">{t('Jurusan')}</Link>
               <ChevronRight aria-hidden="true" className="size-3 shrink-0" />
-              <span aria-current="page">{title}</span>
+              <span aria-current="page" className="font-semibold text-primary">{title}</span>
             </nav>
             <Reveal className="mt-4">
               <HeroBadges />
             </Reveal>
             <Reveal className="delay-100">
-              <h1 id="jurusan-detail-title" className="mt-3 max-w-[26rem] font-heading text-2xl font-extrabold leading-[normal] tracking-figma-heading text-dark-900 sm:text-3xl lg:text-[1.75rem] xl:text-[2rem]">
-                {name.slice(0, lastSpace)}<br />
-                {name.slice(lastSpace + 1)} <span className="text-primary">({design.code})</span>
+              <h1 id="jurusan-detail-title" className="detail-hero-title mt-3 max-w-[26rem] font-heading text-2xl font-extrabold leading-[normal] tracking-figma-heading text-dark-900 sm:text-3xl">
+                {lastSpace > 0 ? (
+                  <>
+                    {name.slice(0, lastSpace)}{' '}
+                    <span className="sm:block">
+                      {name.slice(lastSpace + 1)} <span className="whitespace-nowrap text-primary">({design.code})</span>
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    {name} <span className="whitespace-nowrap text-primary">({design.code})</span>
+                  </>
+                )}
               </h1>
               <p className="mt-4 max-w-md text-xs font-medium leading-[normal] tracking-figma-copy text-dark-500 sm:text-sm lg:text-xs">{t(design.description)}</p>
             </Reveal>
-            <Reveal className="mt-5 grid grid-cols-2 gap-x-3 gap-y-4 xl:grid-cols-4 delay-200">
+            <Reveal className="mt-5 grid grid-cols-2 gap-x-3 gap-y-4 sm:grid-cols-4 delay-200">
               {features.map(([Icon, label], index) => (
-                <div key={label} className={`flex min-w-0 flex-col gap-2 text-[11px] font-medium leading-[normal] tracking-figma-copy text-dark-600 ${index < features.length - 1 ? 'xl:border-r xl:border-dark-200 xl:pr-2' : ''}`}>
-                  <span className="flex size-9 items-center justify-center rounded-full bg-primary-50">
+                <div key={label} className={`flex min-w-0 flex-col gap-2 text-[11px] font-medium leading-[normal] tracking-figma-copy text-dark-600 ${index < features.length - 1 ? 'sm:border-r sm:border-dark-200 sm:pr-2' : ''}`}>
+                  <span className="flex size-10 items-center justify-center rounded-full bg-primary/10">
                     <Icon aria-hidden="true" className="size-5 text-primary" />
                   </span>
                   <span>{t(label)}</span>
@@ -53,9 +63,11 @@ export default function JurusanDetailHero({ item, design }) {
           </div>
           <div className="hero-background detail-hero-art">
             <img src={design.hero} width={design.heroWidth} height={design.heroHeight} alt={t(design.heroAlt)} fetchPriority="high" className="detail-hero-photo" />
-            <span aria-hidden="true" className="detail-hero-brand font-heading text-xs font-extrabold leading-tight text-dark-900 sm:text-sm">{t('Raih Masa Depan')}<br />{t('Bersama {program}!', { program: design.code })}</span>
+            <p className="detail-hero-brand font-heading font-extrabold text-white">
+              <span>{t('Raih masa depan')}</span>
+              <span>{t('bersama {program}', { program: design.code })}</span>
+            </p>
           </div>
-          <span aria-hidden="true" className="detail-hero-stroke" />
           <img src={wave} width={649} height={385} alt="" aria-hidden="true" className="detail-hero-wave" />
         </div>
       </div>

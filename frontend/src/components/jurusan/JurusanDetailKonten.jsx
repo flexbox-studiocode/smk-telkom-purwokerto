@@ -1,7 +1,7 @@
 import { BadgeCheck, BookOpen, BriefcaseBusiness, GraduationCap, Monitor, Quote, School, Users } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import Reveal from '../Reveal';
-import ribbon from '../../assets/jurusan-detail/department-ribbon.webp';
+import WaveMarquee from '../WaveMarquee';
 
 const SectionHeading = ({ children, id }) => (
   <h2 id={id} className="flex items-center gap-3 font-heading text-xl font-extrabold leading-tight text-dark-900 sm:text-2xl">
@@ -49,7 +49,7 @@ export default function JurusanDetailKonten({ item, design }) {
           ))}
         </Reveal>
       </section>
-      <div aria-hidden="true" className="overflow-hidden"><img src={ribbon} width={1847} height={171} alt="" loading="lazy" className="block w-full" /></div>
+      <WaveMarquee />
       <div className="detail-jurusan-content">
         <section id="fasilitas-jurusan" className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12" aria-labelledby="fasilitas-jurusan-title">
           <Reveal><SectionHeading id="fasilitas-jurusan-title">{t('Fasilitas Pendukung')}</SectionHeading><p className="mt-3 max-w-2xl text-sm font-bold leading-[normal] text-dark-500 sm:text-base">{t(design.facilitiesDescription)}</p></Reveal>

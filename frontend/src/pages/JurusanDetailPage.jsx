@@ -4,6 +4,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import MainLayout from '../layouts/MainLayout';
 import JurusanDetailHero from '../components/jurusan/JurusanDetailHero';
+import ribbon from '../assets/jurusan-detail/department-ribbon.webp';
 import JurusanDetailKonten from '../components/jurusan/JurusanDetailKonten';
 import ErrorPage from './ErrorPage';
 import { jurusanDetail } from '../data/dummyData';
@@ -22,8 +23,9 @@ export default function JurusanDetailPage() {
   }, [pathname, item, design, t]);
   if (!item || !design) return <ErrorPage />;
   return (
-    <MainLayout>
+    <MainLayout showOpeningMarquee={false}>
       <JurusanDetailHero item={item} design={design} />
+      <div aria-hidden="true" className="overflow-hidden"><img src={ribbon} width={1847} height={171} alt="" className="block h-auto w-full" /></div>
       <JurusanDetailKonten item={item} design={design} />
     </MainLayout>
   );

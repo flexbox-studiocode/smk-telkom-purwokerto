@@ -22,10 +22,10 @@ const JurusanPage = () => (
       <JurusanQuizSection />
     </Reveal>
     <Reveal>
-      <PartnersSection />
+      <JurusanCompareSection />
     </Reveal>
     <Reveal>
-      <JurusanCompareSection />
+      <PartnersSection />
     </Reveal>
     <Reveal>
       <JurusanShowcaseSection />

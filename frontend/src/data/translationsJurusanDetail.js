@@ -1,8 +1,8 @@
 export default {
   'Apa itu {program}?': 'What is {program}?',
   'Tim {program}': '{program} Team',
-  'Raih Masa Depan': 'Build Your Future',
-  'Bersama {program}!': 'With {program}!',
+  'Raih masa depan': 'Build your future',
+  'bersama {program}': 'with {program}',
   'Kurikulum Up-to-Date': 'Up-to-Date Curriculum',
   'Praktik Langsung': 'Hands-on Practice',
   'Bersertifikasi Industri': 'Industry Certification',
