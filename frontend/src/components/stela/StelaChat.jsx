@@ -222,7 +222,7 @@ const StelaChat = ({ className = '', tampilkanSaran = true, focusInput = false }
               <button
                 key={saran}
                 type="button"
-                onClick={() => kirim(saran)}
+                onClick={() => kirim(t(saran))}
                 className="min-w-0 max-w-full [overflow-wrap:anywhere] rounded-full border border-dark-200 px-3 py-1.5 text-left text-[10px] font-medium text-dark-600 transition-colors hover:border-primary hover:text-primary"
               >
                 {t(saran)}
