@@ -171,10 +171,18 @@
 
 /* ---------- choice cards (M1–M3) */
 .ntg-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
-.ntg-card { position: relative; display: block; width: 100%; aspect-ratio: 233 / 220; padding: 0; border: 0; background: none; filter: drop-shadow(calc(var(--u) * 8) calc(var(--u) * 8) 0 rgb(0 0 0 / .35)); transition: transform .15s ease; }
-.ntg-card:hover { transform: translateY(-4px); }
-.ntg-card[aria-pressed='true'] { filter: drop-shadow(4px 0 0 var(--ntg-red)) drop-shadow(-4px 0 0 var(--ntg-red)) drop-shadow(0 4px 0 var(--ntg-red)) drop-shadow(0 -4px 0 var(--ntg-red)); }
-.ntg-card:focus-visible { outline: none; filter: drop-shadow(4px 0 0 #ffd54a) drop-shadow(-4px 0 0 #ffd54a) drop-shadow(0 4px 0 #ffd54a) drop-shadow(0 -4px 0 #ffd54a); }
+/* Card states: default -> hover (lifts, brightens) -> pressed (sinks) -> selected (white, red outline + red base bar) -> keyboard focus (yellow outline). */
+.ntg-card { position: relative; display: block; width: 100%; aspect-ratio: 233 / 220; padding: 0; border: 0; background: none; filter: drop-shadow(calc(var(--u) * 8) calc(var(--u) * 8) 0 rgb(0 0 0 / .35)); transition: transform var(--ntg-t) var(--ntg-ease), filter var(--ntg-t); }
+.ntg-card__body, .ntg-card__tag { transition: background-color var(--ntg-t); }
+@media (hover: hover) {
+  .ntg-card:hover { transform: translateY(-3px); filter: drop-shadow(calc(var(--u) * 8) calc(var(--u) * 12) 0 rgb(0 0 0 / .3)); }
+  .ntg-card:hover .ntg-card__body { background: #eee; }
+  .ntg-card:hover .ntg-card__tag { background: #dd2d35; }
+}
+.ntg-card:active { transform: translateY(2px); filter: drop-shadow(calc(var(--u) * 4) calc(var(--u) * 4) 0 rgb(0 0 0 / .35)); }
+.ntg-card:active .ntg-card__body { background: #cbcbcb; }
+.ntg-card[aria-pressed='true'] { filter: drop-shadow(4px 0 0 var(--ntg-red)) drop-shadow(-4px 0 0 var(--ntg-red)) drop-shadow(0 4px 0 var(--ntg-red)) drop-shadow(0 -4px 0 var(--ntg-red)) drop-shadow(calc(var(--u) * 8) calc(var(--u) * 8) 0 rgb(0 0 0 / .35)); }
+.ntg-card:focus-visible { outline: none; transform: translateY(-3px); filter: drop-shadow(4px 0 0 #ffd54a) drop-shadow(-4px 0 0 #ffd54a) drop-shadow(0 4px 0 #ffd54a) drop-shadow(0 -4px 0 #ffd54a); }
 .ntg-card__body {
   position: absolute;
   inset: 0;
@@ -186,9 +194,12 @@
   text-align: left;
 }
 .ntg-card[aria-pressed='true'] .ntg-card__body { background: #fff; }
+.ntg-card[aria-pressed='true'] .ntg-card__body::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 7%; background: var(--ntg-red); }
+.ntg-card[aria-pressed='true'] .ntg-card__tag { background: var(--ntg-red-dark); }
+.ntg-card[aria-pressed='true'] .ntg-card__label { font-weight: 700; color: var(--ntg-red-dark); }
 .ntg-card__tag { position: absolute; left: 0; top: 0; width: 29%; height: 28.6%; display: grid; place-items: center; background: var(--ntg-red); clip-path: polygon(6% 0, 100% 0, 94.6% 100%, 0 100%); color: #fff; font-size: max(18px, calc(var(--u) * 40)); font-weight: 700; }
 .ntg-card__icon { justify-self: center; align-self: center; width: 52%; max-height: 100%; height: auto; object-fit: contain; }
-.ntg-card__label { font-size: max(12px, calc(var(--u) * 20)); font-weight: 500; line-height: 1.25; letter-spacing: .04em; color: #1b1b1b; }
+.ntg-card__label { min-height: 3.75em; font-size: max(12px, calc(var(--u) * 20)); font-weight: 500; line-height: 1.25; letter-spacing: .04em; color: #1b1b1b; text-wrap: pretty; }
 
 /* ---------- side panels (M4–M8) */
 .ntg-panel { background: var(--ntg-slate); border: calc(var(--u) * 6) solid #1b2029; box-shadow: inset 0 calc(var(--u) * 6) 0 rgb(255 255 255 / .18); color: #fff; padding: calc(var(--u) * 24); min-width: 0; }
