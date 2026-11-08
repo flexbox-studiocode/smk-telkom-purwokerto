@@ -180,11 +180,16 @@
     pointer-events: none;
     background: linear-gradient(to right, var(--color-secondary) 28%, transparent 48%);
   }
-  .hero-panel--teachers::after { background: linear-gradient(to right, var(--color-secondary) 29%, transparent 42%); }
+  /* Wrap the heading inside the white side of the fade (percentage of the copy box, so it scales with the panel). */
+  .hero-panel--teachers .hero-copy { padding-right: 6%; }
+  .hero-panel--teachers .hero-copy :is(h1, h2) { max-width: 82%; }
+  .hero-panel--teachers::after { background: linear-gradient(to right, var(--color-secondary) 31%, transparent 44%); }
   .hero-panel--activities::after { background: linear-gradient(to right, var(--color-secondary) 31%, transparent 48%); }
 }
 
 @media (min-width: 64rem) and (max-width: 79.999rem) {
+  /* The panel is taller than its copy here, so trade extra lines for a clear gap before the photo. */
+  .hero-panel--teachers .hero-copy { padding-right: 16%; }
   .hero-panel--facilities .hero-background { top: auto; height: auto; }
   /* Preserve whole groups at the narrower desktop ratio, extending their sky above. */
   .hero-panel--bleed .hero-grid > .hero-image,
