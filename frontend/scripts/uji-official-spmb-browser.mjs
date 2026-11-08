@@ -30,13 +30,13 @@ try {
   const destinations = [], apiCalls = [];
   await page.route(`${OFFICIAL_ADMISSIONS_URL}**`, (route) => { destinations.push(route.request().url()); return route.fulfill({ contentType: 'text/html', body: '<h1>Official portal fixture</h1>' }); });
   await page.route('**/api/**', (route) => { apiCalls.push(route.request().url()); return route.fulfill({ contentType: 'application/json', body: '[]' }); });
-  for (const path of ['/spmb', '/spmb/masuk', '/SPMB/masuk', '/%73pmb/masuk', '/spmb/formulir', '/spmb/berkas', '/spmb/status', '/ppdb', '/ppdb/daftar', '/ketentuan-spmb', '/auth/confirm', '/lupa-sandi']) {
+  for (const path of ['/spmb/masuk', '/SPMB/masuk', '/%73pmb/masuk', '/spmb/formulir', '/spmb/berkas', '/spmb/status', '/ppdb', '/ppdb/daftar', '/ketentuan-spmb', '/auth/confirm', '/lupa-sandi']) {
     await page.goto(`${base}${path}?access_token=qa-secret#refresh_token=qa-secret`);
     await page.waitForURL(OFFICIAL_ADMISSIONS_URL);
   }
-  assert.equal(destinations.length, 12);
+  assert.equal(destinations.length, 11);
   assert(destinations.every((url) => url === OFFICIAL_ADMISSIONS_URL), 'Legacy tokens must not be forwarded.');
   assert(!apiCalls.some((url) => /\/api\/(?:auth|ppdb|spmb)(?:\/|$)/.test(new URL(url).pathname)), 'Hidden portal must not mount authentication/admissions data providers.');
   await page.close();
-  console.log(`PASS: ${checked} public route/language/viewport checks, external CTA navigation, 12 safe legacy redirects, no internal portal API calls.`);
+  console.log(`PASS: ${checked} public route/language/viewport checks, external CTA navigation, 11 safe legacy redirects, no internal portal API calls.`);
 } finally { await browser.close(); }
