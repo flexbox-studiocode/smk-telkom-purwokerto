@@ -1,4 +1,4 @@
-const schoolTags = ['#NextGen', '#GlobalTechnopreneur'];
+const schoolTags = ['#NextGens', '#GlobalTechnopreneur'];
 
 export default function HeroBadges({ tags = schoolTags }) {
   return <div data-hero-badges className="flex flex-wrap items-center gap-1">

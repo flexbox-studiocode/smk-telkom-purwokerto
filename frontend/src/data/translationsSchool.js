@@ -112,7 +112,7 @@ export default {
   'Peta belum tersedia. Daftar fasilitas tetap dapat dibuka di bawah.': 'The map is not available. You can still browse the facility listings below.',
   'Geser peta ke kiri': 'Pan map left', 'Geser peta ke kanan': 'Pan map right',
   'Posisi peta sekolah': 'School map position',
-  '#NextGen': '#NextGen',
+  '#NextGens': '#NextGens',
   '#GlobalTechnopreneur': '#GlobalTechnopreneur',
   'Lihat Selengkapnya': 'View More',
   'Bidang Kesiswaan & Karakter': 'Student Affairs & Character Development',
