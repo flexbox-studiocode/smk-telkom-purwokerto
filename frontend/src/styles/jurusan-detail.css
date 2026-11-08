@@ -1,31 +1,78 @@
-/* The four Figma hero photographs are separate from the transparent red wave. */
-.hero-panel--detail { --hero-media-width: 50%; }
-.hero-panel--detail .detail-hero-art { aspect-ratio: 445 / 347; }
-.detail-hero-photo { display: block; width: 100%; height: 100%; object-fit: contain; object-position: right bottom; }
-.detail-hero-wave { position: absolute; right: 0; bottom: 0; width: 100%; height: auto; pointer-events: none; z-index: 2; mask-image: linear-gradient(to right, transparent, black 25%); }
-.detail-hero-stroke { display: none; position: absolute; left: 46%; top: 13%; height: 42%; width: 2rem; background: var(--color-primary); border-radius: .75rem; transform: skewY(-15deg) rotate(8deg); z-index: 3; }
-.detail-hero-brand { position: absolute; right: 7%; top: 6%; transform: rotate(-15deg); text-align: center; }
-.detail-hero-brand::after { content: ''; display: block; width: 100%; margin-top: .25rem; border-top: .25rem solid var(--color-primary); border-radius: 50%; }
+.school-hero--department-detail {
+  --hero-radius: 1rem;
+  padding-bottom: 1rem;
+}
+
+.hero-panel--detail {
+  --hero-media-width: 63%;
+  border-color: color-mix(in srgb, var(--color-primary) 46%, white);
+}
+.hero-panel--detail .detail-hero-art { aspect-ratio: 16 / 11; }
+.detail-hero-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: brightness(.72);
+}
+.detail-hero-wave {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  z-index: 2;
+  mask-image: linear-gradient(to right, transparent, black 28%);
+}
+.detail-hero-brand {
+  position: absolute;
+  z-index: 1;
+  left: 5%;
+  top: 9%;
+  margin: 0;
+  font-size: clamp(1.15rem, 2.65vw, 2.25rem);
+  line-height: 1.18;
+  isolation: isolate;
+}
+.detail-hero-brand::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -.48em auto -1.22em .18em;
+  width: 1.55em;
+  background: linear-gradient(135deg, var(--color-primary) 48%, #a40015);
+  clip-path: polygon(19% 24%, 100% 0, 86% 77%, 0 100%);
+}
+.detail-hero-brand span {
+  display: table;
+  padding: .1em .24em;
+  background: var(--color-primary);
+}
+
 .detail-jurusan-content { position: relative; }
 .detail-jurusan-content::before, .detail-jurusan-content::after { content: ''; position: absolute; inset-block: 0; width: .75rem; pointer-events: none; background: url('../assets/fasilitas/page-accent.png') repeat-y center top / 100% auto; }
 .detail-jurusan-content::before { left: 0; }
 .detail-jurusan-content::after { right: 0; }
-@media (min-width: 40rem) {
-  .detail-hero-wave { width: 76%; }
+
+@media (min-width: 40rem) and (max-width: 63.999rem) {
+  .detail-hero-wave { width: 85%; }
 }
 @media (min-width: 64rem) {
-  .hero-panel--detail .hero-copy { width: 48%; }
-  .hero-panel--detail::after { background: linear-gradient(to right, var(--color-secondary) 44%, transparent 58%); }
+  .hero-panel--detail {
+    min-height: clamp(26rem, 38vw, 29.5rem);
+    align-content: center;
+  }
+  .hero-panel--detail .hero-copy {
+    width: 40%;
+    padding: clamp(1.35rem, 2.4vw, 2rem);
+  }
+  .hero-panel--detail .detail-hero-title { font-size: clamp(1.72rem, 2.65vw, 2.35rem); }
+  .hero-panel--detail::after { content: none; }
   .hero-panel--detail .detail-hero-art { aspect-ratio: auto; }
-  .detail-hero-stroke { display: block; }
-  .hero-panel--detail-tkj .detail-hero-brand { left: 12%; right: auto; }
-  .hero-panel--detail-tjat .detail-hero-brand { right: 22%; transform: rotate(10deg); }
-  .detail-hero-wave { width: 73%; height: 100%; object-fit: cover; object-position: right bottom; }
+  .detail-hero-photo { clip-path: polygon(12% 0, 100% 0, 100% 100%, 2% 100%); }
+  .detail-hero-brand { left: 6%; top: 14%; }
+  .detail-hero-wave { width: 70%; height: 82%; object-fit: fill; }
   .detail-jurusan-content::before, .detail-jurusan-content::after { width: 1rem; }
-}
-@media (min-width: 80rem) {
-  .hero-panel--detail-rpl .detail-hero-photo { object-position: right center; }
-  .hero-panel--detail-pg .detail-hero-photo { object-position: right top; }
-  .hero-panel--detail-tkj .detail-hero-photo { object-position: right center; }
-  .hero-panel--detail-tjat .detail-hero-photo { object-position: right top; }
 }
