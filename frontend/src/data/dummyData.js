@@ -482,22 +482,22 @@ export const timelineData = [
   {
     year: '1993',
     title: 'Sekolah Berdiri',
-    desc: 'Didirikan pada 30 Januari 1993 di Purwokerto.',
+    desc: 'Didirikan pada 30 Januari 1993 sebagai SMK telekomunikasi pertama di Indonesia.',
   },
   {
     year: '2016',
     title: 'Akreditasi A',
-    desc: 'Terakreditasi A dengan standar mutu nasional.',
+    desc: 'Meraih predikat Akreditasi A (nilai 97) dengan standar mutu pendidikan nasional.',
   },
   {
     year: '2020',
-    title: 'Kerja Sama Industri',
-    desc: 'Memperluas kolaborasi dengan berbagai mitra industri ternama.',
+    title: 'Sinergi Industri',
+    desc: 'Memperluas kolaborasi dengan ekosistem Telkom Indonesia dan berbagai mitra industri global.',
   },
   {
     year: '2023',
     title: 'Next Gen',
-    desc: 'Transformasi digital dalam pembelajaran dan manajemen sekolah.',
+    desc: 'Ditetapkan sebagai SMK Pusat Keunggulan TI dengan transformasi pembelajaran dan manajemen digital.',
   },
   {
     year: '2026',
