@@ -180,13 +180,17 @@
 .ntg-panel__title { margin: 0; padding: calc(var(--u) * 14) calc(var(--u) * 26); background: #1b2230; border: calc(var(--u) * 5) solid #11151d; color: #fff; font-size: max(18px, calc(var(--u) * 34)); font-weight: 600; line-height: 1.3; letter-spacing: .03em; }
 .ntg-panel__title--center { text-align: center; background: none; border: 0; }
 .ntg-small-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 4px 12px; border: 2px solid #11151d; border-radius: 4px; background: #262c38; color: #fff; font-size: max(13px, calc(var(--u) * 22)); box-shadow: inset 0 -3px 0 rgb(0 0 0 / .35); }
+.ntg-small-btn { justify-content: center; touch-action: manipulation; -webkit-tap-highlight-color: transparent; transition: background-color .12s, translate .06s, box-shadow .06s; }
 .ntg-small-btn:hover:not(:disabled) { background: #343c4c; }
-.ntg-small-btn:disabled { opacity: .45; }
+.ntg-small-btn:active:not(:disabled) { translate: 0 2px; box-shadow: inset 0 -1px 0 rgb(0 0 0 / .35); }
+.ntg-small-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.ntg-small-btn:disabled { opacity: .4; cursor: not-allowed; box-shadow: none; }
 .ntg-small-btn--red { background: var(--ntg-red); border-color: #6d0f14; }
 .ntg-small-btn--red:hover:not(:disabled) { background: #a8161d; }
 .ntg-small-btn--green { background: var(--ntg-green); border-color: #12481b; font-size: max(18px, calc(var(--u) * 34)); padding: 6px 20px; }
 .ntg-small-btn--green:hover:not(:disabled) { background: #26743a; }
 .ntg-small-btn[aria-pressed='true'] { background: #fff; color: var(--ntg-red); }
+.ntg-small-btn[aria-pressed='true']:disabled { opacity: .85; cursor: default; }
 .ntg-hint-btn img { width: 18px; height: auto; }
 
 /* M4 optics */
@@ -194,35 +198,63 @@
 .ntg-optic__laser-in { display: grid; place-items: center; padding: 6px 16px; background: #1b2230; border: 3px solid #0f131a; font-size: max(20px, calc(var(--u) * 46)); }
 .ntg-optic__status { display: grid; gap: 6px; }
 .ntg-optic__meter { padding: 4px 10px; background: #1b2230; border: 3px solid #0f131a; font-size: max(13px, calc(var(--u) * 22)); }
-.ntg-optic__meter span { display: block; height: 6px; margin-top: 4px; background: #49505f; }
-.ntg-optic__meter i { display: block; height: 100%; background: #ff2a2a; box-shadow: 0 0 6px #ff4b4b; transition: width .3s; }
+.ntg-optic__pct { font-weight: inherit; display: inline-block; animation: ntg-pct .3s steps(3); }
+.ntg-optic__meter span { position: relative; display: block; height: 8px; margin-top: 4px; background: #49505f; overflow: hidden; }
+.ntg-optic__meter span::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent calc(100% - 2px), #1b2230 0) 0 0 / calc(100% / 6) 100%; }
+.ntg-optic__meter i { display: block; height: 100%; background: linear-gradient(#ff8c8c 0 25%, #ff2a2a 25% 70%, #b40d0d 70%); box-shadow: 0 0 6px #ff4b4b; transition: width .35s cubic-bezier(.2, .8, .2, 1); }
+.ntg-optic[data-solved='true'] .ntg-optic__meter i { background: linear-gradient(#ffd37a 0 25%, #ffb02e 25% 70%, #c27a0a 70%); box-shadow: 0 0 6px #ffb02e; }
 .ntg-optic__tools { display: flex; flex-wrap: wrap; gap: 6px; }
 .ntg-optic__stage { position: relative; display: grid; grid-template-columns: 9% 1fr 13%; }
 .ntg-optic__board { grid-column: 2; display: grid; grid-template-columns: repeat(3, 1fr); aspect-ratio: 1; background: #1c2230; border: 4px solid #121620; padding: 4%; gap: 0; }
 .ntg-optic__cell { position: relative; display: grid; place-items: center; border: 1px solid #39414f; }
 .ntg-optic__pipe { width: 120%; height: auto; max-width: none; }
 .ntg-optic__pipe--v { transform: rotate(90deg); }
-.ntg-optic__beam { position: absolute; z-index: 1; background: linear-gradient(#ff8c8c, #ff1f1f 45%, #b40d0d); box-shadow: 0 0 10px 2px rgb(255 40 40 / .75); opacity: 0; transition: opacity .25s; pointer-events: none; }
-.ntg-optic__beam--h { left: -10%; right: -10%; top: 41%; height: 18%; }
-.ntg-optic__beam--v { top: -10%; bottom: -10%; left: 41%; width: 18%; }
-.ntg-optic__beam[data-on='true'] { opacity: 1; }
-.ntg-optic__node { position: relative; width: 78%; aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; background: none; }
-.ntg-optic__node > img { position: relative; z-index: 2; width: 100%; height: auto; }
-.ntg-optic__ports, .ntg-optic__ghost { position: absolute; inset: -28%; transition: transform .2s ease; pointer-events: none; }
-.ntg-optic__port { position: absolute; background: #aab1bd; border: 2px solid #20242c; }
+/* Beam = banded pixel core (dark edge, red body, hot centre) + small glow; ::after is the energy pulse running input -> output. */
+.ntg-optic__beam { position: absolute; z-index: 1; opacity: 0; transition: opacity .25s; pointer-events: none; box-shadow: 0 0 6px 1px rgb(255 40 40 / .6), 0 0 14px 3px rgb(255 40 40 / .25); }
+.ntg-optic__beam::after { content: ''; position: absolute; inset: 0; }
+.ntg-optic__beam--h, .ntg-optic__beam--in, .ntg-optic__beam--out { top: 41%; height: 18%; background: linear-gradient(#b40d0d 0 18%, #ff2a2a 18% 38%, #ffd9d0 38% 62%, #ff2a2a 62% 82%, #b40d0d 82%); }
+.ntg-optic__beam--v { left: 41%; width: 18%; background: linear-gradient(90deg, #b40d0d 0 18%, #ff2a2a 18% 38%, #ffd9d0 38% 62%, #ff2a2a 62% 82%, #b40d0d 82%); }
+.ntg-optic__beam--h { left: -10%; right: -10%; }
+.ntg-optic__beam--v { top: -10%; bottom: -10%; }
+.ntg-optic__beam--in { left: -52%; right: 50%; }
+.ntg-optic__beam--out { left: 50%; right: -18%; }
+.ntg-optic__beam--h::after, .ntg-optic__beam--in::after, .ntg-optic__beam--out::after { background: repeating-linear-gradient(90deg, transparent 0 18px, rgb(255 255 255 / .55) 18px 24px); background-size: 36px 100%; }
+.ntg-optic__beam--v::after { background: repeating-linear-gradient(180deg, transparent 0 18px, rgb(255 255 255 / .55) 18px 24px); background-size: 100% 36px; }
+.ntg-optic__beam[data-on='true'] { opacity: 1; animation: ntg-beam-on .35s steps(5); }
+.ntg-optic__beam[data-on='true']::after { animation: ntg-flow-x .8s steps(8) infinite; }
+.ntg-optic__beam--v[data-on='true']::after { animation-name: ntg-flow-y; }
+.ntg-optic[data-solved='true'] .ntg-optic__beam { box-shadow: 0 0 8px 2px rgb(255 60 40 / .75), 0 0 18px 4px rgb(255 40 40 / .3); }
+.ntg-optic[data-solved='true'] .ntg-optic__beam::after { animation-duration: .5s; }
+@keyframes ntg-beam-on { 0% { opacity: 0; } 30% { opacity: 1; filter: brightness(1.9); } 100% { filter: none; } }
+@keyframes ntg-flow-x { to { background-position-x: 36px; } }
+@keyframes ntg-flow-y { to { background-position-y: 36px; } }
+@keyframes ntg-pct { 0% { color: #ff8c8c; translate: 0 -2px; } 100% { color: inherit; translate: 0; } }
+@keyframes ntg-pulse { from { opacity: .9; scale: .85; } to { opacity: 0; scale: 1.2; } }
+@keyframes ntg-near { 50% { box-shadow: 0 0 10px #ffb02e; border-color: #8a5a10; } }
+.ntg-optic__node { position: relative; width: 78%; aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; }
+.ntg-optic__node:disabled { cursor: default; }
+.ntg-optic__node > img { position: relative; z-index: 2; width: 100%; height: auto; transition: transform .1s, filter .2s; pointer-events: none; }
+.ntg-optic__node:active:not(:disabled) > img { transform: scale(.93); filter: brightness(.9); }
+.ntg-optic__node:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.ntg-optic__node[data-lit='true'] > img { filter: drop-shadow(0 0 3px rgb(255 48 48 / .5)); }
+.ntg-optic__pulse { position: absolute; inset: -4%; z-index: 3; border: 3px solid #fff; border-radius: 50%; pointer-events: none; animation: ntg-pulse .3s ease-out forwards; }
+.ntg-optic__ports, .ntg-optic__ghost { position: absolute; inset: -28%; transition: transform .22s cubic-bezier(.3, 1.35, .5, 1); pointer-events: none; will-change: transform; }
+.ntg-optic__port { position: absolute; background: #aab1bd; border: 2px solid #20242c; box-shadow: inset 0 2px 0 rgb(255 255 255 / .35); transition: background-color .2s, box-shadow .2s; }
 .ntg-optic__port[data-dir='0'] { left: 40%; top: 0; width: 20%; height: 30%; }
 .ntg-optic__port[data-dir='1'] { right: 0; top: 40%; width: 30%; height: 20%; }
 .ntg-optic__port[data-dir='2'] { left: 40%; bottom: 0; width: 20%; height: 30%; }
 .ntg-optic__port[data-dir='3'] { left: 0; top: 40%; width: 30%; height: 20%; }
-.ntg-optic__node[data-lit='true'] .ntg-optic__port { background: #ff3030; box-shadow: 0 0 8px #ff3030; }
+.ntg-optic__node[data-lit='true'] .ntg-optic__port { background: #ff3030; box-shadow: inset 0 2px 0 rgb(255 255 255 / .4), 0 0 8px #ff3030; }
 .ntg-optic__ghost { z-index: 3; }
 .ntg-optic__ghost .ntg-optic__port { background: rgb(255 255 255 / .2); border: 2px dashed #fff; }
-.ntg-optic__node:hover:not(:disabled) > img { filter: brightness(1.15); }
+@media (hover: hover) { .ntg-optic__node:hover:not(:disabled) > img { filter: brightness(1.15); } }
 .ntg-optic__emitter { justify-self: end; width: 100%; aspect-ratio: 1 / 1.1; background: #d0161d; clip-path: polygon(0 0, 30% 0, 100% 30%, 100% 70%, 30% 100%, 0 100%); box-shadow: inset -4px 0 0 #7d0b10; position: absolute; left: 0; top: 19.4%; width: 9%; translate: 0 -50%; }
 .ntg-optic__out { position: relative; grid-column: 3; }
 .ntg-optic__out-label { position: absolute; right: 0; bottom: 34%; padding: 4px 8px; background: #1b2230; border: 3px solid #0f131a; font-size: max(13px, calc(var(--u) * 30)); white-space: normal; }
 .ntg-optic__plug { position: absolute; left: 0; top: 80.6%; translate: 0 -50%; display: grid; place-items: center; width: 100%; max-width: 60px; aspect-ratio: 1; background: #5b6170; border: 3px solid #20242c; }
 .ntg-optic__plug img { width: 60%; height: auto; filter: grayscale(1) brightness(.6); }
+.ntg-optic__plug { transition: background-color .25s, box-shadow .25s; }
+.ntg-optic__plug[data-near='true'] { animation: ntg-near 1s steps(2) infinite; }
 .ntg-optic__plug[data-on='true'] { background: #3b4352; box-shadow: 0 0 12px #ffb02e; }
 .ntg-optic__plug[data-on='true'] img { filter: none; }
 
@@ -369,6 +401,7 @@
 @media (prefers-reduced-motion: reduce) {
   .ntg-drone, .ntg-code__drone[data-jump='true'] { animation: none; }
   .ntg *, .ntg-mode * { transition: none !important; }
+  .ntg-optic__beam, .ntg-optic__beam::after, .ntg-optic__pulse, .ntg-optic__pct, .ntg-optic__plug { animation: none !important; }
 }
 
 /* ---------- desktop: Figma stage geometry */
