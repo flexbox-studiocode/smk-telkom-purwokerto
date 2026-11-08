@@ -30,4 +30,6 @@ Sumber: `d801fef` (halaman asli), `9de3d41` dan `a6f5a64` (admin/integrasi), `e2
 
 ## Hasil pelaksanaan
 
-Diisi setelah pemeriksaan dijalankan.
+Route/navigasi/SEO dipulihkan secara selektif. Adapter DATE/Published dan settings backend diperbaiki tanpa endpoint/schema baru. Seluruh teks seed asli diterjemahkan dengan sanitization rich text. API/MySQL lokal, CRUD Admin UI, settings -> publik, 14 perbandingan ID/EN dan regresi portal resmi lulus. Akun/data QA telah dibersihkan. Hero sudah mengikuti shared components; tidak memerlukan perubahan CSS. Bukti dan batas hasil: `frontend/docs/spmb-restoration-2026-11-08.md`.
+
+Keputusan: pertahankan portal pendaftaran resmi dan redirect portal lama; hanya halaman informasi dibuka. Pertahankan teks admin tanpa padanan Inggris sebagai sumber karena model existing tidak mempunyai kolom terjemahan. Basis PR adalah `fix/hero-consistency-audit` agar tidak membawa ulang perubahan hero yang belum masuk main.
