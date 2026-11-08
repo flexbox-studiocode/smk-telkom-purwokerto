@@ -1,4 +1,7 @@
+import { useLanguage } from '../../context/LanguageContext';
+
 export default function NextTelOption({ questionId, option, selected, onAnswer }) {
+  const { t } = useLanguage();
   const active = selected === option.id;
   return (
     <label className="relative block cursor-pointer">
@@ -8,7 +11,7 @@ export default function NextTelOption({ questionId, option, selected, onAnswer }
         <span aria-hidden="true" className={`nexttel-option__badge flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold ${active ? 'bg-primary text-white' : 'bg-dark-100 text-dark-600'}`}>
           {option.id.toUpperCase()}
         </span>
-        <span>{option.label}</span>
+        <span>{t(option.label)}</span>
       </span>
     </label>
   );

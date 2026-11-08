@@ -24,7 +24,7 @@ const NextTelQuestionnaire = ({ questions, currentIndex, answers, onAnswer, onNe
       <div key={question.id} className="motion-filter-results">
         <p className="nexttel-questionnaire__eyebrow">{t('Pilih satu jawaban')}</p>
         <h1 ref={headingRef} id="nexttel-question" tabIndex={-1} className="nexttel-questionnaire__title">
-          {question.prompt}
+          {t(question.prompt)}
         </h1>
         <div className="nexttel-questionnaire__options" role="radiogroup" aria-labelledby="nexttel-question">
           {question.options.map((option) => <NextTelOption key={option.id} questionId={question.id} option={option} selected={selected} onAnswer={(id, optionId) => onAnswer(id, optionId, optionId === 'e' ? freeText : '')} />)}

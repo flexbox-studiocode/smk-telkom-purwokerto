@@ -35,13 +35,13 @@ try {
     assert.ok(programOptions.includes(`>${value.t(program)}</option>`), `Label jurusan ${program} diterjemahkan.`);
   }
 
-  const questions = [{ id: 'activity', prompt: 'Aktivitas yang paling kamu sukai?', options: [{ id: 'a', label: 'Membuat aplikasi' }] }];
+  const questions = [{ id: 'activity', prompt: 'Aktivitas apa yang paling kamu sukai?', options: [{ id: 'a', label: 'Mencoba hal baru' }] }];
   const questionnaire = render(createElement(NextTelQuestionnaire, { questions, currentIndex: 0, answers: { activity: 'a' }, onAnswer: () => {}, onNext: () => {}, onBack: () => {} }));
   assert.ok(questionnaire.includes('Choose one answer'));
   assert.ok(questionnaire.includes('Question 1 of 1'));
   assert.ok(questionnaire.includes('aria-checked="true"'));
   assert.ok(questionnaire.includes('Complete'));
-  assert.ok(questionnaire.includes('Membuat aplikasi'), 'Questionnaire copy preserves the exact supplied Indonesian text.');
+  assert.ok(questionnaire.includes('Which activity do you enjoy the most?') && questionnaire.includes('Trying new things'), 'Questionnaire questions and answers are shown in English.');
 
   // Catalogued assistant copy follows the selected language.
   const result = render(createElement(NextTelResult, {
