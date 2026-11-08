@@ -33,7 +33,7 @@ export default {
   'Karusel': 'Carousel',
   'Profil alumni belum tersedia.': 'Alumni profiles are not available yet.',
   'Video Highlight': 'Video Highlights',
-  'Didukung & Diakui Oleh. Bersama Mitra Terbaik. Didukung oleh berbagai institusi dan perusahaan ternama untuk membuka lebih banyak peluang bagi masa depan siswa. Huawei, Astra, Microsoft, Cisco, AWS, Dicoding, dan Telkom Indonesia.': 'Supported and recognized by leading partners. Institutions and industry partners create more opportunities for students: Huawei, Astra, Microsoft, Cisco, AWS, Dicoding, and Telkom Indonesia.',
+  'Didukung & Diakui Oleh. Bersama Mitra Terbaik. Didukung oleh berbagai institusi dan perusahaan ternama untuk membuka lebih banyak peluang bagi masa depan siswa. Huawei, Astra, Microsoft, Cisco, AWS, Dicoding, dan Telkom Indonesia.': 'Supported & Recognized By. With the Best Partners. Backed by leading institutions and companies to open more opportunities for the future of our students. Huawei, Astra, Microsoft, Cisco, AWS, Dicoding, and Telkom Indonesia.',
   'Ke slide project {number}': 'Go to project slide {number}',
   'Belum ada pengumuman yang diterbitkan hari ini.': 'No announcements have been published today.',
   'Prestasi sebelumnya': 'Previous achievements',

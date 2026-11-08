@@ -1,6 +1,7 @@
 import { useLanguage } from '../../context/LanguageContext';
 import VideoEmbed from '../VideoEmbed';
 import partnersCard from '../../assets/prestasi-remake/partnersCard.png';
+import partnersCardEn from '../../assets/prestasi-remake/partnersCard-en.png';
 import { videoHighlight } from '../../data/dummyData';
 
 const PrestasiDukunganSection = () => {
@@ -9,7 +10,7 @@ const PrestasiDukunganSection = () => {
     <section aria-labelledby="prestasi-video-title" className="bg-white pb-6 pt-8 font-[family-name:'Plus_Jakarta_Sans',var(--font-sans)] lg:pb-[1.5184vw] lg:pt-[2.2777vw]">
       <div className="mx-auto grid w-[calc(100%-2rem)] max-w-[1769px] grid-cols-1 items-end gap-6 sm:w-[calc(100%-3rem)] lg:w-[91.76%] lg:grid-cols-[41.017%_1fr] lg:gap-[3.1726%]">
         <figure className="overflow-hidden rounded-[20px] lg:rounded-[1.0846vw]">
-          <img src={partnersCard} alt={t('Didukung & Diakui Oleh. Bersama Mitra Terbaik. Didukung oleh berbagai institusi dan perusahaan ternama untuk membuka lebih banyak peluang bagi masa depan siswa. Huawei, Astra, Microsoft, Cisco, AWS, Dicoding, dan Telkom Indonesia.')} width="786" height="506" loading="lazy" className="aspect-[694/456] w-full object-cover" />
+          <img src={language === 'en' ? partnersCardEn : partnersCard} alt={t('Didukung & Diakui Oleh. Bersama Mitra Terbaik. Didukung oleh berbagai institusi dan perusahaan ternama untuk membuka lebih banyak peluang bagi masa depan siswa. Huawei, Astra, Microsoft, Cisco, AWS, Dicoding, dan Telkom Indonesia.')} width="786" height="506" loading="lazy" className="aspect-[694/456] w-full object-cover" />
         </figure>
         <div className="min-w-0">
           <p className="flex items-center gap-3 text-sm font-semibold leading-tight text-[#cd091d] lg:gap-[0.65vw] lg:text-[clamp(0.875rem,1.0846vw,1.25rem)]">
