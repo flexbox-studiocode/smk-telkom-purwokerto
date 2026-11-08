@@ -86,7 +86,7 @@ export default function GameStage({ scene, layout = 'cards', step, done, mood, d
           </div>
           <Drone mood={mood} />
           <div className="ntg-talk">
-            <div className="ntg-dialog">
+            <div key={dialog} className="ntg-dialog">
               <span className="ntg-dialog__name" aria-hidden="true">Nextel</span>
               <h2 ref={dialogRef} tabIndex={-1} className="ntg-dialog__box"><span className="sr-only">Nextel: </span>{t(dialog)}</h2>
             </div>
