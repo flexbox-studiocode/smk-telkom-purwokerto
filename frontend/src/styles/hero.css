@@ -47,8 +47,6 @@
 .hero-floating--stats > div > div > div > p:first-child { font-size: var(--text-figma-section); font-weight: 800; line-height: normal; letter-spacing: .05em; }
 .hero-floating--stats > div > div > div > p:last-child { font-size: clamp(.75rem, 1.148cqw, 1.25rem); font-weight: 500; line-height: normal; letter-spacing: .08em; }
 .hero-floating--quick .quick-access-cta { font-size: var(--text-figma-label); }
-.school-hero--announcement .hero-floating--stats > div > div > div > p:first-child { font-size: clamp(1.5rem, 3.674cqw, 4rem); font-weight: 700; }
-.school-hero--announcement .hero-floating--stats > div > div > div > p:last-child { font-size: var(--text-figma-card); font-weight: 700; letter-spacing: .05em; }
 .hero-panel--background { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
 .hero-panel--background .hero-copy { order: 1; padding: 1.5rem; }
 .hero-panel--background .hero-background { order: 2; position: relative; width: 100%; height: auto; aspect-ratio: 1208 / 679; margin: 0; border-radius: 1.75rem; overflow: hidden; }
