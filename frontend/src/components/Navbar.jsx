@@ -20,6 +20,7 @@ const prefetchByHref = {
   '/berita': () => import('../pages/BeritaPage'),
   '/pengumuman': () => import('../pages/PengumumanPage'),
   '/kalender': () => import('../pages/KalenderPage'),
+  '/spmb': () => import('../pages/SpmbPage'),
   '/nexttel': () => import('../pages/NextTelPage'),
 };
 

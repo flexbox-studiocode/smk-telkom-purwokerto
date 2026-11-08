@@ -5,6 +5,7 @@ export const isHiddenAdmissionsPath = (path) => {
   let normalized;
   try { normalized = decodeURIComponent(path).toLowerCase().replace(/\/+$/, ''); }
   catch { return false; }
+  if (normalized === '/spmb') return false;
   return /^\/(?:spmb|ppdb)(?:\/|$)/.test(normalized)
     || ['/ketentuan-spmb', '/ketentuan-ppdb', '/lupa-sandi', '/auth/confirm'].includes(normalized);
 };
