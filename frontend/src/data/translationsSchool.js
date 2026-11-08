@@ -203,7 +203,7 @@ export default {
   'NEXA siap menjawab pertanyaanmu tentang jurusan, fasilitas, prestasi, SPMB, dan informasi lainnya seputar SMK Telkom Purwokerto': 'NEXA is ready to answer your questions about programs, facilities, achievements, admissions, and more at SMK Telkom Purwokerto',
   'Tanya NEXA Sekarang': 'Ask NEXA Now',
   'Apa Jurusan yang cocok untuk saya yang suka ngoding dan membuat aplikasi?': 'Which program is right for me if I enjoy coding and building apps?',
-  'Kalau kamu suka ngoding dan membuat aplikasi, saya rekomendasikan jurusan Rekayasa Perangkat Lunak (RPL). Di jurusan ini kamu akan belajar pemrograman, pengembangan web, mobile, dan teknologi terbaru lainnya': 'If you enjoy coding and creating applications, I recommend the Software Engineering (RPL) major. In this major, you will learn programming, web and mobile development, and the latest technologies.',
+  'Kalau kamu suka ngoding dan membuat aplikasi, saya rekomendasikan jurusan Rekayasa Perangkat Lunak (RPL). Di jurusan ini kamu akan belajar pemrograman, pengembangan web, mobile, dan teknologi terbaru lainnya': 'If you enjoy coding and creating applications, I recommend the Software Engineering (RPL) program. In this program, you will learn programming, web and mobile development, and the latest technologies.',
   'Tempat Tumbuhnya': 'A Place to Grow',
   'Para Inovator\nMasa Depan.': 'Your Potential\nfor a Brighter Future.',
   'SMK Telkom Purwokerto, sekolah vokasi berbasis teknologi yang mencetak generasi digital berkarakter, kompeten, dan siap bersaing di dunia industri global.': 'SMK Telkom Purwokerto is a vocational high school with digital technology-based education, character building, and global industry-oriented graduates.',
