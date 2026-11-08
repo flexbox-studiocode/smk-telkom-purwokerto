@@ -101,7 +101,7 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop menu */}
-          <div className="hidden min-[1152px]:flex items-center gap-5 xl:gap-6">
+          <div className="hidden min-[1152px]:flex items-center gap-5 xl:gap-7">
             {navLinks.map((link) => {
               if (!link.children) {
                 return (
