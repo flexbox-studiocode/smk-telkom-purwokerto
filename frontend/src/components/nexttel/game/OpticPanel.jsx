@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 import { OPTIC_NODES, OPTIC_SOLUTION, evaluateOptics, historyRedo, historyUndo, opticReset, opticRotate } from '../../../features/nexttel-game/engine.mjs';
 import { asset } from './assets';
@@ -10,11 +11,33 @@ const CELLS = [
   { node: 'C' }, { pipe: 3, dir: 'h' }, { node: 'D' },
 ];
 
-function Ports({ node, rotation, className }) {
+// Cumulative turn angle per node: 3 -> 0 keeps going clockwise (+90deg) instead of spinning back 270deg; undo turns back 90deg.
+function useTurn(rotation) {
+  const [turn, setTurn] = useState({ rot: rotation, deg: rotation * 90, n: 0 });
+  if (turn.rot === rotation) return turn;
+  const delta = (((rotation - turn.rot) % 4) + 4) % 4;
+  const next = { rot: rotation, deg: turn.deg + (delta === 3 ? -1 : delta) * 90, n: turn.n + 1 };
+  setTurn(next); // adjusting state while rendering: React re-renders immediately, before paint
+  return next;
+}
+
+function Ports({ node, deg, className }) {
   return (
-    <span className={className} style={{ transform: `rotate(${rotation * 90}deg)` }} aria-hidden="true">
+    <span className={className} style={{ transform: `rotate(${deg}deg)` }} aria-hidden="true">
       {OPTIC_NODES[node].shape.map((dir) => <span key={dir} className="ntg-optic__port" data-dir={dir} />)}
     </span>
+  );
+}
+
+function OpticNode({ node, rotation, lit, solved, hint, label, onRotate }) {
+  const turn = useTurn(rotation);
+  return (
+    <button type="button" className="ntg-optic__node" data-lit={lit} disabled={solved} aria-label={label} onClick={onRotate}>
+      <Ports node={node} deg={turn.deg} className="ntg-optic__ports" />
+      {hint && <Ports node={node} deg={OPTIC_SOLUTION[node] * 90} className="ntg-optic__ghost" />}
+      <img src={asset(`optic-${node.toLowerCase()}.png`)} alt="" draggable="false" />
+      {turn.n > 0 && <span key={turn.n} className="ntg-optic__pulse" aria-hidden="true" />}
+    </button>
   );
 }
 
@@ -54,18 +77,15 @@ export default function OpticPanel({ value, onChange }) {
               {cell.node === 'A' && <span className="ntg-optic__beam ntg-optic__beam--in" data-on={state.inlet} aria-hidden="true" />}
               {cell.node === 'D' && <span className="ntg-optic__beam ntg-optic__beam--out" data-on={state.outlet} aria-hidden="true" />}
               {cell.node && (
-                <button
-                  type="button"
-                  className="ntg-optic__node"
-                  data-lit={state.lit.includes(cell.node)}
-                  disabled={value.solved}
-                  aria-label={`${t('Putar')} ${describe(cell.node)}`}
-                  onClick={() => onChange(opticRotate(value, cell.node))}
-                >
-                  <Ports node={cell.node} rotation={value.current[cell.node]} className="ntg-optic__ports" />
-                  {value.hintUsed && !value.solved && <Ports node={cell.node} rotation={OPTIC_SOLUTION[cell.node]} className="ntg-optic__ghost" />}
-                  <img src={asset(`optic-${cell.node.toLowerCase()}.png`)} alt="" />
-                </button>
+                <OpticNode
+                  node={cell.node}
+                  rotation={value.current[cell.node]}
+                  lit={state.lit.includes(cell.node)}
+                  solved={value.solved}
+                  hint={value.hintUsed && !value.solved}
+                  label={`${t('Putar')} ${describe(cell.node)}`}
+                  onRotate={() => onChange(opticRotate(value, cell.node))}
+                />
               )}
             </div>
           ))}
