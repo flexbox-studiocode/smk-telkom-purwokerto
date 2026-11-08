@@ -128,7 +128,7 @@ export const navLinks = [
       { label: 'Berita', href: '/berita' },
       { label: 'Pengumuman', href: '/pengumuman' },
       { label: 'Kalender Kegiatan', href: '/kalender' },
-      { label: 'Informasi SPMB', href: OFFICIAL_ADMISSIONS_URL },
+      { label: 'Informasi SPMB', href: '/spmb' },
     ],
   },
   {
@@ -173,7 +173,7 @@ export const quickLinks = [
     title: 'SPMB',
     desc: 'Informasi pendaftaran siswa baru tahun ajaran 2026/2027',
     linkLabel: 'Daftar Sekarang',
-    href: OFFICIAL_ADMISSIONS_URL,
+    href: '/spmb',
   },
   {
     icon: 'bot',
@@ -539,7 +539,7 @@ export const footerData = {
   informasi: [
     { label: 'Berita', href: '/berita' },
     { label: 'Pengumuman', href: '/pengumuman' },
-    { label: 'SPMB', href: OFFICIAL_ADMISSIONS_URL },
+    { label: 'SPMB', href: '/spmb' },
     { label: 'NEXA AI', href: '/nexa' },
     { label: 'NextTel', href: '/nexttel' },
     { label: 'Kebijakan Privasi', href: '/kebijakan-privasi' },

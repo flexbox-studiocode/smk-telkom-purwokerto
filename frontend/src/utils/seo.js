@@ -9,6 +9,7 @@ export const PAGE_META = {
   '/berita': ['Berita SMK Telkom Purwokerto', 'Berita terbaru dari SMK Telkom Purwokerto.'],
   '/pengumuman': ['Pengumuman SMK Telkom Purwokerto', 'Pengumuman resmi SMK Telkom Purwokerto.'],
   '/kalender': ['Kalender Kegiatan | SMK Telkom Purwokerto', 'Jelajahi kalender kegiatan, lomba, dan acara SMK Telkom Purwokerto.'],
+  '/spmb': ['Informasi SPMB | SMK Telkom Purwokerto', 'Informasi alur, jalur penerimaan, berkas, dan pendaftaran SPMB SMK Telkom Purwokerto.'],
   '/nexa': ['NEXA AI | SMK Telkom Purwokerto', 'Asisten informasi umum SMK Telkom Purwokerto.'],
   '/stela': ['STELA — Akses NEXA AI | SMK Telkom Purwokerto', 'Akses asisten NEXA melalui halaman STELA untuk informasi umum SMK Telkom Purwokerto.'],
   '/nexttel': ['NextTel | SMK Telkom Purwokerto', 'Cari jurusan yang sesuai dengan minatmu.'],

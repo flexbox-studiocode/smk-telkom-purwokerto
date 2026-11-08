@@ -1,4 +1,13 @@
 export default {
+  'Buat Akun': 'Create an Account',
+  'Seleksi': 'Selection',
+  'Daftar Ulang': 'Enrollment Confirmation',
+  'Pas Foto Terbaru (3x4 atau 4x6 Background Merah/Biru)': 'Recent Photograph (3×4 or 4×6, Red/Blue Background)',
+  'Scan Dokumen Rapor Semester 1 - 5 (Digabung 1 PDF)': 'Scanned Report Cards for Semesters 1–5 (One Combined PDF)',
+  'Akta Kelahiran / Surat Kenal Lahir': 'Birth Certificate / Birth Record',
+  'Kartu Keluarga (KK) Terbaru': 'Latest Family Card (KK)',
+  'Tanggal pembukaan: {date}': 'Opening date: {date}',
+  'Jadwal gelombang penerimaan {year}': '{year} admission wave schedule',
   'informasi SPMB': 'SPMB information',
   'Informasi belum dipublikasikan.': 'Information has not been published yet.',
   'Informasi pendaftaran belum tersedia. Silakan coba lagi nanti.': 'Admission information is unavailable. Please try again later.',
