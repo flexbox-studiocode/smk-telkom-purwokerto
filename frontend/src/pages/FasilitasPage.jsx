@@ -23,6 +23,7 @@ import headingUnderline from '../assets/fasilitas/heading-underline.svg';
 import classroomIcon from '../assets/fasilitas/quick-classroom.svg';
 import tourIcon from '../assets/fasilitas/quick-tour.svg';
 import quickArrow from '../assets/fasilitas/quick-arrow.svg';
+import FacilityNametag from '../components/fasilitas/FacilityNametag';
 import '../styles/fasilitas.css';
 
 const nexaIcon = '/assets/branding/nexa-mark.png';
@@ -36,8 +37,7 @@ const facilityQuickLinks = [
 ];
 
 function GroupTitle({ title, t }) {
-  const [first, ...rest] = t(title).split(' ');
-  return <h3 className="font-heading text-xl font-bold leading-tight text-black sm:text-2xl"><span className="text-[#cd0b20]">{first}</span> {rest.join(' ')}</h3>;
+  return <FacilityNametag>{t(title)}</FacilityNametag>;
 }
 
 function FacilityPhotos({ item, t }) {
