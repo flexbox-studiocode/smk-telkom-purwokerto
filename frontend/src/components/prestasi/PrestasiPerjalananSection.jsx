@@ -61,12 +61,12 @@ const PrestasiPerjalananSection = ({ items = hallOfFame.items }) => {
                 <h3 className="mt-3 text-sm font-bold leading-tight text-black lg:mt-[0.5423cqw] lg:text-[clamp(0.75rem,1.0846cqw,1.25rem)]">
                   {person.name}
                 </h3>
-                <p className="mt-1 text-xs leading-snug text-black/70 lg:text-[clamp(0.6875rem,0.8677cqw,1rem)]">{t(person.achievement)}</p>
+                <p className="mt-1 text-xs font-medium leading-snug text-black/70 lg:text-[clamp(0.6875rem,0.8677cqw,1rem)]">{t(person.achievement)}</p>
                 <div className="mt-auto flex flex-col items-center pt-5 lg:pt-[0.7592cqw]">
                   <span className="relative block size-9 overflow-hidden lg:h-[2.4403cqw] lg:w-[2.603cqw]">
                     <img src={profileIcon} alt="" aria-hidden="true" className="absolute left-1/2 top-1/2 max-w-none -translate-x-1/2 -translate-y-1/2 scale-75 lg:scale-[calc(100cqw/1844px)]" />
                   </span>
-                  <p className="mt-2 text-xs leading-snug text-black/70 lg:text-[clamp(0.6875rem,0.8677cqw,1rem)]">{t(person.role)}{person.company && <><br />{person.company}</>}</p>
+                  <p className="mt-2 text-xs font-medium leading-snug text-black/70 lg:text-[clamp(0.6875rem,0.8677cqw,1rem)]">{t(person.role)}{person.company && <><br />{person.company}</>}</p>
                 </div>
               </article>
             ))}

@@ -3,6 +3,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
+import path from 'node:path';
 import { env } from './config/env.js';
 import { createLogger, errorHandler, notFoundHandler } from './middleware/error.js';
 import { requireCsrf, csrfToken } from './middleware/csrf.js';
@@ -64,7 +65,7 @@ app.use('/api/stats', statsRouter);
 app.use('/api/ai', aiRouter);
 app.use('/api/uploads', uploadsRouter);
 app.use('/api/turnstile', turnstileRouter);
-app.use('/uploads/content-images', express.static('uploads/content-images', { maxAge: '7d' }));
+app.use('/uploads/content-images', express.static(path.join(process.env.UPLOAD_ROOT || 'uploads', 'content-images'), { maxAge: '7d' }));
 
 app.use(notFoundHandler);
 app.use(errorHandler);

@@ -1,7 +1,6 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useReducedMotion } from 'framer-motion';
+import { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { Typewriter } from './ui/typewriter-text';
+import { TextRevealByWord, TextRevealWord } from './ui/text-reveal';
 import { useLanguage } from '../context/LanguageContext';
 import './HomeMotion.css';
 
@@ -11,37 +10,23 @@ export default function InnovationReveal() {
   const { t, language } = useLanguage();
   const ref = useRef(null);
   const phrase = t('Digital Innovation');
-  const lead = t('Bukan sekadar belajar Teknologi');
-  const tail = t('Kami bikin karya nyata');
-  const reduced = useReducedMotion();
-  const [active, setActive] = useState(false);
-  const characters = (text, visible, offset = 0) => Array.from(text).map((character, index) => (
-    <span key={index} className={visible > offset + index ? 'innovation-character is-typed' : 'innovation-character'}>{character}</span>
+  const lead = t('Bukan sekadar belajar Teknologi').split(/\s+/);
+  const tail = t('Kami bikin karya nyata').split(/\s+/);
+  const count = lead.length + tail.length + 1;
+  const words = (list, progress, offset = 0) => list.map((word, index) => (
+    <TextRevealWord key={index} progress={progress} range={[(offset + index) / count, (offset + index + 1) / count]}>{word}</TextRevealWord>
   ));
-  const words = (text, visible, offset = 0) => {
-    let position = offset;
-    return text.split(' ').map((word, index) => {
-      const start = position;
-      position += Array.from(word).length + 1;
-      return <span data-innovation-word key={index}>{characters(word, visible, start)}</span>;
-    });
-  };
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { setActive(true); observer.disconnect(); }
-    }, { threshold: 0.25 });
-    observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
 
   useLayoutEffect(() => {
     const root = ref.current;
     const media = gsap.matchMedia();
     media.add('(prefers-reduced-motion: no-preference)', () => {
-      const reel = gsap.to(root.querySelector('[data-innovation-reel]'), {
-        xPercent: -50, duration: 8, repeat: -1, ease: 'none', paused: true,
-      });
+      const track = root.querySelector('[data-innovation-reel]');
+      // A remount or media change must not inherit an offscreen or hidden reel.
+      gsap.set(track, { x: 0, y: 0, xPercent: 0, yPercent: 0, opacity: 1, visibility: 'visible' });
+      const reel = gsap.timeline({ repeat: -1, paused: true })
+        .to(track, { xPercent: -100, duration: 2.4, ease: 'power1.inOut' }, 1.8)
+        .set(track, { xPercent: 0 });
       let visible = false;
 
       const sync = () => {
@@ -63,8 +48,8 @@ export default function InnovationReveal() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h2 id="innovation-title" className="home-innovation-title">
           <span className="sr-only">{t('Bukan sekadar belajar Teknologi')}. {phrase}. {t('Kami bikin karya nyata')}.</span>
-          <Typewriter key={language} text={`${lead} ${phrase} ${tail}`} active={active} reducedMotion={Boolean(reduced)} speed={35} cursor="" render={visible => <>
-          <span aria-hidden="true" className="home-innovation-line">{words(lead, visible)}</span>
+          <TextRevealByWord text={[...lead, phrase, ...tail].join(' ')} targetRef={ref} render={progress => <>
+          <span aria-hidden="true" className="home-innovation-line">{words(lead, progress)}</span>
           <span aria-hidden="true" className="home-innovation-line">
             <span className="home-innovation-box">
               <span className="home-innovation-size">{phrase}</span>
@@ -72,7 +57,7 @@ export default function InnovationReveal() {
                 <span>{phrase}</span><span>{phrase}</span>
               </span></span>
             </span>
-            {words(tail, visible, Array.from(`${lead} ${phrase} `).length)}
+            {words(tail, progress, lead.length + 1)}
           </span>
           </>} />
         </h2>

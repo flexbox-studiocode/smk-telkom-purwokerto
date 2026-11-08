@@ -58,10 +58,10 @@ export function GuruGrid({ teachers = tenagaPendidikData, id = 'guru', title = '
   return (
     <section aria-labelledby={`${id}-list-title`} className="relative overflow-hidden bg-white py-8 lg:py-12">
       <SectionAccents variant="teachers" />
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 [container-type:inline-size]">
         <Reveal className="mb-8 text-center">
-          <h2 id={`${id}-list-title`} className="font-heading text-2xl font-extrabold leading-tight text-dark-900 sm:text-3xl">{t(title)} </h2>
-          <p className="mt-1 text-sm font-semibold text-primary sm:text-base">{t("SMK Telkom Purwokerto")}</p>
+          <h2 id={`${id}-list-title`} className="font-heading text-[clamp(1.5rem,2.755cqw,3rem)] font-bold leading-normal text-dark-900">{t(title)} </h2>
+          <p className="mt-1 text-[clamp(.875rem,1.837cqw,2rem)] font-bold text-primary">{t("SMK Telkom Purwokerto")}</p>
         </Reveal>
 
         <div className="relative">
@@ -121,7 +121,7 @@ function GuruPage() {
             <div className="hero-copy">
               <HeroBreadcrumb current="Profil Guru" />
               <HeroBadges />
-              <h1 className="mt-4 font-heading text-3xl font-extrabold leading-[1.2] tracking-tight text-dark-900 sm:text-4xl lg:text-[1.75rem] xl:text-[2rem]">{t("Profil Guru")}<br /><span className="text-primary">{t("SMK Telkom")}<br />{t("Purwokerto")}</span>
+              <h1 className="mt-4 font-heading text-3xl font-extrabold leading-[1.2] tracking-tight text-dark-900 sm:text-4xl lg:text-[1.75rem] xl:text-[2rem]">{t("Profil Guru")}<br /><span className="text-primary">{t("SMK Telkom")} {t("Purwokerto")}</span>
               </h1>
               <p className="mt-4 max-w-md text-xs leading-relaxed text-dark-500 sm:text-sm">{t("Tim pengajar kami memadukan kurikulum berbasis teknologi terbaru dengan metode pembelajaran interaktif. Kami siap membimbing siswa menguasai logika, pemrograman, hingga mampu menciptakan solusi digital masa depan.")} </p>
               <Link to="/profil-sekolah" className="mt-7 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{t("Lihat Profil Sekolah")} <ArrowRight size={17} />
@@ -137,25 +137,25 @@ function GuruPage() {
 
       <section aria-labelledby="kepala-sekolah-title" className="relative overflow-hidden bg-white py-8 lg:py-12">
         <SectionAccents variant="headmaster" />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 [container-type:inline-size]">
           <Reveal className="mx-auto grid overflow-hidden rounded-[20px] border-2 border-[#cd091d] bg-white shadow-[0_0_24px_rgba(130,130,130,0.25)] md:grid-cols-[38%_62%]">
             <div className="relative min-h-[280px] overflow-hidden bg-white md:min-h-[420px]">
               <img src={headmasterAccent} alt="" aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 h-full w-auto max-w-none" />
               <img src={kepalaSekolah.image} alt={t('Foto {name}', { name: kepalaSekolah.name })} loading="lazy" className="absolute inset-0 h-full w-full object-contain object-bottom" />
             </div>
             <div className="flex flex-col justify-center px-6 py-8 sm:px-8 lg:px-10">
-              <h2 id="kepala-sekolah-title" className="font-heading text-xl font-extrabold leading-tight text-dark-900 sm:text-2xl">{t("Kepala Sekolah")}</h2>
-              <p className="mt-1 text-sm font-semibold text-primary sm:text-base">{t("SMK Telkom Purwokerto")}</p>
-              <h3 className="mt-5 font-heading text-lg font-bold leading-tight text-dark-900 sm:text-xl">{t(kepalaSekolah.name)}</h3>
-              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-dark-600">{t(kepalaSekolah.quoteFull)}</p>
+              <h2 id="kepala-sekolah-title" className="font-heading text-[clamp(1.25rem,2.296cqw,2.5rem)] font-bold leading-normal text-dark-900">{t("Kepala Sekolah")}</h2>
+              <p className="mt-1 text-[clamp(.875rem,1.837cqw,2rem)] font-bold text-primary">{t("SMK Telkom Purwokerto")}</p>
+              <h3 className="mt-5 font-heading text-[clamp(1.125rem,2.296cqw,2.5rem)] font-bold leading-normal text-dark-900">{t(kepalaSekolah.name)}</h3>
+              <p className="mt-2 max-w-2xl text-[clamp(.875rem,1.378cqw,1.5rem)] font-medium leading-normal text-dark-600">{t(kepalaSekolah.quoteFull)}</p>
               <div className="mt-5 grid gap-4 sm:grid-cols-2">
                 <div>
-                  <p className="font-heading text-sm font-bold text-primary">{t("Jabatan/Posisi")}</p>
-                  <p className="mt-1 flex items-start gap-1 text-xs leading-relaxed text-dark-600"><Quote aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0 fill-primary text-primary" /> {t("Kepala Sekolah")}</p>
+                  <p className="font-heading text-[clamp(.875rem,1.837cqw,2rem)] font-extrabold text-primary">{t("Jabatan/Posisi")}</p>
+                  <p className="mt-1 flex items-start gap-1 text-[clamp(.75rem,1.148cqw,1.25rem)] font-medium leading-normal text-dark-600"><Quote aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0 fill-primary text-primary" /> {t("Kepala Sekolah")}</p>
                 </div>
                 <div>
-                  <p className="font-heading text-sm font-bold text-primary">{t("Visi Sekolah")}</p>
-                  <p className="mt-1 text-xs leading-relaxed text-dark-600">{t(visiMisi.visi)}</p>
+                  <p className="font-heading text-[clamp(.875rem,1.837cqw,2rem)] font-extrabold text-primary">{t("Visi Sekolah")}</p>
+                  <p className="mt-1 text-[clamp(.75rem,1.148cqw,1.25rem)] font-medium leading-normal text-dark-600">{t(visiMisi.visi)}</p>
                 </div>
               </div>
             </div>

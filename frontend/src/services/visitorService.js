@@ -77,7 +77,7 @@ export async function getVisitorStats() {
     setCachedStats(stats);
     return stats;
   } catch {
-    console.warn('Visitor counter stats RPC failed. Apply migration 009 and verify Supabase RPC permissions.');
+    console.warn('Visitor counter stats request failed. Pastikan backend /api/stats/visitors tersedia.');
     return null;
   }
 }

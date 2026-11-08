@@ -1,3 +1,23 @@
+@font-face {
+  font-family: Arimo;
+  src: url('../assets/fonts/arimo-v36-latin.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Arimo;
+  src: url('../assets/fonts/arimo-v36-latin-bold-italic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+.detail-jurusan-overview { font-family: Arimo, Arial, sans-serif; }
+.detail-jurusan-content h2 { font-family: var(--font-poppins); font-size: clamp(1.25rem, calc(min(100vw, 80rem) * .02755), 3rem); font-weight: 700; line-height: normal; letter-spacing: var(--tracking-figma-heading); }
+.hero-panel--detail [data-hero-badges] span { font-weight: 800; line-height: normal; letter-spacing: var(--tracking-figma-copy); }
+
 .school-hero--department-detail {
   --hero-radius: 1rem;
   padding-bottom: 1rem;
@@ -50,7 +70,6 @@
   padding: .1em .24em;
   background: var(--color-primary);
 }
-
 .detail-jurusan-content { position: relative; }
 .detail-jurusan-content::before, .detail-jurusan-content::after { content: ''; position: absolute; inset-block: 0; width: .75rem; pointer-events: none; background: url('../assets/fasilitas/page-accent.png') repeat-y center top / 100% auto; }
 .detail-jurusan-content::before { left: 0; }
@@ -75,4 +94,10 @@
   .detail-hero-brand { left: 6%; top: 14%; }
   .detail-hero-wave { width: 70%; height: 82%; object-fit: fill; }
   .detail-jurusan-content::before, .detail-jurusan-content::after { width: 1rem; }
+}
+@media (min-width: 80rem) {
+  .hero-panel--detail-rpl .detail-hero-photo { object-position: right center; }
+  .hero-panel--detail-pg .detail-hero-photo { object-position: right top; }
+  .hero-panel--detail-tkj .detail-hero-photo { object-position: right center; }
+  .hero-panel--detail-tjat .detail-hero-photo { object-position: right top; }
 }

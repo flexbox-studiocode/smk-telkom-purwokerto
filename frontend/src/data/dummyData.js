@@ -1,3 +1,4 @@
+import { OFFICIAL_ADMISSIONS_URL } from '../utils/admissions';
 import timDinacom2023 from '../assets/showcase/tim-dinacom-2023.jpeg';
 import worldOfAdventure from '../assets/showcase/world-of-adventure.jpeg';
 import rupantara from '../assets/showcase/rupantara.jpeg';
@@ -150,16 +151,15 @@ export const navLinks = [
 // Tombol "Masuk PPDB" muncul di navbar (desktop dan laci mobile) serta di hero
 // beranda. Alamatnya disimpan sekali di sini supaya tidak ada lagi URL yang
 // ditulis ulang di tiga tempat dan berisiko beda sendiri saat diubah.
-// Tujuannya halaman masuk portal, bukan laman info /ppdb — di sana sudah ada
-// tautan "Daftar Akun Baru" untuk pendaftar yang belum punya akun.
-export const ctaMasukPpdb = { label: 'Masuk SPMB', href: '/spmb/masuk' };
+// Pendaftaran publik memakai portal resmi Telkom Schools.
+export const ctaMasukPpdb = { label: 'Masuk SPMB', href: OFFICIAL_ADMISSIONS_URL };
 
 export const landingHero = {
-  hashtags: ['#DigitalSmartSchool', '#GlobalTechnopreneur'],
+  hashtags: ['#NextGen', '#GlobalTechnopreneur'],
   title: 'Bangun Masa Depanmu',
   titleAccent: 'Bersama Teknologi',
   description:
-    'SMK Telkom Purwokerto mencetak generasi digital yang siap bersaing di dunia industri melalui pembelajaran berbasis teknologi, kreativitas, dan karakter',
+    'SMK Telkom Purwokerto mencetak generasi digital yang siap bersaing di industri lewat teknologi, kreativitas, dan karakter.',
   primaryCta: ctaMasukPpdb,
   secondaryCta: { label: 'Lihat Jurusan', href: '/jurusan' },
   // Panel merah + foto + watermark "TELKOM" sudah menyatu jadi satu aset dari Figma.
@@ -277,7 +277,7 @@ export const prestasiData = {
 };
 
 export const ekstrakurikulerData = {
-  eyebrow: '#DigitalSmartSchool',
+  eyebrow: '#NextGen',
   title: 'EKSTRAKURIKULER',
   subtitle: 'Eksplorasi Minat & Bakat',
   heroImage: heroEkstrakurikuler,
@@ -365,7 +365,7 @@ export const ctaBanner = {
   title: 'Sudah Menemukan Jurusan yang Tepat?',
   description: 'Daftarkan dirimu sekarang dan mulai langkah pertama menuju masa depanmu!',
   ctaText: 'Daftar SPMB Sekarang',
-  href: '/spmb',
+  href: OFFICIAL_ADMISSIONS_URL,
 };
 
 /* =========================================================
@@ -386,7 +386,7 @@ export const heroData = {
   ctaText: 'Daftar Sekarang',
   // Panel merah + foto gedung + pill hashtag + 3 poin keunggulan menyatu jadi satu aset Figma.
   image: profilHero,
-  hashtag: '#DigitalSmartSchool',
+  hashtag: '#NextGen',
   badges: [
     {
       title: 'Berinovasi',
@@ -480,24 +480,24 @@ export const profilVideo = {
 
 export const timelineData = [
   {
-    year: '2012',
+    year: '1993',
     title: 'Sekolah Berdiri',
-    desc: 'SMK Telkom Purwokerto didirikan di Purwokerto.',
+    desc: 'Didirikan pada 30 Januari 1993 sebagai SMK telekomunikasi pertama di Indonesia.',
   },
   {
     year: '2016',
     title: 'Akreditasi A',
-    desc: 'Terakreditasi A dengan standar mutu nasional.',
+    desc: 'Meraih predikat Akreditasi A (nilai 97) dengan standar mutu pendidikan nasional.',
   },
   {
     year: '2020',
-    title: 'Kerja Sama Industri',
-    desc: 'Memperluas kolaborasi dengan berbagai mitra industri ternama.',
+    title: 'Sinergi Industri',
+    desc: 'Memperluas kolaborasi dengan ekosistem Telkom Indonesia dan berbagai mitra industri global.',
   },
   {
     year: '2023',
-    title: 'Digital Smart School',
-    desc: 'Transformasi digital dalam pembelajaran dan manajemen sekolah.',
+    title: 'Next Gen',
+    desc: 'Ditetapkan sebagai SMK Pusat Keunggulan TI dengan transformasi pembelajaran dan manajemen digital.',
   },
   {
     year: '2026',
@@ -1103,7 +1103,7 @@ export const ppdbBanner = {
   description:
     'Pendaftaran Peserta Didik Baru Tahun Ajaran 2027/2028 telah resmi dibuka, Segera daftar dan bergabung bersama kami',
   ctaText: '20 Mei 2026',
-  href: '/spmb',
+  href: OFFICIAL_ADMISSIONS_URL,
 };
 
 export const infoPenting = {
@@ -1946,7 +1946,7 @@ export const pengumumanDetail = [
     ],
     berkas: ['Rapor semester terakhir', 'Kartu keluarga', 'Akta kelahiran', 'Pas foto terbaru'],
     kontak: { nama: 'Panitia PPDB', detail: 'Ruang Tata Usaha, Senin-Jumat pukul 08.00-15.00' },
-    aksi: { label: 'Buka Laman PPDB', href: '/spmb' },
+    aksi: { label: 'Buka Laman PPDB', href: OFFICIAL_ADMISSIONS_URL },
   },
   {
     slug: 'ppdb-gelombang-1-dibuka',
@@ -1976,7 +1976,7 @@ export const pengumumanDetail = [
     ],
     berkas: ['Rapor semester 1-5', 'Kartu keluarga', 'Surat keterangan siswa', 'Pas foto terbaru'],
     kontak: { nama: 'Panitia PPDB', detail: 'Ruang Tata Usaha, Senin-Jumat pukul 08.00-15.00' },
-    aksi: { label: 'Buka Laman PPDB', href: '/spmb' },
+    aksi: { label: 'Buka Laman PPDB', href: OFFICIAL_ADMISSIONS_URL },
   },
   {
     slug: 'jadwal-ujian-tengah-semester',
@@ -2355,6 +2355,8 @@ export const adminSekolah = {
 // tetap bebas dari impor komponen.
 export const adminMenu = [
   { label: 'Dashboard', to: '/dashboard', icon: 'dashboard', end: true },
+  { label: 'Manajemen SPMB', to: '/dashboard/spmb', icon: 'ppdb' },
+  { label: 'Informasi SPMB', to: '/dashboard/informasi-spmb', icon: 'informasiSpmb' },
   { label: 'Prestasi', to: '/dashboard/prestasi', icon: 'prestasi' },
   { label: 'BKK', to: '/dashboard/bkk', icon: 'bkk' },
   { label: 'Berita', to: '/dashboard/berita', icon: 'berita' },

@@ -7,7 +7,7 @@ const CTASection = ({ variant = 'default', containerClassName, href = ctaBanner.
   const { t } = useLanguage();
   return (
     <section id="ppdb" className="bg-white pb-8 lg:pb-12">
-      <div className={containerClassName ?? (variant === 'prestasi' ? 'mx-auto w-[calc(100%-2rem)] max-w-[1703px] sm:w-[calc(100%-3rem)] lg:w-[92.35%]' : 'mx-auto max-w-[1546px] px-4 sm:px-6 lg:px-8')}>
+      <div className={`figma-cta ${containerClassName ?? (variant === 'prestasi' ? 'mx-auto w-[calc(100%-2rem)] max-w-[1703px] sm:w-[calc(100%-3rem)] lg:w-[92.35%]' : 'mx-auto max-w-[1546px] px-4 sm:px-6 lg:px-8')}`}>
         <div className="flex flex-col items-center justify-between gap-5 rounded-3xl bg-[#bf0d1b] px-6 py-6 text-center sm:flex-row sm:px-8 sm:text-left">
           <div className="flex min-w-0 flex-col items-center gap-4 sm:flex-row">
             <span aria-hidden="true" className="flex size-14 shrink-0 items-center justify-center rounded-full bg-white p-2 lg:size-20 lg:p-3"><img src="/assets/branding/spmb-target.svg" alt="" loading="lazy" className="h-auto max-w-full" /></span>

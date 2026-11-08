@@ -4,7 +4,7 @@ Tanggal audit: 2026-11-04
 
 ## Ringkasan
 
-Backend Express + Prisma 7.10.1 sekarang berjalan pada MySQL lokal Laragon. Supabase tetap utuh; tidak ada tabel, data, storage, backup, atau Edge Function Supabase yang dihapus/diubah. Migrasi data belum dijalankan karena `SOURCE_DATABASE_URL` dan inventory storage Supabase belum tersedia.
+Backend Express + Prisma 7.10.1 sekarang berjalan pada MySQL lokal Laragon. Supabase tetap utuh; tidak ada tabel, data, storage, backup, atau Edge Function Supabase yang dihapus/diubah. Migrasi data **sudah dijalankan** melalui Supabase REST read-only: 131 record diimpor (berita 13, pengumuman 11, prestasi 21, bkk 12, events 52, spmb_information 21, site_settings 1) dan 26 file storage diunduh. Satu tabel (`ai_daily_attempts`) terblokir RLS. Detail: `MYSQL_MIGRATION_REPORT.md`.
 
 ## Temuan dan perbaikan
 
@@ -53,8 +53,24 @@ See `docs/MYSQL_MIGRATION_PLAN.md`. Source data, auth, storage, RLS, and Edge Fu
 
 ## Remaining blockers
 
-- No Supabase read-only connection string or storage inventory.
-- No verified auth password-hash compatibility.
-- No SMTP/production storage/AI credentials.
-- No VPS, DNS, TLS, or deployment authorization.
-- No production backup/cutover approval.
+- Koneksi PostgreSQL langsung (`db.*.supabase.co`) tidak resolve; ETL memakai REST read-only (anon key). `SUPABASE_SERVICE_ROLE_KEY` tidak tersedia.
+- `ai_daily_attempts` tidak dapat diekspor (RLS 401/42501).
+- Hash password auth Supabase tidak dapat diekspor lewat anon REST; diganti prosedur seed admin recovery + reset token.
+- Tidak ada SMTP/production storage/AI credentials (NEXA mengembalikan 503 jujur).
+- Tidak ada VPS, DNS, TLS, atau otorisasi deployment; tidak ada klaim deployment sukses.
+- Upload backup ke Supabase belum terverifikasi karena tidak ada service role key / akses bucket.
+
+## Status akhir fase
+
+| Fase | Status |
+|---|---|
+| MySQL Primary Architecture | DONE |
+| Schema & Migration | DONE (4 migrasi) |
+| Supabase ETL | DONE sebagian (131/131 record; 1 tabel BLOCKED_RLS) |
+| File & Storage Migration | DONE (26 file) |
+| Backend/Frontend Refactor | DONE (0 referensi runtime Supabase) |
+| Backup & Restore | DONE (teruji end-to-end) |
+| Laragon Local | DONE |
+| VPS Prep | DOCUMENTED (deployment BLOCKED) |
+| Documentation | DONE |
+| Testing & Report | DONE (14/14 test, lint, typecheck, build) |

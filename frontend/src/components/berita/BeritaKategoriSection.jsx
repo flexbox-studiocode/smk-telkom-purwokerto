@@ -105,7 +105,7 @@ const BeritaKategoriSection = ({ items = [], children }) => {
               value={query}
               onChange={(e) => applyFilter('q', e.target.value)}
               placeholder={t(kategoriBerita.searchPlaceholder)}
-              className="w-40 rounded-full border border-dark-200 py-1.5 pl-8 pr-3 text-[10px] text-dark-700 outline-none transition-colors placeholder:text-dark-400 focus:border-primary"
+              className="w-40 rounded-full border border-dark-200 py-1.5 pl-8 pr-3 text-[10px] font-medium tracking-figma-copy text-dark-700 outline-none transition-colors placeholder:text-dark-400 focus:border-primary"
             />
           </label>
 
@@ -114,7 +114,7 @@ const BeritaKategoriSection = ({ items = [], children }) => {
             <select
               value={sort}
               onChange={(e) => applyFilter('sort', e.target.value, 'terbaru')}
-              className="rounded-full border border-dark-200 px-3 py-1.5 text-[10px] text-dark-600 outline-none transition-colors focus:border-primary"
+              className="rounded-full border border-dark-200 px-3 py-1.5 text-[10px] font-medium tracking-figma-copy text-dark-600 outline-none transition-colors focus:border-primary"
             >
               {kategoriBerita.sortOptions.map((o) => (
                 <option key={o.value} value={o.value}>
@@ -140,7 +140,7 @@ const BeritaKategoriSection = ({ items = [], children }) => {
                     className="w-full aspect-[16/10] object-cover object-top transition-transform duration-500 group-hover:scale-110"
                     loading="lazy"
                   />
-                  <span className="absolute bottom-1.5 left-1.5 rounded bg-primary px-1.5 py-0.5 text-[8px] font-bold text-white">
+                  <span className="absolute bottom-1.5 left-1.5 rounded bg-primary px-1.5 py-0.5 text-[8px] font-semibold tracking-figma-copy text-white">
                     {t(n.kategori)}
                   </span>
                 </div>
@@ -149,13 +149,13 @@ const BeritaKategoriSection = ({ items = [], children }) => {
                   <h3 className="font-heading text-[11px] font-bold leading-snug text-dark-900">
                     {t(n.title)}
                   </h3>
-                  <p className="mt-1.5 text-xs text-dark-500">
+                  <p className="mt-1.5 text-xs font-medium tracking-figma-copy text-dark-500">
                     {formatPublicDate(n.iso, {}, locale)} &nbsp;·&nbsp; {t(n.author)}
                   </p>
-                  <p className="mt-1.5 text-[9px] leading-relaxed text-dark-500">{t(n.excerpt)}</p>
+                  <p className="mt-1.5 text-[9px] font-medium leading-[normal] tracking-figma-copy text-dark-500">{t(n.excerpt)}</p>
                   <Link
                     to={`/berita/${n.slug}`}
-                    className="mt-auto pt-3 text-[10px] font-bold text-primary hover:underline"
+                    className="mt-auto pt-3 text-[10px] font-extrabold tracking-figma-copy text-primary hover:underline"
                   >{t("Baca Selengkapnya")}</Link>
                 </div>
               </article>
@@ -181,7 +181,7 @@ const BeritaKategoriSection = ({ items = [], children }) => {
             type="button"
             onClick={() => setShownCount(shownCount + perPage)}
             disabled={!hasMore}
-            className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-white px-4 py-2 text-[10px] font-bold text-primary transition-colors hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-primary"
+            className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-white px-4 py-2 text-[10px] font-extrabold tracking-figma-copy text-primary transition-colors hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-primary"
           >
             {t(kategoriBerita.ctaText)}
           </button>

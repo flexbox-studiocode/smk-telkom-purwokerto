@@ -11,7 +11,7 @@ const DashboardLayout = () => {
   const { pathname } = useLocation();
 
   return (
-    <div className="min-h-screen bg-white lg:flex">
+    <div className="min-h-screen bg-white font-sans [--font-sans:var(--font-jakarta)] [--font-heading:var(--font-jakarta)] lg:flex">
       {/* Sidebar layar lebar */}
       <aside className="hidden w-72 flex-shrink-0 border-r border-dark-100 lg:sticky lg:top-0 lg:block lg:h-screen">
         <DashboardSidebar />
@@ -49,7 +49,7 @@ const DashboardLayout = () => {
           <Outlet />
         </main>
 
-        <footer className="px-4 pb-6 pt-2 text-[11px] text-dark-400 sm:px-6 lg:px-8">
+        <footer className="px-4 pb-6 pt-2 text-[10.67px] font-semibold leading-[normal] tracking-[.02em] text-dark-400 sm:px-6 lg:px-8">
           {adminSekolah.nama} &bull; Admin Panel
         </footer>
       </div>

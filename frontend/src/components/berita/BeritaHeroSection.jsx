@@ -79,7 +79,7 @@ const BeritaHeroSection = ({ items = [] }) => {
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
         >
-          <span className="inline-flex flex-shrink-0 items-center gap-2 self-start rounded-lg bg-primary px-4 py-2.5 text-[11px] font-bold text-white sm:self-auto">
+          <span className="inline-flex flex-shrink-0 items-center gap-2 self-start rounded-lg bg-primary px-4 py-2.5 text-[11px] font-semibold tracking-figma-copy text-white sm:self-auto">
             <Megaphone className="h-3.5 w-3.5" />
             {t(breakingNews.label)}
           </span>
@@ -89,11 +89,11 @@ const BeritaHeroSection = ({ items = [] }) => {
             className="flex min-w-0 flex-1 flex-wrap items-center gap-x-4 gap-y-1 rounded-lg bg-primary-50 px-4 py-2.5"
           >
             <span className="h-2 w-2 flex-shrink-0 rounded-full bg-primary" />
-            <p className="min-w-0 flex-1 text-[11px] font-semibold text-dark-800">{t(item.text)}</p>
-            <span className="text-[10px] text-dark-500">{formatPublicDate(item.iso, {}, locale)}</span>
+            <p className="min-w-0 flex-1 text-[11px] font-semibold tracking-figma-copy text-dark-800">{t(item.text)}</p>
+            <span className="text-[10px] font-medium tracking-figma-copy text-dark-500">{formatPublicDate(item.iso, {}, locale)}</span>
             <Link
               to={`/berita/${item.slug}`}
-              className="inline-flex items-center gap-1 text-[10px] font-bold text-primary hover:underline"
+              className="inline-flex items-center gap-1 text-[10px] font-semibold tracking-figma-copy text-primary hover:underline"
             >{t("Baca Berita")}<ArrowRight className="h-3 w-3" />
             </Link>
           </div>

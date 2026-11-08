@@ -95,12 +95,13 @@ export async function sendPpdbPasswordReset(email) {
   return api.post('/api/auth/password-reset/request', { email });
 }
 
-export async function updatePpdbPassword(password) {
-  return api.post('/api/auth/password-reset/confirm', { password });
+export async function updatePpdbPassword(password, token) {
+  if (!token) throw new Error('Tautan pemulihan tidak valid atau sudah kedaluwarsa.');
+  return api.post('/api/auth/password-reset/confirm', { password, token });
 }
 
 export async function resendPpdbVerification() {
-  return { message: 'Silakan hubungi panitia SPMB untuk verifikasi ulang email.' };
+  return api.post('/api/auth/verify-email/resend');
 }
 
 export async function signOutPpdb() {

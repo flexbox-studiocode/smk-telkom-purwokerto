@@ -1,7 +1,11 @@
+import { OFFICIAL_ADMISSIONS_URL, isHiddenAdmissionsPath } from '../src/utils/admissions.js';
 import assert from 'node:assert/strict';
 import { canonicalAdmissionsPath, formatAdmissionsText } from '../src/utils/admissions.js';
 import { createServer } from 'vite';
 import { jawabanFaqCepat, kategoriPertanyaan, topikDiizinkan } from '../../supabase/functions/stela/inti.mjs';
+
+for (const path of ['/spmb/masuk', '/spmb/formulir', '/SPMB/masuk', '/%73pmb/masuk', '/ppdb', '/ppdb/status', '/ketentuan-spmb', '/lupa-sandi', '/auth/confirm']) assert(isHiddenAdmissionsPath(path));
+for (const path of ['/spmb', '/spmb/', '/SPMB', '/%73pmb', '/dashboard/spmb', '/dashboard/informasi-spmb', '/login', '/spmb-other', '/berita/spmb']) assert(!isHiddenAdmissionsPath(path), `${path}: public information must remain accessible`);
 
 for (const step of ['masuk', 'daftar', 'verifikasi', 'atur-sandi', 'formulir', 'berkas', 'selesai', 'status', 'dokumen-peserta']) {
   assert.equal(canonicalAdmissionsPath(`/ppdb/${step}`), `/spmb/${step}`);
@@ -32,7 +36,9 @@ try {
   assert.equal(translate('Kembali ke {label}', 'id', { label: 'PPDB' }), 'Kembali ke SPMB');
   assert.equal(translate('Kelola PPDB dari dashboard', 'id'), 'Kelola SPMB dari dashboard');
   const data = await server.ssrLoadModule('/src/data/dummyData.js');
-  assert.equal(data.ctaMasukPpdb.href, '/spmb/masuk');
+  assert.equal(data.ctaMasukPpdb.href, OFFICIAL_ADMISSIONS_URL);
+  assert.equal(data.navLinks.find(item => item.label === 'Informasi').children.find(item => item.label === 'Informasi SPMB').href, '/spmb');
+  assert.equal(data.footerData.informasi.find(item => item.label === 'SPMB').href, '/spmb');
   assert.ok(data.ppdbLangkahPortal.every(({ to }) => to.startsWith('/spmb/')));
   console.log('SPMB: routes, legacy redirects, query/hash preservation, bilingual terminology, and portal links pass.');
 } finally {

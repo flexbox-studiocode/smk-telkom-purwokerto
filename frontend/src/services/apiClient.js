@@ -30,7 +30,7 @@ async function ensureCsrf() {
   return readCookie('csrf_token');
 }
 
-export async function apiRequest(path, { method = 'GET', body, headers = {}, raw = false } = {}) {
+export async function apiRequest(path, { method = 'GET', body, headers = {}, raw = false, signal } = {}) {
   const isMutation = !['GET', 'HEAD'].includes(method);
   const requestHeaders = { ...headers };
   if (body && !(body instanceof FormData)) requestHeaders['content-type'] = 'application/json';
@@ -40,6 +40,7 @@ export async function apiRequest(path, { method = 'GET', body, headers = {}, raw
     credentials: 'include',
     headers: requestHeaders,
     body: body ? (body instanceof FormData ? body : JSON.stringify(body)) : undefined,
+    signal,
   });
   if (raw) return res;
   const text = await res.text();
@@ -49,11 +50,11 @@ export async function apiRequest(path, { method = 'GET', body, headers = {}, raw
 }
 
 export const api = {
-  get: (path) => apiRequest(path),
-  post: (path, body) => apiRequest(path, { method: 'POST', body }),
-  put: (path, body) => apiRequest(path, { method: 'PUT', body }),
-  patch: (path, body) => apiRequest(path, { method: 'PATCH', body }),
-  delete: (path) => apiRequest(path, { method: 'DELETE' }),
+  get: (path, options) => apiRequest(path, options),
+  post: (path, body, options) => apiRequest(path, { ...options, method: 'POST', body }),
+  put: (path, body, options) => apiRequest(path, { ...options, method: 'PUT', body }),
+  patch: (path, body, options) => apiRequest(path, { ...options, method: 'PATCH', body }),
+  delete: (path, options) => apiRequest(path, { ...options, method: 'DELETE' }),
   upload: (path, file) => {
     const form = new FormData();
     form.append('file', file);

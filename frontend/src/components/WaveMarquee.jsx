@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { useLanguage } from '../context/LanguageContext';
 import { loopDistance, wavePath } from '../utils/waveMarquee';
 import ribbon from '../assets/landing/wave-ribbon.svg';
+import tourRibbonBack from '../assets/fasilitas/campus/tour-ribbon-back.svg';
 import rocket from '../assets/landing/wave-rocket.svg';
 import award from '../assets/landing/wave-award.svg';
 import bulb from '../assets/landing/wave-bulb.svg';
@@ -15,7 +16,7 @@ const items = [
 ];
 const copies = [0, 1, 2, 3, 4, 5];
 
-export default function WaveMarquee() {
+export default function WaveMarquee({ schoolTour = false }) {
   const { t, language } = useLanguage();
   const ref = useRef(null);
   const pathId = `wave-${useId().replace(/:/g, '')}`;
@@ -77,7 +78,9 @@ export default function WaveMarquee() {
   return (
     <div ref={ref} data-hero-marquee data-wave-marquee className="home-wave relative w-full overflow-hidden bg-white">
       <ul className="sr-only">{items.map(item => <li key={item.label}>{t(item.label)}</li>)}</ul>
-      <svg className="home-wave-canvas" viewBox="0 0 1937.06 250" aria-hidden="true">
+      <svg className="home-wave-canvas" viewBox={schoolTour ? '0 2354.127 1847 340' : '0 0 1937.06 250'} aria-hidden="true">
+        {schoolTour && <image href={tourRibbonBack} transform="matrix(.9998604 .01671177 -.02235702 .99975008 -71.72852 2387.76172)" width="1940.51" height="201.035" />}
+        <g transform={schoolTour ? 'matrix(.99868232 .05131896 -.05924154 .99824375 -66.72852 2354.36523) translate(0 -20)' : undefined}>
         <defs>
           <path id={pathId} d={wavePath(17)} />
           <path data-wave-center d={wavePath()} />
@@ -92,6 +95,7 @@ export default function WaveMarquee() {
             {items.map(item => <g key={item.label} data-wave-icon><image href={item.icon} x={-item.width / 2} y={-item.height / 2} width={item.width} height={item.height} /></g>)}
           </g>
         ))}
+        </g>
       </svg>
     </div>
   );

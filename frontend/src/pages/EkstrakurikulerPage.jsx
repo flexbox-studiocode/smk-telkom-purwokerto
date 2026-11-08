@@ -29,7 +29,7 @@ const CategoryTabs = ({ activeCategory, onSelect }) => {
           type="button"
           onClick={() => onSelect(name)}
           aria-pressed={active}
-          className={`min-h-11 rounded-full border px-4 font-heading text-xs font-bold transition-colors duration-200 sm:min-w-[7.5rem] sm:px-5 ${
+          className={`min-h-11 rounded-full border px-4 font-[family-name:var(--font-poppins)] text-[clamp(.75rem,1.378cqw,1.5rem)] font-semibold tracking-[.05em] transition-colors duration-200 sm:min-w-[7.5rem] sm:px-5 ${
             active
               ? 'border-primary bg-primary text-white'
               : 'border-primary/45 bg-white text-primary hover:border-primary hover:bg-primary-50'
@@ -46,7 +46,7 @@ const CategoryTabs = ({ activeCategory, onSelect }) => {
 const ActivityCard = ({ item, onOpen }) => {
   const { t } = useLanguage();
   return (
-  <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-dark-100 bg-white transition-colors duration-200 hover:border-primary">
+  <article data-activity={item.title} className="group flex h-full flex-col overflow-hidden [container-type:inline-size] rounded-2xl border border-dark-100 bg-white transition-colors duration-200 hover:border-primary">
     <div className="aspect-[2/1] flex-none overflow-hidden">
       <ContentImage
         src={item.image}
@@ -56,12 +56,12 @@ const ActivityCard = ({ item, onOpen }) => {
       />
     </div>
     <div className="flex min-h-0 flex-1 flex-col px-4 pb-4 pt-4">
-      <h3 className="font-heading text-base font-bold leading-snug text-primary">{t(item.title)}</h3>
-      <p className="mt-1.5 line-clamp-5 text-sm leading-relaxed text-dark-600">{t(item.description)}</p>
+      <h3 className="font-heading text-[clamp(1rem,8cqw,2rem)] group-data-[activity=E-Sport]:text-[clamp(1rem,6cqw,1.5rem)] font-bold leading-normal text-primary">{t(item.title)}</h3>
+      <p className="mt-1.5 line-clamp-5 text-xs group-data-[activity=E-Sport]:text-[clamp(.75rem,3.75cqw,.9375rem)] font-medium leading-normal text-dark-600">{t(item.description)}</p>
       <button
         type="button"
         onClick={(event) => onOpen(item, event.currentTarget)}
-        className="mt-auto inline-flex min-h-11 items-center gap-1.5 pt-3 text-sm font-bold text-primary transition-colors hover:text-primary-800"
+        className="mt-auto inline-flex min-h-11 items-center gap-1.5 pt-3 text-[clamp(.75rem,3.25cqw,.8125rem)] font-medium tracking-[.08em] text-primary transition-colors hover:text-primary-800"
       >{t("Selengkapnya")} <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1" />
       </button>
     </div>
@@ -168,10 +168,10 @@ const CategorySection = ({ activeCategory, title, items, onSelect, onOpen }) => 
       className="relative overflow-hidden bg-white pb-8 lg:pb-12"
     >
       <SectionAccents variant="activities" />
-      <div className="relative z-10 mx-auto mt-8 max-w-7xl px-4 sm:px-6 lg:mt-12 lg:px-8">
+      <div className="relative z-10 mx-auto mt-8 max-w-7xl px-4 sm:px-6 lg:mt-12 lg:px-8 [container-type:inline-size]">
         <CategoryTabs activeCategory={activeCategory} onSelect={onSelect} />
         <div className="mt-6 flex items-end justify-between gap-4">
-          <h2 className="font-heading text-xl font-extrabold text-dark-900 sm:text-2xl">{t(title)}</h2>
+          <h2 className="font-[family-name:var(--font-poppins)] text-[clamp(1.25rem,2.296cqw,2.5rem)] font-semibold tracking-[.05em] text-dark-900">{t(title)}</h2>
           <p className="text-xs text-dark-500">{t('{count} kegiatan', { count: items.length })}</p>
         </div>
         {items.length > 0 ? (
@@ -226,7 +226,7 @@ const EkstrakurikulerPage = () => {
   return (
     <MainLayout>
       <section className="school-hero">
-        <div className="hero-container">
+        <div className="hero-container [container-type:inline-size]">
           <PageHeroCarousel page="ekstrakurikuler"><div className="hero-panel hero-panel--bleed hero-panel--activities">
             <div className="hero-grid">
             <div className="hero-copy">
@@ -246,7 +246,7 @@ const EkstrakurikulerPage = () => {
                   }}
                   aria-label={t("Cari kegiatan")}
                   placeholder={t("Cari Kegiatan....")}
-                  className="min-w-0 flex-1 bg-transparent text-xs text-dark-700 outline-none placeholder:text-dark-400 sm:text-sm"
+                  className="min-w-0 flex-1 bg-transparent font-[family-name:var(--font-poppins)] text-[clamp(.75rem,1.148cqw,1.25rem)] font-normal tracking-[.05em] text-dark-700 outline-none placeholder:text-dark-400"
                 />
                 <span className="mr-1 grid h-9 w-9 flex-none place-items-center rounded-full bg-primary text-white">
                   <Search className="h-4 w-4" />
@@ -262,8 +262,8 @@ const EkstrakurikulerPage = () => {
                         <Icon className="h-5 w-5" />
                       </span>
                       <div className="min-w-0">
-                        <p className="text-[10px] font-medium leading-tight text-dark-600">{t(stat.label)}</p>
-                        <p className="mt-0.5 font-heading text-lg font-bold leading-none text-dark-900">{stat.value}</p>
+                        <p className="font-[family-name:var(--font-poppins)] text-[clamp(.625rem,.918cqw,1rem)] font-light tracking-[.05em] leading-normal text-dark-600">{t(stat.label)}</p>
+                        <p className="mt-0.5 font-[family-name:var(--font-poppins)] text-[clamp(1.125rem,1.378cqw,1.5rem)] font-semibold tracking-[.05em] leading-normal text-dark-900">{stat.value}</p>
                       </div>
                     </div>
                   );
@@ -275,8 +275,8 @@ const EkstrakurikulerPage = () => {
               <img
                 src={heroFigma}
                 alt={t("Siswa SMK Telkom Purwokerto mengeksplorasi teknologi")}
-                width="2000"
-                height="1032"
+                width="1999"
+                height="1007"
                 fetchPriority="high"
                 className="hero-image"
               />

@@ -9,7 +9,7 @@ import PengumumanForm from '../src/pages/admin/pengumuman/PengumumanForm';
 const forms = { Prestasi: PrestasiForm, BKK: BkkForm, Berita: BeritaForm, Pengumuman: PengumumanForm };
 
 // Contoh lokal memakai form asli tanpa login atau menulis data produksi.
-// Di dashboard, onSubmit sudah dihubungkan ke service Supabase masing-masing.
+// Di dashboard, onSubmit sudah dihubungkan ke API backend (MySQL) masing-masing.
 export default function Example() {
   const [tab, setTab] = useState('Prestasi');
   const [result, setResult] = useState('');

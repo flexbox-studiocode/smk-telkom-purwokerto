@@ -1,3 +1,4 @@
+import { OFFICIAL_ADMISSIONS_URL } from '../utils/admissions';
 import PageHeroCarousel from '../components/PageHeroCarousel';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -34,7 +35,7 @@ export default function KalenderPage({ initialItems }) {
               <h1 className="mt-4 font-heading text-3xl font-extrabold leading-tight tracking-tight text-dark-900 sm:text-4xl">{prefix} <span className="text-primary">{accent.join(' ')}</span></h1>
               <p className="mt-4 max-w-md text-xs leading-relaxed text-dark-500 sm:text-sm lg:max-w-xs">{t('Temukan jadwal kegiatan, lomba, dan acara terbaru di SMK Telkom Purwokerto.')}</p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <Link to="/spmb" className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-800">{t('Masuk SPMB')}<ArrowRight className="size-4" /></Link>
+                <Link to={OFFICIAL_ADMISSIONS_URL} className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-800">{t('Masuk SPMB')}<ArrowRight className="size-4" /></Link>
                 <a href="#kalender" className="inline-flex items-center gap-2 rounded-full border border-dark-200 bg-white px-6 py-3 text-sm font-semibold text-dark-700 transition-colors hover:border-primary hover:text-primary">{t('Lihat Event')}<ArrowRight className="size-4 text-primary" /></a>
               </div>
             </div>

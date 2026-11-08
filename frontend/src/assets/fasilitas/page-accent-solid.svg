@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="39" height="564" viewBox="0 0 39 564">
+  <!-- Same rectangle sequence and palette as page-accent.png, without its baked-in white fade. -->
+  <g stroke="white" stroke-width="2">
+    <path fill="#ab0a1b" d="M9 0h29v51H9z"/>
+    <path fill="#bbb" d="M-1 26h24v52H-1z"/>
+    <path fill="#878787" d="M9 62h29v52H9z"/>
+    <path fill="#cd091d" d="M-1 98h24v52H-1z"/>
+    <path fill="#ab0a1b" d="M9 134h29v52H9z"/>
+    <path fill="#bbb" d="M-1 170h24v51H-1z"/>
+    <path fill="#878787" d="M9 206h29v52H9z"/>
+    <path fill="#cd091d" d="M-1 242h24v51H-1z"/>
+    <path fill="#ab0a1b" d="M9 278h29v52H9z"/>
+    <path fill="#bbb" d="M-1 314h24v51H-1z"/>
+    <path fill="#878787" d="M9 350h29v52H9z"/>
+    <path fill="#cd091d" d="M-1 386h24v51H-1z"/>
+    <path fill="#ab0a1b" d="M9 422h29v52H9z"/>
+    <path fill="#bbb" d="M-1 458h24v51H-1z"/>
+    <path fill="#878787" d="M9 494h29v52H9z"/>
+    <path fill="#cd091d" d="M-1 529h24v36H-1z"/>
+  </g>
+</svg>

@@ -14,7 +14,7 @@ const PengumumanFilterBar = ({ chip, onChip, query, onQuery, chips = [] }) => {
         type="button"
         onClick={() => onChip(c)}
         aria-pressed={chip === c}
-        className={`min-w-[62px] rounded-full px-3 py-2 text-[11px] font-bold transition-colors ${
+        className={`min-w-[62px] rounded-full px-3 py-2 ${c === 'Semua' ? 'text-[19.4px]' : 'text-[13.86px]'} font-bold leading-[normal] tracking-[.05em] transition-colors ${
           chip === c
             ? 'bg-primary text-white'
             : 'border border-dark-200 text-dark-600 hover:border-primary hover:text-primary'
@@ -32,7 +32,7 @@ const PengumumanFilterBar = ({ chip, onChip, query, onQuery, chips = [] }) => {
         value={query}
         onChange={(e) => onQuery(e.target.value)}
         placeholder={t(pengumumanFilter.searchPlaceholder)}
-        className="min-h-11 w-full scroll-mt-24 rounded-lg border border-dark-200 py-2 pl-8 pr-3 text-xs font-semibold text-dark-900 outline-none transition-colors placeholder:text-dark-600 focus:border-primary sm:w-[220px] lg:scroll-mt-28"
+        className="min-h-11 w-full scroll-mt-24 rounded-lg border border-dark-200 py-2 pl-8 pr-3 text-[16.63px] font-bold leading-[normal] tracking-[.05em] text-dark-900 outline-none transition-colors placeholder:text-dark-600 focus:border-primary sm:w-[220px] lg:scroll-mt-28"
       />
     </label>
   </div>

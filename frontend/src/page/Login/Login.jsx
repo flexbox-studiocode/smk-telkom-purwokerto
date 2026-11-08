@@ -54,7 +54,7 @@ const Login = () => {
   const canSubmit = !submitting && !loading && (!turnstileEnabled || turnstileStatus === TURNSTILE_STATUS.success);
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center bg-dark-50 px-3 py-6 sm:px-4 sm:py-8">
+    <main className="public-site relative flex min-h-screen flex-col items-center justify-center bg-dark-50 px-3 py-6 sm:px-4 sm:py-8">
       <Link
         to="/"
         className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-full border border-primary px-4 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary hover:text-white sm:right-8 sm:top-8"

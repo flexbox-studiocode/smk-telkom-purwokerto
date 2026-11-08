@@ -99,10 +99,13 @@ try {
   assert.equal(guard.ambilCache(messages,'id'),'Indonesian reply');
   assert.equal(guard.ambilCache(messages,'en'),'English reply');
   const originalFetch = globalThis.fetch;
+  const originalDocument = globalThis.document;
   try {
+    globalThis.document = { cookie: 'csrf_token=language-test' };
     const { tanyaStela } = await server.ssrLoadModule('/src/services/stela.js');
     const { jelaskanRekomendasiNextTel } = await server.ssrLoadModule('/src/services/nexttel.js');
     globalThis.fetch = async (_url, options) => {
+      assert.equal(options.headers['x-csrf-token'], 'language-test');
       assert.equal(JSON.parse(options.body).language, 'en');
       return Response.json({reply:'English reply',explanation:'English explanation',strengths:[],learningSuggestions:[]});
     };
@@ -126,6 +129,10 @@ try {
     assert.ok(calls >= 2,'NextTel custom instructions must bypass FAQ and retain provider failover');
     assert.equal(recommendation.penyediaDipakai,'groq');
     assert.equal(JSON.parse(recommendation.teks).explanation,'English recommendation');
-  } finally { globalThis.fetch = originalFetch; }
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (originalDocument === undefined) delete globalThis.document;
+    else globalThis.document = originalDocument;
+  }
   console.log(`English content: ${views} rendered views, ${Object.values(live).flat().length} content records, paragraph/URL preservation, FAQ language and cache separation pass.`);
 } finally { await server.close(); }

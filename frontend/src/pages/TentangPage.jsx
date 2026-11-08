@@ -10,6 +10,7 @@ import TentangVisiMisiSection from '../components/tentang/TentangVisiMisiSection
 import TentangTimelineSection from '../components/tentang/TentangTimelineSection';
 import TentangKepalaSekolahSection from '../components/tentang/TentangKepalaSekolahSection';
 import TentangMetodePembelajaranSection from '../components/tentang/TentangMetodePembelajaranSection';
+import TentangPathwaySection from '../components/tentang/TentangPathwaySection';
 
 const ProfileSekolahPage = () => (
   <MainLayout showOpeningMarquee={false}>
@@ -32,6 +33,9 @@ const ProfileSekolahPage = () => (
       <TentangMetodePembelajaranSection />
     </Reveal>
     <FacilitiesSection variant="profile" />
+    <Reveal>
+      <TentangPathwaySection />
+    </Reveal>
   </MainLayout>
 );
 

@@ -18,7 +18,6 @@ export default defineConfig({
           if (/node_modules\/(framer-motion|motion-dom|motion-utils)\//.test(id.replace(/\\/g, '/'))) return 'motion-vendor';
           if (id.includes('node_modules/gsap/')) return 'gsap-vendor';
           if (id.includes('node_modules/lenis/')) return 'lenis-vendor';
-          if (id.includes('node_modules/@supabase/supabase-js/')) return 'supabase-vendor';
         },
       },
     },

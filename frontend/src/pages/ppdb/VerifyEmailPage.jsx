@@ -74,7 +74,7 @@ const VerifyEmailPage = () => {
     setResending(true);
     setFeedback('');
     try {
-      await resendPpdbVerification(email);
+      await resendPpdbVerification();
       setFeedback('Email verifikasi berhasil dikirim ulang.');
       setSisa(COOLDOWN_SECONDS);
     } catch {

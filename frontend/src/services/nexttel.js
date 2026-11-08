@@ -1,4 +1,4 @@
-import { api } from './apiClient';
+import { apiRequest } from './apiClient';
 
 export const PESAN_NEXTTEL_GAGAL = 'NextTel sedang mengalami kendala. Silakan coba lagi.';
 
@@ -33,11 +33,9 @@ export const hasilFallbackNextTel = (result, language = 'id') => {
 
 const validasiHasil = (data) => data && typeof data.explanation === 'string' && Array.isArray(data.strengths) && data.strengths.every((item) => typeof item === 'string') && Array.isArray(data.learningSuggestions) && data.learningSuggestions.every((item) => typeof item === 'string');
 
-// Dua backend, sama seperti STELA: Edge Function saat Supabase terkonfigurasi,
-// endpoint lokal /api/nexttel saat `npm run dev`. Sebelumnya NextTel hanya
-// punya jalur Edge Function, sehingga tidak bisa dicoba sama sekali tanpa
-// deploy Supabase lebih dulu.
-const alamatNextTel = api.url('/api/ai/nexttel');
+// Backend /api/ai/nexttel adalah satu-satunya jalur penilaian NextTel.
+// Provider AI dan kredensial hanya ada di server, bukan di browser.
+const alamatNextTel = '/api/ai/nexttel';
 
 // import.meta.env.DEV dilipat saat build, jadi cabang lokal hilang dari bundel
 // produksi -- bukan sekadar tidak terpanggil.
@@ -47,15 +45,12 @@ export async function jelaskanRekomendasiNextTel(payload, { signal } = {}) {
   if (!nextTelSiap) throw new Error(PESAN_NEXTTEL_GAGAL);
 
   try {
-    const response = await fetch(alamatNextTel, {
+    const data = await apiRequest(alamatNextTel, {
       method: 'POST',
       signal,
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: payload,
     });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok || !validasiHasil(data)) throw new Error(PESAN_NEXTTEL_GAGAL);
+    if (!validasiHasil(data)) throw new Error(PESAN_NEXTTEL_GAGAL);
     return {
       explanation: data.explanation.trim(),
       strengths: data.strengths.map((item) => item.trim()).filter(Boolean),

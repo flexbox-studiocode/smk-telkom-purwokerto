@@ -59,7 +59,7 @@ export default {
   'Akademik': 'Academic',
   'Lomba': 'Competition',
   'Karier': 'Career',
-  'Tabel kegiatan belum tersedia. Terapkan migration 010_calendar_events.sql pada Supabase.': 'Events are not available yet. Apply migration 010_calendar_events.sql in Supabase.',
+  'Tabel kegiatan belum tersedia. Jalankan migration Prisma pada backend MySQL.': 'Events are not available yet. Apply the Prisma migration on the MySQL backend.',
   'Kegiatan gagal dimuat atau disimpan. Periksa koneksi lalu coba lagi.': 'Events could not be loaded or saved. Check your connection and try again.',
   'Tanggal kegiatan': 'Event date',
   'Waktu': 'Time',

@@ -36,21 +36,21 @@ const JurusanQuizSection = () => {
   return (
     <section id="quiz-jurusan" className="relative bg-white py-8 lg:py-12">
       <SectionAccents variant="departmentsQuiz" />
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 [container-type:inline-size]">
         <div className="grid grid-cols-1 items-center gap-6 rounded-2xl bg-primary/7 p-5 sm:p-6 lg:grid-cols-[1.4fr_1fr_0.8fr] lg:gap-5 lg:p-4 xl:gap-6 xl:p-5">
           {/* Ajakan */}
           <div className="flex min-w-0 items-center gap-4">
             <img src={stelaBot} alt="" aria-hidden="true" width="250" height="250" className="aspect-square h-auto w-24 flex-none rounded-2xl bg-primary object-contain p-4 sm:w-32 sm:p-5 lg:w-36 xl:w-44 xl:p-7" />
             <div className="min-w-0">
-              <h2 className="font-heading text-sm font-extrabold leading-snug text-dark-900 xl:text-base">{t("Belum Tahu Memilih")} <span className="text-primary">{t("Jurusan?")}</span>
+              <h2 className="font-heading text-[clamp(.875rem,1.378cqw,1.5rem)] font-bold leading-normal text-dark-900">{t("Belum Tahu Memilih")} <span className="text-primary">{t("Jurusan?")}</span>
               </h2>
-              <p className="mt-3 text-xs leading-snug text-dark-600">
+              <p className="mt-3 text-[clamp(.75rem,1.148cqw,1.25rem)] font-medium leading-normal text-dark-600">
                 {t(jurusanQuiz.description)}
               </p>
               <button
                 type="button"
                 onClick={() => setStarted(true)}
-                className="mt-5 inline-flex min-h-11 items-center justify-center gap-3 rounded-xl bg-primary px-6 py-3 text-xs font-bold tracking-wider text-white transition-colors hover:bg-primary-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:text-sm"
+                className="mt-5 inline-flex min-h-11 items-center justify-center gap-3 rounded-xl bg-primary px-6 py-3 text-[clamp(.75rem,1.378cqw,1.5rem)] font-semibold tracking-[.12em] text-white transition-colors hover:bg-primary-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
                 {t(jurusanQuiz.ctaText)}
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -70,7 +70,7 @@ const JurusanQuizSection = () => {
                   disabled={!started}
                   aria-pressed={on}
                   onClick={() => toggle(i)}
-                  className={`min-h-11 max-w-full rounded-xl px-5 py-3 text-left text-xs leading-snug text-dark-900 transition-colors disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${i % 2 === 1 ? 'self-end' : ''} ${
+                  className={`min-h-11 max-w-full rounded-xl px-5 py-3 text-left text-[clamp(.75rem,1.148cqw,1.25rem)] font-medium leading-normal text-dark-900 transition-colors disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${i % 2 === 1 ? 'self-end' : ''} ${
                     highlighted
                       ? 'bg-primary/10'
                       : 'bg-white enabled:hover:bg-primary/10'

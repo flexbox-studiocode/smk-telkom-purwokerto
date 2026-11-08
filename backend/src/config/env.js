@@ -7,6 +7,10 @@ const schema = z.object({
   DATABASE_URL: z.string().min(1),
   SESSION_SECRET: z.string().min(32),
   FRONTEND_URL: z.string().url().default('http://localhost:5173'),
+  UPLOAD_ROOT: z.string().optional(),
+  // Absolute public base URL of this backend, used to build media URLs.
+  MEDIA_BASE_URL: z.preprocess((value) => value === '' ? undefined : value, z.string().url().optional()),
+  PUBLIC_STORAGE_URL: z.preprocess((value) => value === '' ? undefined : value, z.string().url().optional()),
 });
 
 export const env = schema.parse(process.env);

@@ -5,9 +5,16 @@ import { optionalAuth, requireAdmin } from '../middleware/auth.js';
 import { asyncHandler, notFound, parsePagination } from '../utils/http.js';
 
 export const eventsRouter = express.Router();
+// Harus sinkron dengan enum `EventCategory` di prisma/schema.prisma.
+export const EVENT_CATEGORIES = [
+  'kegiatan', 'akademik', 'lomba', 'karier', 'lainnya',
+  'awal-pkl', 'penilaian-siswa', 'libur-akhir-semester', 'cuti-bersama',
+  'libur-tahun-pelajaran', 'hari-pertama-sekolah', 'upacara-nasional',
+  'hut-smk', 'libur-ramadhan', 'perkiraan-kelulusan',
+];
 const schema = z.object({
   judul: z.string().trim().min(1).max(180), ringkasan: z.string().max(500).default(''), deskripsi: z.string().max(20000).default(''),
-  kategori: z.enum(['kegiatan', 'akademik', 'lomba', 'karier', 'lainnya']).default('kegiatan'), tanggal_mulai: z.coerce.date(), waktu_mulai: z.string().max(8).nullable().optional(),
+  kategori: z.enum(EVENT_CATEGORIES).default('kegiatan'), tanggal_mulai: z.coerce.date(), waktu_mulai: z.string().max(8).nullable().optional(),
   tanggal_selesai: z.coerce.date().nullable().optional(), waktu_selesai: z.string().max(8).nullable().optional(), lokasi: z.string().max(240).default(''), penyelenggara: z.string().max(160).default(''),
   gambar_url: z.string().url().max(2048).nullable().optional(), link_informasi: z.string().url().max(2048).nullable().optional(), status: z.enum(['draft', 'published']).default('draft'),
 });

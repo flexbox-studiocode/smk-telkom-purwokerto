@@ -56,12 +56,12 @@ export default function CalendarBoard({ events = [] }) {
 
   const eventCard = event => (
     <button type="button" key={event.id} data-calendar-event={event.id} onClick={() => setDetail(event.id)} className="flex w-full items-start gap-3 rounded-xl p-2 text-left transition-colors hover:bg-dark-50 focus-visible:outline-2 focus-visible:outline-primary">
-      <span className={`flex size-10 shrink-0 flex-col items-center justify-center rounded-lg font-heading text-base font-bold ${eventColors(event)}`}><span>{event.date.slice(-2)}</span><span className="text-[9px] font-normal">{formatDate(event.date, { month: 'short' })}</span></span>
+      <span className={`flex size-10 shrink-0 flex-col items-center justify-center rounded-lg font-sans text-xs font-normal leading-[normal] tracking-[.12em] ${eventColors(event)}`}><span>{event.date.slice(-2)}</span><span className="text-[9px] font-medium leading-[normal] tracking-[.12em]">{formatDate(event.date, { month: 'short' })}</span></span>
       <span className="min-w-0 flex-1">
-        <span className="block text-xs font-bold leading-relaxed text-dark-900">{t(event.title)}</span>
+        <span className="block text-xs font-bold leading-[normal] tracking-[.12em] text-dark-900">{t(event.title)}</span>
         <span className="mt-1 block"><EventCategoryLabel category={event.category} /></span>
-        <span className="mt-1 flex items-center gap-1 text-[10px] text-dark-500"><Clock className="size-3 shrink-0" />{t(eventTimeLabel(event))}</span>
-        <span className="mt-1 flex items-start gap-1 text-[10px] text-dark-500"><MapPin className="size-3 shrink-0" />{event.location || t('Belum ditentukan')}</span>
+        <span className="mt-1 flex items-center gap-1 text-[10px] font-bold leading-[normal] tracking-[.12em] text-dark-500"><Clock className="size-3 shrink-0" />{t(eventTimeLabel(event))}</span>
+        <span className="mt-1 flex items-start gap-1 text-[10px] font-bold leading-[normal] tracking-[.12em] text-dark-500"><MapPin className="size-3 shrink-0" />{event.location || t('Belum ditentukan')}</span>
       </span>
       <ChevronRight className="mt-2 size-4 shrink-0 text-dark-400" />
     </button>
@@ -75,8 +75,8 @@ export default function CalendarBoard({ events = [] }) {
       </div>
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-7 text-center">
-          <h2 id="calendar-title" className="font-heading text-2xl font-extrabold text-dark-900 sm:text-3xl"><span className="text-primary">Calendar</span> of Events</h2>
-          <p className="mt-1 text-sm font-semibold text-primary sm:text-base">SMK Telkom Purwokerto</p>
+          <h2 id="calendar-title" className="font-[family-name:var(--font-poppins)] text-2xl font-bold leading-[normal] tracking-[.05em] text-dark-900 sm:text-[38.12px]"><span className="text-primary">Calendar</span> of Events</h2>
+          <p className="mt-1 text-sm font-bold leading-[normal] text-primary sm:text-[22.18px]">SMK Telkom Purwokerto</p>
         </div>
         <div className="grid items-stretch gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
           <div className="min-w-0 rounded-2xl border border-dark-300 bg-white p-3 sm:p-5">
@@ -91,7 +91,7 @@ export default function CalendarBoard({ events = [] }) {
                       const next = event.key === 'Home' ? 'calendar' : event.key === 'End' ? 'list' : mode === 'calendar' ? 'list' : 'calendar';
                       setMode(next); document.getElementById(`calendar-tab-${next}`)?.focus();
                     }}
-                    className={`inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-primary ${mode === value ? 'bg-primary text-white' : 'text-dark-500 hover:bg-dark-50'}`}>
+                    className={`inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 text-[13.86px] font-bold leading-[normal] tracking-[.12em] transition-colors focus-visible:outline-2 focus-visible:outline-primary ${mode === value ? 'bg-primary text-white' : 'text-dark-500 hover:bg-dark-50'}`}>
                     <Icon className="size-4" />{t(label)}
                   </button>
                 ))}
@@ -99,14 +99,14 @@ export default function CalendarBoard({ events = [] }) {
               <div className="flex min-w-0 flex-wrap items-center gap-2">
                 <div className="flex items-center rounded-lg border border-dark-300">
                   <button type="button" onClick={() => changeMonth(-1)} aria-label={t('Bulan sebelumnya')} className="grid size-10 place-items-center rounded-lg text-dark-600 hover:bg-dark-50 focus-visible:outline-2 focus-visible:outline-primary"><ChevronLeft className="size-4" /></button>
-                  <label className="relative flex min-h-10 cursor-pointer items-center gap-1 px-1 text-xs font-semibold text-dark-900 focus-within:rounded focus-within:outline-2 focus-within:outline-primary">
+                  <label className="relative flex min-h-10 cursor-pointer items-center gap-1 px-1 text-xs font-bold leading-[normal] tracking-[.12em] text-dark-900 focus-within:rounded focus-within:outline-2 focus-within:outline-primary">
                     <span aria-live="polite" data-calendar-month>{monthLabel}</span><ChevronDown className="size-3" />
                     <input ref={pickerRef} type="month" min="0100-01" max="9999-12" value={month} onChange={event => chooseMonth(event.target.value)} aria-label={t('Pilih bulan dan tahun')} className="absolute inset-0 w-full cursor-pointer opacity-0" />
                   </label>
                   <button type="button" onClick={() => changeMonth(1)} aria-label={t('Bulan berikutnya')} className="grid size-10 place-items-center rounded-lg text-dark-600 hover:bg-dark-50 focus-visible:outline-2 focus-visible:outline-primary"><ChevronRight className="size-4" /></button>
                 </div>
                 <button type="button" onClick={() => { try { pickerRef.current.showPicker(); } catch { pickerRef.current.focus(); } }} aria-label={t('Pilih bulan dan tahun')} className="hidden size-10 place-items-center rounded-lg border border-dark-300 text-dark-700 sm:grid"><CalendarDays className="size-5" /></button>
-                <button type="button" onClick={() => chooseDate(today)} className="min-h-10 rounded-lg border border-dark-300 px-3 text-xs font-semibold text-dark-900 hover:bg-dark-50 focus-visible:outline-2 focus-visible:outline-primary">{t('Hari ini')}</button>
+                <button type="button" onClick={() => chooseDate(today)} className="min-h-10 rounded-lg border border-dark-300 px-3 text-[13.86px] font-bold leading-[normal] tracking-[.12em] text-dark-900 hover:bg-dark-50 focus-visible:outline-2 focus-visible:outline-primary">{t('Hari ini')}</button>
               </div>
             </div>
             <div id="calendar-panel" role="tabpanel" aria-labelledby={`calendar-tab-${mode}`}>
@@ -117,8 +117,8 @@ export default function CalendarBoard({ events = [] }) {
                     const dayEvents = eventsOnDate(events, cell.key);
                     return <td key={cell.key} className="border border-dark-100 p-0 align-top">
                       <button type="button" data-calendar-date={cell.key} tabIndex={cell.key === focusKey ? 0 : -1} aria-pressed={cell.key === view.selected} aria-current={cell.key === today ? 'date' : undefined} aria-label={`${formatDate(cell.key, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}, ${t('{count} kegiatan', { count: dayEvents.length })}`} aria-description={dayEvents.map(event => `${t(event.title)}: ${t(getEventCategory(event.category).label)}`).join('; ') || undefined} onClick={() => chooseDate(cell.key)} onKeyDown={event => onDateKey(event, cell.key)} className={`flex h-full min-h-14 w-full flex-col gap-1 p-1 text-left transition-colors duration-200 hover:bg-primary-50 focus-visible:relative focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-primary sm:p-2 ${cell.key === view.selected ? 'bg-primary-50' : 'bg-white'} ${cell.inMonth ? 'text-dark-900' : 'text-dark-400'}`}>
-                        <span className={`grid size-5 shrink-0 place-items-center rounded-full text-[10px] font-bold transition-colors sm:text-xs ${cell.key === view.selected ? 'bg-primary text-white' : cell.key === today ? 'bg-primary-100 text-primary' : ''}`}>{cell.day}</span>
-                        {dayEvents.slice(0, 1).map(event => <span key={event.id} title={`${t(event.title)} · ${t(getEventCategory(event.category).label)}`} className={`block w-full min-w-0 rounded py-1 text-[9px] leading-tight sm:px-1 sm:text-[10px] ${eventColors(event)}`}><span className="flex items-start gap-0.5 sm:gap-1"><EventCategoryDot category={event.category} /><span className="font-semibold sm:hidden">{dayEvents.length}</span><span className="hidden min-w-0 break-words font-semibold sm:line-clamp-2">{t(event.title)}</span></span><span className="mt-1 hidden text-[8px] sm:block">{t(eventTimeLabel(event))}</span></span>)}
+                        <span className={`grid size-5 shrink-0 place-items-center rounded-full text-[10px] font-normal leading-[normal] tracking-[.12em] transition-colors sm:text-xs ${cell.key === view.selected ? 'bg-primary text-white' : cell.key === today ? 'bg-primary-100 text-primary' : ''}`}>{cell.day}</span>
+                        {dayEvents.slice(0, 1).map(event => <span key={event.id} title={`${t(event.title)} · ${t(getEventCategory(event.category).label)}`} className={`block w-full min-w-0 rounded py-1 text-[9px] leading-[normal] tracking-[.12em] sm:px-1 sm:text-[10px] ${eventColors(event)}`}><span className="flex items-start gap-0.5 sm:gap-1"><EventCategoryDot category={event.category} /><span className="font-semibold sm:hidden">{dayEvents.length}</span><span className="hidden min-w-0 break-words font-semibold sm:line-clamp-2">{t(event.title)}</span></span><span className="mt-1 hidden text-[8px] font-semibold leading-[normal] tracking-[.12em] sm:block">{t(eventTimeLabel(event))}</span></span>)}
                         {dayEvents.length > 1 && <span className="hidden text-[9px] text-primary sm:block">+{dayEvents.length - 1}</span>}
                       </button>
                     </td>;
@@ -129,14 +129,14 @@ export default function CalendarBoard({ events = [] }) {
               </div>}
             </div>
             <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-primary-50 p-3">
-              <div className="flex min-w-0 flex-1 items-start gap-3"><span className="grid size-8 shrink-0 place-items-center rounded-full bg-white text-primary"><Megaphone className="size-4" /></span><div><h3 className="text-xs font-bold text-dark-600">{t('Jangan lewatkan setiap kesempatan!')}</h3><p className="mt-1 text-[10px] leading-relaxed text-dark-500">{t('Ikuti berbagai kegiatan menarik yang bisa menambah pengalaman dan prestasimu di SMK Telkom Purwokerto.')}</p></div></div>
-              <button type="button" onClick={allEvents} className="min-h-9 text-[10px] font-semibold text-primary hover:underline focus-visible:outline-2 focus-visible:outline-primary">{t('Lihat Semua Agenda')}</button>
+              <div className="flex min-w-0 flex-1 items-start gap-3"><span className="grid size-8 shrink-0 place-items-center rounded-full bg-white text-primary"><Megaphone className="size-4" /></span><div><h3 className="text-xs font-bold leading-[normal] tracking-[.12em] text-dark-600">{t('Jangan lewatkan setiap kesempatan!')}</h3><p className="mt-1 text-[10px] font-bold leading-[normal] tracking-[.12em] text-dark-500">{t('Ikuti berbagai kegiatan menarik yang bisa menambah pengalaman dan prestasimu di SMK Telkom Purwokerto.')}</p></div></div>
+              <button type="button" onClick={allEvents} className="min-h-9 text-[10px] font-bold leading-[normal] tracking-[.12em] text-primary hover:underline focus-visible:outline-2 focus-visible:outline-primary">{t('Lihat Semua Agenda')}</button>
             </div>
             <EventCategoryLegend />
           </div>
           <aside className="flex min-w-0 flex-col gap-3" aria-label={t('Agenda Terdekat')}>
             <div className="flex-1 rounded-2xl border border-dark-300 bg-white p-3">
-              <div className="flex items-center justify-between gap-2"><h3 className="flex items-center gap-2 text-xs font-bold text-dark-900"><span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary text-white"><CalendarDays className="size-4" /></span>{view.selected ? t('Agenda pada {date}', { date: formatDate(view.selected, { day: 'numeric', month: 'short' }) }) : t('Agenda Terdekat')}</h3><button type="button" onClick={allEvents} className="min-h-9 shrink-0 text-[9px] font-semibold text-primary hover:underline">{t('Lihat Semua')}<ArrowRight className="ml-1 inline size-3" /></button></div>
+              <div className="flex items-center justify-between gap-2"><h3 className="flex items-center gap-2 text-xs font-bold leading-[normal] tracking-[.12em] text-dark-900"><span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary text-white"><CalendarDays className="size-4" /></span>{view.selected ? t('Agenda pada {date}', { date: formatDate(view.selected, { day: 'numeric', month: 'short' }) }) : t('Agenda Terdekat')}</h3><button type="button" onClick={allEvents} className="min-h-9 shrink-0 text-[9px] font-bold leading-[normal] tracking-[.12em] text-primary hover:underline">{t('Lihat Semua')}<ArrowRight className="ml-1 inline size-3" /></button></div>
               {agenda.length ? <ul className="mt-4 space-y-3">{agenda.map(event => <li key={event.id}>{eventCard(event)}</li>)}</ul> : <p role="status" className="py-10 text-center text-xs leading-relaxed text-dark-500">{t(view.selected ? 'Belum ada kegiatan pada tanggal ini.' : 'Belum ada agenda mendatang.')}</p>}
             </div>
           </aside>

@@ -26,6 +26,16 @@ enum EventCategory {
   lomba
   karier
   lainnya
+  awal_pkl             @map("awal-pkl")
+  penilaian_siswa      @map("penilaian-siswa")
+  libur_akhir_semester @map("libur-akhir-semester")
+  cuti_bersama         @map("cuti-bersama")
+  libur_tahun_pelajaran @map("libur-tahun-pelajaran")
+  hari_pertama_sekolah @map("hari-pertama-sekolah")
+  upacara_nasional     @map("upacara-nasional")
+  hut_smk              @map("hut-smk")
+  libur_ramadhan       @map("libur-ramadhan")
+  perkiraan_kelulusan  @map("perkiraan-kelulusan")
 }
 enum SpmbKind {
   jadwal
@@ -247,7 +257,7 @@ model SiteSettings {
   academicYear String   @map("academic_year") @db.Char(9)
   spmbOpen     Boolean  @default(true) @map("spmb_open")
   newsPageSize Int      @map("news_page_size")
-  revision     BigInt   @default(1)
+  revision     Int      @default(1)
   updatedAt    DateTime @updatedAt @map("updated_at")
   @@map("site_settings")
 }

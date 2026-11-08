@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { slugify } from '../../utils/slug';
 import SectionAccents from '../SectionAccents';
 import TeacherCard from '../TeacherCard';
+import TeacherCardBorder from '../TeacherCardBorder';
 import useSlidingPage from '../../hooks/useSlidingPage';
 import { kepalaSekolah } from '../../data/dummyData';
 import { schoolTeacherData as guruData } from '../../data/schoolTeacherData';
@@ -13,12 +14,12 @@ const subscribeViewport = (notify) => {
   window.addEventListener('resize', notify);
   return () => window.removeEventListener('resize', notify);
 };
-const getPageSize = () => window.innerWidth >= 1280 ? 4 : window.innerWidth >= 400 ? 2 : 1;
+const getPageSize = () => window.innerWidth >= 1280 ? 8 : window.innerWidth >= 1024 ? 6 : window.innerWidth >= 640 ? 4 : window.innerWidth >= 400 ? 2 : 1;
 
 const TentangKepalaSekolahSection = () => {
   const { t } = useLanguage();
   const [page, setPage] = useState(0);
-  const perPage = useSyncExternalStore(subscribeViewport, getPageSize, () => 4);
+  const perPage = useSyncExternalStore(subscribeViewport, getPageSize, () => 8);
 
   const pages = Math.ceil(guruData.length / perPage);
   // Ketika viewport membesar, halaman terakhir tetap dibatasi ke rentang yang ada.
@@ -33,18 +34,21 @@ const TentangKepalaSekolahSection = () => {
 
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-stretch gap-6 px-4 sm:px-6 lg:grid-cols-[minmax(0,38%)_minmax(0,1fr)] lg:px-8 min-[1660px]:max-w-[1621px] min-[1660px]:grid-cols-[610px_964px] min-[1660px]:gap-[47px] min-[1660px]:px-0">
         {/* Kepala Sekolah */}
-        <div className="flex min-w-0 flex-col rounded-2xl border border-dark-100 bg-white p-5 shadow-card sm:p-6 min-[1660px]:rounded-[20px] min-[1660px]:border-0 min-[1660px]:bg-[#fffdfd]">
+        <div data-principal-profile className="flex min-w-0 flex-col rounded-2xl border border-dark-100 bg-white p-5 shadow-card sm:p-6 min-[1660px]:rounded-[20px] min-[1660px]:border-0 min-[1660px]:bg-[#fffdfd]">
           <h2 className="font-heading text-base font-extrabold text-primary min-[1660px]:text-[32px] min-[1660px]:leading-[40px]">{t("Kepala Sekolah")} </h2>
           <div className="mt-5 flex flex-1 flex-col justify-center gap-6">
-            <figure className="mx-auto grid w-full min-w-0 max-w-44 items-center gap-4 min-[400px]:max-w-none min-[400px]:grid-cols-[128px_minmax(0,1fr)] lg:grid-cols-[144px_minmax(0,1fr)] min-[1660px]:grid-cols-[176px_minmax(0,1fr)]">
+            <figure className="mx-auto flex w-full min-w-0 flex-col items-center gap-4">
+              <div className="relative isolate w-48 max-w-full p-[2%] sm:w-56 min-[1660px]:w-80">
               <img
                 src={kepalaSekolah.image}
                 alt={t(kepalaSekolah.name)}
                 loading="lazy"
                 decoding="async"
-                className="aspect-[3/4] w-full rounded-xl bg-dark-50 object-contain p-1"
+                className="aspect-[3/4] w-full bg-dark-50 object-contain p-1"
               />
-              <figcaption className="[overflow-wrap:anywhere]">
+              <TeacherCardBorder />
+              </div>
+              <figcaption className="w-full text-center [overflow-wrap:anywhere]">
                 <p className="font-heading text-base font-bold leading-snug text-primary min-[1660px]:text-lg">{t(kepalaSekolah.name)}</p>
                 <p className="mt-1 text-xs leading-relaxed text-dark-500">{t(kepalaSekolah.title)}</p>
               </figcaption>
@@ -63,15 +67,15 @@ const TentangKepalaSekolahSection = () => {
           <h2 className="min-w-0 font-heading text-base font-extrabold text-primary min-[1660px]:text-[32px] min-[1660px]:leading-[40px]">{t("Guru & Tenaga Pendidik")} </h2>
           <p className="mt-2 text-[11px] leading-relaxed text-dark-500">{t("Mata pelajaran mengikuti informasi terbaru; jabatan organisasi mengacu pada SK Pengawakan 2026/2027.")} </p>
 
-          <div ref={viewportRef} data-sliding-page className="relative mt-4 overflow-x-clip">
-          <div className="grid grid-cols-1 gap-4 min-[400px]:grid-cols-2 xl:grid-cols-4 min-[1660px]:gap-5">
-            {shown.map((guru, i) => (
+          <div ref={viewportRef} data-sliding-page className="relative mt-4 min-h-0! overflow-x-clip">
+          <div data-profile-teacher-grid className="grid [&_.teacher-card-description]:min-h-0! grid-cols-1 gap-4 min-[400px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-[1660px]:gap-5">
+            {shown.map((guru) => (
               <Link
                 key={guru.nama}
                 to={`/profil-sekolah/guru/${slugify(guru.nama)}?from=profil-sekolah`}
                 className="block min-w-0 rounded-xl transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary motion-reduce:transform-none"
               >
-                <TeacherCard teacher={guru} name={t(guru.nama)} role={t(guru.jabatan)} alt={guru.nama} loading={i < 4 ? 'eager' : 'lazy'}>
+                <TeacherCard teacher={guru} name={t(guru.nama)} role={t(guru.jabatan)} alt={guru.nama} loading="eager">
                   {guru.bidang && <p className="text-[11px] leading-relaxed text-dark-500">{t(guru.bidang)}</p>}
                 </TeacherCard>
               </Link>
@@ -81,8 +85,9 @@ const TentangKepalaSekolahSection = () => {
           <span className="sr-only" aria-live="polite">{t('Halaman {page} dari {total}', { page: currentPage + 1, total: pages })}</span>
 
           {/* Indikator carousel — hanya muncul kalau gurunya lebih dari satu halaman */}
+          <div className="mt-2 flex min-w-0 flex-col items-center justify-center gap-3 sm:flex-row">
           {pages > 1 && (
-          <div className="mt-5 flex items-center justify-center gap-2">
+          <div data-profile-teacher-pagination className="flex w-full min-w-0 items-center justify-center gap-2 sm:w-auto">
             <button
               type="button"
               onClick={() => goToPage(currentPage - 1)}
@@ -114,7 +119,7 @@ const TentangKepalaSekolahSection = () => {
             ><ChevronRight className="h-5 w-5" aria-hidden="true" /></button>
           </div>
           )}
-          <div className="mt-4 flex min-w-0 justify-center">
+          <div className="flex min-w-0 justify-center">
             <Link
               to="/profil-sekolah/guru"
               className="inline-flex max-w-full items-center gap-2 rounded-full border border-dark-200 bg-white px-4 py-2.5 text-xs font-semibold text-dark-700 transition-colors hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
@@ -122,6 +127,7 @@ const TentangKepalaSekolahSection = () => {
               {t("Lihat semua profil guru")}
               <ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
             </Link>
+          </div>
           </div>
         </div>
       </div>

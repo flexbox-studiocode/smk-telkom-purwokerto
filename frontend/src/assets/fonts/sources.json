@@ -3,6 +3,20 @@
   "api": "https://fonts.googleapis.com/css2",
   "files": [
     {
+      "file": "arimo-v36-latin.woff2",
+      "source": "https://fonts.gstatic.com/s/arimo/v36/P5sMzZCDf9_T_10ZxCE.woff2",
+      "retrieved": "2026-11-06",
+      "bytes": 20132,
+      "sha256": "6a22ce0b2709c7e856a8bd9bbf31b0f7695caeeeb03915b0212d6d959e9bc1b9"
+    },
+    {
+      "file": "arimo-v36-latin-bold-italic.woff2",
+      "source": "https://fonts.gstatic.com/s/arimo/v36/P5sdzZCDf9_T_10c3i9MeUcyat4iJY9jQyrDfQY.woff2",
+      "retrieved": "2026-11-06",
+      "bytes": 12392,
+      "sha256": "585caa2d533eff8554785869fc41a802a6865c243a83e1b5d210eb18125c032a"
+    },
+    {
       "file": "inter-v20-UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7SUc.woff2",
       "source": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7SUc.woff2",
       "bytes": 25960,

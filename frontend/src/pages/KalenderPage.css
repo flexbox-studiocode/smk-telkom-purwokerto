@@ -11,6 +11,10 @@
   object-fit: cover;
   object-position: right bottom;
 }
+[data-event-legend] li > span {
+  line-height: normal;
+  letter-spacing: .12em;
+}
 .hero-calendar-art { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; }
 .calendar-hero-building { position: absolute; inset-block: 0; right: 0; width: 100%; opacity: .2; overflow: hidden; mask-image: linear-gradient(to right, transparent, black 30%); }
 .calendar-hero-building img { position: absolute; width: 107.49%; max-width: none; left: -2%; top: -3.68%; }

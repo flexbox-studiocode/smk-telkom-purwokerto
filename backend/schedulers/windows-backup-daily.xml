@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<!--
+  TEMPLATE Task Scheduler. JANGAN diimpor langsung: ganti placeholder berikut,
+  atau (disarankan) jalankan install-windows-task.ps1 yang mengisinya otomatis:
+    __CMD_EXE__      contoh: C:\Windows\System32\cmd.exe
+    __NODE_EXE__     contoh: C:\Program Files\nodejs\node.exe
+    __BACKEND_DIR__  path absolut folder backend (berisi scripts\backup.mjs)
+    __TIME__         contoh: 02:00 (WIB)
+-->
+<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Description>SMK Telkom Purwokerto - Daily encrypted MySQL + uploads backup at __TIME__ WIB (Asia/Jakarta, UTC+7).</Description>
+  </RegistrationInfo>
+  <Triggers>
+    <CalendarTrigger>
+      <StartBoundary>2026-01-01T__TIME__:00+07:00</StartBoundary>
+      <ScheduleByDay>
+        <DaysInterval>1</DaysInterval>
+      </ScheduleByDay>
+    </CalendarTrigger>
+  </Triggers>
+  <Settings>
+    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <AllowHardTerminate>true</AllowHardTerminate>
+    <StartWhenAvailable>true</StartWhenAvailable>
+    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>
+    <Enabled>true</Enabled>
+    <ExecutionTimeLimit>PT1H</ExecutionTimeLimit>
+    <Priority>7</Priority>
+  </Settings>
+  <Actions>
+    <Exec>
+      <Command>__CMD_EXE__</Command>
+      <Arguments>/c schedulers\run-backup.cmd "__NODE_EXE__"</Arguments>
+      <WorkingDirectory>__BACKEND_DIR__</WorkingDirectory>
+    </Exec>
+  </Actions>
+</Task>

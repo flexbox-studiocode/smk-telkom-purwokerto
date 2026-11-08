@@ -12,7 +12,7 @@ const BkkAlumniSection = () => {
     <div className="max-w-7xl mx-auto grid grid-cols-1 gap-5 px-4 sm:px-6 lg:grid-cols-[1fr_26%] lg:px-8">
       {/* Testimoni alumni */}
       <div className="rounded-2xl border border-dark-100 bg-white p-5 shadow-card">
-        <h2 className="font-heading text-base font-extrabold text-dark-900">{t(kisahAlumni.title)}</h2>
+        <h2 className="font-heading text-[22.18px] font-extrabold leading-[normal] tracking-[.05em] text-dark-900">{t(kisahAlumni.title)}</h2>
 
         <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
           {kisahAlumni.items.map((alum) => (
@@ -23,12 +23,12 @@ const BkkAlumniSection = () => {
               <div className="flex items-center gap-3">
                 <ContentImage src={alum.image} alt={alum.name} loading="lazy" className="h-12 w-12 flex-shrink-0 rounded-full object-cover" />
                 <figcaption className="min-w-0">
-                  <p className="font-heading text-xs font-bold text-dark-900">{alum.name}</p>
-                  <p className="mt-1 text-[10px] text-dark-500">{t(alum.meta)}</p>
-                  <p className="text-[10px] text-dark-500">{t(alum.role)}</p>
+                  <p className="font-heading text-[16.63px] font-extrabold leading-[normal] tracking-[.05em] text-dark-900">{alum.name}</p>
+                  <p className="mt-1 text-[13.86px] font-semibold leading-[normal] tracking-[.05em] text-dark-500">{t(alum.meta)}</p>
+                  <p className="text-[12.47px] font-semibold leading-[normal] tracking-[.05em] text-dark-500">{t(alum.role)}</p>
                 </figcaption>
               </div>
-              <p className="mt-3 text-[11px] leading-relaxed text-dark-600">{t(alum.summary)}</p>
+              <p className="mt-3 text-[12.47px] font-semibold leading-[normal] tracking-[.05em] text-dark-600">{t(alum.summary)}</p>
             </figure>
           ))}
         </div>
@@ -41,12 +41,12 @@ const BkkAlumniSection = () => {
             <li key={item}>
               <Link
                 to={`/bkk/panduan/${slugify(item)}`}
-                className="group flex items-center gap-3 py-1.5 text-xs text-dark-600 transition-colors hover:text-primary"
+                className="group flex items-center gap-3 py-1.5 text-[10.4px] font-bold leading-[normal] tracking-[.05em] text-dark-600 transition-colors hover:text-primary"
               >
                 <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-primary/30">
                   <Lightbulb className="h-3.5 w-3.5 text-primary" />
                 </span>
-                <span className="min-w-0 leading-relaxed">{t(item)}</span>
+                <span className="min-w-0 leading-[normal]">{t(item)}</span>
               </Link>
             </li>
           ))}

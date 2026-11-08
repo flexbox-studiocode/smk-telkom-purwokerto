@@ -29,7 +29,7 @@ export default function SchoolAgendaSection({ events = [] }) {
   const date = key => new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(dateFromKey(key));
   return <section id="agenda-sekolah" aria-labelledby="school-agenda-title" className="bg-white py-10 lg:py-14">
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <Reveal className="mb-8 text-center"><h2 id="school-agenda-title" className="font-heading text-2xl font-extrabold text-dark-900 sm:text-3xl"><span className="text-primary">{t('Agenda')}</span> {t('Sekolah')}</h2></Reveal>
+      <Reveal className="mb-8 text-center"><h2 id="school-agenda-title" className="font-[family-name:var(--font-poppins)] text-2xl font-bold leading-[normal] tracking-[.05em] text-dark-900 sm:text-[38.12px]"><span className="text-primary">{t('Agenda')}</span> {t('Sekolah')}</h2></Reveal>
       {agenda.length ? <div className="grid auto-rows-fr items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {agenda.map((event, index) => <Reveal key={event.id} as="article" className={`min-w-0 ${['motion-safe:delay-0', 'motion-safe:delay-100', 'motion-safe:delay-200'][index]}`}>
           <button type="button" data-school-agenda-event={event.id} onClick={() => setDetail(event.id)} aria-label={t('Lihat detail {title}', { title: t(event.title) })} className="flex h-full w-full flex-col rounded-2xl text-left hover:shadow-card focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary motion-safe:transition-[transform,box-shadow] motion-safe:duration-200 motion-safe:hover:-translate-y-1">

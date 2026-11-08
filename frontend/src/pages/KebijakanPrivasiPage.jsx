@@ -42,7 +42,7 @@ const privacySections = {
     {
       title: '4. Layanan Pihak Ketiga',
       paragraphs: [
-        'Portal web kami menggunakan layanan pihak ketiga untuk operasional, termasuk Supabase sebagai penyedia database dan autentikasi, serta Cloudflare Turnstile sebagai layanan verifikasi keamanan anti-bot pada halaman login administrator dan portal SPMB.',
+        'Portal web kami menggunakan layanan pihak ketiga untuk operasional, termasuk Cloudflare Turnstile sebagai layanan verifikasi keamanan anti-bot pada halaman login administrator dan portal SPMB. Data operasional disimpan pada database MySQL yang dikelola sekolah; cadangan terenkripsi disimpan pada layanan penyimpanan eksternal.',
         'Website kami juga dapat menggunakan cookies untuk menyimpan preferensi sesi pengguna dan mengoptimalkan pengalaman navigasi web. Pengguna memiliki opsi untuk mematikan cookies melalui pengaturan peramban masing-masing.',
       ],
     },
@@ -96,7 +96,7 @@ const privacySections = {
     {
       title: '4. Third-Party Services',
       paragraphs: [
-        'Our web portal uses third-party services for operations, including Supabase as a database and authentication provider, and Cloudflare Turnstile as a security verification service for the administrator login page and SPMB portal.',
+        'Our web portal uses third-party services for operations, including Cloudflare Turnstile as a security verification service for the administrator login page and SPMB portal. Operational data is stored on a MySQL database managed by the school; encrypted backups are kept on an external storage service.',
         'Our website may also use cookies to store user session preferences and optimize the web navigation experience. Users have the option to disable cookies through their respective browser settings.',
       ],
     },

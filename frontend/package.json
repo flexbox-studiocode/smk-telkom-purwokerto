@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "animasi:uji": "node scripts/uji-animasi.mjs",
     "hero:uji": "node scripts/uji-floating-hero-structure.mjs",
+    "bahasa:halaman": "node scripts/uji-bahasa-halaman.mjs",
     "bahasa:uji": "node scripts/uji-bahasa.mjs && node scripts/uji-bahasa-portal.mjs && node scripts/uji-bahasa-konten.mjs",
     "preview": "vite preview",
     "stela:konten": "node scripts/buat-konten-stela.mjs",
@@ -35,7 +36,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.111.0",
     "@tailwindcss/vite": "^4.3.3",
     "@tiptap/extension-table": "^3.32.2",
     "@tiptap/extension-text-align": "^3.32.2",

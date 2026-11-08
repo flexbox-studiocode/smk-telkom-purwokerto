@@ -19,3 +19,8 @@
   transition: transform 320ms cubic-bezier(.22, 1, .36, 1), opacity 320ms ease;
 }
 .faq-toggle[data-open='true'] .faq-toggle-vertical { transform: rotate(90deg); opacity: 0; }
+
+.jurusan-faq-listing > div { container-type: inline-size; }
+.jurusan-faq-listing > div > div > h2 { font-family: var(--font-jakarta); font-size: clamp(1.5rem, 2.755cqw, 3rem); font-weight: 800; letter-spacing: .05em; line-height: normal; }
+.jurusan-faq-listing h3 button > span:first-child { font-family: var(--font-jakarta); font-size: clamp(.875rem, 1.665cqw, 1.8125rem); font-weight: 500; letter-spacing: .05em; line-height: normal; }
+.jurusan-faq-listing > div > div > a { font-family: var(--font-jakarta); font-size: clamp(.875rem, 2.067cqw, 2.25rem); font-weight: 500; letter-spacing: .05em; line-height: normal; }

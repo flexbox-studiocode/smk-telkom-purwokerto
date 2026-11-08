@@ -14,15 +14,17 @@ import { buatPenjaga } from '../supabase/functions/stela/penjaga-biaya.mjs';
 import { hitungHasilNextTel } from '../supabase/functions/nexttel/scoring.mjs';
 import { jelaskanHasilNextTel } from '../supabase/functions/nexttel/inti.mjs';
 
-// Menyediakan POST /api/stela selama `npm run dev`, supaya STELA bisa diajak
-// bicara tanpa perlu punya proyek Supabase dan tanpa deploy Edge Function.
+// Plugin pengembangan lokal (opsional). Frontend produksi memanggil backend
+// /api/ai/stela dan /api/ai/nexttel -- lihat src/services/stela.js dan
+// src/services/nexttel.js. Endpoint /api/stela dan /api/nexttel di bawah ini
+// hanya berguna untuk bereksperimen dengan prompt/model tanpa menjalankan
+// backend, dan membaca kunci API dari proses Node dev server (bukan bundel
+// browser). Tidak ada koneksi Supabase saat runtime.
 //
 // Kuncinya: berkas ini hanya berjalan di proses Node milik dev server, tidak
 // pernah ikut ke bundel browser. Kunci API dibaca di sini dan tidak pernah
 // menyeberang ke sisi klien. Karena itu kuncinya TIDAK boleh diberi awalan
 // VITE_ -- awalan itu justru membuat Vite menyuntikkannya ke browser.
-//
-// Di produksi endpoint ini tidak ada; yang dipakai Edge Function Supabase.
 
 // Plafon harian mode lokal sengaja jauh lebih ketat daripada produksi. Sumber
 // pemborosan terbesar saat mengembangkan bukan pengunjung, melainkan loop tak

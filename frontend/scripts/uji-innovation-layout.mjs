@@ -15,10 +15,10 @@ try {
   const sections = main.childNodes.filter(node => node.tagName === 'section');
   const innovation = sections.findIndex(node => attr(node, 'data-innovation-reveal') !== undefined);
   const about = sections.findIndex(node => attr(node, 'id') === 'tentang');
-  const stela = sections.findIndex(node => attr(node, 'id') === 'stela');
+  const nexa = sections.findIndex(node => attr(node, 'id') === 'nexa');
   assert.ok(innovation > about, 'Innovation follows the main homepage content.');
-  assert.equal(innovation + 1, stela, 'Innovation sits immediately before STELA, as in Figma.');
-  console.log('Innovation layout: bottom content position before STELA passed.');
+  assert.equal(innovation + 1, nexa, 'Innovation sits immediately before NEXA, as in Figma.');
+  console.log('Innovation layout: bottom content position before NEXA passed.');
 } finally {
   await server.close();
 }

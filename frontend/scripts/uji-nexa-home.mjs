@@ -15,7 +15,7 @@ try {
   assert.equal(formatStelaPublicText('https://example.test/stela /api/stela stela_history'), 'https://example.test/stela /api/stela stela_history');
   const render = async (module, language, props = {}) => {
     const { default: Component } = await server.ssrLoadModule(`/src/${module}.jsx`);
-    return renderToStaticMarkup(h(LanguageContext.Provider, { value: { language, t: text => translate(text, language) } }, h(MemoryRouter, null, h(Component, props))));
+    return renderToStaticMarkup(h(LanguageContext.Provider, { value: { language, locale: language === 'en' ? 'en-US' : 'id-ID', t: text => translate(text, language) } }, h(MemoryRouter, null, h(Component, props))));
   };
   for (const language of ['id', 'en']) {
     const banner = await render('components/StelaAISection', language);
@@ -37,7 +37,7 @@ try {
     assert.match(faq, /href="\/jurusan\/faq"/);
     assert.match(faq, /href="\/nexa"/);
     const stats = await render('components/HomeStatistics', language);
-    for (const number of ['1030+', '57+', '59+', '45+']) assert.ok(stats.includes(number));
+    for (const number of [language === 'en' ? '1,030+' : '1.030+', '57+', '59+', '45+']) assert.ok(stats.includes(number));
     const cta = await render('components/CTASection', language, { href: '/custom-admissions' });
     assert.match(cta, /href="\/custom-admissions"/);
     assert.match(cta, /spmb-target.svg/);

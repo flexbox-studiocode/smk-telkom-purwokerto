@@ -1,6 +1,6 @@
 import { useLanguage } from '../../context/LanguageContext';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import FormInput from '../../components/dashboard/FormInput';
 import PpdbAuthLayout from '../../components/ppdb/PpdbAuthLayout';
 import { usePpdb } from '../../context/PpdbContext';
@@ -8,7 +8,9 @@ import { signOutPpdb, updatePpdbPassword } from '../../services/ppdbService';
 
 const AturSandiPage = () => {
   const { t } = useLanguage();
-  const { currentUser, authLoading } = usePpdb();
+  const { authLoading } = usePpdb();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token') || '';
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
   const [saving, setSaving] = useState(false);
@@ -24,7 +26,7 @@ const AturSandiPage = () => {
     setSaving(true);
     setError('');
     try {
-      await updatePpdbPassword(password);
+      await updatePpdbPassword(password, token);
       setSuccess(true);
       try {
         await signOutPpdb();
@@ -46,7 +48,7 @@ const AturSandiPage = () => {
           <div className="mt-6 space-y-2 text-sm"><p role="status" className="text-green-700">{t("Kata sandi diperbarui.")} <Link to="/spmb/masuk" className="font-bold underline">{t("Masuk kembali")}</Link> {t("dengan kata sandi baru.")}</p>{error && <p role="alert" className="text-primary">{t(error)}</p>}</div>
         ) : authLoading ? (
           <p className="mt-6 text-sm text-dark-500">{t("Memeriksa tautan pemulihan...")}</p>
-        ) : !currentUser ? (
+        ) : !token ? (
           <p role="alert" className="mt-6 text-sm text-dark-600">{t("Tautan tidak valid atau sudah kedaluwarsa.")} <Link to="/lupa-sandi" className="font-bold text-primary underline">{t("Minta tautan baru")}</Link>.</p>
         ) : (
           <form onSubmit={simpan} className="mt-6 space-y-5">

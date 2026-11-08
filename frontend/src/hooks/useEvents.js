@@ -16,7 +16,7 @@ export default function useEvents(published = false, initialItems) {
     } finally { if (!controller.signal.aborted) setLoading(false); }
   }, [published]);
   useEffect(() => {
-    // Initial fetch synchronizes this view with the external Supabase store.
+    // Initial fetch synchronizes this view with the backend store.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void refresh();
     const update = () => { if (document.visibilityState === 'visible') void refresh(true); };

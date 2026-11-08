@@ -25,13 +25,13 @@ const LinkColumn = ({ title, links }) => {
   const { t } = useLanguage();
   return (
   <div className="min-w-0">
-    <h2 className="font-heading text-xs font-bold text-dark-900">{t(title)}</h2>
-    <ul className="mt-3 space-y-2 text-[11px] leading-relaxed">
+    <h2 className="footer-link-heading text-dark-900">{t(title)}</h2>
+    <ul className="footer-link-list mt-3 space-y-2">
       {links.map((link) => (
         <li key={link.label}>
           <Link
             to={link.href}
-            className="text-[11px] text-dark-500 transition-colors hover:text-primary"
+            className="text-dark-500 transition-colors hover:text-primary"
           >
             {t(link.label)}
           </Link>
@@ -68,11 +68,11 @@ const Footer = () => {
           <div className="col-span-2 lg:col-span-1">
             <a href={settings?.website || '/'} className="flex items-center gap-3">
               <Logo className="h-11 w-11" />
-              <span className="font-heading text-base font-extrabold leading-[1.15] text-dark-900">
+              <span className="footer-brand-name text-dark-900">
                 {settings?.school_name || <>SMK Telkom<br />Purwokerto</>}
               </span>
             </a>
-            <p className="mt-3 leading-relaxed text-dark-500 max-w-xs text-[11px]">
+            <p className="footer-tagline mt-3 text-dark-500 max-w-xs">
               {t(footerData.tagline)}
             </p>
             <div className="mt-4 flex items-center gap-3">
@@ -94,7 +94,7 @@ const Footer = () => {
             </div>
 
             <div className="mt-4 max-w-[280px]">
-              <h2 className="font-heading text-xs font-bold text-dark-900">Supported by:</h2>
+              <h2 className="footer-link-heading text-dark-900">Supported by:</h2>
               <div className="mt-3 flex items-center gap-3">
                 <img
                   src={flexboxLogo}
@@ -121,8 +121,8 @@ const Footer = () => {
 
           {/* Kontak */}
           <div className="footer-contact col-span-2 min-w-0 [overflow-wrap:anywhere] lg:col-span-1">
-            <h2 className="font-heading text-xs font-bold text-dark-900">{t('Kontak')}</h2>
-            <ul className="mt-3 space-y-2 text-dark-500 text-[11px]">
+            <h2 className="footer-link-heading text-dark-900">{t('Kontak')}</h2>
+            <ul className="footer-contact-list mt-3 space-y-2 text-dark-500">
               <li className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-3 w-3 flex-shrink-0" />
                 {t(footerData.kontak.address)}

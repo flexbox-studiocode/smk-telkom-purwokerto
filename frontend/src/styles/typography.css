@@ -1,0 +1,45 @@
+.public-site {
+  --font-sans: var(--font-jakarta);
+  --font-heading: var(--font-jakarta);
+  font-family: var(--font-jakarta);
+}
+
+.site-navbar > nav, .site-footer .footer-content, .footer-bottom-bar > div { container-type: inline-size; }
+.site-navbar .navbar-link { font-size: clamp(.75rem, 1.148cqw, 1.25rem); font-weight: 600; line-height: normal; letter-spacing: var(--tracking-figma-copy); }
+.site-navbar .navbar-cta { font-size: clamp(.875rem, 1.378cqw, 1.5rem); font-weight: 600; line-height: normal; letter-spacing: var(--tracking-figma-copy); }
+.site-navbar .language-toggle { font-size: clamp(.75rem, 1.378cqw, 1.5rem); font-weight: 500; line-height: normal; letter-spacing: .01em; }
+.site-navbar .navbar-dropdown-enter a { font-family: var(--font-jakarta); }
+.site-navbar #mobile-nav :is(a, button) { font-weight: 600; line-height: normal; letter-spacing: var(--tracking-figma-copy); }
+
+/* Keep longer English labels inside the existing desktop navigation. */
+@media (min-width: 72rem) and (max-width: 89.999rem) {
+  .site-navbar .navbar-link { font-size: clamp(.75rem, 1.148cqw, .8125rem); }
+  .site-navbar .navbar-cta { font-size: .875rem; }
+  .site-navbar .language-toggle { font-size: .75rem; }
+}
+@media (min-width: 72rem) and (max-width: 79.999rem) {
+  .site-navbar .navbar-link { font-size: .75rem; letter-spacing: var(--tracking-figma-heading); }
+  .site-navbar .navbar-cta { letter-spacing: var(--tracking-figma-label); }
+}
+
+.site-footer .footer-brand-name { font-family: var(--font-jakarta); font-size: clamp(1rem, 2.172cqw, 2.25rem); font-weight: 800; line-height: normal; letter-spacing: var(--tracking-figma-heading); }
+.site-footer .footer-link-heading { font-family: var(--font-jakarta); font-size: clamp(.875rem, 1.207cqw, 1.25rem); font-weight: 800; line-height: normal; }
+.site-footer .footer-link-list, .site-footer .footer-link-list a, .site-footer .footer-contact-list, .site-footer .footer-tagline { font-size: clamp(.75rem, .966cqw, 1rem); font-weight: 500; line-height: 1.5625; }
+.footer-bottom-bar > div > * { font-size: clamp(.6875rem, .966cqw, 1rem); font-weight: 400; line-height: normal; }
+
+.figma-cta { container-type: inline-size; }
+.figma-cta h2 { font-size: clamp(1.125rem, 2.365cqw, 2.25rem); font-weight: 700; line-height: normal; }
+.figma-cta p { font-size: clamp(.875rem, 1.314cqw, 1.25rem); font-weight: 700; line-height: normal; }
+.figma-cta > div > a { font-size: clamp(.875rem, 1.577cqw, 1.5rem); font-weight: 800; line-height: normal; letter-spacing: .01em; }
+
+.home-departments-content, [data-home-statistics] > div, .home-achievements-content { container-type: inline-size; }
+.home-departments-content > h2 { font-size: clamp(1.5rem, 3.444cqw, 3.75rem); font-weight: 800; line-height: normal; letter-spacing: .1em; }
+.home-departments-content > p { font-size: clamp(1.125rem, 2.067cqw, 2.25rem); font-weight: 800; line-height: normal; letter-spacing: .05em; }
+.home-department-card { container-type: inline-size; }
+.home-department-card h3 { font-size: clamp(1rem, 6.575cqw, 1.5rem); font-weight: 700; line-height: normal; }
+.home-department-card p { font-size: clamp(.75rem, 4.11cqw, .9375rem); font-weight: 500; line-height: normal; }
+.home-department-card a { font-size: clamp(.75rem, 3.562cqw, .8125rem); font-weight: 500; line-height: normal; letter-spacing: .08em; }
+[data-home-statistics] dd { font-size: clamp(1.875rem, 4.156cqw, 4rem); font-weight: 600; line-height: normal; }
+[data-home-statistics] dt { font-size: clamp(.875rem, 2.208cqw, 2.125rem); font-weight: 600; line-height: normal; }
+.home-achievements-content h2 { font-size: clamp(1.5rem, 2.067cqw, 2.25rem); font-weight: 800; line-height: normal; letter-spacing: .05em; }
+.home-achievements-content h2 + p { font-size: clamp(.875rem, 1.148cqw, 1.25rem); font-weight: 800; line-height: normal; letter-spacing: .05em; }

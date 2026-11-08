@@ -75,6 +75,8 @@
 .hero-carousel--profil { --hero-carousel-ratio: 1600 / 751; }
 .hero-carousel--berita, .hero-carousel--prestasi, .hero-carousel--bkk { --hero-carousel-ratio: 1106 / 656; }
 .hero-carousel--fasilitas { --hero-carousel-ratio: 1144 / 679; }
+/* Crop the white footer baked into the home artwork inside its existing window. */
+.hero-carousel .hero-panel--students .hero-media > .hero-image { height: calc(100% + 4px); object-fit: cover; object-position: right top; }
 /* Keep composite artwork at its native ratio and fill the panel vertically.
    A narrow, bottom-aligned contain box otherwise leaves a hard blank strip above it. */
 @media (min-width: 64rem) {
@@ -91,3 +93,12 @@
   .hero-carousel--kalender .hero-media { aspect-ratio: 2 / 1; }
   .hero-carousel--guru .hero-carousel-profile-crop { width: auto; height: 100%; }
 }
+
+.hero-carousel-controls { position: absolute; inset: 0; z-index: 30; pointer-events: none; }
+.hero-carousel-controls > button { position: absolute; top: 50%; translate: 0 -50%; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid var(--color-dark-200); border-radius: 50%; background: rgb(255 255 255 / .94); color: var(--color-primary); box-shadow: var(--shadow-soft); cursor: pointer; pointer-events: auto; }
+.hero-carousel-previous { left: -20px; }
+.hero-carousel-next { right: -20px; }
+.hero-carousel-controls > button > svg { width: 20px; height: 20px; }
+.hero-carousel-controls > button:hover { background: var(--color-primary); color: white; }
+.hero-carousel-controls > button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+@media (max-width: 63.999rem) { .hero-carousel-controls > button { width: 32px; height: 32px; } .hero-carousel-previous { left: -12px; } .hero-carousel-next { right: -12px; } }

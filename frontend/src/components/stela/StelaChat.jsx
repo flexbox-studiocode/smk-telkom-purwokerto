@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { AlertCircle, Send } from 'lucide-react';
 import { PESAN_STELA_GAGAL, tanyaStela, kategorikanGalat, KATEGORI_GALAT, formatStelaPublicText } from '../../services/stela';
 import { stelaData } from '../../data/dummyData';
-import { canonicalAdmissionsPath, formatAdmissionsText } from '../../utils/admissions';
+import { canonicalAdmissionsPath, formatAdmissionsText, isHiddenAdmissionsPath, OFFICIAL_ADMISSIONS_URL } from '../../utils/admissions';
 
 // STELA menyebut alamat halaman, dan menulis **tebal** serta `kode` karena
 // model bahasa memang terbiasa memakai Markdown. Tanpa penanganan di sini,
@@ -25,11 +25,13 @@ const PEMISAH = new RegExp(
 );
 const COCOK_PATH = new RegExp(`^${BAGIAN_PATH}$`);
 
-const TautanPath = ({ path }) => (
-  <Link to={canonicalAdmissionsPath(path)} className="font-semibold text-primary underline">
-    {canonicalAdmissionsPath(path)}
-  </Link>
-);
+const TautanPath = ({ path }) => {
+  const { t } = useLanguage();
+  const admissions = isHiddenAdmissionsPath(path);
+  return <Link to={admissions ? OFFICIAL_ADMISSIONS_URL : canonicalAdmissionsPath(path)} className="font-semibold text-primary underline">
+    {admissions ? t('Masuk SPMB') : canonicalAdmissionsPath(path)}
+  </Link>;
+};
 
 const IsiPesan = ({ teks }) =>
   formatAdmissionsText(formatStelaPublicText(teks)).split(PEMISAH).map((bagian, i) => {
@@ -220,7 +222,7 @@ const StelaChat = ({ className = '', tampilkanSaran = true, focusInput = false }
               <button
                 key={saran}
                 type="button"
-                onClick={() => kirim(saran)}
+                onClick={() => kirim(t(saran))}
                 className="min-w-0 max-w-full [overflow-wrap:anywhere] rounded-full border border-dark-200 px-3 py-1.5 text-left text-[10px] font-medium text-dark-600 transition-colors hover:border-primary hover:text-primary"
               >
                 {t(saran)}

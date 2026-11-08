@@ -54,7 +54,7 @@ const AchievementsSection = ({ initialItems }) => {
   <section ref={sectionRef} id="prestasi" className="relative overflow-hidden bg-white py-12 sm:py-16 lg:py-20">
     <SectionAccents variant="achievements" />
 
-    <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="home-achievements-content relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       {/* Judul diapit dua cabang laurel (sisi kanan = cabang yang sama, dicerminkan) */}
       <div className="flex items-center justify-center gap-3 sm:gap-6">
         <img

@@ -1,0 +1,11 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="53" height="53" viewBox="0 0 53 53" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="carbon:direction-straight-right">
+<g id="Vector">
+<path d="M43.1699 26.5L31.5762 14.9062L29.2342 17.2482L36.8298 24.8438H3.41992V28.1562H36.8298L29.2342 35.7518L31.5762 38.0938L43.1699 26.5Z" fill="white"/>
+<mask id="stroke0_0_4" fill="white">
+<path d="M43.1699 26.5L31.5762 14.9062L29.2342 17.2482L36.8298 24.8438H3.41992V28.1562H36.8298L29.2342 35.7518L31.5762 38.0938L43.1699 26.5Z"/>
+</mask>
+<path d="M43.1699 26.5L31.5762 14.9062L29.2342 17.2482L36.8298 24.8438H3.41992V28.1562H36.8298L29.2342 35.7518L31.5762 38.0938L43.1699 26.5Z" stroke-width="6" stroke="white" mask="url(#stroke0_0_4)"/>
+</g>
+</g>
+</svg>

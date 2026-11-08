@@ -1,12 +1,13 @@
 import express from 'express';
 import { prisma } from '../db.js';
 import { asyncHandler } from '../utils/http.js';
+import { jakartaToday } from '../utils/date.js';
 
 export const statsRouter = express.Router();
 statsRouter.get('/visitors', asyncHandler(async (_req, res) => {
-  const today = new Date(); today.setHours(0, 0, 0, 0);
-  const last30 = new Date(today); last30.setDate(last30.getDate() - 29);
-  const last12 = new Date(today); last12.setMonth(last12.getMonth() - 11);
+  const today = jakartaToday();
+  const last30 = new Date(today); last30.setUTCDate(last30.getUTCDate() - 29);
+  const last12 = new Date(today); last12.setUTCMonth(last12.getUTCMonth() - 11);
   const [todayCount, monthCount, yearCount] = await prisma.$transaction([
     prisma.siteVisitor.count({ where: { day: today } }),
     prisma.siteVisitor.count({ where: { day: { gte: last30 } } }),
@@ -17,7 +18,7 @@ statsRouter.get('/visitors', asyncHandler(async (_req, res) => {
 statsRouter.post('/visitors', asyncHandler(async (req, res) => {
   const hash = String(req.body?.visitor_hash || '').slice(0, 128);
   if (!hash) return res.status(400).json({ error: 'visitor_hash diperlukan.' });
-  const day = new Date(); day.setHours(0, 0, 0, 0);
+  const day = jakartaToday();
   await prisma.siteVisitor.upsert({ where: { visitorHash_day: { visitorHash: hash, day } }, create: { visitorHash: hash, day }, update: {} });
   res.status(204).end();
 }));

@@ -14,7 +14,7 @@ const DepartmentCard = ({ icon, name, desc, image, slug }) => {
   const Icon = icons[icon];
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-dark-100 bg-white shadow-card">
+    <article className="home-department-card group flex h-full flex-col overflow-hidden rounded-2xl border border-dark-100 bg-white shadow-card">
       <div className="relative">
         <div className="overflow-hidden">
           <img

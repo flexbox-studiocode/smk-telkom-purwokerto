@@ -18,13 +18,13 @@ const warnaNomor = [
 const PengumumanPopulerCard = ({ items = [], tampilkanLihatSemua = true }) => {
   const { t, locale } = useLanguage();
   return (
-  <div className="rounded-xl bg-white p-4 font-[family-name:'Plus_Jakarta_Sans',var(--font-sans)] shadow-card">
+  <div className="rounded-xl bg-white p-4 font-[family-name:var(--font-jakarta)] shadow-card">
     <div className="flex items-center justify-between gap-3">
-      <h2 className="text-base font-extrabold text-dark-900">{t("Pengumuman Terbaru")}</h2>
+      <h2 className="text-[16.63px] font-extrabold leading-[normal] tracking-[.05em] text-dark-900">{t("Pengumuman Terbaru")}</h2>
       {tampilkanLihatSemua && (
         <Link
           to="/pengumuman/populer"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-primary px-2.5 py-1 text-[11px] font-extrabold text-primary transition-colors hover:bg-primary hover:text-white"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-primary px-2.5 py-1 text-[16.63px] font-extrabold leading-[normal] tracking-[.05em] text-primary transition-colors hover:bg-primary hover:text-white"
         >{t("Lihat Semua")}<ArrowRight className="h-2.5 w-2.5" />
         </Link>
       )}
@@ -35,15 +35,15 @@ const PengumumanPopulerCard = ({ items = [], tampilkanLihatSemua = true }) => {
         <li key={item.slug}>
           <Link to={`/pengumuman/${item.slug}`} className="flex items-start gap-3">
             <span
-              className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-[38px] font-bold sm:h-14 sm:w-14 sm:text-[44px] ${warnaNomor[i % warnaNomor.length]}`}
+              className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-[38px] font-bold leading-[normal] tracking-[.05em] sm:h-14 sm:w-14 sm:text-[44.35px] ${warnaNomor[i % warnaNomor.length]}`}
             >
               {i + 1}
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-sm font-extrabold leading-snug tracking-wide text-dark-900">
+              <span className="block text-[16.63px] font-extrabold leading-[normal] tracking-[.05em] text-dark-900">
                 {t(item.title)}
               </span>
-              <span className="mt-1 flex flex-wrap items-center gap-2 text-xs font-bold text-dark-600">
+              <span className="mt-1 flex flex-wrap items-center gap-2 text-[16.63px] font-extrabold leading-[normal] tracking-[.05em] text-dark-600">
                 {formatPublicDate(item.iso, {}, locale)}
               </span>
             </span>

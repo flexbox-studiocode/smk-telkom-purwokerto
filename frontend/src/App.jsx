@@ -5,7 +5,7 @@ import ContentSkeleton from './components/ContentSkeleton';
 import RouteErrorBoundary from './components/RouteErrorBoundary';
 import ErrorPage from './pages/ErrorPage';
 import MainLayout from './layouts/MainLayout';
-import { canonicalAdmissionsPath } from './utils/admissions';
+import { canonicalAdmissionsPath, isHiddenAdmissionsPath, OFFICIAL_ADMISSIONS_URL } from './utils/admissions';
 import { PAGE_META, applyPageMetadata } from './utils/seo';
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const FasilitasPage = lazy(() => import('./pages/FasilitasPage'));
@@ -108,7 +108,19 @@ const RouteLoading = () => {
   return <Suspense fallback={loadingStatus}><MainLayout busy><section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"><p role="status" className="text-sm text-dark-600">{t('Memuat halaman...')}</p><ContentSkeleton /></section></MainLayout></Suspense>;
 };
 
+const OfficialAdmissionsRedirect = () => {
+  const { t } = useLanguage();
+  useEffect(() => {
+    applyPageMetadata({ pathname: window.location.pathname, title: 'SPMB', description: '', indexable: false });
+    // Never forward legacy query strings or authentication tokens to another site.
+    window.location.replace(OFFICIAL_ADMISSIONS_URL);
+  }, []);
+  return <a href={OFFICIAL_ADMISSIONS_URL}>{t('Masuk SPMB')}</a>;
+};
+
 const App = () => {
+  const { pathname } = useLocation();
+  if (isHiddenAdmissionsPath(pathname)) return <OfficialAdmissionsRedirect />;
   return (
     <>
       <ScrollToTop />

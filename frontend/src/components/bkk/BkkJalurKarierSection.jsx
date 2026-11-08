@@ -18,7 +18,7 @@ const BkkJalurKarierSection = () => {
         <div className="rounded-2xl border border-dark-100 bg-white p-5 shadow-card sm:p-7">
           {/* Judul + tab jurusan */}
           <div className="flex flex-wrap items-center gap-3">
-            <h2 className="font-heading text-lg sm:text-xl font-extrabold text-dark-900">
+            <h2 className="font-heading text-lg sm:text-[27.72px] font-extrabold leading-[normal] tracking-[.05em] text-dark-900">
               {t(jalurKarier.title)}
             </h2>
             <div role="tablist" aria-label={t("Jalur karier per jurusan")} className="flex flex-wrap gap-2">
@@ -29,7 +29,7 @@ const BkkJalurKarierSection = () => {
                   role="tab"
                   aria-selected={tab === kode}
                   onClick={() => setTab(kode)}
-                  className={`rounded-full border px-3.5 py-1.5 text-[10px] font-bold transition-colors ${
+                  className={`rounded-full border px-3.5 py-1.5 text-[16.63px] font-bold leading-[normal] tracking-[.12em] transition-colors ${
                     tab === kode
                       ? 'border-primary bg-primary text-white'
                       : 'border-dark-200 text-dark-600 hover:border-primary hover:text-primary'
@@ -57,10 +57,10 @@ const BkkJalurKarierSection = () => {
                       {i + 1}
                     </span>
                   </span>
-                  <h3 className="mt-4 font-heading text-[11px] font-bold text-dark-900">
+                  <h3 className="mt-4 font-heading text-[16.63px] font-bold leading-[normal] tracking-[.12em] text-dark-900">
                     {t(step.title)}
                   </h3>
-                  <p className="mt-1 max-w-[9rem] text-[9px] leading-relaxed text-dark-500">
+                  <p className="mt-1 max-w-[9rem] text-[13.86px] font-medium leading-[normal] tracking-[.12em] text-dark-500">
                     {t(step.desc)}
                   </p>
                 </li>
@@ -71,7 +71,7 @@ const BkkJalurKarierSection = () => {
           <div className="mt-8 flex justify-center">
             <Link
               to={`/bkk/roadmap/${tab.toLowerCase()}`}
-              className="inline-flex items-center gap-2 rounded-full border border-primary/40 px-4 py-2 text-[10px] font-bold text-primary transition-colors hover:bg-primary hover:text-white"
+              className="inline-flex items-center gap-2 rounded-full border border-primary/40 px-4 py-2 text-[13.86px] font-bold leading-[normal] tracking-[.12em] text-primary transition-colors hover:bg-primary hover:text-white"
             >
               {t(jalurKarier.ctaText)}
               <ArrowRight className="h-3 w-3" />

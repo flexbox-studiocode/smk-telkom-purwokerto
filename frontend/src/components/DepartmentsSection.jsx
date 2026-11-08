@@ -14,7 +14,7 @@ const DepartmentsSection = () => {
   <section id="jurusan" className="relative overflow-hidden bg-white py-8 lg:py-12">
     <SectionAccents variant="departments" />
 
-    <div className="relative mx-auto max-w-[1546px] px-4 sm:px-6 lg:px-8">
+    <div className="home-departments-content relative mx-auto max-w-[1546px] px-4 sm:px-6 lg:px-8">
       <h2 className="text-center font-heading text-2xl font-bold leading-tight tracking-wide text-primary sm:text-3xl">
         {t(jurusanData.eyebrow)}
       </h2>

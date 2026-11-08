@@ -1,4 +1,4 @@
-import { ctaMasukPpdb, heroData, jurusanHero, landingHero, prestasiHero, bkkHero, beritaHero, pengumumanHero, ekstrakurikulerData, ppdbMeta } from './dummyData';
+import { ctaMasukPpdb, heroData, jurusanHero, landingHero, prestasiHero, bkkHero, beritaHero, pengumumanHero, ppdbMeta } from './dummyData';
 import facilities640 from '../assets/fasilitas/hero-640.webp';
 import facilities960 from '../assets/fasilitas/hero-960.webp';
 import facilities from '../assets/fasilitas/hero-1144.webp';
@@ -32,27 +32,27 @@ export const landingHeroSlides = [
   },
   {
     id: 'prestasi', name: 'Prestasi',
-    content: { ...prestasiHero, title: 'Prestasi', titleAccent: 'Membanggakan', primaryCta: { label: prestasiHero.ctaText, href: '/prestasi' }, secondaryCta: ctaMasukPpdb },
+    content: { ...prestasiHero, title: 'Prestasi', description: 'Siswa terus berinovasi, berkompetisi, dan mengharumkan nama sekolah di tingkat nasional hingga internasional.', titleAccent: 'Membanggakan', primaryCta: { label: prestasiHero.ctaText, href: '/prestasi' }, secondaryCta: ctaMasukPpdb },
     media: { src: prestasiHero.image, srcSet: `${achievements640} 640w, ${achievements960} 960w, ${prestasiHero.image} 1106w`, width: 1106, height: 656, composition: 'achievements', alt: prestasiHero.imageAlt },
   },
   {
     id: 'profil', name: 'Profil Sekolah',
-    content: { title: 'Profil Sekolah', titleAccent: '', description: heroData.description, primaryCta: { label: 'Lihat Profil Sekolah', href: '/profil-sekolah' }, secondaryCta: ctaMasukPpdb },
+    content: { title: 'Profil Sekolah', titleAccent: '', description: 'Sekolah vokasi berbasis teknologi yang mencetak generasi digital berkarakter, kompeten, dan siap bersaing secara global.', primaryCta: { label: 'Lihat Profil Sekolah', href: '/profil-sekolah' }, secondaryCta: ctaMasukPpdb },
     media: { src: heroData.image, srcEn: profileEnglish, width: 1600, height: 751, composition: 'school', alt: 'Gedung SMK Telkom Purwokerto' },
   },
   {
     id: 'guru', name: 'Profil Guru',
-    content: { title: 'Profil Guru', titleAccent: 'SMK Telkom', description: 'Tim pengajar kami memadukan kurikulum berbasis teknologi terbaru dengan metode pembelajaran interaktif. Kami siap membimbing siswa menguasai logika, pemrograman, hingga mampu menciptakan solusi digital masa depan.', primaryCta: { label: 'Profil Guru', href: '/profil-sekolah/guru' } },
+    content: { title: 'Profil Guru', titleAccent: 'SMK Telkom', description: 'Tim pengajar memadukan kurikulum teknologi dan pembelajaran interaktif untuk membimbing siswa menciptakan solusi digital.', primaryCta: { label: 'Profil Guru', href: '/profil-sekolah/guru' } },
     media: { src: teachers, width: 2200, height: 1033, composition: 'teachers', alt: 'Guru dan tenaga pendidik SMK Telkom Purwokerto' },
   },
   {
     id: 'ekstrakurikuler', name: 'Ekstrakurikuler',
-    content: { title: 'Ekstrakurikuler', titleAccent: '', description: ekstrakurikulerData.subtitle, primaryCta: { label: 'Lihat Kegiatan', href: '/ekstrakurikuler' } },
-    media: { src: activities, width: 2000, height: 1032, composition: 'activities', alt: 'Ekstrakurikuler' },
+    content: { title: 'Ekstrakurikuler', titleAccent: '', description: 'Eksplorasi minat dan bakat melalui beragam organisasi, komunitas, dan kegiatan ekstrakurikuler.', primaryCta: { label: 'Lihat Kegiatan', href: '/ekstrakurikuler' } },
+    media: { src: activities, width: 1999, height: 1007, composition: 'activities', alt: 'Ekstrakurikuler' },
   },
   {
     id: 'bkk', name: 'BKK',
-    content: { ...bkkHero, primaryCta: { label: bkkHero.ctaText, href: '/bkk' } },
+    content: { ...bkkHero, description: 'BKK menjembatani siswa dan alumni dengan lowongan kerja, tempat PKL, serta mitra industri yang siap membuka pintu karier.', primaryCta: { label: bkkHero.ctaText, href: '/bkk' } },
     media: { src: bkkHero.image, width: 1106, height: 656, composition: 'careers', alt: bkkHero.imageAlt },
   },
   {

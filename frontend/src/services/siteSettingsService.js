@@ -1,7 +1,10 @@
 import { api } from './apiClient';
 import { generalFields, schoolFields, validateSettings } from '../utils/siteSettings';
 
-export const getSiteSettings = async () => (await api.get('/api/settings')).data;
+export const getSiteSettings = async () => {
+  const { data } = await api.get('/api/settings');
+  return { ...data, school_name: data.schoolName ?? data.school_name, academic_year: data.academicYear ?? data.academic_year, spmb_open: data.spmbOpen ?? data.spmb_open, news_page_size: data.newsPageSize ?? data.news_page_size, logo_url: data.logoUrl ?? data.logo_url ?? null };
+};
 
 export async function requireAdmin() {
   const { user } = await api.get('/api/auth/me');
@@ -36,6 +39,6 @@ export async function saveAdminAccount({ full_name, email }) {
   const trimmedName = (full_name || '').trim();
   const trimmedEmail = (email || '').trim();
   if (!trimmedName || trimmedName.length > 150 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) throw new Error('Nama atau email akun tidak valid.');
-  const { user } = await api.get('/api/auth/me');
-  return { user: { ...user, email: trimmedEmail, user_metadata: { full_name: trimmedName } }, emailPending: false };
+  const saved = await api.post('/api/auth/account', { full_name: trimmedName, email: trimmedEmail });
+  return { user: { ...saved.user, user_metadata: { full_name: trimmedName } }, emailPending: Boolean(saved.emailPending), delivered: Boolean(saved.delivered) };
 }

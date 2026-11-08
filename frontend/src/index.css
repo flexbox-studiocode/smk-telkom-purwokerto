@@ -1,10 +1,25 @@
 @import "tailwindcss";
 @import './assets/fonts/font-faces-optimized.css';
+@import './styles/typography.css';
 
 @theme {
+  --font-jakarta: 'Plus Jakarta Sans', 'Jakarta Fallback', Arial, sans-serif;
+  --font-poppins: 'Poppins', Arial, sans-serif;
+  --font-inter: 'Inter', Arial, sans-serif;
   --font-main: 'Inter', 'Poppins', system-ui, sans-serif;
   --font-sans: var(--font-main);
   --font-heading: 'Poppins', 'Inter', system-ui, sans-serif;
+
+  /* Figma roles scale within the existing component containers. */
+  --text-figma-display: clamp(1.5rem, 6.209cqw, 6rem);
+  --text-figma-page: clamp(1.75rem, 2.755cqw, 3rem);
+  --text-figma-section: clamp(1.5rem, 2.296cqw, 2.5rem);
+  --text-figma-card: clamp(1rem, 1.378cqw, 1.5rem);
+  --text-figma-body: clamp(.875rem, .918cqw, 1rem);
+  --text-figma-label: clamp(.75rem, .861cqw, .9375rem);
+  --tracking-figma-heading: .05em;
+  --tracking-figma-copy: .12em;
+  --tracking-figma-label: .08em;
 
   --color-primary-50: #fef2f2;
   --color-primary-100: #fee2e2;

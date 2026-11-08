@@ -1,7 +1,9 @@
-/* Fade only the decorative image so the next white section has no hard seam. */
+/* Fade both image edges; keep the video, text and cards outside the mask. */
 .about-background {
   --about-background-fade: clamp(6rem, 12vw, 11rem);
   -webkit-mask-image: linear-gradient(
+    to bottom, transparent, rgb(0 0 0 / 15%) 4%, rgb(0 0 0 / 50%) 10%, rgb(0 0 0 / 85%) 16%, #000 22%
+  ), linear-gradient(
     to top,
     transparent 0,
     rgb(0 0 0 / 15%) calc(var(--about-background-fade) * .2),
@@ -10,6 +12,8 @@
     #000 var(--about-background-fade)
   );
   mask-image: linear-gradient(
+    to bottom, transparent, rgb(0 0 0 / 15%) 4%, rgb(0 0 0 / 50%) 10%, rgb(0 0 0 / 85%) 16%, #000 22%
+  ), linear-gradient(
     to top,
     transparent 0,
     rgb(0 0 0 / 15%) calc(var(--about-background-fade) * .2),
@@ -17,4 +21,6 @@
     rgb(0 0 0 / 85%) calc(var(--about-background-fade) * .8),
     #000 var(--about-background-fade)
   );
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
 }

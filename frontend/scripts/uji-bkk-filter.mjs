@@ -92,4 +92,44 @@ cek('lowongan tanpa lokasi tetap muncul selama lokasi tidak difilter', () => {
   assert.ok(peran(saringLowongan(LOWONGAN, { tipe: 'Full Time' })).includes('tes'));
 });
 
+cek('kategori menyaring bidang tanpa mengganti lokasi dan tipe', () => {
+  const jobs = [
+    { role: 'Backend Engineer', lokasi: 'Jakarta', tipe_pekerjaan: 'Magang' },
+    { role: 'Network Engineer', lokasi: 'Jakarta', tipe_pekerjaan: 'Magang' },
+    { role: 'QA Analyst', lokasi: 'Jakarta', tipe_pekerjaan: 'Full Time', kategori: 'UI/UX' },
+  ];
+  assert.deepEqual(peran(saringLowongan(jobs, { kategori: 'Programming', lokasi: 'Jakarta', tipe: 'Magang' })), ['Backend Engineer']);
+  assert.deepEqual(peran(saringLowongan(jobs, { kategori: 'Networking' })), ['Network Engineer']);
+  assert.deepEqual(peran(saringLowongan(jobs, { kategori: 'UI/UX' })), ['QA Analyst']);
+  assert.deepEqual(saringLowongan(jobs, { kategori: 'LKS' }), []);
+});
+
+cek('kategori eksplisit/tag dipakai tanpa menebak jangkauan perusahaan', () => {
+  const jobs = [{ role: 'Engineer', company: 'PT Nasional Indonesia', tags: ['Internasional', 'AI'] }, {}];
+  assert.equal(saringLowongan(jobs, { kategori: 'Internasional' }).length, 1);
+  assert.equal(saringLowongan(jobs, { kategori: 'AI' }).length, 1);
+  assert.equal(saringLowongan(jobs, { kategori: 'Nasional' }).length, 0);
+  assert.equal(saringLowongan(jobs, { kategori: 'Programming' }).length, 0);
+});
+
+cek('pencarian profil alumni mencakup nama, angkatan dan peran', () => {
+  const alumni = [{ name: 'Alfa Putra Kurnia', meta: 'Alumni TKJ', role: 'Co-founder & CEO Arkademy.com' }];
+  assert.equal(saringLowongan(alumni, { keyword: '  ALFA ' }).length, 1);
+  assert.equal(saringLowongan(alumni, { keyword: 'TKJ' }).length, 1);
+  assert.equal(saringLowongan(alumni, { keyword: 'CEO', kategori: 'Networking' }).length, 1);
+  assert.deepEqual(saringLowongan(alumni, { keyword: 'unknown' }), []);
+});
+
+cek('kata AI tidak cocok dengan potongan kata lain', () => {
+  assert.equal(saringLowongan([{ role: 'Chairman' }], { kategori: 'AI' }).length, 0);
+  assert.equal(saringLowongan([{ role: 'AI Research Intern' }], { kategori: 'AI' }).length, 1);
+});
+
+cek('kategori dalam deskripsi disaring tanpa menebak nama perusahaan', () => {
+  const jobs = [{ deskripsi: 'Lowongan perusahaan internasional untuk alumni LKS.' }, { deskripsi: 'Perusahaan nasional.' }];
+  assert.equal(saringLowongan(jobs, { kategori: 'Internasional' }).length, 1);
+  assert.equal(saringLowongan(jobs, { kategori: 'Nasional' }).length, 1);
+  assert.equal(saringLowongan(jobs, { kategori: 'LKS' }).length, 1);
+});
+
 console.log(`\n${lulus} pemeriksaan lulus.\n`);

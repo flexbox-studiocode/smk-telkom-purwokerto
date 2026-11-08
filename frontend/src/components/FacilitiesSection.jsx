@@ -209,7 +209,7 @@ export default function FacilitiesSection({ variant = 'default' }) {
           <img src={backgroundRight} alt="" className="facilities-background absolute left-[16.3%] top-0 aspect-[1592/1129.08] w-[86.19%] sm:-top-[24%]" />
           <div className="facilities-motif absolute right-[-8.75%] top-4 aspect-[493.607/179] w-[26.72%] rotate-180 sm:top-10" />
         </div>
-        <div className="mx-auto max-w-[1546px] px-6 sm:px-12 lg:px-20">
+        <div className="facilities-heading mx-auto max-w-[1546px] px-6 sm:px-12 lg:px-20">
           <p className="text-sm text-dark-600">{t('Fasilitas Kelas')} —</p>
           <h2 className="mt-3 font-heading text-3xl font-extrabold leading-tight tracking-tight text-dark-900 sm:text-4xl lg:text-5xl">{titleStart} <span className="text-primary">{titleEnd}</span></h2>
           <p className="mt-4 max-w-lg text-xs leading-relaxed text-dark-600 sm:text-sm">{t('Fasilitas sekolah adalah sarana dan prasarana yang disediakan untuk mendukung kegiatan belajar mengajar, supaya siswa bisa belajar dengan nyaman, aman, dan maksimal.')}</p>
@@ -223,10 +223,10 @@ export default function FacilitiesSection({ variant = 'default' }) {
               return (
                 <button key={index} type="button" data-slide data-flip-id={`facility-${index}`} aria-hidden={Math.abs(offset) > 1 || undefined} disabled={Math.abs(offset) > 1} onClick={() => offset === 0 ? showDetails(slide.category) : navigate(index)}
                   aria-label={offset === 0 ? t('Lihat detail {name}', { name: t(slide.name) }) : t('Tampilkan {name}', { name: t(slide.name) })}
-                  className={`relative aspect-[611/354] shrink-0 rounded-xl border-[3px] border-white bg-white shadow-card focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-primary ${Math.abs(offset) > 1 ? 'hidden' : offset === 0 ? 'z-10 w-full sm:w-[38%]' : `hidden sm:block sm:w-[33%] ${offset < 0 ? '-mr-4 -rotate-2' : '-ml-4 rotate-2'}`}`}>
+                  className={`facility-slide relative aspect-[611/354] shrink-0 rounded-xl border-[3px] border-white bg-white shadow-card focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-primary ${Math.abs(offset) > 1 ? 'hidden' : offset === 0 ? 'z-10 w-full sm:w-[38%]' : `hidden sm:block sm:w-[33%] ${offset < 0 ? '-mr-4 -rotate-2' : '-ml-4 rotate-2'}`}`}>
                   <img src={slide.image} alt={t(slide.name)} width="611" height="354" loading="lazy" className="h-full w-full rounded-lg object-cover" />
                   <span data-slide-panel aria-hidden={offset !== 0} className={`pointer-events-none absolute -bottom-16 left-[7%] flex min-h-28 w-[86%] flex-col justify-center rounded-xl border-[3px] border-white bg-[#e72033] px-4 py-4 text-left text-white shadow-card lg:min-h-32 lg:px-6 ${offset === 0 ? 'opacity-100' : 'opacity-0'}`}><span className="font-heading text-sm font-bold leading-snug sm:text-base lg:text-xl">{t(slide.title ?? slide.name)}</span><span className="mt-1 text-xs leading-snug">{t(slide.preview ?? 'Ruang praktik untuk belajar mengatur, memasang, dan mengamankan jaringan komputer.')}</span></span>
-                  <span data-slide-preview aria-hidden={offset === 0} className={`pointer-events-none absolute inset-0 flex items-end rounded-lg facilities-slide-preview p-4 text-left font-heading text-base font-bold leading-snug text-white lg:text-xl ${offset === 0 ? 'opacity-0' : 'opacity-100'}`}>{t(slide.name)}</span>
+                  <span data-slide-preview data-classroom={slide.name === 'Ruang Kelas' || undefined} aria-hidden={offset === 0} className={`pointer-events-none absolute inset-0 flex items-end rounded-lg facilities-slide-preview p-4 text-left font-heading text-base font-bold leading-snug text-white lg:text-xl ${offset === 0 ? 'opacity-0' : 'opacity-100'}`}>{t(slide.name)}</span>
                 </button>
               );
             })}

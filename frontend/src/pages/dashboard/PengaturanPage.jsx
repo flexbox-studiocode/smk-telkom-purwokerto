@@ -19,7 +19,7 @@ export function AkunAdmin({value,onChange,errors={}}) {
     <FormInput label="Nama Lengkap" value={data.full_name} maxLength={150} onChange={e=>onChange?.({...data,full_name:e.target.value})} error={errors.full_name} />
     <FormInput label="Email" type="email" value={data.email} onChange={e=>onChange?.({...data,email:e.target.value})} error={errors.email} />
     <FormInput label="Peran" value={isAdmin ? 'Administrator' : 'Belum terverifikasi sebagai admin'} readOnly />
-    <p className="text-xs text-dark-500">Perubahan email memerlukan verifikasi Supabase Auth. Peran tidak dapat diubah melalui pengaturan akun.</p>
+    <p className="text-xs text-dark-500">Perubahan email memerlukan verifikasi melalui email. Peran tidak dapat diubah melalui pengaturan akun.</p>
     {user?.new_email && <p role="status" className="text-xs text-primary">Menunggu verifikasi email: {user.new_email}</p>}
   </div>;
 }
@@ -65,7 +65,7 @@ export default function PengaturanPage() {
       if(pending.group==='account') {
         const result=await saveAdminAccount(pending.data,`${window.location.origin}/dashboard/pengaturan`);
         const value=accountValue(result.user);setAccount(value);setSavedAccount(value);
-        setNotice(result.emailPending?'Nama tersimpan. Periksa email lama dan baru untuk verifikasi; email login belum dianggap berubah sampai dikonfirmasi.':'Akun tersimpan dan telah dibaca ulang dari Supabase Auth.');
+        setNotice(result.emailPending?'Nama tersimpan. Periksa email lama dan baru untuk verifikasi; email login belum dianggap berubah sampai dikonfirmasi.':'Akun tersimpan dan telah dibaca ulang dari database.');
       } else {
         const verified=await saveSiteSettings(pending.data,pending.group,pending.revision,pending.file);
         setRecord(verified);

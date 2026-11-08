@@ -35,7 +35,7 @@ const BeritaAgendaSection = ({ items = [], tampilkanLihatSemua = true }) => {
             {tampilkanLihatSemua && (
               <Link
                 to="/berita#kategori-berita"
-                className="text-[10px] font-bold text-primary hover:underline"
+                className="text-[10px] font-extrabold tracking-figma-copy text-primary hover:underline"
               >
                 {t('Lihat Semua')}
               </Link>
@@ -84,7 +84,7 @@ const BeritaAgendaSection = ({ items = [], tampilkanLihatSemua = true }) => {
             </h2>
             <Link
               to="/galeri"
-              className="text-[10px] font-bold text-primary hover:underline"
+              className="text-[10px] font-extrabold tracking-figma-copy text-primary hover:underline"
             >
               {t(galeriKegiatan.linkText)}
             </Link>
@@ -122,7 +122,7 @@ const BeritaAgendaSection = ({ items = [], tampilkanLihatSemua = true }) => {
           <h3 className="mt-4 font-heading text-base font-extrabold text-dark-900">
             {t(newsletterBerita.heading)}
           </h3>
-          <p className="mt-2 text-[9px] leading-relaxed text-dark-500">
+          <p className="mt-2 text-[9px] font-medium leading-[normal] tracking-figma-copy text-dark-500">
             {t(newsletterBerita.description)}
           </p>
 
@@ -138,12 +138,12 @@ const BeritaAgendaSection = ({ items = [], tampilkanLihatSemua = true }) => {
                   setSent(false);
                 }}
                 placeholder={t(newsletterBerita.placeholder)}
-                className="w-full rounded-lg border border-dark-200 px-3 py-2.5 text-[10px] text-dark-700 outline-none transition-colors placeholder:text-dark-400 focus:border-primary"
+                className="w-full rounded-lg border border-dark-200 px-3 py-2.5 text-[10px] font-medium tracking-figma-copy text-dark-700 outline-none transition-colors placeholder:text-dark-400 focus:border-primary"
               />
             </label>
             <button
               type="submit"
-              className="mt-3 w-full rounded-full bg-primary py-2.5 text-[11px] font-bold text-white transition-colors hover:bg-primary-800"
+              className="mt-3 w-full rounded-full bg-primary py-2.5 text-[11px] font-semibold tracking-figma-copy text-white transition-colors hover:bg-primary-800"
             >
               {t(newsletterBerita.ctaText)}
             </button>
@@ -151,7 +151,7 @@ const BeritaAgendaSection = ({ items = [], tampilkanLihatSemua = true }) => {
 
           <p
             aria-live="polite"
-            className="mt-3 text-[8px] leading-relaxed text-dark-400"
+            className="mt-3 text-[8px] font-medium leading-[normal] tracking-figma-copy text-dark-400"
           >
             {sent ? (
               <span className="font-semibold text-primary">

@@ -17,7 +17,7 @@ import {
 //
 // ponytail: perubahan hanya bertahan selama tab dibuka. Untuk penyimpanan
 // sungguhan, ganti isi setiap fungsi di bawah dengan pemanggilan service
-// Supabase yang sudah ada di src/services/.
+// backend MySQL melalui API. Tidak ada koneksi langsung dari frontend ke Supabase.
 const AdminDataContext = createContext(null);
 
 const berikutnya = (daftar) => Math.max(0, ...daftar.map((d) => d.id)) + 1;

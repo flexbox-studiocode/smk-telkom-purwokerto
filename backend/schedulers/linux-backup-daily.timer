@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily SMK Telkom Purwokerto backup trigger (02:00 WIB)
+
+[Timer]
+# 02:00 Asia/Jakarta = 19:00 UTC hari sebelumnya.
+OnCalendar=*-*-* 19:00:00 UTC
+AccuracySec=1min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

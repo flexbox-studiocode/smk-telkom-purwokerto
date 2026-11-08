@@ -1,18 +1,19 @@
 import { api } from './apiClient';
 import { spmbInfoPayload, spmbStatisticsId } from '../utils/spmbInformation';
 
-const normalize = (row) => ({ ...row, tanggal_mulai: row.tanggalMulai ?? row.tanggal_mulai, tanggal_selesai: row.tanggalSelesai ?? row.tanggal_selesai, tanggal_seleksi: row.tanggalSeleksi ?? row.tanggal_seleksi, tanggal_pengumuman: row.tanggalPengumuman ?? row.tanggal_pengumuman, tautan_url: row.tautanUrl ?? row.tautan_url, sumber_url: row.sumberUrl ?? row.sumber_url, kuota_total: row.kuotaTotal ?? row.kuota_total, created_at: row.createdAt ?? row.created_at, updated_at: row.updatedAt ?? row.updated_at });
+// Prisma serializes DATE columns as ISO timestamps; forms and schedules consume date keys.
+const dateKey = value => value ? value.slice(0, 10) : null;
+const normalize = (row) => ({ ...row, tanggal_mulai: dateKey(row.tanggalMulai ?? row.tanggal_mulai), tanggal_selesai: dateKey(row.tanggalSelesai ?? row.tanggal_selesai), tanggal_seleksi: dateKey(row.tanggalSeleksi ?? row.tanggal_seleksi), tanggal_pengumuman: dateKey(row.tanggalPengumuman ?? row.tanggal_pengumuman), tautan_url: row.tautanUrl ?? row.tautan_url, sumber_url: row.sumberUrl ?? row.sumber_url, kuota_total: row.kuotaTotal ?? row.kuota_total, created_at: row.createdAt ?? row.created_at, updated_at: row.updatedAt ?? row.updated_at });
 const parse = (data) => { const p = spmbInfoPayload(data); return { ...p, tanggalMulai: p.tanggal_mulai, tanggalSelesai: p.tanggal_selesai, tanggalSeleksi: p.tanggal_seleksi, tanggalPengumuman: p.tanggal_pengumuman, tautanUrl: p.tautan_url, sumberUrl: p.sumber_url, kuotaTotal: p.kuota_total }; };
 
 export async function getSpmbInformation(published = false, signal) {
-  void published;
   if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
-  const response = await api.get('/api/spmb');
-  return response.data.map(normalize);
+  const response = await api.get('/api/spmb', { signal });
+  return response.data.filter(row => !published || row.status === 'published').map(normalize);
 }
 export async function getSpmbStatistics(signal) {
   if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
-  const response = await api.get('/api/stats/spmb');
+  const response = await api.get('/api/stats/spmb', { signal });
   return response.data;
 }
 function changed() {

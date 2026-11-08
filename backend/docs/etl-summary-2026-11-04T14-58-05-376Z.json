@@ -1,0 +1,101 @@
+{
+  "startedAt": "2026-11-04T14:58:05.378Z",
+  "dryRun": false,
+  "tables": {
+    "site_settings": {
+      "source": 1,
+      "imported": 1,
+      "failed": 0,
+      "target": 1,
+      "status": "PASS"
+    },
+    "berita": {
+      "source": 13,
+      "imported": 13,
+      "failed": 0,
+      "target": 13,
+      "status": "PASS"
+    },
+    "pengumuman": {
+      "source": 11,
+      "imported": 11,
+      "failed": 0,
+      "target": 11,
+      "status": "PASS"
+    },
+    "prestasi": {
+      "source": 21,
+      "imported": 21,
+      "failed": 0,
+      "target": 21,
+      "status": "PASS"
+    },
+    "bkk": {
+      "source": 12,
+      "imported": 12,
+      "failed": 0,
+      "target": 12,
+      "status": "PASS"
+    },
+    "events": {
+      "source": 52,
+      "imported": 52,
+      "failed": 0,
+      "target": 52,
+      "status": "PASS"
+    },
+    "spmb_information": {
+      "source": 21,
+      "imported": 21,
+      "failed": 0,
+      "target": 21,
+      "status": "PASS"
+    },
+    "admins": {
+      "source": 0,
+      "imported": 0,
+      "failed": 0,
+      "target": 0,
+      "status": "PASS"
+    },
+    "ppdb": {
+      "source": 0,
+      "imported": 0,
+      "failed": 0,
+      "target": 0,
+      "status": "PASS"
+    },
+    "ppdb_drafts": {
+      "source": 0,
+      "imported": 0,
+      "failed": 0,
+      "target": 0,
+      "status": "PASS"
+    },
+    "ai_daily_attempts": {
+      "source": "blocked",
+      "imported": 0,
+      "failed": 0,
+      "target": "n/a",
+      "status": "BLOCKED_RLS",
+      "error": "ai_daily_attempts REST 401: {\"code\":\"42501\",\"details\":null,\"hint\":\"Grant the required privileges to the current role with: GRANT SELECT ON public.ai_daily_attempts TO anon;\",\"message\":\"permission denied for table ai_daily_attempts\"}"
+    },
+    "site_visitors": {
+      "source": 0,
+      "imported": 0,
+      "failed": 0,
+      "target": 1,
+      "status": "PASS"
+    }
+  },
+  "storage": {
+    "downloaded": 26,
+    "failed": 0
+  },
+  "integrity": {
+    "orphanPpdb": 0,
+    "orphanDraft": 0
+  },
+  "finishedAt": "2026-11-04T14:58:09.473Z",
+  "totalFailed": 0
+}

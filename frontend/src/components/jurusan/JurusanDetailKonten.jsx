@@ -23,16 +23,16 @@ export default function JurusanDetailKonten({ item, design }) {
   ];
   return (
     <>
-      <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-10" aria-labelledby="tentang-jurusan-title">
+      <section className="detail-jurusan-overview mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-10" aria-labelledby="tentang-jurusan-title">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)]">
           <Reveal>
             <SectionHeading id="tentang-jurusan-title">{t('Apa itu {program}?', { program: design.code })}</SectionHeading>
-            <div className="mt-4 space-y-4 text-sm leading-relaxed text-dark-600">{design.about.map(text => <p key={text}>{t(text)}</p>)}</div>
+            <div className="mt-4 space-y-4 text-sm leading-[1.52] text-dark-600 sm:text-base">{design.about.map(text => <p key={text}>{t(text)}</p>)}</div>
           </Reveal>
           <Reveal as="figure" className="relative rounded-2xl bg-primary-50 p-6 lg:mt-2 delay-100">
             <Quote aria-hidden="true" className="mb-3 size-7 fill-primary text-primary" />
-            <blockquote className="text-sm font-semibold italic leading-relaxed text-dark-600">{t(design.quote)}</blockquote>
-            <figcaption className="mt-4 text-xs leading-relaxed text-dark-500"><span className="block font-bold">{t('Tim {program}', { program: design.code })}</span>SMK Telkom Purwokerto</figcaption>
+            <blockquote className="text-base font-bold italic leading-[1.48] text-dark-600 sm:text-lg">{t(design.quote)}</blockquote>
+            <figcaption className="mt-4 text-xs leading-[normal] text-dark-500 sm:text-sm"><span className="block font-bold">{t('Tim {program}', { program: design.code })}</span>SMK Telkom Purwokerto</figcaption>
           </Reveal>
         </div>
         <Reveal as="dl" className="mt-6 grid gap-6 rounded-2xl bg-dark-50 p-5 sm:grid-cols-2 sm:p-6">
@@ -52,7 +52,7 @@ export default function JurusanDetailKonten({ item, design }) {
       <WaveMarquee />
       <div className="detail-jurusan-content">
         <section id="fasilitas-jurusan" className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12" aria-labelledby="fasilitas-jurusan-title">
-          <Reveal><SectionHeading id="fasilitas-jurusan-title">{t('Fasilitas Pendukung')}</SectionHeading><p className="mt-3 max-w-2xl text-sm leading-relaxed text-dark-500">{t(design.facilitiesDescription)}</p></Reveal>
+          <Reveal><SectionHeading id="fasilitas-jurusan-title">{t('Fasilitas Pendukung')}</SectionHeading><p className="mt-3 max-w-2xl text-sm font-bold leading-[normal] text-dark-500 sm:text-base">{t(design.facilitiesDescription)}</p></Reveal>
           <div className="mt-6 grid gap-5 md:grid-cols-3">
             {design.facilities.map((facility, index) => {
               const Icon = icons[index];
@@ -65,8 +65,8 @@ export default function JurusanDetailKonten({ item, design }) {
                     <span aria-hidden="true" className="absolute -top-4 left-4 flex size-8 items-center justify-center rounded-full border-2 border-white bg-primary text-white">
                       <Icon className="size-4" />
                     </span>
-                    <h3 className="mt-2 font-heading text-sm font-bold text-dark-900">{t(facility.title)}</h3>
-                    <p className="mt-2 text-xs leading-relaxed text-dark-500">{t(facility.description)}</p>
+                    <h3 className="mt-2 font-heading text-sm font-extrabold leading-[normal] text-dark-900">{t(facility.title)}</h3>
+                    <p className="mt-2 text-xs font-medium leading-[normal] text-dark-500">{t(facility.description)}</p>
                   </div>
                 </Reveal>
               );
@@ -74,15 +74,15 @@ export default function JurusanDetailKonten({ item, design }) {
           </div>
         </section>
         <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8 lg:pb-12" aria-labelledby="perjalanan-jurusan-title">
-          <Reveal><SectionHeading id="perjalanan-jurusan-title">{t('Perjalanan')} <span className="text-primary">{t('Tiga Tahun')}</span></SectionHeading><p className="mt-3 text-sm text-dark-500">{t('Dari dasar hingga siap terjun ke dunia industri')}</p></Reveal>
+          <Reveal><SectionHeading id="perjalanan-jurusan-title">{t('Perjalanan')} <span className="text-primary">{t('Tiga Tahun')}</span></SectionHeading><p className="mt-3 text-sm font-bold leading-[normal] text-dark-500 sm:text-base">{t('Dari dasar hingga siap terjun ke dunia industri')}</p></Reveal>
           <ol className="mt-6 grid gap-5 md:grid-cols-3">
             {design.journey.map((points, index) => (
               <Reveal as="li" key={levels[index]} data-learning-year={levels[index]} className={`rounded-2xl border border-dark-200 bg-white p-5 ${delays[index]}`}>
-                <h3 className="flex items-center gap-3 font-heading text-base font-bold text-primary">
+                <h3 className="flex items-center gap-3 font-heading text-base font-extrabold leading-[normal] text-primary">
                   <span aria-hidden="true" className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm text-white">{index + 1}</span>
                   {t(levels[index])}
                 </h3>
-                <ul className="mt-3 list-disc space-y-2 pl-5 text-xs leading-relaxed text-dark-600">
+                <ul className="mt-3 list-disc space-y-2 pl-5 text-xs font-bold leading-[normal] text-dark-600">
                   {points.map(point => <li key={point}>{t(point)}</li>)}
                 </ul>
               </Reveal>

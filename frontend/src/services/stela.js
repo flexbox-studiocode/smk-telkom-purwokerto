@@ -1,23 +1,17 @@
-import { api } from './apiClient';
+import { apiRequest } from './apiClient';
 
 // Widget chat tidak memanggil Gemini langsung. Semua permintaan lewat backend,
 // karena API key hanya disimpan di server dan tidak pernah masuk ke bundel browser.
 //
 // Ada dua backend, dan yang dipakai ditentukan otomatis:
 //
-//   1. Edge Function Supabase — dipakai begitu VITE_SUPABASE_URL terisi.
-//      Provider dan failover dikendalikan server; kunci tidak pernah masuk browser.
-//   2. /api/stela — endpoint lokal dari vite-plugin-stela.js, hanya hidup
-//      selama `npm run dev`; konfigurasi provider tetap berada di server lokal.
-const ALAMAT = api.url('/api/ai/stela');
-
-// import.meta.env.DEV dilipat saat build, jadi cabang lokal ini hilang total
-// dari bundel produksi — bukan sekadar tidak terpanggil.
+//   Backend /api/ai/stela — satu-satunya jalur ke provider AI. Kunci API
+//      hanya disimpan di server dan tidak pernah masuk ke bundel browser.
 export const stelaSiap = true;
 
 export const PESAN_STELA_GAGAL = 'NEXA sedang mengalami kendala. Silakan coba lagi.';
 export const PESAN_STELA_BELUM_SIAP =
-  'NEXA belum dikonfigurasi. Isi GEMINI_API_KEY di frontend/.env untuk mode lokal, atau VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY untuk memakai Edge Function.';
+  'NEXA belum dikonfigurasi. Hubungi administrator untuk mengaktifkan layanan AI.';
 
 // Presentation only: keep backend replies, request history, URLs, and identifiers unchanged.
 export const formatStelaPublicText = (text) => String(text ?? '')
@@ -83,25 +77,14 @@ export const tanyaStela = async (pesan, { signal, language = 'id' } = {}) => {
   if (!stelaSiap) throw new Error(PESAN_STELA_BELUM_SIAP);
 
   try {
-    const tanggapan = await fetch(ALAMAT, {
+    const data = await apiRequest('/api/ai/stela', {
       method: 'POST',
       signal,
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pertanyaan: typeof pesan === 'string' ? pesan : JSON.stringify(pesan), language }),
+      body: {
+        pertanyaan: typeof pesan === 'string' ? pesan : JSON.stringify(pesan),
+        language,
+      },
     });
-
-    const data = await tanggapan.json().catch(() => ({}));
-
-    if (!tanggapan.ok) {
-      const serverMessage = typeof data.error === 'string' && data.error ? data.error : PESAN_STELA_GAGAL;
-      const error = new Error(serverMessage);
-      if (data.code === 'quota_exhausted' || data.code === 'rate_limit' || (tanggapan.status === 429 && data.code !== 'quota_unavailable')) error.category = KATEGORI_GALAT.RATE_LIMIT;
-      else if (data.code === 'provider_timeout' || tanggapan.status === 504) error.category = KATEGORI_GALAT.TRANSIENT;
-      else if (data.code === 'config' || tanggapan.status === 503) error.category = KATEGORI_GALAT.CONFIG;
-      else if (data.code === 'provider_failed') error.category = KATEGORI_GALAT.TRANSIENT;
-      throw error;
-    }
 
     // Server mengirim scope_rejected=true saat pertanyaan di luar scope
     if (data.scope_rejected === true && typeof data.reply === 'string') {
@@ -116,8 +99,12 @@ export const tanyaStela = async (pesan, { signal, language = 'id' } = {}) => {
     return data.reply.trim();
   } catch (error) {
     if (error?.name === 'AbortError') throw error;
-    // Preserve category if already set
     if (error?.category) throw error;
-    throw new Error(error?.message || PESAN_STELA_GAGAL, { cause: error });
+    const mapped = new Error(error?.message || PESAN_STELA_GAGAL, { cause: error });
+    if (error?.code === 'quota_exhausted') mapped.category = KATEGORI_GALAT.RATE_LIMIT;
+    else if (error?.code === 'provider_timeout') mapped.category = KATEGORI_GALAT.TRANSIENT;
+    else if (error?.code === 'config') mapped.category = KATEGORI_GALAT.CONFIG;
+    else if (error?.code === 'provider_failed') mapped.category = KATEGORI_GALAT.TRANSIENT;
+    throw mapped;
   }
 };

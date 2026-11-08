@@ -12,3 +12,5 @@ backend/.cursor/
 backend/.devin/
 backend/uploads/
 
+
+backend/backups/

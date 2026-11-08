@@ -1,4 +1,3 @@
-/* Use the site's Inter/Poppins tokens and max-w-7xl rhythm, not raw Figma canvas sizes. */
 .nexttel-page {
   font-family: var(--font-sans);
   color: var(--color-dark-800);
@@ -11,7 +10,10 @@
   padding-inline: 32px;
   margin-inline: auto;
 }
-.nexttel-intro > nav { margin: 0 0 24px; }
+.nexttel-intro > nav, .nexttel-result > nav { font-weight: 800; line-height: normal; letter-spacing: var(--tracking-figma-copy); }
+.nexttel-intro > nav { margin: 0 0 24px; font-size: .875rem; }
+.nexttel-result > nav { font-family: var(--font-inter); font-size: .625rem; }
+:is(.nexttel-intro, .nexttel-result) > nav [aria-current="page"] { font-family: var(--font-inter); font-weight: inherit; }
 .nexttel-intro__panel {
   position: relative;
   isolation: isolate;
@@ -35,9 +37,9 @@
 .nexttel-intro__heading { position: relative; }
 .nexttel-intro__heading h1 {
   font-family: var(--font-heading);
-  font-size: clamp(28px, 3cqw, 36px);
+  font-size: clamp(28px, 3.2cqw, 48px);
   font-weight: 800;
-  line-height: 1.25;
+  line-height: normal;
   outline: none;
 }
 .nexttel-intro__mascot {
@@ -60,9 +62,9 @@
 .nexttel-intro__description {
   margin-top: 28px;
   max-width: 600px;
-  font-size: 14px;
-  line-height: 1.75;
-  font-weight: 400;
+  font-size: clamp(14px, 1.335cqw, 20px);
+  line-height: normal;
+  font-weight: 700;
   color: #ffffffe6;
 }
 .nexttel-intro__start {
@@ -79,7 +81,7 @@
   background: #fff;
   color: #cd091d;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: background-color .2s;
 }
@@ -97,46 +99,52 @@
   box-shadow: var(--shadow-soft);
 }
 .nexttel-progress { margin-bottom: 24px; }
-.nexttel-progress__label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; color: var(--color-dark-500); font-size: 14px; font-weight: 600; }
+.nexttel-progress__label { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: 8px; color: var(--color-dark-500); font-size: 14px; font-weight: 800; line-height: normal; letter-spacing: var(--tracking-figma-heading); }
 .nexttel-progress progress { height: 10px; }
-.nexttel-questionnaire__eyebrow { color: var(--color-primary); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+.nexttel-questionnaire__eyebrow { color: var(--color-primary); font-size: 12px; font-weight: 800; line-height: normal; text-transform: uppercase; letter-spacing: .2em; }
 .nexttel-questionnaire__title {
   margin-top: 12px;
   font-family: var(--font-heading);
-  font-size: 30px;
-  line-height: 1.35;
+  font-size: clamp(24px, 4vw, 40px);
+  line-height: normal;
   font-weight: 800;
+  letter-spacing: var(--tracking-figma-heading);
   color: var(--color-dark-900);
   outline: none;
   scroll-margin-top: 120px;
 }
 .nexttel-questionnaire__options { display: grid; gap: 16px; margin-top: 24px; }
-.nexttel-option { min-height: 72px; padding: 14px 20px; gap: 20px; border-color: var(--color-dark-300); border-radius: 16px; color: var(--color-dark-600); font-size: 16px; font-weight: 600; line-height: 1.5; }
+.nexttel-option { min-height: 72px; padding: 14px 20px; gap: 20px; border-color: var(--color-dark-300); border-radius: 16px; color: var(--color-dark-600); font-size: clamp(16px, 1.8vw, 18px); font-weight: 700; line-height: normal; letter-spacing: var(--tracking-figma-heading); }
 .nexttel-option__badge { width: 42px; height: 42px; font-size: 16px; background: var(--color-dark-100); color: var(--color-dark-700); }
 .peer:checked + .nexttel-option .nexttel-option__badge { background: var(--color-primary); color: white; }
 .nexttel-navigation { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 24px; }
-.nexttel-navigation button { min-width: 120px; min-height: 48px; font-size: 14px; }
+.nexttel-navigation button { min-width: 120px; min-height: 48px; font-size: 14px; font-weight: 800; line-height: normal; letter-spacing: var(--tracking-figma-heading); }
 .nexttel-result__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-block: 16px 24px; color: var(--color-primary); }
 .nexttel-result__tags span { border: 1px solid #ce0b2140; border-radius: 25px; padding: 5px 10px; font-size: 11px; font-weight: 600; letter-spacing: .5px; }
 .nexttel-result__banner { position: relative; isolation: isolate; overflow: hidden; border-radius: 20px; padding: 28px 32px; color: white; background: #c2112f; }
 .nexttel-result__artwork { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-.nexttel-result__banner > div { font-size: 12px; font-weight: 600; }
-.nexttel-result__banner h1 { font-family: var(--font-heading); font-size: 36px; font-weight: 800; line-height: 1.3; }
-.nexttel-result__banner p { max-width: 720px; font-size: 14px; font-weight: 400; line-height: 1.75; color: #ffffffe6; margin-block: 16px 0; }
+.nexttel-result__banner > div { font-size: 12px; }
+.nexttel-result__banner h1 { font-family: var(--font-heading); font-size: clamp(26px, 4vw, 46px); }
+.nexttel-result__banner p { max-width: 720px; font-size: 14px; color: #ffffffe6; margin-block: 16px 0; }
+.nexttel-result__banner > :is(div,h1,p), .nexttel-result__statistics h2, .nexttel-result__explanation :is(h2,h3,li), .nexttel-result__explanation > p:not([role]), .nexttel-result__explanation > button, .nexttel-result__explanation [role='alert'] {
+  font-weight: 800;
+  line-height: normal;
+  letter-spacing: var(--tracking-figma-heading);
+}
 .nexttel-result__statistics { margin-top: 24px; padding: 24px; border: 1px solid var(--color-dark-200); border-radius: 20px; }
-.nexttel-result__statistics h2, .nexttel-result__explanation h2 { font-family: var(--font-heading); font-size: 22px; font-weight: 700; }
+.nexttel-result__statistics h2, .nexttel-result__explanation h2 { font-family: var(--font-heading); font-size: 22px; }
 .nexttel-result__statistics h2 svg { width: 24px; height: 24px; }
 .nexttel-result__statistics > div { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 24px; }
 .nexttel-result__statistics svg[role='img'] { max-width: 620px; }
 .nexttel-result__statistics svg[role='img'] > polygon[fill='none'] { stroke: #9ca3af; }
 .nexttel-result__statistics svg[role='img'] circle { fill: white; stroke: #cd091d; stroke-width: 2; }
-.nexttel-result__statistics svg[role='img'] foreignObject div { font-weight: 500; }
+.nexttel-result__statistics svg[role='img'] foreignObject div, .nexttel-result__statistics th, .nexttel-result__statistics td, .nexttel-result__statistics [aria-hidden='true'] > span { font-weight: 700; letter-spacing: var(--tracking-figma-heading); }
 .nexttel-result__statistics table { font-size: 14px; }
 .nexttel-result__statistics td, .nexttel-result__statistics th { padding-block: 20px; }
 .nexttel-result__explanation { margin-top: 24px; padding: 32px; border: 1px solid var(--color-dark-200); border-radius: 20px; }
-.nexttel-result__explanation [role='alert'] { font-size: 14px; font-weight: 500; padding: 12px 16px; }
-.nexttel-result__explanation > p, .nexttel-result__explanation li { font-size: 14px; font-weight: 400; line-height: 1.75; }
-.nexttel-result__explanation h3 { font-family: var(--font-heading); font-size: 16px; font-weight: 600; }
+.nexttel-result__explanation [role='alert'] { font-size: 14px; padding: 12px 16px; }
+.nexttel-result__explanation > p, .nexttel-result__explanation li { font-size: 14px; }
+.nexttel-result__explanation h3 { font-family: var(--font-heading); font-size: 16px; }
 .nexttel-result__explanation > button { font-size: 14px; border-width: 1px; }
 @media (min-width: 1024px) {
   .nexttel-page { padding-top: 48px; }

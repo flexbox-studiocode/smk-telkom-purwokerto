@@ -373,11 +373,10 @@ export default {
   'Tutup pengingat NEXA': 'Dismiss NEXA reminder',
   'Punya pertanyaan?': 'Have a question?',
   'NEXA siap membantu menemukan informasi tentang sekolah.': 'NEXA is ready to help you find information about the school.',
-  'NEXA belum dikonfigurasi. Isi GEMINI_API_KEY di frontend/.env untuk mode lokal, atau VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY untuk memakai Edge Function.': 'NEXA has not been configured. Set GEMINI_API_KEY in frontend/.env for local mode, or VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to use the Edge Function.',
+  'NEXA belum dikonfigurasi. Hubungi administrator untuk mengaktifkan layanan AI.': 'NEXA has not been configured. Contact the administrator to enable the AI service.',
   'Memuat obrolan...': 'Loading chat...',
   'Tutup obrolan NEXA': 'Close NEXA chat',
   'Buka obrolan dengan NEXA': 'Open NEXA chat',
   'NEXA sedang mengalami kendala. Silakan coba lagi.': 'NEXA is currently experiencing a problem. Please try again.',
-  'NEXA belum dikonfigurasi. Isi NINEROUTER_KEY, GEMINI_API_KEY, atau ANTHROPIC_API_KEY di frontend/.env untuk mode lokal, atau VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY untuk memakai Edge Function.': 'NEXA has not been configured. Set NINEROUTER_KEY, GEMINI_API_KEY, or ANTHROPIC_API_KEY in frontend/.env for local mode, or VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to use the Edge Function.',
   'Pendaftaran gagal disimpan dan dokumen sementara belum dapat dihapus. Hubungi admin sekolah sebelum mencoba kembali.': 'The application could not be saved, and temporary documents could not be deleted. Contact the school administrator before trying again.',
 };

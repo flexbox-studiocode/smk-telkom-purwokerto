@@ -48,12 +48,12 @@ const AboutSection = () => {
         {/* Teks + badge */}
         <div className="min-w-0">
           <div>
-            <h2 className="font-heading text-[1.75rem] font-extrabold leading-[1.25] tracking-tight text-dark-900 sm:text-[2rem] lg:text-[clamp(1.75rem,2.983cqw,3rem)]">
+            <h2 className="font-heading text-[1.75rem] font-extrabold leading-normal tracking-normal text-dark-900 sm:text-[2rem] lg:text-[clamp(1.75rem,2.983cqw,3rem)]">
               {titleLead} <span className="text-[#cd0b20]">{titleRest.join(' ')}</span>
             </h2>
             <TextReveal
               text={t(landingAbout.description)}
-              className="mt-2 text-base leading-[1.3] text-dark-900 lg:mt-[0.497cqw] lg:min-h-[5.159cqw] lg:max-w-[94.67%] lg:text-[clamp(0.875rem,1.243cqw,1.25rem)]"
+              className="mt-2 text-base font-medium leading-normal text-dark-900 lg:mt-[0.497cqw] lg:min-h-[5.159cqw] lg:max-w-[94.67%] lg:text-[clamp(0.875rem,1.243cqw,1.25rem)]"
             />
           </div>
 
@@ -70,7 +70,7 @@ const AboutSection = () => {
                   <p className="font-heading text-base font-bold leading-tight text-primary lg:text-[clamp(0.875rem,1.492cqw,1.5rem)]">
                     {t(badge.title)}
                   </p>
-                  <p className="mt-1 text-sm leading-[1.3] text-dark-600 lg:text-[clamp(0.75rem,0.994cqw,1rem)]">
+                  <p className="mt-1 text-sm font-bold leading-normal text-dark-600 lg:text-[clamp(0.75rem,0.994cqw,1rem)]">
                     {t(badge.desc)}
                   </p>
                 </div>
@@ -80,7 +80,7 @@ const AboutSection = () => {
 
           <Link
             to="/profil-sekolah"
-            className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary lg:-ml-[0.249cqw] lg:mt-[1.368cqw] lg:min-h-[4.413cqw] lg:min-w-[20.759cqw] lg:justify-center lg:rounded-[1.243cqw] lg:text-[clamp(0.875rem,1.492cqw,1.5rem)]"
+            className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-primary-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary lg:-ml-[0.249cqw] lg:mt-[1.368cqw] lg:min-h-[4.413cqw] lg:min-w-[20.759cqw] lg:justify-center lg:rounded-[1.243cqw] lg:text-[clamp(0.875rem,1.492cqw,1.5rem)]"
           >
             {t(landingAbout.ctaText)}
             <img src={aboutArrow} alt="" className="h-auto w-5 shrink-0 lg:w-[2.051cqw]" />

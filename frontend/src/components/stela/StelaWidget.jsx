@@ -1,7 +1,7 @@
 import { useLanguage } from '../../context/LanguageContext';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { MessageCircle, X } from 'lucide-react';
+import { X } from 'lucide-react';
 const maskot = '/assets/branding/nexa-mark.png';
 
 const StelaChat = lazy(() => import('./StelaChat'));
@@ -111,9 +111,9 @@ const StelaWidget = () => {
         aria-expanded={terbuka}
         aria-controls="stela-widget-panel"
         aria-label={t(terbuka ? 'Tutup obrolan NEXA' : 'Buka obrolan dengan NEXA')}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-card transition-transform duration-300 hover:scale-105"
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-card transition-transform duration-300 hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary motion-reduce:transition-none motion-reduce:hover:scale-100"
       >
-        {terbuka ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+        {terbuka ? <X aria-hidden="true" className="h-6 w-6" /> : <img src={maskot} alt="" aria-hidden="true" width="40" height="40" className="h-10 w-10 object-contain" />}
       </button>
     </div>
   );

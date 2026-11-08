@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import HeroPanel from './HeroPanel';
 import './HeroCarousel.css';
@@ -13,19 +14,20 @@ export default function HeroCarousel({ slides, opening, page = 'beranda' }) {
     const node = root.current;
     const panels = [...node.querySelectorAll('[data-hero-slide]')];
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let current = 0, timer, animation, pending = 0;
-    let moving = false, disposed = false, visible = false;
+    let current = 0, timer, animation, pending = null;
+    let moving = false, disposed = false, visible = false, interacting = false;
     const schedule = () => {
       window.clearTimeout(timer);
-      if (disposed || moving || preference.matches || document.hidden || !visible || node.querySelector(':focus-visible') || node.matches(':focus-visible')) return;
+      if (disposed || moving || interacting || preference.matches || document.hidden || !visible || node.querySelector(':focus-visible') || node.matches(':focus-visible')) return;
       timer = window.setTimeout(() => move(1), 6200);
     };
     const move = async direction => {
       window.clearTimeout(timer);
-      if (moving) { pending = direction; return; }
+      if (moving) { pending = () => move(direction); return; }
+      const next = (current + direction + panels.length) % panels.length;
+      if (next === current) { schedule(); return; }
       moving = true;
       node.dataset.heroMoving = 'true';
-      const next = (current + direction + panels.length) % panels.length;
       const outgoing = panels[current], incoming = panels[next];
       await Promise.all([...incoming.querySelectorAll('img')].map(image => {
         image.loading = 'eager';
@@ -46,14 +48,15 @@ export default function HeroCarousel({ slides, opening, page = 'beranda' }) {
         node.dataset.heroMoving = 'false';
         incoming.inert = false;
         setActive(next);
-        if (pending) { const direction = pending; pending = 0; move(direction); }
+        if (pending) { const queued = pending; pending = null; queued(); }
         else schedule();
       };
       if (preference.matches) { complete(); return; }
-      gsap.set(incoming, { visibility: 'visible', xPercent: direction * 100 });
+      const sign = Math.sign(direction);
+      gsap.set(incoming, { visibility: 'visible', xPercent: sign * 100 });
       gsap.set([outgoing, incoming], { willChange: 'transform' });
       animation = gsap.timeline({ defaults: { duration: 0.8, ease: 'power3.inOut', force3D: true }, onComplete: complete })
-        .to(outgoing, { xPercent: -direction * 100 }, 0)
+        .to(outgoing, { xPercent: -sign * 100 }, 0)
         .to(incoming, { xPercent: 0 }, 0);
     };
     const finish = () => { pending = 0; animation?.progress(1); };
@@ -68,7 +71,7 @@ export default function HeroCarousel({ slides, opening, page = 'beranda' }) {
     preference.addEventListener('change', mediaChanged);
     window.addEventListener('resize', finish);
     mediaChanged();
-    actions.current = { move };
+    actions.current = { move, pause: () => { interacting = true; window.clearTimeout(timer); }, resume: () => { interacting = false; schedule(); } };
     // Load upcoming artwork after the opening image, then decode again before each transition.
     Promise.all([...panels[0].querySelectorAll('img')].map(image => image.decode().catch(() => {}))).then(() => {
       if (disposed) return;
@@ -93,9 +96,16 @@ export default function HeroCarousel({ slides, opening, page = 'beranda' }) {
   }}>
     <p id="hero-keyboard-instructions" className="sr-only">{t('Gunakan tombol panah kiri atau kanan untuk mengganti sorotan sekolah.')}</p>
     <div className="hero-carousel-viewport" aria-live="off">
-      {slides.map((slide, index) => <div key={slide.id} data-hero-slide={index} data-active={active === index} className="hero-carousel-slide" role="group" aria-roledescription={t('Slide')} aria-label={t('{number} dari {total}: {name}', { number: index + 1, total: slides.length, name: t(slide.name) })} aria-hidden={active !== index} inert={active !== index}>
+      {slides.map((slide, index) => <div key={slide.id} id={`hero-${page}-slide-${index}`} data-hero-slide={index} data-active={active === index} className="hero-carousel-slide" role="group" aria-roledescription={t('Slide')} aria-label={t('{number} dari {total}: {name}', { number: index + 1, total: slides.length, name: t(slide.name) })} aria-hidden={active !== index} inert={active !== index}>
         {index === 0 && opening ? opening : <HeroPanel content={slide.content} media={slide.media} carousel heading={index === 0 ? 'h1' : 'h2'} priority={index === 0} />}
       </div>)}
     </div>
+    {slides.length > 1 && <div className="hero-carousel-controls" role="group" aria-label={t('Navigasi sorotan sekolah')}
+      onPointerEnter={event => { if (event.pointerType === 'mouse') actions.current.pause?.(); }} onPointerLeave={event => { if (event.pointerType === 'mouse') actions.current.resume?.(); }}
+      onPointerDown={event => { if (event.pointerType !== 'mouse') actions.current.pause?.(); }} onPointerUp={event => { if (event.pointerType !== 'mouse') actions.current.resume?.(); }} onPointerCancel={() => actions.current.resume?.()}
+      >
+      <button type="button" className="hero-carousel-previous" aria-label={t('Sorotan sebelumnya')} onClick={() => actions.current.move?.(-1)}><ChevronLeft aria-hidden="true" /></button>
+      <button type="button" className="hero-carousel-next" aria-label={t('Sorotan berikutnya')} onClick={() => actions.current.move?.(1)}><ChevronRight aria-hidden="true" /></button>
+    </div>}
   </div>;
 }

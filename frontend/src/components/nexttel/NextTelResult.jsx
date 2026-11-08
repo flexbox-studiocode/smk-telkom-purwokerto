@@ -24,7 +24,7 @@ const NextTelResult = ({ result, explanation, loading, error, onRetry, onRestart
   return (
     <div className="nexttel-result">
       <HeroBreadcrumb current="Hasil tes minat" parent="NextTel AI" parentTo="/nexttel" />
-      <div className="nexttel-result__tags"><span>#DigitalSmartSchool</span><span>#GlobalTechnopreneur</span></div>
+      <div className="nexttel-result__tags"><span>#NextGen</span><span>#GlobalTechnopreneur</span></div>
       <div className="nexttel-result__banner">
         <svg className="nexttel-result__artwork" viewBox="0 0 1694 237" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <image href="/assets/nexttel/result-ellipse-326.svg" x="526.87" y="138" width="246.256" height="99.129" />

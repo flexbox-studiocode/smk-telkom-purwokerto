@@ -2,11 +2,11 @@ import { guruDescriptionTranslations } from './guruDescriptions';
 
 export default {
   ...guruDescriptionTranslations,
-  "Mata pelajaran mengikuti informasi terbaru; jabatan organisasi mengacu pada SK Pengawakan 2026/2027.": "Teaching subjects follow the latest information; organisational roles refer to the 2026/2027 staffing decree.",
+  "Mata pelajaran mengikuti informasi terbaru; jabatan organisasi mengacu pada SK Pengawakan 2026/2027.": "Teaching subjects follow the latest information; organizational roles refer to the 2026/2027 staffing decree.",
   "Kesiswaan": "Student Affairs",
   "Karakter": "Character Development",
   "Mata Pelajaran": "Teaching Subject",
-  "Jabatan Organisasi": "Organisational Role",
+  "Jabatan Organisasi": "Organizational Role",
   "Jabatan dalam SK 2026/2027": "Role in the 2026/2027 Decree",
   "Jabatan Terbaru": "Latest Role",
   "Pembina Sekbid IV": "Adviser for Section IV",

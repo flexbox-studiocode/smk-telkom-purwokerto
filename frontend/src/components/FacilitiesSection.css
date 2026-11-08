@@ -28,10 +28,10 @@
   padding: 0.75rem 1.25rem;
   border: 1px solid var(--color-primary);
   border-radius: 999px;
-  font-family: var(--font-sans);
+  font-family: var(--font-inter);
   font-size: clamp(0.875rem, 2.166vw, 2.5rem);
   font-weight: 800;
-  line-height: 1.2;
+  line-height: normal;
   text-align: center;
   text-decoration: none;
   transition: background-color 150ms, color 150ms;
@@ -100,3 +100,14 @@
   transform: scaleX(var(--facility-progress, 0));
   opacity: var(--facility-line-opacity, 1);
 }
+
+.facilities-heading { container-type: inline-size; }
+.facilities-heading > p:first-child { font-size: clamp(1rem, 1.837cqw, 2rem); font-weight: 500; line-height: normal; letter-spacing: .12em; }
+.facilities-heading h2 { font-size: clamp(1.5rem, 3.674cqw, 4rem); font-weight: 800; line-height: normal; letter-spacing: .12em; }
+.facilities-heading > p:last-child { font-size: clamp(.875rem, .918cqw, 1rem); font-weight: 600; line-height: normal; letter-spacing: .12em; }
+.facility-slide { container-type: inline-size; }
+.facility-slide [data-slide-panel] > span:first-child, .facility-slide [data-slide-preview] { font-size: clamp(.875rem, 5.892cqw, 2.25rem); font-weight: 600; line-height: normal; }
+.facility-slide [data-slide-panel] > span:last-child { font-size: clamp(.75rem, 2.619cqw, 1rem); font-weight: 500; line-height: normal; letter-spacing: .12em; }
+.facilities-indicators button { font-size: clamp(.75rem, 1.299vw, 1.5rem); font-weight: 700; line-height: normal; }
+
+.facility-slide [data-slide-preview][data-classroom] { font-weight: 800; }

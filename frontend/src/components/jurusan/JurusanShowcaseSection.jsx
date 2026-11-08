@@ -13,8 +13,8 @@ const JurusanShowcaseSection = () => {
 
   return (
     <section className="overflow-hidden bg-white py-8 lg:py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="font-heading text-xl sm:text-2xl font-extrabold text-dark-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 [container-type:inline-size]">
+        <h2 className="font-heading text-[clamp(1.25rem,2.296cqw,2.5rem)] font-extrabold text-dark-900">
           {language === 'en' ? t('Pameran Proyek Siswa') : <>{projectShowcase.title}{' '}
           <span className="text-primary">{projectShowcase.titleAccent}</span>{' '}
           {projectShowcase.titleTail}</>}

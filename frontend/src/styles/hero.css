@@ -3,30 +3,50 @@
   --hero-height: 29rem;
   --hero-overlap: 2.5rem;
   --hero-radius: 2rem;
+  --hero-gap-sm: .625rem;
+  --hero-gap-md: .75rem;
+  --hero-gap-lg: 1.25rem;
+  --hero-clearance: 1.5rem;
   padding-top: 1rem;
   padding-bottom: 1.5rem;
 }
-.hero-container { width: 100%; max-width: 80rem; margin-inline: auto; padding-inline: 1rem; }
+.hero-container { container-type: inline-size; width: 100%; max-width: 80rem; margin-inline: auto; padding-inline: 1rem; }
 .hero-panel { position: relative; aspect-ratio: auto; border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent); border-radius: var(--hero-radius); background: white; padding: .75rem; }
 .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; align-items: stretch; }
 .hero-copy { min-width: 0; position: relative; z-index: 10; padding: 1.5rem .75rem; }
-.hero-copy h1 { overflow-wrap: anywhere; }
+.hero-panel:where(:not(.hero-panel--detail)) .hero-copy h1, .hero-panel:where(:not(.hero-panel--detail)) .hero-copy h2 { overflow-wrap: anywhere; font-family: var(--font-jakarta); font-size: var(--text-figma-page); font-weight: 800; line-height: normal; letter-spacing: var(--tracking-figma-heading); }
+.hero-panel:where(:not(.hero-panel--detail)) .hero-copy > p { font-size: clamp(.75rem, .804cqw, .875rem); font-weight: 500; line-height: normal; letter-spacing: var(--tracking-figma-copy); }
+.hero-panel:where(:not(.hero-panel--detail)) .hero-copy > a, .hero-panel:where(:not(.hero-panel--detail)) .hero-copy > div > a { font-size: var(--text-figma-label); font-weight: 600; line-height: normal; letter-spacing: var(--tracking-figma-copy); }
+.hero-panel:where(:not(.hero-panel--detail)) .hero-copy > div > a + a { font-weight: 700; }
+.hero-panel:where(:not(.hero-panel--detail)) .hero-copy [data-hero-badges] span { font-size: clamp(.625rem, .746cqw, .8125rem); font-weight: 800; line-height: normal; letter-spacing: var(--tracking-figma-copy); }
+:is(.hero-panel--school, .hero-panel--teachers, .hero-panel--facilities, .hero-panel--activities, .hero-panel--announcement, .hero-panel--calendar, .hero-panel--detail) .hero-copy > nav {
+  font-size: .625rem;
+  font-weight: 800;
+  line-height: normal;
+  letter-spacing: var(--tracking-figma-copy);
+  & [aria-current="page"] { font-family: var(--font-inter); font-weight: inherit; }
+}
+/* One type scale for every full-bleed hero (opening panels and carousel slides alike), so a page reads the same
+   before and after its carousel advances. Beranda is the reference; the detail hero keeps its own sizing. */
+.hero-panel--bleed:not(.hero-panel--detail) .hero-copy :is(h1, h2) { font-family: var(--font-jakarta); font-size: clamp(1.625rem, 2.5cqw, 2.75rem); font-weight: 800; line-height: 1.2; letter-spacing: var(--tracking-figma-heading); text-wrap: balance; }
+.hero-panel--bleed:not(.hero-panel--detail) .hero-copy > p { font-family: var(--font-jakarta); font-size: var(--text-figma-body); font-weight: 500; line-height: 1.65; letter-spacing: var(--tracking-figma-copy); text-wrap: pretty; }
 .hero-grid > .hero-image, .hero-media { width: 100%; min-height: 0; aspect-ratio: 1208 / 679; border-radius: 1.75rem; overflow: hidden; }
 .hero-image { display: block; object-fit: cover; object-position: center; }
 .hero-media > .hero-image { position: absolute; inset: 0; width: 100%; height: 100%; }
 .hero-floating { position: relative; z-index: 10; width: calc(100% - 2rem); margin-inline: auto; margin-top: calc(-1 * var(--hero-overlap, 2.5rem)); border-radius: 1rem; border: 1px solid var(--color-dark-100); background: white; box-shadow: var(--shadow-card); }
 .hero-floating--quick .quick-access-content { display: grid; grid-template-rows: auto minmax(2.25rem, 1fr) auto; row-gap: .25rem; }
-.hero-floating--quick .quick-access-title, .hero-floating--quick .quick-access-description, .hero-floating--quick .quick-access-cta { margin: 0; letter-spacing: normal; word-spacing: normal; text-align: left; }
-.hero-floating--quick .quick-access-title { font-size: 1rem; line-height: 1.25; }
-.hero-floating--quick .quick-access-description, .hero-floating--quick .quick-access-cta { font-size: .75rem; line-height: 1.5; }
+.hero-floating--quick .quick-access-title, .hero-floating--quick .quick-access-description, .hero-floating--quick .quick-access-cta { margin: 0; letter-spacing: .08em; word-spacing: normal; text-align: left; }
+.hero-floating--quick .quick-access-title { font-size: clamp(1rem, 1.665cqw, 1.8125rem); font-weight: 800; line-height: normal; letter-spacing: .05em; }
+.hero-floating--quick .quick-access-description, .hero-floating--quick .quick-access-cta { font-size: .75rem; font-weight: 500; line-height: normal; }
 .hero-floating--stats > div { grid-template-columns: minmax(0, 1fr); padding: 0; gap: 0; }
 .hero-floating--stats > div > div { min-width: 0; padding: 1.25rem 1.5rem; gap: .75rem; }
 .hero-floating--stats > div > div > div { min-width: 0; overflow-wrap: anywhere; }
 .hero-floating--stats > div > div + div { border-top: 1px solid var(--color-dark-200); }
 .hero-floating--stats > div > div > span { width: 2.5rem; height: 2.5rem; }
 .hero-floating--stats > div > div > span > svg { width: 1.25rem; height: 1.25rem; }
-.hero-floating--stats > div > div > div > p:first-child { font-size: 1.25rem; font-weight: 800; }
-.hero-floating--stats > div > div > div > p:last-child { font-size: .6875rem; }
+.hero-floating--stats > div > div > div > p:first-child { font-size: var(--text-figma-section); font-weight: 800; line-height: normal; letter-spacing: .05em; }
+.hero-floating--stats > div > div > div > p:last-child { font-size: clamp(.75rem, 1.148cqw, 1.25rem); font-weight: 500; line-height: normal; letter-spacing: .08em; }
+.hero-floating--quick .quick-access-cta { font-size: var(--text-figma-label); }
 .hero-panel--background { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
 .hero-panel--background .hero-copy { order: 1; padding: 1.5rem; }
 .hero-panel--background .hero-background { order: 2; position: relative; width: 100%; height: auto; aspect-ratio: 1208 / 679; margin: 0; border-radius: 1.75rem; overflow: hidden; }
@@ -52,6 +72,7 @@
   .hero-panel.hero-grid { min-height: var(--hero-height); }
   .hero-grid { min-height: calc(var(--hero-height) - 2rem - 2px); grid-template-columns: minmax(0, 38fr) minmax(0, 62fr); gap: 1rem; }
   .hero-copy { padding: 1rem; }
+  /* Scale these titles to the existing copy column so the source line breaks and stats fit. */
   .hero-panel--floating .hero-copy { padding-bottom: 3rem; }
   .hero-grid > .hero-image, .hero-media { height: 100%; min-height: 0; aspect-ratio: auto; }
   .hero-grid > .hero-image { max-height: calc(var(--hero-height) - 2rem - 2px); }
@@ -69,17 +90,14 @@
   .hero-panel--calendar .hero-copy { width: 40%; padding: 2rem; }
   .hero-panel--calendar .hero-calendar-art { position: absolute; inset: 0; margin: 0; aspect-ratio: auto; }
 }
+@media (min-width: 64rem) and (max-width: 79.999rem) {
+  /* The copy column is narrow here; ease the type so descriptions stay short. */
+  .hero-panel--bleed:not(.hero-panel--detail) .hero-copy :is(h1, h2) { font-size: clamp(1.375rem, 2.5cqw, 1.75rem); }
+  .hero-panel--bleed:not(.hero-panel--detail) .hero-copy > p { font-size: .8125rem; letter-spacing: .08em; }
+}
 @media (min-width: 80rem) {
   .school-hero { --hero-height: 29rem; }
   .hero-floating--quick .quick-access-card { padding-inline: 1rem; gap: .75rem; }
-}
-
-/* Reserve enough room for the longer teacher introduction above the floating cards. */
-@media (min-width: 64rem) {
-  .school-hero--teachers { --hero-height: 38rem; }
-}
-@media (min-width: 80rem) {
-  .school-hero--teachers { --hero-height: 36rem; }
 }
 
 /* Composite artwork shares the panel edges; the copy and floating cards stay in flow. */
@@ -93,6 +111,12 @@
 }
 .hero-panel--bleed .hero-grid { gap: 0; }
 .hero-panel--bleed .hero-copy { padding: 1.5rem; }
+/* Shared vertical rhythm for the copy column of every full-bleed hero (carousel slides and page heroes). */
+.hero-panel--bleed .hero-copy > nav { margin-bottom: var(--hero-gap-md); }
+.hero-panel--bleed .hero-copy > [data-hero-badges] + :is(h1, h2) { margin-top: var(--hero-gap-md); }
+.hero-panel--bleed .hero-copy > :is(h1, h2) + p { margin-top: var(--hero-gap-sm); }
+.hero-panel--bleed .hero-copy > p + :is(a, div, label), .hero-panel--bleed .hero-copy > label + div { margin-top: var(--hero-gap-lg); }
+.hero-panel--bleed .hero-copy > .grid { row-gap: var(--hero-gap-md); }
 .hero-panel--bleed .hero-image,
 .hero-panel--bleed .hero-media,
 .hero-panel--bleed .hero-background { border-radius: 0; }
@@ -108,7 +132,7 @@
 .hero-panel--bleed .hero-background { margin: 0; border-radius: 0; }
 .hero-panel--bleed .hero-profile-crop { border-radius: 0; }
 .hero-panel--teachers { --hero-media-ratio: 2200 / 1033; --hero-media-width: 72%; --hero-media-position: left center; }
-.hero-panel--activities { --hero-media-ratio: 2000 / 1032; --hero-media-width: 69%; --hero-media-position: right center; }
+.hero-panel--activities { --hero-media-ratio: 1999 / 1007; --hero-media-width: 69%; --hero-media-position: right center; }
 .hero-panel--admissions { --hero-media-ratio: 1248 / 676; --hero-media-width: 72%; }
 .hero-panel--school { --hero-media-width: 70%; }
 .hero-panel--announcement { --hero-media-ratio: 1600 / 751; --hero-media-position: right center; }
@@ -126,14 +150,15 @@
 .hero-panel--facilities { --hero-media-width: 65.4%; }
 .hero-panel--facilities .hero-background { aspect-ratio: 1144 / 679; }
 .hero-panel--facilities .hero-copy { width: auto; }
-.hero-panel--facilities .hero-background > img { mask-image: url('../assets/fasilitas/hero-mask.svg'); mask-size: 100% 100%; mask-repeat: no-repeat; }
+.hero-panel--facilities .hero-background > img { object-position: right bottom; mask-image: url('../assets/fasilitas/hero-mask.svg'); mask-size: 100% 100%; mask-repeat: no-repeat; }
 [data-facilities-quick-access] .quick-access-cta { min-height: 2.75rem; }
 
 @media (min-width: 64rem) {
   .hero-panel--bleed { padding: 0; }
   .hero-panel--bleed .hero-grid { min-height: calc(var(--hero-height) - 2px); grid-template-columns: minmax(0, 38fr) minmax(0, 62fr); }
-  .hero-panel--bleed .hero-copy { padding: 2rem; }
-  .hero-panel--bleed.hero-panel--floating .hero-copy { padding-bottom: 4rem; }
+  .hero-panel--bleed .hero-copy { padding: 1.5rem 2rem 2rem; }
+  /* Keep the content clear of the floating cards that overlap the panel's bottom edge. */
+  .hero-panel--bleed:is(.hero-panel--floating, .hero-panel--activities) .hero-copy { padding-bottom: calc(var(--hero-overlap) + var(--hero-clearance)); }
   .hero-panel--facilities .hero-copy { width: 40%; }
   .hero-panel--bleed .hero-grid > .hero-image,
   .hero-panel--bleed .hero-media,
@@ -155,11 +180,16 @@
     pointer-events: none;
     background: linear-gradient(to right, var(--color-secondary) 28%, transparent 48%);
   }
-  .hero-panel--teachers::after { background: linear-gradient(to right, var(--color-secondary) 29%, transparent 42%); }
+  /* Wrap the heading inside the white side of the fade (percentage of the copy box, so it scales with the panel). */
+  .hero-panel--teachers .hero-copy { padding-right: 6%; }
+  .hero-panel--teachers .hero-copy :is(h1, h2) { max-width: 82%; }
+  .hero-panel--teachers::after { background: linear-gradient(to right, var(--color-secondary) 31%, transparent 44%); }
   .hero-panel--activities::after { background: linear-gradient(to right, var(--color-secondary) 31%, transparent 48%); }
 }
 
 @media (min-width: 64rem) and (max-width: 79.999rem) {
+  /* The panel is taller than its copy here, so trade extra lines for a clear gap before the photo. */
+  .hero-panel--teachers .hero-copy { padding-right: 16%; }
   .hero-panel--facilities .hero-background { top: auto; height: auto; }
   /* Preserve whole groups at the narrower desktop ratio, extending their sky above. */
   .hero-panel--bleed .hero-grid > .hero-image,

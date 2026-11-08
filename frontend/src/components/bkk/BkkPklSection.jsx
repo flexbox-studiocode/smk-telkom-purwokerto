@@ -22,14 +22,14 @@ const BkkPklSection = () => {
                 alt={pkl.company}
                 className="h-7 w-auto max-w-[6rem] self-start object-contain"
               />
-              <h3 className="mt-3.5 font-heading text-xs font-bold text-dark-900">{t(pkl.role)}</h3>
-              <p className="mt-1 text-[9px] text-dark-500">{pkl.company}</p>
-              <p className="text-[9px] text-dark-500">{t(pkl.location)}</p>
-              <p className="mt-3 text-[10px] font-bold text-primary">{t(pkl.kuota)}</p>
-              <p className="mt-0.5 text-[9px] text-primary">{t(pkl.kota)}</p>
+              <h3 className={`mt-3.5 font-heading ${pkl.role === 'PKL Software Engineer' ? 'text-[16.63px]' : 'text-[19.4px]'} font-normal leading-[normal] tracking-[.05em] text-dark-900`}>{t(pkl.role)}</h3>
+              <p className="mt-1 text-[12.47px] leading-[normal] tracking-[.08em] text-dark-500">{pkl.company}</p>
+              <p className="text-[12.47px] leading-[normal] tracking-[.08em] text-dark-500">{t(pkl.location)}</p>
+              <p className="mt-3 text-[13.86px] font-bold leading-[normal] tracking-[.05em] text-primary">{t(pkl.kuota)}</p>
+              <p className="mt-0.5 text-[13.86px] leading-[normal] tracking-[.05em] text-primary">{t(pkl.kota)}</p>
               <Link
                 to={`/bkk/pkl/${slugify(`${pkl.role} ${pkl.company}`)}`}
-                className="mt-3.5 inline-flex items-center justify-center gap-1.5 rounded-full border border-dark-200 px-2.5 py-1.5 text-[8px] font-bold text-dark-500 transition-colors hover:border-primary hover:text-primary"
+                className="mt-3.5 inline-flex items-center justify-center gap-1.5 rounded-full border border-dark-200 px-2.5 py-1.5 text-[10.4px] font-normal leading-[normal] tracking-[.12em] text-dark-500 transition-colors hover:border-primary hover:text-primary"
               >
                 {t(pklData.ctaText)}
                 <ArrowRight className="h-2 w-2" />
@@ -41,7 +41,7 @@ const BkkPklSection = () => {
 
       {/* Ajakan tanya NEXA */}
       <div className="flex flex-col items-center rounded-2xl bg-primary-100 px-5 py-6 text-center">
-        <h2 className="whitespace-pre-line font-heading text-[11px] font-extrabold leading-snug text-primary-900">
+        <h2 className="whitespace-pre-line font-heading text-[16.63px] font-extrabold leading-[normal] tracking-[.05em] text-primary-900">
           {t(pklData.stela.title)}
         </h2>
         <img
@@ -52,7 +52,7 @@ const BkkPklSection = () => {
         />
         <Link
           to="/nexa"
-          className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[11px] font-bold text-white transition-colors hover:bg-primary-800"
+          className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[22.18px] font-extrabold leading-[normal] tracking-[.05em] text-white transition-colors hover:bg-primary-800"
         >
           {t(pklData.stela.ctaText)}
           <ArrowRight className="h-3.5 w-3.5" />

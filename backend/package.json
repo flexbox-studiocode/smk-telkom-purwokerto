@@ -10,6 +10,15 @@
     "prisma:generate": "prisma generate",
     "prisma:validate": "prisma validate",
     "prisma:migrate": "prisma migrate dev",
+    "db:status": "prisma migrate status",
+    "db:migrate": "prisma migrate deploy",
+    "db:generate": "prisma generate",
+    "db:seed": "node scripts/seed.mjs",
+    "db:backup": "node scripts/backup.mjs",
+    "db:backup:keygen": "node scripts/backup-keygen.mjs",
+    "db:backup:verify": "node scripts/backup-verify.mjs",
+    "db:restore": "node scripts/restore.mjs",
+    "db:etl:dry-run": "node scripts/etl/migrate.mjs --dry-run",
     "test": "node --import ./tests/setup.js --test"
   },
   "dependencies": {

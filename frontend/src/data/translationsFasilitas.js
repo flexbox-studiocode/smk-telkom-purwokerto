@@ -1,4 +1,5 @@
 export default {
+  'Geser Untuk Menjelajah': 'Drag to Explore',
   'Gedung D': 'Building D',
   'Kelas C 2.1': 'Classroom C 2.1',
   'Kelas C 3.1': 'Classroom C 3.1',

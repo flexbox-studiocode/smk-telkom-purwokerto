@@ -25,7 +25,7 @@ export default function MainLayout({ children, busy = false, className = '', cta
   }, [SmoothScroll]);
 
   return (
-    <div className={`min-h-screen bg-white ${className}`}>
+    <div className={`public-site min-h-screen bg-white ${className}`}>
       {SmoothScroll && <SmoothScroll />}
       <a href="#main-content" className="sr-only z-[100] rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4" onClick={(event) => {
         event.preventDefault();

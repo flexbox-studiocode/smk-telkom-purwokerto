@@ -19,7 +19,7 @@ export default function HeroPanel({ content, media, breadcrumb, carousel = false
     loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : 'low'} decoding="async"
     className={`hero-image ${media?.className || ''} ${language === 'en' && media?.srcEn ? 'hero-carousel-profile-en' : ''}`}
   />;
-  return <div className={`hero-panel hero-panel--floating hero-panel--bleed hero-panel--${media?.composition || 'students'}`}>
+  return <div className={`hero-panel hero-panel--slide hero-panel--floating hero-panel--bleed hero-panel--${media?.composition || 'students'}`}>
     <div className="hero-grid">
       <div className="hero-copy">
         {breadcrumb && <HeroBreadcrumb {...breadcrumb} />}

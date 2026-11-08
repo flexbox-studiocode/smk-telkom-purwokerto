@@ -40,7 +40,7 @@ const PrestasiPage = () => {
   }, []);
 
   useEffect(() => {
-    // Fetch awal menyinkronkan state halaman dengan data eksternal Supabase.
+    // Fetch awal menyinkronkan state halaman dengan data backend.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void loadPrestasi();
   }, [loadPrestasi]);

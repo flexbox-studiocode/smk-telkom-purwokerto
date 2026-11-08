@@ -1,0 +1,19 @@
+[Unit]
+Description=SMK Telkom Purwokerto — Daily encrypted MySQL + uploads backup
+After=network-online.target mysqld.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# Sesuaikan WorkingDirectory dan path node sesuai instalasi VPS Anda.
+WorkingDirectory=/opt/smk-telkom-purwokerto/backend
+EnvironmentFile=/opt/smk-telkom-purwokerto/backend/.env
+ExecStart=/usr/bin/node scripts/backup.mjs
+# Backup mengunggah ke Supabase Storage; keluar kode != 0 jika env backup hilang di production.
+TimeoutStartSec=3600
+User=smk
+Group=smk
+
+# Cron alternative (uncomment jika tidak memakai systemd timer):
+# 0 19 * * *  cd /opt/smk-telkom-purwokerto/backend && /usr/bin/node scripts/backup.mjs >> /var/log/smk-backup.log 2>&1
+# (02:00 WIB = 19:00 UTC hari sebelumnya)

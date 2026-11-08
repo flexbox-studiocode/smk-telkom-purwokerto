@@ -1,6 +1,66 @@
 /* Leave room for the decorative chains and keyboard focus rings. */
 .facility-content {
+  --facility-type-unit: calc(min(100vw, 1644px) / 1847);
   padding-inline: calc(clamp(6px, 2.11vw, 39px) + clamp(16px, 1.5vw, 28px));
+}
+#fasilitas-title {
+  font-family: var(--font-poppins);
+  font-size: max(24px, calc(48 * var(--facility-type-unit)));
+  line-height: normal;
+  letter-spacing: .05em;
+}
+#fasilitas-grid h3:not(.facility-nametag) {
+  font-family: var(--font-poppins);
+  font-size: max(20px, calc(40 * var(--facility-type-unit)));
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: .05em;
+}
+/* Category nametag (Figma 405:1300/405:1301, 36px type on a 68px tab). Every measure is em-based on the Figma size. */
+.facility-nametag { --nt: max(20px, calc(36 * var(--facility-type-unit))); display: flex; align-items: stretch; width: fit-content; max-width: 100%; margin: 0; font-size: var(--nt); }
+#fasilitas-grid .facility-nametag__body {
+  min-width: 0;
+  min-height: calc(var(--nt) * 68 / 36);
+  padding: calc(var(--nt) * 14 / 36) calc(var(--nt) * 15 / 36) 0 calc(var(--nt) * 13 / 36);
+  border-radius: calc(var(--nt) * 30 / 36) calc(var(--nt) * 30 / 36) 0 calc(var(--nt) * 4 / 36);
+  background: #cd0b20;
+  color: #fff;
+  font: inherit;
+  font-family: var(--font-poppins);
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: .05em;
+  text-wrap: balance;
+}
+.facility-nametag__accent { flex: none; align-self: stretch; width: calc(var(--nt) * 57 / 36); height: auto; }
+.facility-filters > button {
+  font-family: var(--font-poppins);
+  /* Reserve existing button padding at the narrow desktop breakpoint. */
+  font-size: clamp(12px, calc(1.44vw - 2.6px), 24px);
+  line-height: normal;
+  letter-spacing: .05em;
+}
+[data-facility-card] h4 {
+  font-family: var(--font-jakarta);
+  font-size: max(18px, calc(32 * var(--facility-type-unit)));
+  line-height: normal;
+}
+[data-facility-card="aula-3"] h4,
+[data-facility-card="semua-aula-3"] h4 {
+  font-size: max(18px, calc(30 * var(--facility-type-unit)));
+}
+[data-facility-card] p {
+  font-family: var(--font-jakarta);
+  font-size: max(11px, calc(12 * var(--facility-type-unit)));
+  font-weight: 500;
+  line-height: normal;
+}
+[data-facility-card] button {
+  font-family: var(--font-jakarta);
+  font-size: max(11px, calc(13 * var(--facility-type-unit)));
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: .08em;
 }
 .facility-filters {
   display: grid;
@@ -13,10 +73,16 @@
   width: clamp(5px, 1.3vw, 24px);
   z-index: -1;
   pointer-events: none;
-  background: url('../assets/fasilitas/page-accent.png') top center / 100% auto repeat-y;
+  background: url('../assets/fasilitas/page-accent-solid.svg') top center / 100% auto repeat-y;
+  -webkit-mask-image: linear-gradient(to right, black, transparent);
+  mask-image: linear-gradient(to right, black, transparent);
 }
 .facility-chain--right { right: 0; }
-.facility-chain--left { left: 0; transform: scaleX(-1); }
+.facility-chain--left {
+  left: 0;
+  transform: scaleX(-1);
+  /* Mirroring also reverses the mask, so both outer edges fade to transparent. */
+}
 @media (min-width: 40rem) {
   .facility-filters { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }

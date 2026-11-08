@@ -95,7 +95,7 @@ const PengumumanDaftarSection = ({ items = [], tampilkanLihatSemua = true }) => 
               <div className="mt-4 flex justify-start">
                 <Link
                   to="/pengumuman/semua"
-                  className="inline-flex min-h-11 items-center justify-between gap-6 rounded-md border border-primary px-6 py-3 font-[family-name:'Plus_Jakarta_Sans',var(--font-sans)] text-xs font-extrabold tracking-wide text-primary transition-colors hover:bg-primary hover:text-white sm:w-[47.4%]"
+                  className="inline-flex min-h-11 items-center justify-between gap-6 rounded-md border border-primary px-6 py-3 font-[family-name:var(--font-jakarta)] text-[16.63px] font-extrabold leading-[normal] tracking-[.05em] text-primary transition-colors hover:bg-primary hover:text-white sm:w-[47.4%]"
                 >
                   {t(daftarPengumuman.ctaText)}
                   <ArrowRight className="h-4 w-4" />

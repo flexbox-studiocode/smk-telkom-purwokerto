@@ -2,6 +2,8 @@ import { Link, NavLink } from 'react-router-dom';
 import {
   BriefcaseBusiness,
   CalendarDays,
+  GraduationCap,
+  Info,
   LayoutDashboard,
   Megaphone,
   Newspaper,
@@ -15,6 +17,8 @@ import { adminMenu, adminSekolah } from '../../data/dummyData';
 // pola yang sudah dipakai HeroStatsBar.
 const ikon = {
   dashboard: LayoutDashboard,
+  ppdb: GraduationCap,
+  informasiSpmb: Info,
   prestasi: Trophy,
   bkk: BriefcaseBusiness,
   berita: Newspaper,
@@ -33,7 +37,7 @@ const DashboardSidebar = ({ onPilihMenu }) => (
       </div>
     </Link>
 
-    <p className="px-6 pb-3 text-[10px] font-bold uppercase tracking-[0.12em] text-dark-400">
+    <p className="px-6 pb-3 text-[11.38px] font-extrabold leading-[normal] uppercase tracking-[0.12em] text-dark-400">
       Menu Utama
     </p>
 
@@ -47,7 +51,7 @@ const DashboardSidebar = ({ onPilihMenu }) => (
             end={end}
             onClick={onPilihMenu}
             className={({ isActive }) =>
-              `flex items-center gap-3 rounded-full py-2.5 pl-2.5 pr-4 text-sm font-semibold transition-colors ${
+              `flex items-center gap-3 rounded-full py-2.5 pl-2.5 pr-4 text-[14.22px] font-bold leading-[normal] tracking-[.03em] transition-colors ${
                 isActive
                   ? 'bg-primary text-white shadow-card'
                   : 'text-dark-700 hover:bg-primary-50 hover:text-primary'
@@ -73,9 +77,9 @@ const DashboardSidebar = ({ onPilihMenu }) => (
 
     <div className="p-4">
       <div className="rounded-2xl border border-dark-100 bg-white px-5 py-4 shadow-card">
-        <p className="font-heading text-xs font-bold text-dark-900">{adminSekolah.nama}</p>
+        <p className="font-heading text-[12.8px] font-extrabold leading-[normal] tracking-[.02em] text-dark-900">{adminSekolah.nama}</p>
         {adminSekolah.alamat.map((baris) => (
-          <p key={baris} className="mt-1 text-[11px] leading-snug text-dark-500">
+          <p key={baris} className="mt-1 text-[10.67px] font-semibold leading-[15.64px] tracking-[.03em] text-dark-500">
             {baris}
           </p>
         ))}

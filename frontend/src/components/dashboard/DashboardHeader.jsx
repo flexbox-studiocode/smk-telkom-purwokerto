@@ -53,7 +53,7 @@ const DashboardHeader = ({ onBukaMenu }) => {
             value={cari}
             onChange={(e) => setCari(e.target.value)}
             placeholder={adminProfil.placeholderCari}
-            className="w-full rounded-2xl border border-dark-200 py-3 pl-11 pr-4 text-xs text-dark-800 outline-none transition-colors placeholder:text-dark-400 focus:border-primary"
+            className="w-full rounded-2xl border border-dark-200 py-3 pl-11 pr-4 text-xs font-light leading-[normal] tracking-[.03em] text-dark-800 outline-none transition-colors placeholder:text-dark-400 focus:border-primary"
           />
         </form>
 
@@ -68,10 +68,10 @@ const DashboardHeader = ({ onBukaMenu }) => {
         <div className="flex flex-shrink-0 items-center gap-3">
           <img src={telkomLogo} alt="Logo SMK Telkom Purwokerto" width="40" height="40" className="h-10 w-10 rounded-full bg-dark-200 p-1.5 object-contain" />
           <div className="hidden sm:block">
-            <p className="font-heading text-xs font-bold leading-tight text-dark-900">
+            <p className="font-heading text-[14.22px] font-bold leading-[normal] tracking-[.03em] text-dark-900">
               {typeof user?.user_metadata?.full_name === 'string' ? user.user_metadata.full_name : user?.email || adminProfil.nama}
             </p>
-            <p className="text-[11px] text-dark-500">{adminProfil.peran}</p>
+            <p className="text-[11.38px] font-medium leading-[normal] tracking-[.03em] text-dark-500">{adminProfil.peran}</p>
           </div>
         </div>
 

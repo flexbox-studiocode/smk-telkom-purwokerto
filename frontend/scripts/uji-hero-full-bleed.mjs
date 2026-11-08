@@ -57,7 +57,7 @@ try {
         results.push({ path, width, language, geometry });
         if (language === 'id' && [1847, 1440, 1024, 768, 390].includes(width)) await page.locator('.school-hero').screenshot({ path: join(output, `${path.slice(1).replaceAll('/', '-') || 'beranda'}-${width}.png`), animations: 'disabled' });
         if (baseline) continue;
-        assert.deepEqual(await panel.locator('[data-hero-slide][data-active="true"] [data-hero-badges] span').allTextContents(), ['#DigitalSmartSchool', '#GlobalTechnopreneur'], `${path}/${width}/${language}: complete school branding`);
+        assert.deepEqual(await panel.locator('[data-hero-slide][data-active="true"] [data-hero-badges] span').allTextContents(), ['#NextGen', '#GlobalTechnopreneur'], `${path}/${width}/${language}: complete school branding`);
         assert.equal(geometry.overflow, false, `${path}/${width}/${language}: overflow`);
         assert.equal(geometry.broken, 0, `${path}: broken artwork`);
         assert.equal(geometry.radius, '32px');
@@ -92,7 +92,7 @@ try {
     await page.goto(`${base}/jurusan/${program}`);
     const badges = page.locator('[data-hero-slide][data-active="true"] [data-hero-badges]');
     await badges.waitFor();
-    assert.deepEqual(await badges.locator('span').allTextContents(), ['#DigitalSmartSchool', '#GlobalTechnopreneur']);
+    assert.deepEqual(await badges.locator('span').allTextContents(), ['#NextGen', '#GlobalTechnopreneur']);
   }
   assert.deepEqual(errors, []);
   console.log(`PASS ${results.length} viewport/language checks${baseline ? ' (baseline)' : ': image coverage, dimensions, controls, floating cards, assets and runtime'}.`);

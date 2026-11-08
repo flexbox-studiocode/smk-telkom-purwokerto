@@ -21,7 +21,6 @@ export const PAGE_META = {
   '/bkk/panduan': ['Panduan Karier | SMK Telkom Purwokerto', 'Panduan persiapan karier untuk siswa SMK Telkom Purwokerto.'],
   '/jurusan/faq': ['FAQ Jurusan | SMK Telkom Purwokerto', 'Pertanyaan dan jawaban tentang program keahlian SMK Telkom Purwokerto.'],
   '/jurusan/perbandingan': ['Perbandingan Jurusan | SMK Telkom Purwokerto', 'Bandingkan program keahlian SMK Telkom Purwokerto.'],
-  '/ketentuan-spmb': ['Ketentuan SPMB | SMK Telkom Purwokerto', 'Ketentuan pendaftaran siswa baru SMK Telkom Purwokerto.'],
   '/pengumuman/populer': ['Pengumuman Terbaru | SMK Telkom Purwokerto', 'Pengumuman resmi sekolah yang terbaru, diurutkan berdasarkan tanggal.'],
   '/pengumuman/semua': ['Semua Pengumuman | SMK Telkom Purwokerto', 'Seluruh pengumuman resmi sekolah, dari yang terbaru sampai yang terlama.'],
   '/pengumuman/timeline': ['Timeline Pengumuman | SMK Telkom Purwokerto', 'Pengumuman sekolah disusun berdasarkan tanggal pengumuman.'],
