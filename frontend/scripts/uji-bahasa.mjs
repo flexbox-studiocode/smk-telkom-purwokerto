@@ -1,4 +1,3 @@
-import { OFFICIAL_ADMISSIONS_URL } from '../src/utils/admissions.js';
 import assert from 'node:assert/strict';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -32,7 +31,7 @@ try {
   assert.deepEqual(navLinks[1].children.map(({ label, href }) => [label, href]), [
     ['Profil Sekolah', '/profil-sekolah'], ['Fasilitas Sekolah', '/fasilitas'], ['Profil Guru', '/profil-sekolah/guru'], ['Ekstrakurikuler', '/ekstrakurikuler'],
   ]);
-  assert.deepEqual(navLinks[5].children.map(({ label, href }) => [label, href]), [['Berita', '/berita'], ['Pengumuman', '/pengumuman'], ['Kalender Kegiatan', '/kalender'], ['Informasi SPMB', OFFICIAL_ADMISSIONS_URL]]);
+  assert.deepEqual(navLinks[5].children.map(({ label, href }) => [label, href]), [['Berita', '/berita'], ['Pengumuman', '/pengumuman'], ['Kalender Kegiatan', '/kalender'], ['Informasi SPMB', '/spmb']]);
   assert.deepEqual(navLinks[4].children.map(({ label, href }) => [label, href]), [['BKK', '/bkk'], ['Sinergi', '/sinergi']]);
   assert.deepEqual(navLinks[6].children.map(({ label }) => label), ['Mylms', 'STARRY', 'DIGITS', 'SAKU', 'BISA', 'JUARA', 'LIONS', 'ADUAN']);
   assert.equal(translate('Layanan', 'en'), 'Services');
