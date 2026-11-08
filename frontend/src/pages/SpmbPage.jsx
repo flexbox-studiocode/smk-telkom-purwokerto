@@ -15,6 +15,7 @@ import { ppdbMeta, quickLinks, mitraIndustri } from '../data/dummyData';
 import { spmbContact } from '../data/spmbInfo';
 import { registrationForSpmb, safeSpmbLink, toSpmbWave } from '../utils/spmbInformation';
 import { registrationCountdown, registrationState } from '../utils/spmbSchedule';
+import { OFFICIAL_ADMISSIONS_URL } from '../utils/admissions';
 import hero from '../assets/spmb/hero-1248.webp';
 import hero640 from '../assets/spmb/hero-640.webp';
 import hero960 from '../assets/spmb/hero-960.webp';
@@ -43,7 +44,7 @@ const admissionLinks = [{ title: 'Alur SPMB', desc: 'Lihat langkah dari buat aku
 const content = {
   hashtags: ['#NextGen', '#GlobalTechnopreneur'], title: 'Wujudkan Mimpimu', titleAccent: 'di Dunia Digital',
   description: `Daftar SPMB SMK Telkom Purwokerto Tahun Ajaran ${ppdbMeta.tahun}/${Number(ppdbMeta.tahun) + 1} dan mulai langkah pertamamu menuju karier di bidang teknologi.`,
-  primaryCta: { label: 'Daftar SPMB', href: '/spmb/daftar' }, secondaryCta: { label: 'Lihat Jurusan', href: '/jurusan' },
+  primaryCta: { label: 'Daftar SPMB', href: OFFICIAL_ADMISSIONS_URL }, secondaryCta: { label: 'Lihat Jurusan', href: '/jurusan' },
 };
 
 function InformationLink({ href, className, children }) {
@@ -74,7 +75,10 @@ function RegistrationInfo({ schedule, closed = false }) {
 export default function SpmbPage({ initialData }) {
   const { settings } = useSiteSettings();
   const { t, locale } = useLanguage();
-  const liveContent = settings ? {...content, description: t(content.description).replace(`${ppdbMeta.tahun}/${Number(ppdbMeta.tahun) + 1}`,settings.academic_year).replace('SMK Telkom Purwokerto',settings.school_name), primaryCta: settings.spmb_open ? content.primaryCta : {label:t('Pendaftaran ditutup'),href:'/spmb#informasi-pendaftaran'}} : content;
+  const spmbOpen = settings?.spmbOpen ?? settings?.spmb_open;
+  const academicYear = settings?.academicYear ?? settings?.academic_year ?? `${ppdbMeta.tahun}/${Number(ppdbMeta.tahun) + 1}`;
+  const schoolName = settings?.schoolName ?? settings?.school_name ?? 'SMK Telkom Purwokerto';
+  const liveContent = {...content, description: t(content.description).replace(`${ppdbMeta.tahun}/${Number(ppdbMeta.tahun) + 1}`, academicYear).replace('SMK Telkom Purwokerto', schoolName), primaryCta: spmbOpen === false ? { label: t('Pendaftaran ditutup'), href: '/spmb#informasi-pendaftaran' } : content.primaryCta};
   const { items, stats, loading, error, refresh } = useSpmbInformation(true, initialData);
   const schedule = registrationForSpmb(items, stats);
   const spmbSteps = items.filter(item => item.jenis === 'timeline');
@@ -84,11 +88,11 @@ export default function SpmbPage({ initialData }) {
   const terms = items.filter(item => item.jenis === 'syarat');
   const empty = <p role="status" className="py-6 text-center text-xs leading-relaxed text-dark-500">{t('Informasi belum dipublikasikan.')}</p>;
   const formatDate = value => value ? new Intl.DateTimeFormat(locale, { timeZone: 'Asia/Jakarta', day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(value)) : t('Belum diumumkan');
-  return <MainLayout className="spmb-page" ctaHref="/spmb/daftar">
+  return <MainLayout className="spmb-page" ctaHref={OFFICIAL_ADMISSIONS_URL}>
     <HeroSection page="spmb" content={liveContent} links={admissionLinks} breadcrumb={{ current: 'SPMB', parent: 'Informasi', parentTo: null }} media={{ src: hero, srcSet: `${hero640} 640w, ${hero960} 960w, ${hero} 1248w`, width: 1248, height: 676, className: 'spmb-hero-image', composition: 'admissions' }} />
-    {settings && <p id="informasi-pendaftaran" role="status" className="mx-auto max-w-7xl px-4 py-3 text-sm">{settings.academic_year} · {t(settings.spmb_open ? "Pendaftaran dibuka" : "Pendaftaran ditutup")}</p>}
+    {settings && <p id="informasi-pendaftaran" role="status" className="mx-auto max-w-7xl px-4 py-3 text-sm">{academicYear} · {t(spmbOpen ? "Pendaftaran dibuka" : "Pendaftaran ditutup")}</p>}
     <div className="spmb-container"><PublicDataState loading={loading} error={error ? t('Informasi pendaftaran belum tersedia. Silakan coba lagi nanti.') : ''} onRetry={() => refresh()} label={t('informasi SPMB')} /></div>
-    <RegistrationInfo schedule={schedule} closed={settings?.spmb_open === false} />
+    <RegistrationInfo schedule={schedule} closed={spmbOpen === false} />
     <section id="alur-spmb" className="spmb-section relative overflow-hidden scroll-mt-28" aria-labelledby="spmb-timeline-title">
       <img src={timelineLeft} alt="" aria-hidden="true" loading="lazy" className="spmb-deco spmb-deco-timeline-left" />
       <img src={timelineRight} alt="" aria-hidden="true" loading="lazy" className="spmb-deco spmb-deco-timeline-right" />
