@@ -43,7 +43,7 @@ export const landingHeroSlides = [
   {
     id: 'guru', name: 'Profil Guru',
     content: { title: 'Profil Guru', titleAccent: 'SMK Telkom', description: 'Tim pengajar memadukan kurikulum teknologi dan pembelajaran interaktif untuk membimbing siswa menciptakan solusi digital.', primaryCta: { label: 'Profil Guru', href: '/profil-sekolah/guru' } },
-    media: { src: teachers, width: 2200, height: 1033, composition: 'teachers', alt: 'Guru dan tenaga pendidik SMK Telkom Purwokerto' },
+    media: { src: teachers, width: 2000, height: 1082, composition: 'teachers', alt: 'Guru dan tenaga pendidik SMK Telkom Purwokerto' },
   },
   {
     id: 'ekstrakurikuler', name: 'Ekstrakurikuler',
