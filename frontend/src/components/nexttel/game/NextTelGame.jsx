@@ -55,7 +55,7 @@ export default function NextTelGame({ onExit, onQuiz }) {
     const last = state.index === MISSIONS.length - 1;
     const next = () => dispatch(last ? { type: 'finish' } : { type: 'go', index: state.index + 1 });
     const back = () => dispatch({ type: 'go', index: state.index - 1 });
-    const common = { scene: mission.scene, layout: LAYOUT[mission.type], step: state.index + 1, mood: mission.mood, dialog: mission.dialog, onBack: back };
+    const common = { scene: mission.scene, layout: LAYOUT[mission.type], step: state.index + 1, done: complete, mood: mission.mood, dialog: mission.dialog, onBack: back };
 
     if (mission.type === 'choice') {
       screen = (

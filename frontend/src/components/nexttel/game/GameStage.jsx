@@ -9,9 +9,9 @@ const BOTTOM_BLOCKS = [[149, 0], [1011, 0], [1365, 0], [-4, 11], [462, 11], [699
 export function FrameEdge({ side, color = '#67676c' }) {
   if (side === 'top') {
     return (
-      <svg className="ntg-edge ntg-edge--top" viewBox="0 0 1605 127" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <svg className="ntg-edge ntg-edge--top" viewBox="0 0 1605 92" preserveAspectRatio="none" aria-hidden="true" focusable="false">
         {TOP_BLOCKS.map(([x, y]) => <rect key={`${x}-${y}`} x={x} y={y} width="83" height="127" fill={color} />)}
-        <rect x="0" y="71" width="1605" height="56" fill={color} />
+        <rect x="0" y="71" width="1605" height="21" fill={color} />
       </svg>
     );
   }
@@ -60,7 +60,7 @@ export function BackButton({ onClick, label = 'Kembali' }) {
 }
 
 // Shared mission screen: frame, backdrop, progress, Kembali, drone and Nextel's dialog. `children` is the mission panel.
-export default function GameStage({ scene, layout = 'cards', step, mood, dialog, onBack, actions, footer, live, children }) {
+export default function GameStage({ scene, layout = 'cards', step, done, mood, dialog, onBack, actions, footer, live, children }) {
   const { t } = useLanguage();
   const dialogRef = useRef(null);
   // Move focus to the new dialog so keyboard and screen-reader users land on the mission they just opened.
@@ -74,7 +74,10 @@ export default function GameStage({ scene, layout = 'cards', step, mood, dialog,
           <div className="ntg-top">
             <div className="ntg-progress" role="img" aria-label={step ? t('Misi {current} dari {total}', { current: step, total: 8 }) : t('Pengenalan misi')}>
               <span className="ntg-progress__badge" aria-hidden="true">{step ? `${step}/8` : '—'}</span>
-              <span className="ntg-progress__bar" aria-hidden="true"><span className="ntg-progress__fill" style={{ width: `${(step ?? 0) / 8 * 100}%` }} /></span>
+              <span className="ntg-progress__bar" aria-hidden="true">
+                <span className="ntg-progress__fill ntg-progress__fill--now" data-done={done === true} style={{ width: `${(step ?? 0) / 8 * 100}%` }} />
+                <span className="ntg-progress__fill" style={{ width: `${Math.max((step ?? 1) - 1, 0) / 8 * 100}%` }} />
+              </span>
             </div>
             <div className="ntg-actions">
               {actions}
@@ -83,7 +86,7 @@ export default function GameStage({ scene, layout = 'cards', step, mood, dialog,
           </div>
           <Drone mood={mood} />
           <div className="ntg-talk">
-            <div className="ntg-dialog">
+            <div key={dialog} className="ntg-dialog">
               <span className="ntg-dialog__name" aria-hidden="true">Nextel</span>
               <h2 ref={dialogRef} tabIndex={-1} className="ntg-dialog__box"><span className="sr-only">Nextel: </span>{t(dialog)}</h2>
             </div>
