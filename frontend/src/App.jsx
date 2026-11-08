@@ -6,6 +6,7 @@ import RouteErrorBoundary from './components/RouteErrorBoundary';
 import ErrorPage from './pages/ErrorPage';
 import MainLayout from './layouts/MainLayout';
 import { canonicalAdmissionsPath, isHiddenAdmissionsPath, OFFICIAL_ADMISSIONS_URL } from './utils/admissions';
+import { useAppConfig } from './context/AppConfigContext';
 import { PAGE_META, applyPageMetadata } from './utils/seo';
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const FasilitasPage = lazy(() => import('./pages/FasilitasPage'));
@@ -59,6 +60,7 @@ const AdminBkkPage = lazy(() => import('./pages/admin/bkk/BkkPage'));
 const KalenderAdminPage = lazy(() => import('./pages/admin/kalender/KalenderAdminPage'));
 const SpmbInformationPage = lazy(() => import('./pages/admin/spmb/SpmbInformationPage'));
 const AdminPpdbPage = lazy(() => import('./pages/admin/ppdb/PPDBPage'));
+const SpmbInternalGate = lazy(() => import('./pages/dashboard/SpmbInternalGate'));
 const ProtectedRoute = lazy(() => import('./router/ProtectedRoute'));
 const NextTelPage = lazy(() => import('./pages/NextTelPage'));
 const EkstrakurikulerPage = lazy(() => import('./pages/EkstrakurikulerPage'));
@@ -120,7 +122,11 @@ const OfficialAdmissionsRedirect = () => {
 
 const App = () => {
   const { pathname } = useLocation();
-  if (isHiddenAdmissionsPath(pathname)) return <OfficialAdmissionsRedirect />;
+  const { spmbInternalEnabled, loading: configLoading } = useAppConfig();
+  // Tunggu status fitur sebelum memutuskan redirect, supaya portal internal
+  // yang sengaja diaktifkan tidak terlanjur dialihkan saat config dimuat.
+  if (configLoading && isHiddenAdmissionsPath(pathname)) return <RouteLoading />;
+  if (isHiddenAdmissionsPath(pathname, { spmbInternalEnabled })) return <OfficialAdmissionsRedirect />;
   return (
     <>
       <ScrollToTop />
@@ -223,12 +229,12 @@ const App = () => {
               }
             >
               <Route index element={<DashboardHomePage />} />
-              <Route path="informasi-spmb" element={<SpmbInformationPage />} />
+              <Route path="informasi-spmb" element={<SpmbInternalGate><SpmbInformationPage /></SpmbInternalGate>} />
               {/* Tambah/edit berita dan detail PPDB kini memakai modal di dalam
                   halamannya masing-masing, jadi tidak ada rute terpisah lagi. */}
               <Route path="berita" element={<AdminBeritaPage />} />
               <Route path="pengumuman" element={<AdminPengumumanPage />} />
-              <Route path="spmb" element={<AdminPpdbPage />} />
+              <Route path="spmb" element={<SpmbInternalGate><AdminPpdbPage /></SpmbInternalGate>} />
               <Route path="jurusan" element={<DashboardJurusanPage />} />
               <Route path="prestasi" element={<AdminPrestasiPage />} />
               <Route path="bkk" element={<AdminBkkPage />} />

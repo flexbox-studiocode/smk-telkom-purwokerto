@@ -12,6 +12,9 @@ import {
 } from 'lucide-react';
 import Logo from '../Logo';
 import { adminMenu, adminSekolah } from '../../data/dummyData';
+import { useAppConfig } from '../../context/AppConfigContext';
+
+const SPMB_INTERNAL_MENU = new Set(['/dashboard/spmb', '/dashboard/informasi-spmb']);
 
 // Nama ikon disimpan sebagai teks di dummyData lalu dipetakan di sini, mengikuti
 // pola yang sudah dipakai HeroStatsBar.
@@ -27,7 +30,10 @@ const ikon = {
   pengaturan: Settings,
 };
 
-const DashboardSidebar = ({ onPilihMenu }) => (
+const DashboardSidebar = ({ onPilihMenu }) => {
+  const { spmbInternalEnabled } = useAppConfig();
+  const menu = spmbInternalEnabled ? adminMenu : adminMenu.filter(({ to }) => !SPMB_INTERNAL_MENU.has(to));
+  return (
   <div className="flex h-full flex-col bg-white">
     <Link to="/" onClick={onPilihMenu} aria-label="Kembali ke beranda SMK Telkom Purwokerto" className="flex items-center gap-3 rounded-lg px-6 py-6 transition-colors hover:bg-dark-50">
       <Logo className="h-11 w-11" />
@@ -42,7 +48,7 @@ const DashboardSidebar = ({ onPilihMenu }) => (
     </p>
 
     <nav className="flex-1 space-y-1.5 overflow-y-auto px-4" aria-label="Menu admin">
-      {adminMenu.map(({ label, to, icon, end }) => {
+      {menu.map(({ label, to, icon, end }) => {
         const Ikon = ikon[icon];
         return (
           <NavLink
@@ -86,6 +92,7 @@ const DashboardSidebar = ({ onPilihMenu }) => (
       </div>
     </div>
   </div>
-);
+  );
+};
 
 export default DashboardSidebar;

@@ -11,6 +11,8 @@ const schema = z.object({
   // Absolute public base URL of this backend, used to build media URLs.
   MEDIA_BASE_URL: z.preprocess((value) => value === '' ? undefined : value, z.string().url().optional()),
   PUBLIC_STORAGE_URL: z.preprocess((value) => value === '' ? undefined : value, z.string().url().optional()),
+  // Portal SPMB internal. Default nonaktif; lihat src/config/features.js.
+  SPMB_INTERNAL_ENABLED: z.preprocess((value) => String(value ?? 'false').toLowerCase(), z.enum(['true', 'false'])).default('false'),
 });
 
 export const env = schema.parse(process.env);

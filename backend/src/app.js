@@ -7,6 +7,7 @@ import path from 'node:path';
 import { env } from './config/env.js';
 import { createLogger, errorHandler, notFoundHandler } from './middleware/error.js';
 import { requireCsrf, csrfToken } from './middleware/csrf.js';
+import { blockSpmbMutations } from './middleware/spmbGate.js';
 import { HttpError } from './utils/http.js';
 import { authRouter } from './routes/auth.js';
 import { prisma } from './db.js';
@@ -20,6 +21,7 @@ import { statsRouter } from './routes/stats.js';
 import { aiRouter } from './routes/ai.js';
 import { uploadsRouter } from './routes/uploads.js';
 import { turnstileRouter } from './routes/turnstile.js';
+import { configRouter } from './routes/config.js';
 
 export const app = express();
 app.disable('x-powered-by');
@@ -60,18 +62,23 @@ app.get('/health', async (_req, res) => {
   res.status(payload.ok ? 200 : 503).json(payload);
 });
 app.get('/api/auth/csrf', csrfToken);
+app.use('/api/config', configRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/berita', createContentRouter('berita'));
 app.use('/api/pengumuman', createContentRouter('pengumuman'));
 app.use('/api/prestasi', createContentRouter('prestasi'));
 app.use('/api/bkk', createContentRouter('bkk'));
+// SPMB internal: mutasi alur pendaftaran ditolak (503 SPMB_DISABLED) saat
+// fitur nonaktif. Pembacaan historis tetap tersedia untuk admin berwenang.
+app.use('/api/admin/ppdb', blockSpmbMutations);
 app.use('/api/admin', adminRouter);
-app.use('/api/ppdb', ppdbRouter);
+app.use('/api/ppdb', blockSpmbMutations, ppdbRouter);
 app.use('/api/events', eventsRouter);
-app.use('/api/spmb', spmbRouter);
+app.use('/api/spmb', blockSpmbMutations, spmbRouter);
 app.use('/api/settings', settingsRouter);
 app.use('/api/stats', statsRouter);
 app.use('/api/ai', aiRouter);
+app.use('/api/uploads/ppdb-documents', blockSpmbMutations);
 app.use('/api/uploads', uploadsRouter);
 app.use('/api/turnstile', turnstileRouter);
 app.use('/uploads/content-images', express.static(path.join(process.env.UPLOAD_ROOT || 'uploads', 'content-images'), { maxAge: '7d' }));

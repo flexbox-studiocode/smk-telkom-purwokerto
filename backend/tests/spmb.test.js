@@ -7,6 +7,8 @@ import { prisma, closeDatabase } from '../src/db.js';
 
 test('SPMB admin CRUD persists to MySQL and public reads respect publication', async () => {
   assert(['localhost', '127.0.0.1', '::1'].includes(new URL(process.env.DATABASE_URL).hostname), 'Run this integration test against a local database.');
+  const previousFeatureFlag = process.env.SPMB_INTERNAL_ENABLED;
+  process.env.SPMB_INTERNAL_ENABLED = 'true';
   const server = app.listen(0);
   await new Promise(resolve => server.once('listening', resolve));
   const base = `http://127.0.0.1:${server.address().port}`;
@@ -46,6 +48,8 @@ test('SPMB admin CRUD persists to MySQL and public reads respect publication', a
     assert.equal((await request(`/api/spmb/${id}`, { method: 'DELETE' })).status, 204);
     assert.equal((await request(`/api/spmb/${id}`, { anonymous: true })).status, 404);
   } finally {
+    if (previousFeatureFlag === undefined) delete process.env.SPMB_INTERNAL_ENABLED;
+    else process.env.SPMB_INTERNAL_ENABLED = previousFeatureFlag;
     await prisma.spmbInformation.deleteMany({ where: { id: { in: ids } } });
     if (admin) await prisma.user.delete({ where: { id: admin.id } });
     await new Promise(resolve => server.close(resolve));

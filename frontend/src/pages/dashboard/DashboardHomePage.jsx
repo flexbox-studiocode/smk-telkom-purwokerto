@@ -6,6 +6,7 @@ import PageHeader from '../../components/dashboard/PageHeader';
 import StatCard from '../../components/dashboard/StatCard';
 import StatusBadge from '../../components/dashboard/StatusBadge';
 import { getDashboardStats } from '../../services/dashboardService';
+import { useAppConfig } from '../../context/AppConfigContext';
 
 const formatTanggal = (value) => {
   if (!value) return '-';
@@ -29,6 +30,7 @@ const statusLabel = {
 // halaman 2). Susunannya memakai komponen yang sama dengan halaman lain supaya
 // tetap satu bahasa visual, dan gampang diganti kalau desainnya menyusul.
 const DashboardHomePage = () => {
+  const { spmbInternalEnabled } = useAppConfig();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -112,15 +114,23 @@ const DashboardHomePage = () => {
       <div className="mb-6 rounded-2xl bg-primary px-6 py-6 text-white">
         <p className="font-heading text-lg font-extrabold">Selamat datang di Dashboard Admin.</p>
         <p className="mt-1.5 text-xs text-white/80">
-          {loading ? 'Memuat ringkasan data terbaru...' : counts.ppdbMenunggu > 0 ? `Ada ${counts.ppdbMenunggu} pendaftar yang menunggu diproses.` : 'Tidak ada pendaftar yang menunggu diproses.'}
+          {loading
+            ? 'Memuat ringkasan data terbaru...'
+            : !spmbInternalEnabled
+              ? 'Pendaftaran SPMB dikelola melalui portal resmi Yayasan Telkom Schools.'
+              : counts.ppdbMenunggu > 0
+                ? `Ada ${counts.ppdbMenunggu} pendaftar yang menunggu diproses.`
+                : 'Tidak ada pendaftar yang menunggu diproses.'}
         </p>
-        <Link
-          to="/dashboard/spmb"
-          className="mt-4 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-xs font-bold text-primary transition-transform hover:-translate-y-0.5"
-        >
-          Buka Manajemen SPMB
-          <ArrowRight className="h-4 w-4" />
-        </Link>
+        {spmbInternalEnabled && (
+          <Link
+            to="/dashboard/spmb"
+            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-xs font-bold text-primary transition-transform hover:-translate-y-0.5"
+          >
+            Buka Manajemen SPMB
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        )}
       </div>
 
       {error && (
@@ -136,12 +146,16 @@ const DashboardHomePage = () => {
         ))}
       </div>
 
-      <h2 className="mb-4 font-heading text-lg font-extrabold text-dark-900">Ringkasan SPMB</h2>
-      <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-5">
-        {ppdbStatCards.map((stat) => (
-          <StatCard key={stat.label} {...stat} />
-        ))}
-      </div>
+      {spmbInternalEnabled && (
+        <>
+          <h2 className="mb-4 font-heading text-lg font-extrabold text-dark-900">Ringkasan SPMB</h2>
+          <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-5">
+            {ppdbStatCards.map((stat) => (
+              <StatCard key={stat.label} {...stat} />
+            ))}
+          </div>
+        </>
+      )}
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <h2 className="font-heading text-lg font-extrabold text-dark-900">Berita Terbaru</h2>
@@ -156,13 +170,17 @@ const DashboardHomePage = () => {
 
       <DataTable columns={columns} rows={berita} perPage={5} kosong="Belum ada berita." />
 
-      <div className="mb-4 mt-8 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-heading text-lg font-extrabold text-dark-900">Pendaftar Terbaru</h2>
-        <Link to="/dashboard/spmb" className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline">
-          Lihat semua <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-      </div>
-      <DataTable columns={ppdbColumns} rows={pendaftar} perPage={5} kosong="Belum ada pendaftar." />
+      {spmbInternalEnabled && (
+        <>
+          <div className="mb-4 mt-8 flex flex-wrap items-center justify-between gap-3">
+            <h2 className="font-heading text-lg font-extrabold text-dark-900">Pendaftar Terbaru</h2>
+            <Link to="/dashboard/spmb" className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline">
+              Lihat semua <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+          <DataTable columns={ppdbColumns} rows={pendaftar} perPage={5} kosong="Belum ada pendaftar." />
+        </>
+      )}
     </section>
   );
 };

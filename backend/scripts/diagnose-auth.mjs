@@ -16,6 +16,7 @@
 //
 // Email juga dapat diberikan lewat env DIAGNOSE_EMAIL atau ADMIN_RECOVERY_EMAIL.
 import 'dotenv/config';
+import argon2 from 'argon2';
 import { prisma, closeDatabase } from '../src/db.js';
 
 const args = process.argv.slice(2);
@@ -27,6 +28,9 @@ const asJson = args.includes('--json');
 const requestedEmail = String(
   valueAfter('--email') || process.env.DIAGNOSE_EMAIL || process.env.ADMIN_RECOVERY_EMAIL || '',
 ).trim().toLowerCase();
+// Password opsional hanya untuk memverifikasi Argon2. Sengaja dibaca dari env
+// (bukan argumen CLI) agar tidak muncul pada riwayat perintah. Tidak pernah dicetak.
+const providedPassword = String(process.env.DIAGNOSE_PASSWORD || process.env.ADMIN_RECOVERY_PASSWORD || '');
 
 function describeTarget() {
   try {
@@ -77,6 +81,10 @@ async function collect() {
       where: { email: requestedEmail },
       include: { admin: true },
     });
+    let passwordHashValid = null;
+    if (user && providedPassword) {
+      passwordHashValid = await argon2.verify(user.passwordHash, providedPassword).catch(() => false);
+    }
     email = user
       ? {
           value: maskEmail(user.email),
@@ -85,9 +93,19 @@ async function collect() {
           adminRelation: Boolean(user.admin),
           emailVerified: Boolean(user.emailVerified),
           passwordHashFormat: classifyHash(user.passwordHash),
+          passwordHashValid,
         }
-      : { value: maskEmail(requestedEmail), found: false, adminRelation: false };
+      : { value: maskEmail(requestedEmail), found: false, adminRelation: false, passwordHashValid: null };
   }
+
+  // Status ringkas untuk konsumsi otomasi. Tidak memuat hash/token/credential.
+  const status = {
+    DATABASE_CONNECTED: true,
+    USER_FOUND: Boolean(email?.found),
+    ADMIN_PROFILE_FOUND: Boolean(email?.found && email.adminRelation),
+    PASSWORD_HASH_VALID: email?.found ? email.passwordHashValid : null,
+    ACCOUNT_RECOVERY_REQUIRED: requestedEmail ? !(email?.found && email.adminRelation) : admins === 0,
+  };
 
   return {
     readOnly: true,
@@ -97,6 +115,7 @@ async function collect() {
       adminProfiles: admins,
       adminLoginAvailable: admins > 0,
     },
+    status,
     email,
   };
 }
@@ -122,12 +141,17 @@ try {
       } else {
         console.log(`Email ${entry.value}: tidak ditemukan`);
       }
+      if (entry.passwordHashValid === true) console.log('Verifikasi password: cocok (Argon2)');
+      else if (entry.passwordHashValid === false) console.log('Verifikasi password: TIDAK cocok');
+      else console.log('Verifikasi password: tidak diuji (set DIAGNOSE_PASSWORD untuk memeriksa)');
     } else {
       console.log('Email    : tidak diminta (pakai --email untuk memeriksa satu akun)');
     }
+    console.log('Status   : ' + Object.entries(report.status).map(([key, value]) => `${key}=${value === null ? 'null' : value}`).join(' '));
   }
 } catch (error) {
   console.error(`Diagnostik gagal: ${error?.message || 'kesalahan tidak diketahui'}`);
+  console.error('Status   : DATABASE_CONNECTED=false ACCOUNT_RECOVERY_REQUIRED=unknown');
   process.exitCode = 1;
 } finally {
   await closeDatabase();

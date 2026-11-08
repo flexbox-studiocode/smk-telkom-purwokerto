@@ -16,6 +16,7 @@ import { spmbContact } from '../data/spmbInfo';
 import { registrationForSpmb, safeSpmbLink, toSpmbWave } from '../utils/spmbInformation';
 import { registrationCountdown, registrationState } from '../utils/spmbSchedule';
 import { OFFICIAL_ADMISSIONS_URL } from '../utils/admissions';
+import { useAppConfig } from '../context/AppConfigContext';
 import { translateSpmbContent } from '../utils/spmbTranslation';
 import hero from '../assets/spmb/hero-1248.webp';
 import hero640 from '../assets/spmb/hero-640.webp';
@@ -75,11 +76,17 @@ function RegistrationInfo({ schedule, closed = false }) {
 
 export default function SpmbPage({ initialData }) {
   const { settings } = useSiteSettings();
+  const { spmbInternalEnabled, officialAdmissionsUrl } = useAppConfig();
   const { t, locale } = useLanguage();
   const spmbOpen = settings?.spmbOpen ?? settings?.spmb_open;
   const academicYear = settings?.academicYear ?? settings?.academic_year ?? `${ppdbMeta.tahun}/${Number(ppdbMeta.tahun) + 1}`;
   const schoolName = settings?.schoolName ?? settings?.school_name ?? 'SMK Telkom Purwokerto';
-  const liveContent = {...content, description: t(content.description).replace(`${ppdbMeta.tahun}/${Number(ppdbMeta.tahun) + 1}`, academicYear).replace('SMK Telkom Purwokerto', schoolName), primaryCta: spmbOpen === false ? { label: t('Pendaftaran ditutup'), href: '/spmb#informasi-pendaftaran' } : content.primaryCta};
+  // Saat portal internal nonaktif, seluruh CTA pendaftaran menuju portal resmi.
+  const registrationHref = spmbInternalEnabled ? '/spmb/masuk' : (officialAdmissionsUrl || OFFICIAL_ADMISSIONS_URL);
+  const primaryCta = spmbOpen === false
+    ? { label: t('Pendaftaran ditutup'), href: '/spmb#informasi-pendaftaran' }
+    : { ...content.primaryCta, label: t(content.primaryCta.label), href: registrationHref };
+  const liveContent = {...content, description: t(content.description).replace(`${ppdbMeta.tahun}/${Number(ppdbMeta.tahun) + 1}`, academicYear).replace('SMK Telkom Purwokerto', schoolName), primaryCta};
   const { items, stats, loading, error, refresh } = useSpmbInformation(true, initialData);
   const schedule = registrationForSpmb(items, stats);
   const spmbSteps = items.filter(item => item.jenis === 'timeline');
@@ -122,7 +129,9 @@ export default function SpmbPage({ initialData }) {
     </section>
     <section className="spmb-section relative overflow-hidden" aria-label={t('Berkas dan Persyaratan')}><SpmbOrnaments />
       <Reveal className="spmb-container"><div className="grid items-stretch gap-8 md:grid-cols-2">
-        <article className="spmb-raised-card"><header className="flex items-center gap-4"><span className="spmb-square-icon"><img src={documents} alt="" /></span><div><h2 className="font-heading text-lg font-bold text-dark-900">{t('Berkas Yang Disiapkan')}</h2><p className="mt-1 text-xs leading-relaxed text-primary">{t('Satu PDF gabungan, maksimal 10 MB')}</p></div></header>{ppdbDokumen.length ? <ul className="mt-6 space-y-5">{ppdbDokumen.map(item => <li key={item.id} className="flex items-start gap-3"><img src={check} alt="" className="mt-1 size-5 shrink-0" /><div className="min-w-0"><p className="break-words text-sm font-semibold leading-relaxed text-dark-700">{t(item.judul)}</p>{item.deskripsi && <RichContent className="mt-1 whitespace-pre-wrap break-words text-xs leading-relaxed text-dark-500" value={translateSpmbContent(item.deskripsi, t)} />}</div></li>)}</ul> : empty}<Link to="/spmb/masuk" className="mt-6 inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-primary">{t('Lanjutkan di portal SPMB')}<ArrowRight className="size-4" /></Link></article>
+        <article className="spmb-raised-card"><header className="flex items-center gap-4"><span className="spmb-square-icon"><img src={documents} alt="" /></span><div><h2 className="font-heading text-lg font-bold text-dark-900">{t('Berkas Yang Disiapkan')}</h2><p className="mt-1 text-xs leading-relaxed text-primary">{t('Satu PDF gabungan, maksimal 10 MB')}</p></div></header>{ppdbDokumen.length ? <ul className="mt-6 space-y-5">{ppdbDokumen.map(item => <li key={item.id} className="flex items-start gap-3"><img src={check} alt="" className="mt-1 size-5 shrink-0" /><div className="min-w-0"><p className="break-words text-sm font-semibold leading-relaxed text-dark-700">{t(item.judul)}</p>{item.deskripsi && <RichContent className="mt-1 whitespace-pre-wrap break-words text-xs leading-relaxed text-dark-500" value={translateSpmbContent(item.deskripsi, t)} />}</div></li>)}</ul> : empty}{spmbInternalEnabled
+            ? <Link to="/spmb/masuk" className="mt-6 inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-primary">{t('Lanjutkan di portal SPMB')}<ArrowRight className="size-4" /></Link>
+            : <a href={registrationHref} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-primary">{t('Buka portal SPMB resmi')}<ArrowRight className="size-4" /></a>}</article>
         <article className="spmb-raised-card"><header className="flex items-center gap-4"><span className="spmb-square-icon"><img src={requirements} alt="" /></span><div><h2 className="font-heading text-lg font-bold text-dark-900">{t('Syarat Umum')}</h2><p className="mt-1 text-xs leading-relaxed text-primary">{t('Persiapan menggunakan portal SPMB')}</p></div></header>{terms.length ? <div className="mt-6 space-y-3">{terms.map(item => <div className="rounded-xl bg-dark-100 p-4" key={item.id}><h3 className="break-words text-sm font-bold text-dark-900">{t(item.judul)}</h3><RichContent className="mt-1 whitespace-pre-wrap break-words text-xs leading-relaxed text-dark-500" value={translateSpmbContent(item.deskripsi, t)} /></div>)}</div> : empty}<a href={spmbContact.href} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-primary">{t('Konfirmasi persyaratan')}<ArrowRight className="size-4" /></a></article>
       </div></Reveal>
     </section>
