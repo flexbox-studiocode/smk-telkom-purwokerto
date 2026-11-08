@@ -102,14 +102,3 @@
 .hero-carousel-controls > button:hover { background: var(--color-primary); color: white; }
 .hero-carousel-controls > button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
 @media (max-width: 63.999rem) { .hero-carousel-controls > button { width: 32px; height: 32px; } .hero-carousel-previous { left: -12px; } .hero-carousel-next { right: -12px; } }
-
-/* One type scale for every carousel slide, so titles and copy read the same whichever slide is showing.
-   Selectors out-rank the per-page overrides in hero.css (Poppins teachers/activities, larger school/announcement titles).
-   Vertical rhythm comes from the shared --hero-gap-* tokens in hero.css. */
-.hero-carousel .hero-panel--slide .hero-copy :is(h1, h2) { font-family: var(--font-jakarta); font-size: clamp(1.625rem, 2.5cqw, 2.75rem); font-weight: 800; line-height: 1.2; letter-spacing: var(--tracking-figma-heading); text-wrap: balance; }
-.hero-carousel .hero-panel--slide .hero-copy > p { max-width: 28rem; font-family: var(--font-jakarta); font-size: var(--text-figma-body); font-weight: 500; line-height: 1.65; letter-spacing: var(--tracking-figma-copy); text-wrap: pretty; }
-@media (min-width: 64rem) and (max-width: 79.999rem) {
-  /* The copy column is narrow here; ease the type so descriptions stay short. */
-  .hero-carousel .hero-panel--slide .hero-copy :is(h1, h2) { font-size: clamp(1.375rem, 2.5cqw, 1.75rem); }
-  .hero-carousel .hero-panel--slide .hero-copy > p { font-size: .8125rem; letter-spacing: .08em; }
-}
