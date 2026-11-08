@@ -198,8 +198,11 @@
 .ntg-optic__laser-in { display: grid; place-items: center; padding: 6px 16px; background: #1b2230; border: 3px solid #0f131a; font-size: max(20px, calc(var(--u) * 46)); }
 .ntg-optic__status { display: grid; gap: 6px; }
 .ntg-optic__meter { padding: 4px 10px; background: #1b2230; border: 3px solid #0f131a; font-size: max(13px, calc(var(--u) * 22)); }
-.ntg-optic__meter span { display: block; height: 6px; margin-top: 4px; background: #49505f; }
-.ntg-optic__meter i { display: block; height: 100%; background: #ff2a2a; box-shadow: 0 0 6px #ff4b4b; transition: width .3s; }
+.ntg-optic__pct { font-weight: inherit; display: inline-block; animation: ntg-pct .3s steps(3); }
+.ntg-optic__meter span { position: relative; display: block; height: 8px; margin-top: 4px; background: #49505f; overflow: hidden; }
+.ntg-optic__meter span::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent calc(100% - 2px), #1b2230 0) 0 0 / calc(100% / 6) 100%; }
+.ntg-optic__meter i { display: block; height: 100%; background: linear-gradient(#ff8c8c 0 25%, #ff2a2a 25% 70%, #b40d0d 70%); box-shadow: 0 0 6px #ff4b4b; transition: width .35s cubic-bezier(.2, .8, .2, 1); }
+.ntg-optic[data-solved='true'] .ntg-optic__meter i { background: linear-gradient(#ffd37a 0 25%, #ffb02e 25% 70%, #c27a0a 70%); box-shadow: 0 0 6px #ffb02e; }
 .ntg-optic__tools { display: flex; flex-wrap: wrap; gap: 6px; }
 .ntg-optic__stage { position: relative; display: grid; grid-template-columns: 9% 1fr 13%; }
 .ntg-optic__board { grid-column: 2; display: grid; grid-template-columns: repeat(3, 1fr); aspect-ratio: 1; background: #1c2230; border: 4px solid #121620; padding: 4%; gap: 0; }

@@ -24,12 +24,12 @@ export default function OpticPanel({ value, onChange }) {
   const state = evaluateOptics(value.current);
   const describe = (node) => t('Optik {node}, terbuka ke {dirs}', { node, dirs: OPTIC_NODES[node].shape.map((dir) => t(DIRECTION[(dir + value.current[node]) % 4])).join(', ') });
   return (
-    <section className="ntg-panel ntg-optic" aria-label={t('Panel optik laser')}>
+    <section className="ntg-panel ntg-optic" data-solved={state.solved} aria-label={t('Panel optik laser')}>
       <div className="ntg-optic__head">
         <div className="ntg-optic__laser-in">Laser In</div>
         <div className="ntg-optic__status">
           <div className="ntg-optic__meter" role="status" aria-live="polite">
-            {t('Koneksi {percent}%', { percent: state.percent })}
+            <b key={state.percent} className="ntg-optic__pct">{t('Koneksi {percent}%', { percent: state.percent })}</b>
             <span aria-hidden="true"><i style={{ width: `${state.percent}%` }} /></span>
           </div>
           <div className="ntg-optic__tools">
