@@ -1,19 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { api } from '../services/apiClient';
 
 const TURNSTILE_ENABLED = import.meta.env.VITE_TURNSTILE_ENABLED === 'true';
 const SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '';
 
 
 export async function verifyTurnstileToken(token) {
-  const backendUrl = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? 'http://localhost:3000' : '');
-  const response = await fetch(`${backendUrl}/api/turnstile/verify`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token }),
-  });
-  const result = await response.json();
-  if (!response.ok || !result.success) throw new Error('Verifikasi keamanan gagal. Silakan coba lagi.');
+  // Lewat apiClient agar header CSRF (x-csrf-token) ikut terkirim; endpoint
+  // /api/turnstile/verify berada di belakang requireCsrf.
+  const result = await api.post('/api/turnstile/verify', { token });
+  if (!result?.success) throw new Error('Verifikasi keamanan gagal. Silakan coba lagi.');
 }
 
 export function useTurnstile() {

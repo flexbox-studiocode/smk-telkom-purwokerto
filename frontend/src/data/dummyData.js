@@ -1,4 +1,5 @@
 import { OFFICIAL_ADMISSIONS_URL } from '../utils/admissions';
+import { schoolCertificate } from './schoolCertificate';
 import timDinacom2023 from '../assets/showcase/tim-dinacom-2023.jpeg';
 import worldOfAdventure from '../assets/showcase/world-of-adventure.jpeg';
 import rupantara from '../assets/showcase/rupantara.jpeg';
@@ -488,6 +489,7 @@ export const timelineData = [
     year: '2016',
     title: 'Akreditasi A',
     desc: 'Meraih predikat Akreditasi A (nilai 97) dengan standar mutu pendidikan nasional.',
+    certificate: schoolCertificate,
   },
   {
     year: '2020',

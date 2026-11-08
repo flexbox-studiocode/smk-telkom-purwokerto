@@ -6,6 +6,7 @@ const API_BASE_URL = (configuredApiBaseUrl || (import.meta.env.DEV ? 'http://loc
 export const apiSiap = Boolean(API_BASE_URL);
 
 function readCookie(name) {
+  if (typeof document === 'undefined') return '';
   return document.cookie.split('; ').find((row) => row.startsWith(`${name}=`))?.split('=')[1] ?? '';
 }
 
@@ -22,7 +23,7 @@ let csrfPromise;
 
 async function ensureCsrf() {
   if (readCookie('csrf_token')) return readCookie('csrf_token');
-  csrfPromise ??= fetch(`${API_BASE_URL}/api/auth/csrf`, { credentials: 'include' })
+  csrfPromise ??= fetch(`${API_BASE_URL}/api/auth/csrf`, { credentials: 'include', cache: 'no-store' })
     .then((res) => res.json())
     .catch(() => null)
     .finally(() => { csrfPromise = undefined; });
@@ -30,22 +31,39 @@ async function ensureCsrf() {
   return readCookie('csrf_token');
 }
 
-export async function apiRequest(path, { method = 'GET', body, headers = {}, raw = false, signal } = {}) {
+function parseBody(text) {
+  if (!text) return null;
+  try {
+    return JSON.parse(text);
+  } catch {
+    // Proxy/edge terkadang mengembalikan HTML atau body non-JSON.
+    return null;
+  }
+}
+
+async function send(path, { method, body, headers, signal, cache }) {
+  return fetch(`${API_BASE_URL}${path}`, {
+    method,
+    credentials: 'include',
+    headers,
+    body: body ? (body instanceof FormData ? body : JSON.stringify(body)) : undefined,
+    signal,
+    cache,
+  });
+}
+
+export async function apiRequest(path, { method = 'GET', body, headers = {}, raw = false, signal, cache = 'no-store' } = {}) {
   const isMutation = !['GET', 'HEAD'].includes(method);
   const requestHeaders = { ...headers };
   if (body && !(body instanceof FormData)) requestHeaders['content-type'] = 'application/json';
   if (isMutation) requestHeaders['x-csrf-token'] = await ensureCsrf();
-  const res = await fetch(`${API_BASE_URL}${path}`, {
-    method,
-    credentials: 'include',
-    headers: requestHeaders,
-    body: body ? (body instanceof FormData ? body : JSON.stringify(body)) : undefined,
-    signal,
-  });
+  const options = { method, body, headers: requestHeaders, signal, cache };
+  let res = await send(path, options);
+  // 304 Not Modified tidak membawa body. Paksa ambil representasi penuh sekali.
+  if (res.status === 304) res = await send(path, { ...options, cache: 'reload' });
   if (raw) return res;
-  const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
-  if (!res.ok) throw new ApiError(data?.error || 'Permintaan gagal.', res.status, data);
+  const data = parseBody(await res.text());
+  if (!res.ok && res.status !== 304) throw new ApiError(data?.error || 'Permintaan gagal.', res.status, data);
   return data;
 }
 

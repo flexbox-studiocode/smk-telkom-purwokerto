@@ -9,6 +9,7 @@ import calendar from './translationsCalendar';
 import spmbInfo from './translationsSpmbInfo';
 import jurusanDetail from './translationsJurusanDetail';
 import nextTel from './translationsNextTel';
+import nextTelGame from './translationsNextTelGame';
 
 export default {
   'Bukan sekadar belajar Teknologi': 'More than learning Technology',
@@ -17,7 +18,7 @@ export default {
   'NEXT GENERATION': 'NEXT GENERATION',
   'AKREDITASI A': 'GRADE A ACCREDITED',
   'Lihat semua fasilitas': 'View all facilities',
-  ...school, ...publicPages, ...portal, ...audit, ...teachers, ...spmb, ...facilities, ...calendar, ...spmbInfo, ...jurusanDetail, ...nextTel,
+  ...school, ...publicPages, ...portal, ...audit, ...teachers, ...spmb, ...facilities, ...calendar, ...spmbInfo, ...jurusanDetail, ...nextTel, ...nextTelGame,
   'Pilihan Jurusan': school['Pilihan Jurusan'],
   '{name} sedang kami siapkan. Nantikan informasi selengkapnya di halaman ini.': 'We are preparing {name}. More information will be available on this page soon.',
   'Layanan': 'Services', 'Submenu Layanan': 'Services submenu',

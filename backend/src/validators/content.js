@@ -1,6 +1,14 @@
 import { z } from 'zod';
 
-const url = z.string().url().max(2048).nullable().optional();
+// Hanya tautan web. Menolak skema seperti ftp:/data: dan kredensial di URL.
+const url = z.string().max(2048).refine((value) => {
+  try {
+    const parsed = new URL(value);
+    return ['http:', 'https:'].includes(parsed.protocol) && !parsed.username && !parsed.password;
+  } catch {
+    return false;
+  }
+}, 'Gunakan tautan HTTP/HTTPS yang valid.').nullable().optional();
 const status = z.enum(['draft', 'published']);
 
 export const beritaSchema = z.object({

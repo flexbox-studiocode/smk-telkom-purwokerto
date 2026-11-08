@@ -14,12 +14,13 @@
     "db:migrate": "prisma migrate deploy",
     "db:generate": "prisma generate",
     "db:seed": "node scripts/seed.mjs",
+    "db:diagnose-auth": "node scripts/diagnose-auth.mjs",
     "db:backup": "node scripts/backup.mjs",
     "db:backup:keygen": "node scripts/backup-keygen.mjs",
     "db:backup:verify": "node scripts/backup-verify.mjs",
     "db:restore": "node scripts/restore.mjs",
     "db:etl:dry-run": "node scripts/etl/migrate.mjs --dry-run",
-    "test": "node --import ./tests/setup.js --test"
+    "test": "node --import ./tests/setup.js --test --test-concurrency=1"
   },
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.10.1",

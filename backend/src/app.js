@@ -23,7 +23,16 @@ import { turnstileRouter } from './routes/turnstile.js';
 
 export const app = express();
 app.disable('x-powered-by');
+// API JSON here is dynamic and partially session-dependent (admin vs guest).
+// Disable automatic ETag validators so Express never answers API GETs with an
+// empty 304, and let static upload routes keep their own cache validators.
+app.set('etag', false);
 app.use(helmet());
+app.use('/api', (_req, res, next) => {
+  res.set('Cache-Control', 'private, no-store, max-age=0');
+  res.set('Pragma', 'no-cache');
+  next();
+});
 app.use(cors({ origin: env.FRONTEND_URL, credentials: true }));
 app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());

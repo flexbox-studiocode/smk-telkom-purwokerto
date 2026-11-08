@@ -57,7 +57,8 @@ try {
       await history.scrollIntoViewIfNeeded();
       await history.locator('img').evaluateAll(images => Promise.all(images.map(image => image.decode())));
       assert.deepEqual(await history.locator('.profile-milestone-year').allTextContents(), ['1993', '2016', '2020', '2023', '2026']);
-      assert.equal(await history.locator('button').count(), 0, 'Static milestones should not be misleading controls');
+      assert.equal(await history.locator('button').count(), 1, 'Only the certificate milestone has an action');
+      assert.equal(await history.locator('li').nth(1).getByRole('button', { name: language === 'id' ? 'Lihat Sertifikat' : 'View Certificate' }).count(), 1);
       const milestones = await history.locator('.profile-milestone').evaluateAll(items => items.map(item => {
         const box = item.getBoundingClientRect();
         return { x: box.x, y: box.y, right: box.right, bottom: box.bottom, textFits: [...item.querySelectorAll('.profile-milestone-title, .profile-milestone-description')].every(text => text.scrollWidth <= text.clientWidth && text.getBoundingClientRect().right <= box.right + 1) };
@@ -77,14 +78,18 @@ try {
       const geometry = await pathway.locator('article').evaluateAll(cards => cards.map(card => {
         const box = card.getBoundingClientRect();
         const student = card.querySelector('.profile-pathway-student').getBoundingClientRect();
+        const icon = card.querySelector('.profile-pathway-icon img').getBoundingClientRect();
         const texts = [...card.querySelectorAll('h3,p')];
         return {
           textFits: texts.every(text => text.scrollWidth <= text.clientWidth && text.getBoundingClientRect().bottom <= box.bottom + 1),
           separate: texts.every(text => { const copy = text.getBoundingClientRect(); return copy.left >= student.right - 1 || copy.right <= student.left + 1 || copy.top >= student.bottom - 1; }),
           visible: student.width > 60 && student.left >= 0 && student.right <= window.innerWidth,
+          // Every card, Professional included, shows its icon inside the card and clear of the copy and the student.
+          iconClear: icon.width > 24 && icon.height > 24 && icon.left >= box.left && icon.right <= box.right && icon.top >= box.top && icon.bottom <= box.bottom
+            && [...texts, card.querySelector('.profile-pathway-student')].every(element => { const other = element.getBoundingClientRect(); return other.right <= icon.left + 1 || other.left >= icon.right - 1 || other.bottom <= icon.top + 1 || other.top >= icon.bottom - 1; }),
         };
       }));
-      assert(geometry.every(item => item.textFits && item.separate && item.visible), `${width}/${language}: pathway copy and cutouts fit without overlap ${JSON.stringify(geometry)}`);
+      assert(geometry.every(item => item.textFits && item.separate && item.visible && item.iconClear), `${width}/${language}: pathway copy, cutouts and icons fit without overlap ${JSON.stringify(geometry)}`);
       assert.equal(await pathway.locator('.profile-pathway-cutout img').evaluateAll(images => images.every(image => image.alt && image.naturalWidth > 0)), true);
       await pathway.screenshot({ path: `${output}/pathway-${width}-${language}.png`, style: 'header,nav,.fixed.bottom-4 {visibility:hidden}' });
       console.log(`PASS profile vision, values, history ${width}/${language}`);

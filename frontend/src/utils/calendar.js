@@ -1,6 +1,15 @@
 export const dateKey = date => date.toISOString().split('T')[0];
 export const dateFromKey = key => new Date(`${key}T00:00:00Z`);
 
+// API mengembalikan DateTime ISO ("2026-11-08T00:00:00.000Z"), sedangkan
+// kalender membandingkan string "YYYY-MM-DD". Ambil bagian tanggalnya agar
+// perbandingan dan pencocokan sel tidak meleset.
+export const normalizeDateKey = (value) => {
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? '' : dateKey(value);
+  const key = String(value || '').slice(0, 10);
+  return /^\d{4}-\d{2}-\d{2}$/.test(key) ? key : '';
+};
+
 export function shiftDate(key, days) {
   const date = dateFromKey(key);
   date.setUTCDate(date.getUTCDate() + days);

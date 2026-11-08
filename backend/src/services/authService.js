@@ -32,5 +32,8 @@ export async function logout(token) {
 }
 
 export function publicUser(user) {
-  return { id: user.id, email: user.email, role: user.admin ? 'admin' : user.role, emailVerified: Boolean(user.emailVerified) };
+  // Hak admin ditentukan oleh relasi `admins`, bukan oleh string role yang bisa
+  // tertinggal dari migrasi/provisioning lama.
+  const role = user.admin ? 'admin' : user.role === 'admin' ? 'applicant' : user.role;
+  return { id: user.id, email: user.email, role, emailVerified: Boolean(user.emailVerified) };
 }
