@@ -8,6 +8,8 @@ Downloaded from the Google Fonts CSS2 response used by the application on 2026-1
 
 The four program detail frames use Arimo for their overview. The original Arimo v36 Latin files provide normal 400–700 and bold italic 700. Their font faces are declared in the stylesheet for program detail pages and use the [Arimo license](Arimo-OFL.txt).
 
+The NextTel game uses Pixelify Sans v3 (Latin, variable 400–700) from `fonts.gstatic.com/s/pixelifysans/v3/`. Its font face is declared in `src/styles/nexttel-game.css`, so it only loads on the NextTel page, and it uses the [Pixelify Sans license](Pixelify-OFL.txt).
+
 `sources.json` records original gstatic URLs and SHA-256 hashes. Each family retains its SIL Open Font License in the adjacent `*-OFL.txt`. Binary font files are served separately by Vite: unused subsets and weights are not embedded into the critical stylesheet. The shared HTML entry preloads only the canonical Jakarta Latin face.
 
 These files are intentional runtime assets, including the subsets that are not requested by the current Indonesian/English homepage. Preserve them when cleaning assets; removing them changes the original glyph coverage.

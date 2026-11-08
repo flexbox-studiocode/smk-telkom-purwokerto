@@ -4,15 +4,22 @@ import MainLayout from '../layouts/MainLayout';
 import NextTelIntro from '../components/nexttel/NextTelIntro';
 import NextTelQuestionnaire from '../components/nexttel/NextTelQuestionnaire';
 import NextTelResult from '../components/nexttel/NextTelResult';
+import NextTelModeSelect from '../components/nexttel/NextTelModeSelect';
+import NextTelGame from '../components/nexttel/game/NextTelGame';
+import { hasProgress, loadState, reachable } from '../features/nexttel-game/engine.mjs';
 import { hasilFallbackNextTel, jelaskanRekomendasiNextTel, PESAN_NEXTTEL_GAGAL } from '../services/nexttel';
 import { hitungHasilNextTel } from '../../../backend/src/modules/nexttel/scoring.mjs';
 
 import { NEXTTEL_QUESTIONS as QUESTIONS } from '../data/nexttelQuestions';
 import '../styles/nexttel.css';
+import '../styles/nexttel-game.css';
+
+const savedGame = () => { try { return loadState(window.localStorage); } catch { return null; } };
 
 const NextTelPage = () => {
   const { language } = useLanguage();
-  const [mode, setMode] = useState('intro');
+  // A game that was in progress reopens straight away after a refresh.
+  const [mode, setMode] = useState(() => { const game = savedGame(); return game && game.screen !== 'intro' ? 'game' : 'intro'; });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
@@ -64,13 +71,16 @@ const NextTelPage = () => {
     if (currentIndex === QUESTIONS.length - 1) selesai();
     else setCurrentIndex((value) => value + 1);
   };
+  const resumeStep = () => { const game = savedGame(); return game && hasProgress(game) ? (game.screen === 'result' ? 8 : Math.min(game.index, reachable(game.answers)) + 1) : null; };
   const restart = () => { controllerRef.current?.abort(); controllerRef.current = null; setMode('intro'); setResult(null); setExplanation(null); setError(null); setLoading(false); };
 
   return (
     <MainLayout showSupportSections={false} showMarquees={false}>
       <section className={`nexttel-page nexttel-page--${mode}`}>
         <div className="nexttel-page__container">
-          {mode === 'intro' && <NextTelIntro onStart={mulai} />}
+          {mode === 'intro' && <NextTelIntro onStart={() => setMode('select')} />}
+          {mode === 'select' && <NextTelModeSelect onQuiz={mulai} onGame={() => setMode('game')} resumeStep={resumeStep()} />}
+          {mode === 'game' && <NextTelGame onExit={() => setMode('select')} onQuiz={mulai} />}
           {mode === 'questionnaire' && error && <p role="alert" className="mb-4 text-sm text-primary">{error}</p>}
           {mode === 'questionnaire' && <NextTelQuestionnaire questions={QUESTIONS} currentIndex={currentIndex} answers={answers} onAnswer={jawab} onNext={lanjut} onBack={() => setCurrentIndex((value) => Math.max(0, value - 1))} />}
           {mode === 'result' && result && <NextTelResult result={result} explanation={explanation} loading={loading} error={error} onRetry={selesai} onRestart={restart} />}
