@@ -57,7 +57,8 @@ try {
       await history.scrollIntoViewIfNeeded();
       await history.locator('img').evaluateAll(images => Promise.all(images.map(image => image.decode())));
       assert.deepEqual(await history.locator('.profile-milestone-year').allTextContents(), ['1993', '2016', '2020', '2023', '2026']);
-      assert.equal(await history.locator('button').count(), 0, 'Static milestones should not be misleading controls');
+      assert.equal(await history.locator('button').count(), 1, 'Only the certificate milestone has an action');
+      assert.equal(await history.locator('li').nth(1).getByRole('button', { name: language === 'id' ? 'Lihat Sertifikat' : 'View Certificate' }).count(), 1);
       const milestones = await history.locator('.profile-milestone').evaluateAll(items => items.map(item => {
         const box = item.getBoundingClientRect();
         return { x: box.x, y: box.y, right: box.right, bottom: box.bottom, textFits: [...item.querySelectorAll('.profile-milestone-title, .profile-milestone-description')].every(text => text.scrollWidth <= text.clientWidth && text.getBoundingClientRect().right <= box.right + 1) };

@@ -1,4 +1,11 @@
 export default {
+  'Lihat Sertifikat': 'View Certificate',
+  'Tutup sertifikat': 'Close certificate',
+  'Terakreditasi A': 'Accredited A',
+  '(Unggul)': '(Excellent)',
+  'Sertifikat ini berlaku sampai dengan tanggal ': 'This certificate is valid until ',
+  '31 Desember 2026': '31 December 2026',
+  'Dokumen sertifikat akreditasi sekolah': 'School accreditation certificate document',
   'Visi, Misi, dan Tiga Pilar Stematel': 'Stematel Vision, Mission, and Three Pillars',
   'Tiga Pilar Stematel': 'Three Pillars of Stematel',
   'Menjadi sekolah vokasi berbasis teknologi yang mencetak talenta ': 'To be a technology-driven vocational school developing talent in ',

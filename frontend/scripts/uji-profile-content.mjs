@@ -8,6 +8,13 @@ try {
   const { translate } = await server.ssrLoadModule('/src/utils/language.js');
   const { learningMethods, learningStages } = await server.ssrLoadModule('/src/data/profileLearning.js');
   const { profileMissions, profilePillars, profilePathways } = await server.ssrLoadModule('/src/data/profilePathway.js');
+  assert.deepEqual(timelineData.filter(item => item.certificate).map(item => item.year), ['2016']);
+  const certificate = timelineData.find(item => item.year === '2016').certificate;
+  assert.equal(certificate.npsn, '20301902');
+  assert.equal(certificate.expiresAt, '2026-12-31');
+  for (const text of ['Lihat Sertifikat', 'Tutup sertifikat', 'Terakreditasi A', '(Unggul)', 'Sertifikat ini berlaku sampai dengan tanggal ', '31 Desember 2026', 'Dokumen sertifikat akreditasi sekolah']) {
+    assert.notEqual(translate(text, 'en'), text, `Missing certificate UI translation: ${text}`);
+  }
   assert.equal(profileMissions.length, 5);
   assert.deepEqual(profilePillars.map(item => item.title), ['Digital Skills', 'Global Exposure', 'Industry Partnership']);
   assert.deepEqual(profilePathways.map(item => item.title), ['The Founder', 'The Scholar', 'Professional']);
