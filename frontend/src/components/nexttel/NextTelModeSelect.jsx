@@ -25,7 +25,7 @@ export default function NextTelModeSelect({ onQuiz, onGame, resumeStep }) {
             <img className="ntg-mode__arrow" src={asset('mode-arrow.svg')} width="62" height="62" alt="" />
           </button>
           <button type="button" className="ntg-mode__card" onClick={onGame}>
-            <img className="ntg-mode__art" src={asset('drone.png')} width="578" height="432" alt="" />
+            <img className="ntg-mode__art" src={asset('mode-game.png')} width="326" height="326" alt="" />
             <span>
               <span className="ntg-mode__name">{t('Game')}</span><span className="ntg-mode__sub">{t('Belajar sambil bermain')}</span>
               {resumeStep && <span className="ntg-mode__resume">{t('Lanjutkan dari Misi {n}', { n: resumeStep })}</span>}

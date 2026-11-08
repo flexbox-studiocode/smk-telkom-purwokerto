@@ -408,7 +408,7 @@
   .ntg-mode > * { --m: calc(100cqw / 1457); }
   .ntg-mode__panel { inset: calc(var(--m) * 60) 0 0; aspect-ratio: auto; border-radius: 0; background: none; }
   .ntg-mode__panel img { display: block; width: 100%; height: 100%; }
-  .ntg-mode__prompt { position: absolute; left: calc(var(--m) * 5); top: calc(var(--m) * 46); width: calc(var(--m) * 972); height: calc(var(--m) * 125); margin: 0; padding: calc(var(--m) * 6) 0 0 calc(var(--m) * 109); }
+  .ntg-mode__prompt { position: absolute; left: calc(var(--m) * 5); top: calc(var(--m) * 46); width: calc(var(--m) * 972); height: calc(var(--m) * 125); margin: 0; padding: calc(var(--m) * 6) 0 0 calc(var(--m) * 140); }
   .ntg-mode__prompt h1 { font-size: calc(var(--m) * 44); letter-spacing: .03em; }
   .ntg-mode__prompt p { font-size: calc(var(--m) * 32); margin-top: calc(var(--m) * 4); }
   .ntg-mode__robot { left: calc(var(--m) * -70); top: calc(var(--m) * -60); width: calc(var(--m) * 233); translate: none; }
