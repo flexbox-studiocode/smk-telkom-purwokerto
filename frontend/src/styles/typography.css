@@ -5,7 +5,7 @@
 }
 
 .site-navbar > nav, .site-footer .footer-content, .footer-bottom-bar > div { container-type: inline-size; }
-.site-navbar .navbar-link { font-size: clamp(.75rem, 1.148cqw, 1.25rem); font-weight: 600; line-height: normal; letter-spacing: var(--tracking-figma-copy); }
+.site-navbar .navbar-link { font-size: clamp(.8125rem, 1.04cqw, .9375rem); font-weight: 600; line-height: normal; letter-spacing: .03em; }
 .site-navbar .navbar-cta { font-size: clamp(.875rem, 1.378cqw, 1.5rem); font-weight: 600; line-height: normal; letter-spacing: var(--tracking-figma-copy); }
 .site-navbar .language-toggle { font-size: clamp(.75rem, 1.378cqw, 1.5rem); font-weight: 500; line-height: normal; letter-spacing: .01em; }
 .site-navbar .navbar-dropdown-enter a { font-family: var(--font-jakarta); }
@@ -18,7 +18,7 @@
   .site-navbar .language-toggle { font-size: .75rem; }
 }
 @media (min-width: 72rem) and (max-width: 79.999rem) {
-  .site-navbar .navbar-link { font-size: .75rem; letter-spacing: var(--tracking-figma-heading); }
+  .site-navbar .navbar-link { font-size: .75rem; letter-spacing: .02em; }
   .site-navbar .navbar-cta { letter-spacing: var(--tracking-figma-label); }
 }
 
