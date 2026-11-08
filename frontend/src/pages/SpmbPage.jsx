@@ -43,7 +43,7 @@ const icons = { account, data, upload, program, selection, result, register, eas
 const stateLabels = { unknown: 'Jadwal belum tersedia', upcoming: 'Akan Dibuka', open: 'Sedang Berlangsung', closed: 'Ditutup' };
 const admissionLinks = [{ title: 'Alur SPMB', desc: 'Lihat langkah dari buat akun sampai daftar ulang.', linkLabel: 'Lihat Alur', href: '/spmb#alur-spmb', icon: 'userPlus' }, ...quickLinks.slice(1)];
 const content = {
-  hashtags: ['#NextGen', '#GlobalTechnopreneur'], title: 'Wujudkan Mimpimu', titleAccent: 'di Dunia Digital',
+  hashtags: ['#NextGens', '#GlobalTechnopreneur'], title: 'Wujudkan Mimpimu', titleAccent: 'di Dunia Digital',
   description: `Daftar SPMB SMK Telkom Purwokerto Tahun Ajaran ${ppdbMeta.tahun}/${Number(ppdbMeta.tahun) + 1} dan mulai langkah pertamamu menuju karier di bidang teknologi.`,
   primaryCta: { label: 'Daftar SPMB', href: OFFICIAL_ADMISSIONS_URL }, secondaryCta: { label: 'Lihat Jurusan', href: '/jurusan' },
 };
