@@ -128,7 +128,7 @@ function GuruPage() {
               </Link>
             </div>
             <div className="hero-media relative">
-              <img src={heroPhoto} alt={t("Guru dan tenaga pendidik SMK Telkom Purwokerto")} width="2200" height="1033" fetchPriority="high" className="hero-image" />
+              <img src={heroPhoto} alt={t("Guru dan tenaga pendidik SMK Telkom Purwokerto")} width="2000" height="1082" fetchPriority="high" className="hero-image" />
             </div>
           </div></PageHeroCarousel>
           <HeroQuickAccess />

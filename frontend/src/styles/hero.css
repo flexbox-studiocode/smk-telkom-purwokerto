@@ -131,7 +131,7 @@
 .hero-panel--bleed .hero-media .hero-image { object-position: var(--hero-media-position); }
 .hero-panel--bleed .hero-background { margin: 0; border-radius: 0; }
 .hero-panel--bleed .hero-profile-crop { border-radius: 0; }
-.hero-panel--teachers { --hero-media-ratio: 2200 / 1033; --hero-media-width: 72%; --hero-media-position: left center; }
+.hero-panel--teachers { --hero-media-ratio: 2000 / 1082; --hero-media-width: 72%; --hero-media-position: left center; }
 .hero-panel--activities { --hero-media-ratio: 1999 / 1007; --hero-media-width: 69%; --hero-media-position: right center; }
 .hero-panel--admissions { --hero-media-ratio: 1248 / 676; --hero-media-width: 72%; }
 .hero-panel--school { --hero-media-width: 70%; }
