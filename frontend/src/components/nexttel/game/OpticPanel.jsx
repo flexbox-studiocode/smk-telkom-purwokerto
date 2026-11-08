@@ -43,7 +43,7 @@ export default function OpticPanel({ value, onChange }) {
         </div>
       </div>
       <div className="ntg-optic__stage">
-        <span className="ntg-optic__emitter" aria-hidden="true" />
+        <span className="ntg-optic__emitter" data-on={state.inlet} aria-hidden="true" />
         <div className="ntg-optic__board">
           {CELLS.map((cell, index) => (
             <div key={index} className="ntg-optic__cell">
@@ -51,6 +51,8 @@ export default function OpticPanel({ value, onChange }) {
                 <img className={`ntg-optic__pipe ntg-optic__pipe--${cell.dir}`} src={asset('pipe.png')} width="81" height="36" alt="" />
                 <span className={`ntg-optic__beam ntg-optic__beam--${cell.dir}`} data-on={state.pipes[cell.pipe]} aria-hidden="true" />
               </>}
+              {cell.node === 'A' && <span className="ntg-optic__beam ntg-optic__beam--in" data-on={state.inlet} aria-hidden="true" />}
+              {cell.node === 'D' && <span className="ntg-optic__beam ntg-optic__beam--out" data-on={state.outlet} aria-hidden="true" />}
               {cell.node && (
                 <button
                   type="button"

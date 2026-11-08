@@ -209,10 +209,28 @@
 .ntg-optic__cell { position: relative; display: grid; place-items: center; border: 1px solid #39414f; }
 .ntg-optic__pipe { width: 120%; height: auto; max-width: none; }
 .ntg-optic__pipe--v { transform: rotate(90deg); }
-.ntg-optic__beam { position: absolute; z-index: 1; background: linear-gradient(#ff8c8c, #ff1f1f 45%, #b40d0d); box-shadow: 0 0 10px 2px rgb(255 40 40 / .75); opacity: 0; transition: opacity .25s; pointer-events: none; }
-.ntg-optic__beam--h { left: -10%; right: -10%; top: 41%; height: 18%; }
-.ntg-optic__beam--v { top: -10%; bottom: -10%; left: 41%; width: 18%; }
-.ntg-optic__beam[data-on='true'] { opacity: 1; }
+/* Beam = banded pixel core (dark edge, red body, hot centre) + small glow; ::after is the energy pulse running input -> output. */
+.ntg-optic__beam { position: absolute; z-index: 1; opacity: 0; transition: opacity .25s; pointer-events: none; box-shadow: 0 0 6px 1px rgb(255 40 40 / .6), 0 0 14px 3px rgb(255 40 40 / .25); }
+.ntg-optic__beam::after { content: ''; position: absolute; inset: 0; }
+.ntg-optic__beam--h, .ntg-optic__beam--in, .ntg-optic__beam--out { top: 41%; height: 18%; background: linear-gradient(#b40d0d 0 18%, #ff2a2a 18% 38%, #ffd9d0 38% 62%, #ff2a2a 62% 82%, #b40d0d 82%); }
+.ntg-optic__beam--v { left: 41%; width: 18%; background: linear-gradient(90deg, #b40d0d 0 18%, #ff2a2a 18% 38%, #ffd9d0 38% 62%, #ff2a2a 62% 82%, #b40d0d 82%); }
+.ntg-optic__beam--h { left: -10%; right: -10%; }
+.ntg-optic__beam--v { top: -10%; bottom: -10%; }
+.ntg-optic__beam--in { left: -52%; right: 50%; }
+.ntg-optic__beam--out { left: 50%; right: -18%; }
+.ntg-optic__beam--h::after, .ntg-optic__beam--in::after, .ntg-optic__beam--out::after { background: repeating-linear-gradient(90deg, transparent 0 18px, rgb(255 255 255 / .55) 18px 24px); background-size: 36px 100%; }
+.ntg-optic__beam--v::after { background: repeating-linear-gradient(180deg, transparent 0 18px, rgb(255 255 255 / .55) 18px 24px); background-size: 100% 36px; }
+.ntg-optic__beam[data-on='true'] { opacity: 1; animation: ntg-beam-on .35s steps(5); }
+.ntg-optic__beam[data-on='true']::after { animation: ntg-flow-x .8s steps(8) infinite; }
+.ntg-optic__beam--v[data-on='true']::after { animation-name: ntg-flow-y; }
+.ntg-optic[data-solved='true'] .ntg-optic__beam { box-shadow: 0 0 8px 2px rgb(255 60 40 / .75), 0 0 18px 4px rgb(255 40 40 / .3); }
+.ntg-optic[data-solved='true'] .ntg-optic__beam::after { animation-duration: .5s; }
+@keyframes ntg-beam-on { 0% { opacity: 0; } 30% { opacity: 1; filter: brightness(1.9); } 100% { filter: none; } }
+@keyframes ntg-flow-x { to { background-position-x: 36px; } }
+@keyframes ntg-flow-y { to { background-position-y: 36px; } }
+@keyframes ntg-pct { 0% { color: #ff8c8c; translate: 0 -2px; } 100% { color: inherit; translate: 0; } }
+@keyframes ntg-pulse { from { opacity: .9; scale: .85; } to { opacity: 0; scale: 1.2; } }
+@keyframes ntg-near { 50% { box-shadow: 0 0 10px #ffb02e; border-color: #8a5a10; } }
 .ntg-optic__node { position: relative; width: 78%; aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; background: none; }
 .ntg-optic__node > img { position: relative; z-index: 2; width: 100%; height: auto; }
 .ntg-optic__ports, .ntg-optic__ghost { position: absolute; inset: -28%; transition: transform .2s ease; pointer-events: none; }
