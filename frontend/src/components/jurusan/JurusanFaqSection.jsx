@@ -17,8 +17,8 @@ const JurusanFaqSection = ({ variant = 'default' }) => {
       <div className={`mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 sm:px-6 lg:px-8 ${home ? 'lg:grid-cols-[minmax(0,1fr)_minmax(0,1.95fr)] lg:gap-16' : ''}`}>
         {home && <div>
           <p className="inline-flex items-center gap-2 rounded-full border border-primary/50 bg-primary-50 px-4 py-1 text-xs font-extrabold uppercase tracking-wide text-primary"><CircleHelp aria-hidden="true" className="size-4" />{copy('Pusat Bantuan', 'Help Center')}</p>
-          <h2 className="mt-6 font-heading text-3xl font-extrabold leading-tight tracking-tight text-dark-900 sm:text-4xl">{copy('Kenali Jurusan, Temukan', 'Explore Majors, Find')} <span className="text-primary">{copy('Jawabanmu.', 'Your Answers.')}</span></h2>
-          <p className="mt-4 text-base leading-relaxed text-dark-500">{copy('Masih punya pertanyaan tentang jurusan? Temukan jawabannya di sini.', 'Still have questions about our majors? Find your answers here.')}</p>
+          <h2 className="mt-6 font-heading text-3xl font-extrabold leading-tight tracking-tight text-dark-900 sm:text-4xl">{copy('Kenali Jurusan, Temukan', 'Explore Programs, Find')} <span className="text-primary">{copy('Jawabanmu.', 'Your Answers.')}</span></h2>
+          <p className="mt-4 text-base leading-relaxed text-dark-500">{copy('Masih punya pertanyaan tentang jurusan? Temukan jawabannya di sini.', 'Still have questions about our programs? Find your answers here.')}</p>
           <Link to="/jurusan/faq" className="mt-5 inline-flex min-h-11 items-center gap-3 text-sm font-extrabold text-primary hover:underline">{t(jurusanFaq.ctaText)}<ArrowRight aria-hidden="true" className="size-4" /></Link>
           <div className="mt-6 border-t border-dark-200 pt-6">
             <p className="text-xs text-dark-500">{copy('Butuh bantuan lebih lanjut?', 'Need more help?')}</p>
@@ -26,7 +26,7 @@ const JurusanFaqSection = ({ variant = 'default' }) => {
           </div>
         </div>}
         <div>
-          <h2 className="font-heading text-xl font-extrabold text-primary sm:text-2xl"><span>{home ? 'FAQ' : t(jurusanFaq.title)}</span> <span className="text-dark-900">{home ? copy('tentang jurusan', 'about our majors') : t(jurusanFaq.titleAccent)}</span></h2>
+          <h2 className="font-heading text-xl font-extrabold text-primary sm:text-2xl"><span>{home ? 'FAQ' : t(jurusanFaq.title)}</span> <span className="text-dark-900">{home ? copy('tentang jurusan', 'about our programs') : t(jurusanFaq.titleAccent)}</span></h2>
           <div className="mt-6 space-y-4">
             {jurusanFaq.items.map((item, i) => {
               const isOpen = i === open;
@@ -38,7 +38,7 @@ const JurusanFaqSection = ({ variant = 'default' }) => {
                 <div id={`${id}-panel-${i}`} role="region" aria-labelledby={`${id}-question-${i}`} aria-hidden={!isOpen} inert={!isOpen} data-open={isOpen} className="faq-panel">
                   <div className="faq-panel-clip">
                     <div className="mx-5 border-t border-primary/15 py-4 sm:mx-6">
-                      <p className="text-sm leading-relaxed text-dark-500 sm:text-base">{home && i === 0 ? copy('Materi coding berbeda di setiap jurusan. Kenali mata pelajaran dan kompetensi masing-masing jurusan untuk menemukan pilihan yang sesuai minatmu.', 'Coding content differs across majors. Explore the subjects and competencies of each major to find the right fit for your interests.') : t(item.a)}</p>
+                      <p className="text-sm leading-relaxed text-dark-500 sm:text-base">{home && i === 0 ? copy('Materi coding berbeda di setiap jurusan. Kenali mata pelajaran dan kompetensi masing-masing jurusan untuk menemukan pilihan yang sesuai minatmu.', 'Coding content differs across programs. Explore the subjects and competencies of each program to find the right fit for your interests.') : t(item.a)}</p>
                     </div>
                   </div>
                 </div>

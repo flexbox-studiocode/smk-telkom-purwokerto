@@ -8,15 +8,16 @@ import facilities from './translationsFasilitas';
 import calendar from './translationsCalendar';
 import spmbInfo from './translationsSpmbInfo';
 import jurusanDetail from './translationsJurusanDetail';
+import nextTel from './translationsNextTel';
 
 export default {
   'Bukan sekadar belajar Teknologi': 'More than learning Technology',
   'Kami bikin karya nyata': 'We create real work',
   'Digital Innovation': 'Digital Innovation',
   'NEXT GENERATION': 'NEXT GENERATION',
-  'AKREDITASI A': 'A ACCREDITATION',
+  'AKREDITASI A': 'GRADE A ACCREDITED',
   'Lihat semua fasilitas': 'View all facilities',
-  ...school, ...publicPages, ...portal, ...audit, ...teachers, ...spmb, ...facilities, ...calendar, ...spmbInfo, ...jurusanDetail,
+  ...school, ...publicPages, ...portal, ...audit, ...teachers, ...spmb, ...facilities, ...calendar, ...spmbInfo, ...jurusanDetail, ...nextTel,
   'Pilihan Jurusan': school['Pilihan Jurusan'],
   '{name} sedang kami siapkan. Nantikan informasi selengkapnya di halaman ini.': 'We are preparing {name}. More information will be available on this page soon.',
   'Layanan': 'Services', 'Submenu Layanan': 'Services submenu',
@@ -43,7 +44,7 @@ export default {
   'Menjadi sekolah vokasi berbasis teknologi yang unggul secara akademik, berkarakter, dan berdaya saing global.': 'To become a technology-based vocational school with academic excellence, strong character, and global competitiveness.',
   'Menyelenggarakan pendidikan vokasi bermutu, mengembangkan potensi peserta didik, serta menjalin kerja sama strategis dengan dunia industri.': 'Provide high-quality vocational education, develop students’ potential, and build strategic partnerships with industry.',
   'SMK Telkom Purwokerto didirikan di Purwokerto.': 'SMK Telkom Purwokerto was founded in Purwokerto.',
-  'Terakreditasi A dengan standar mutu nasional.': 'Accredited A under national quality standards.',
+  'Terakreditasi A dengan standar mutu nasional.': 'Grade A accredited under national quality standards.',
   'Kerja Sama Industri': 'Industry Partnerships',
   'Memperluas kolaborasi dan berbagai mitra industri terkemuka.': 'Expanding collaboration with leading industry partners.',
   'Transformasi digital dalam pembelajaran dan manajemen sekolah.': 'Digital transformation in learning and school management.',
