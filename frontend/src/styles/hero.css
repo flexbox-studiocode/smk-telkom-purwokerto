@@ -27,8 +27,8 @@
   & [aria-current="page"] { font-family: var(--font-inter); font-weight: inherit; }
 }
 .hero-panel--school .hero-copy :is(h1, h2) { font-size: clamp(1.75rem, 3.157cqw, 3.4375rem); }
-.hero-panel--school .hero-copy > p, .hero-panel--teachers .hero-copy > p { font-size: var(--text-figma-body); }
-.hero-panel--teachers .hero-copy :is(h1, h2), .hero-panel--activities .hero-copy :is(h1, h2) { font-family: var(--font-poppins); font-size: clamp(1.75rem, 3.674cqw, 4rem); font-weight: 600; }
+.hero-panel--school .hero-copy > p { font-size: var(--text-figma-body); }
+.hero-panel--activities .hero-copy :is(h1, h2) { font-family: var(--font-poppins); font-size: clamp(1.75rem, 3.674cqw, 4rem); font-weight: 600; }
 .hero-panel--activities .hero-copy > p { font-family: var(--font-poppins); font-size: clamp(.875rem, 1.148cqw, 1.25rem); font-weight: 400; letter-spacing: .05em; }
 .hero-panel--calendar .hero-copy :is(h1, h2) { font-family: var(--font-poppins); font-weight: 600; }
 .hero-panel--announcement .hero-copy :is(h1, h2) { font-family: var(--font-poppins); font-size: clamp(1.75rem, 3.157cqw, 3.4375rem); font-weight: 700; line-height: calc(65 / 55); letter-spacing: .02em; }
@@ -80,6 +80,8 @@
   /* Scale these titles to the existing copy column so the source line breaks and stats fit. */
   .hero-panel--students .hero-copy :is(h1, h2) { font-size: clamp(1.5rem, 2.5cqw, 3rem); }
   .hero-panel--activities .hero-copy :is(h1, h2) { font-size: clamp(1.5rem, 2.9cqw, 4rem); }
+  /* "SMK Telkom Purwokerto" must stay on one line inside the 38% copy column. */
+  .hero-panel--teachers .hero-copy :is(h1, h2) { font-size: clamp(1.25rem, 2.3cqw, 2.5rem); }
   .hero-panel--floating .hero-copy { padding-bottom: 3rem; }
   .hero-grid > .hero-image, .hero-media { height: 100%; min-height: 0; aspect-ratio: auto; }
   .hero-grid > .hero-image { max-height: calc(var(--hero-height) - 2rem - 2px); }
@@ -100,14 +102,6 @@
 @media (min-width: 80rem) {
   .school-hero { --hero-height: 29rem; }
   .hero-floating--quick .quick-access-card { padding-inline: 1rem; gap: .75rem; }
-}
-
-/* Reserve enough room for the longer teacher introduction above the floating cards. */
-@media (min-width: 64rem) {
-  .school-hero--teachers { --hero-height: 38rem; }
-}
-@media (min-width: 80rem) {
-  .school-hero--teachers { --hero-height: 36rem; }
 }
 
 /* Composite artwork shares the panel edges; the copy and floating cards stay in flow. */
