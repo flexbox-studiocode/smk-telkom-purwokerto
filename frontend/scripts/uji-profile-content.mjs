@@ -7,6 +7,15 @@ try {
   const { aboutDescription, visiMisi, nilaiStematel, timelineData } = await server.ssrLoadModule('/src/data/dummyData.js');
   const { translate } = await server.ssrLoadModule('/src/utils/language.js');
   const { learningMethods, learningStages } = await server.ssrLoadModule('/src/data/profileLearning.js');
+  const { profileMissions, profilePillars, profilePathways } = await server.ssrLoadModule('/src/data/profilePathway.js');
+  assert.equal(profileMissions.length, 5);
+  assert.deepEqual(profilePillars.map(item => item.title), ['Digital Skills', 'Global Exposure', 'Industry Partnership']);
+  assert.deepEqual(profilePathways.map(item => item.title), ['The Founder', 'The Scholar', 'Professional']);
+  for (const text of [...profileMissions.flat(), ...profilePillars.map(item => item.desc), ...profilePathways.flatMap(item => [item.description, item.alt])]) {
+    if (!text.trim()) continue;
+    assert.notEqual(translate(text, 'en'), text, `Missing profile translation: ${text}`);
+    assert.equal(translate(text, 'id'), text);
+  }
   const learningComponent = await readFile(new URL('../src/components/tentang/TentangMetodePembelajaranSection.jsx', import.meta.url), 'utf8');
   const principlesComponent = await readFile(new URL('../src/components/tentang/TentangVisiMisiSection.jsx', import.meta.url), 'utf8');
   for (const [, text] of principlesComponent.matchAll(/t\('([^']+)'\)/g)) {
@@ -25,7 +34,7 @@ try {
   assert.deepEqual(nilaiStematel.map(v => v.title), ['Innovation', 'Character', 'Technology', 'Collaboration']);
   assert.deepEqual(timelineData.map(v => v.year), ['1993', '2016', '2020', '2023', '2026']);
   const page = await readFile(new URL('../src/pages/TentangPage.jsx', import.meta.url), 'utf8');
-  const order = ['TentangHeroSection', 'RibbonDivider', 'TentangAboutSection', 'TentangVisiMisiSection', 'TentangTimelineSection', 'WaveMarquee', 'TentangKepalaSekolahSection', 'TentangMetodePembelajaranSection', 'FacilitiesSection'];
+  const order = ['TentangHeroSection', 'RibbonDivider', 'TentangAboutSection', 'TentangVisiMisiSection', 'TentangTimelineSection', 'WaveMarquee', 'TentangKepalaSekolahSection', 'TentangMetodePembelajaranSection', 'FacilitiesSection', 'TentangPathwaySection'];
   const positions = order.map(name => page.indexOf(`<${name}`));
   assert(positions.every((value, index) => value >= 0 && (!index || value > positions[index - 1])), 'Figma section order.');
   assert.equal((page.match(/<FacilitiesSection/g) || []).length, 1);

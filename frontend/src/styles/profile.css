@@ -63,123 +63,143 @@
   .profile-learning-stages .profile-learning-stage-title { font-size: 1.3125rem; line-height: 1.380952; }
   .profile-learning-stages li:not(:last-child)::after { top: 2.5rem; right: 0; }
 }
+/* Profile frame 415:6487: reuse global containers, fonts and color tokens. */
 .profile-section { background: white; padding-block: 1.5rem; }
 .profile-container { width: 100%; max-width: 80rem; margin-inline: auto; padding-inline: 1rem; }
-.profile-section-heading { margin-bottom: 1.5rem; font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; line-height: 1.35; color: var(--color-primary); }
-.profile-about { scroll-margin-top: 6rem; }
-.profile-about-panel { container-type: inline-size; display: grid; align-items: center; gap: 2rem; padding: 1.5rem; border: 1px solid var(--color-dark-100); border-radius: 1.25rem; box-shadow: var(--shadow-card); }
+.profile-section-heading { margin-bottom: 1.25rem; font-family: var(--font-jakarta); font-size: clamp(1.5rem, 2.755cqw, 3rem); font-weight: 700; line-height: 1.25; color: var(--color-primary); }
+.profile-about { scroll-margin-top: 6rem; font-family: var(--font-jakarta); }
+.profile-about-panel { container-type: inline-size; display: grid; align-items: center; gap: 2rem; padding: 1.5rem; border: 2px solid var(--color-primary); border-radius: 1.25rem; box-shadow: var(--shadow-card); }
 .profile-about-copy { min-width: 0; }
-.profile-about-copy h2 { white-space: pre-line; font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800; line-height: 1.3; color: var(--color-primary); }
-.profile-about-copy > p { font-weight: 500; max-width: 43rem; margin-top: 1.25rem; font-size: .875rem; line-height: 1.5; color: var(--color-dark-600); }
-.profile-about-action { display: inline-flex; align-items: center; gap: .75rem; min-height: 2.75rem; margin-top: 1.5rem; padding: .75rem 1rem; border: 1px solid var(--color-dark-200); border-radius: .5rem; font-size: .75rem; font-weight: 800; letter-spacing: .12em; }
+.profile-about-copy h2 { white-space: pre-line; font-size: clamp(1.5rem, 2.3cqw, 2.5rem); font-weight: 800; line-height: 1.3; color: var(--color-primary); }
+.profile-about-copy > p { max-width: 43rem; margin-top: 1.25rem; font-size: clamp(.875rem, 1.55cqw, 1.6875rem); font-weight: 500; line-height: 1.45; color: var(--color-dark-600); }
+.profile-about-action { display: inline-flex; align-items: center; gap: .75rem; min-height: 2.75rem; margin-top: 1.5rem; padding: .75rem 1rem; border: 1px solid var(--color-dark-200); border-radius: .5rem; font-size: .75rem; font-weight: 800; letter-spacing: .08em; }
 .profile-about-action:hover { border-color: var(--color-primary); }
 .profile-about-action:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 4px; }
 .profile-video { position: relative; min-width: 0; padding: 1rem 1rem .75rem; border-radius: 1.25rem; background: var(--color-primary); box-shadow: var(--shadow-card); }
-.profile-video > p { margin-top: .75rem; font-family: var(--font-heading); font-size: clamp(.875rem, 1.4vw, 1.5rem); font-weight: 800; line-height: 1.3; text-align: center; color: white; }
+.profile-video > p { margin-top: .75rem; font-size: clamp(.875rem, 2.2cqw, 2.625rem); font-weight: 800; line-height: 1.3; text-align: center; color: white; }
 .profile-video-logo { position: absolute; top: .5rem; right: .5rem; width: 3rem; aspect-ratio: 1; padding: .25rem; border-radius: .5rem; background: var(--color-primary); pointer-events: none; }
 .profile-video-logo > span { display: block; width: 100%; height: 100%; background: white; mask-size: contain; mask-position: center; mask-repeat: no-repeat; }
-.profile-principles-section, .profile-history { --profile-red: #cd0b20; --profile-font: var(--font-jakarta); font-family: var(--profile-font); }
-.profile-principles-section > .profile-container, .profile-history > .profile-container { container-type: inline-size; }
-.profile-principles-section .profile-principles { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(2rem, 3.46vw, 4rem); }
-.profile-principles-section .profile-vision-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
-.profile-principle-card { position: relative; isolation: isolate; min-width: 0; min-height: 25rem; border: 3px solid var(--profile-red); border-radius: 1.25rem; background: white; overflow: hidden; box-shadow: 0 10px 4px rgb(130 130 130 / .25); }
-.profile-principle-vision > .profile-principle-photo { position: absolute; z-index: -1; top: 23.5%; left: -1.68%; width: 103.47%; height: 128.16%; max-width: none; object-fit: cover; }
-.profile-vision-accent { position: absolute; z-index: -1; top: -2.75rem; right: -3.5rem; width: 37.7%; aspect-ratio: 359 / 373; mask: url('../assets/tentang/profile/vision-accent-mask.svg') center / 100% 100% no-repeat; }
-.profile-principle-copy { padding: 1.25rem; }
-.profile-principle-header { display: flex; align-items: start; gap: .75rem; }
+.profile-principles-section, .profile-history, .profile-pathway { --profile-red: #cd0b20; font-family: var(--font-jakarta); }
+.profile-principles-section > .profile-container, .profile-history > .profile-container, .profile-pathway > .profile-container { container-type: inline-size; }
+.profile-principles { display: grid; gap: 2.5rem; }
+.profile-vision-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+.profile-principle-card { position: relative; isolation: isolate; display: flex; flex-direction: column; min-width: 0; border: 2px solid var(--profile-red); border-radius: 1.25rem; background: white; overflow: hidden; box-shadow: 0 8px 4px rgb(130 130 130 / .25); }
+.profile-principle-copy { position: relative; z-index: 1; padding: 1.25rem; }
+.profile-principle-header { display: flex; align-items: center; gap: .5rem; }
 .profile-principle-header > img { flex: none; width: clamp(3.5rem, 6.946cqw, 7.5625rem); height: auto; }
-.profile-principle-mission .profile-principle-header > img { width: clamp(3.5rem, 5.836cqw, 6.3542rem); }
-.profile-principle-header h2 { font-size: clamp(2.25rem, 3.674cqw, 4rem); font-weight: 700; line-height: 1.125; color: var(--profile-red); }
-.profile-principle-tagline { font-size: clamp(.875rem, 1.837cqw, 2rem); font-weight: 700; line-height: 1.25; }
-.profile-principle-tagline span { color: var(--profile-red); }
-.profile-principle-description { margin-top: clamp(.75rem, 1.148cqw, 1.25rem); font-size: clamp(.75rem, 1.091cqw, 1.1875rem); font-weight: 500; line-height: 1.3; color: rgb(0 0 0 / .68); }
-.profile-principle-description strong { font-weight: 700; }
-.profile-principle-description strong ~ strong { font-weight: 600; }
-.profile-mission-photo { position: absolute; z-index: -1; inset: 26% 0 0; mask: url('../assets/tentang/profile/mission-fade.svg') center / 100% 100% no-repeat; }
-.profile-mission-photo img { position: absolute; top: -13.97%; width: 100.13%; height: 133.37%; max-width: none; object-fit: cover; }
-@media (max-width: 79.999rem) {
-  .profile-principle-card { display: flex; flex-direction: column; }
-  .profile-principle-copy { order: 1; }
-  .profile-principle-vision > .profile-principle-photo { position: relative; order: 2; top: auto; left: 0; width: 100%; height: auto; max-height: 20rem; aspect-ratio: 1.6; object-fit: cover; object-position: center 65%; mask-image: linear-gradient(transparent, black 25%); }
-  .profile-mission-photo { position: relative; order: 2; inset: auto; width: 100%; max-height: 20rem; aspect-ratio: 1.6; margin-top: -2rem; }
-  .profile-vision-accent { width: 30%; opacity: .45; }
-}
-@media (min-width: 80rem) {
-  .profile-principles-section .profile-vision-grid { grid-template-columns: minmax(0, 952fr) minmax(0, 762fr); gap: clamp(1rem, 1.607cqw, 1.75rem); }
-  .profile-principle-card { min-height: clamp(20rem, 33.123cqw, 36.0625rem); border-width: 3px; }
-  .profile-principle-copy { padding: clamp(.875rem, 1.148cqw, 1.25rem) clamp(1.25rem, 2.296cqw, 2.5rem); }
-  .profile-principle-header { margin-left: -.75rem; gap: .5rem; }
-  .profile-principle-vision .profile-principle-description { max-width: 62%; }
-  .profile-principle-mission .profile-principle-description { font-size: clamp(.75rem, 1.148cqw, 1.25rem); }
-}
-@container (min-width: 70rem) and (max-width: 90rem) {
-  .profile-principle-vision > .profile-principle-photo { top: 30%; }
-}
-.profile-principles-section .profile-section-heading, .profile-history .profile-section-heading { margin-bottom: clamp(1rem, 1.148cqw, 1.25rem); font-family: var(--profile-font); font-size: clamp(1.5rem, 2.755cqw, 3rem); line-height: 1.25; color: var(--profile-red); }
-.profile-values-grid { --values-gap: clamp(1rem, 5.166cqw, 5.625rem); position: relative; isolation: isolate; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 1.5rem var(--values-gap); }
-.profile-value-card { position: relative; display: flex; flex-direction: column; align-items: start; gap: .5rem; min-width: 0; padding: 1rem; border-radius: 1.25rem; background: white; box-shadow: 0 0 24px rgb(130 130 130 / .25); }
-.profile-value-card:nth-child(odd)::after { position: absolute; z-index: -1; top: calc(50% - .8125rem); left: 100%; width: var(--values-gap); height: 1.625rem; background: linear-gradient(#cd0b20 27%, #ae0013 27% 73%, #cd0b20 73%); content: ''; }
-.profile-value-icon { display: flex; flex: none; align-items: center; justify-content: center; width: 3.5rem; height: 3.5rem; }
+.profile-principle-header h2 { font-size: clamp(2.25rem, 4.4cqw, 4.75rem); font-weight: 700; line-height: 1.125; color: var(--profile-red); }
+.profile-principle-description { margin-top: .75rem; font-size: clamp(1rem, 1.837cqw, 2rem); font-weight: 700; line-height: 1.3; color: #111; }
+.profile-principle-description strong, .profile-missions strong { color: var(--profile-red); font-weight: 600; }
+.profile-principle-vision > .profile-principle-photo { order: 2; width: 100%; height: auto; margin-top: -1rem; aspect-ratio: 1.6; object-fit: cover; object-position: center 65%; }
+.profile-vision-accent { position: absolute; z-index: -1; top: -2.75rem; right: -3.5rem; width: 37.7%; aspect-ratio: 359 / 373; mask: url('../assets/tentang/profile/vision-accent-mask.svg') center / 100% 100% no-repeat; }
+.profile-missions { margin-top: .75rem; padding-left: 1.1em; list-style: disc; font-size: clamp(.875rem, 1.148cqw, 1.25rem); font-weight: 500; line-height: 1.4; color: #111; }
+.profile-missions li + li { margin-top: .25rem; }
+.profile-mission-photo { position: relative; order: 2; flex: 1; min-height: 8rem; margin-top: -1.5rem; mask-image: linear-gradient(transparent, black 65%); }
+.profile-mission-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 65%; }
+.profile-values-grid { --values-gap: clamp(1.5rem, 5.166cqw, 5.625rem); position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0, 1fr); grid-auto-rows: 1fr; gap: 1.5rem var(--values-gap); }
+.profile-value-card { position: relative; display: flex; align-items: center; gap: .75rem; min-width: 0; padding: 1.25rem; border-radius: 1.25rem; background: white; box-shadow: 0 0 24px rgb(130 130 130 / .18); }
+.profile-value-icon { display: flex; flex: none; align-items: center; justify-content: center; width: clamp(3rem, 6.602cqw, 7.1875rem); height: clamp(3rem, 6.602cqw, 7.1875rem); }
 .profile-value-icon img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .profile-value-copy { min-width: 0; }
 .profile-value-card h3 { font-size: clamp(1rem, 1.837cqw, 2rem); font-weight: 700; line-height: 1.25; }
-.profile-value-card p { max-width: 10.0625rem; font-size: clamp(.75rem, .861cqw, .9375rem); font-weight: 500; line-height: 1.3; color: rgb(0 0 0 / .68); }
-@media (max-width: 25rem) {
-  .profile-value-card { padding: .75rem; }
-  .profile-value-card h3 { font-size: .875rem; }
-}
-@media (min-width: 40rem) {
-  .profile-value-card { flex-direction: row; align-items: center; gap: .25rem; min-height: 7rem; }
-}
-@media (min-width: 64rem) {
-  .profile-values-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .profile-value-card { min-height: clamp(6rem, 9.127cqw, 9.9375rem); padding: clamp(.5rem, .918cqw, 1rem); }
-  .profile-value-card:not(:last-child)::after { position: absolute; z-index: -1; top: calc(50% - .8125rem); left: 100%; width: var(--values-gap); height: 1.625rem; background: linear-gradient(#cd0b20 27%, #ae0013 27% 73%, #cd0b20 73%); content: ''; }
-  .profile-value-icon { width: clamp(3rem, 6.602cqw, 7.1875rem); height: clamp(3rem, 6.602cqw, 7.1875rem); }
-  .profile-value-card:nth-child(3) .profile-value-icon, .profile-value-card:nth-child(4) .profile-value-icon { width: clamp(3rem, 5.741cqw, 6.25rem); }
-}
+.profile-value-card p { margin-top: .25rem; font-size: clamp(.75rem, .861cqw, .9375rem); font-weight: 500; line-height: 1.4; color: var(--color-dark-600); }
 .profile-history { scroll-margin-top: 6rem; padding-bottom: 3rem; }
-.profile-timeline { --timeline-icon: 2.75rem; --timeline-gap: .75rem; display: grid; gap: 2rem; padding: 1.5rem; border-radius: 1.25rem; background: #fffdfd; box-shadow: 0 0 24px rgb(130 130 130 / .25); }
+.profile-timeline { --timeline-icon: 2.75rem; --timeline-gap: .75rem; display: grid; gap: 2rem; padding: 1.5rem; border-radius: 1.25rem; background: #fffdfd; box-shadow: 0 0 24px rgb(130 130 130 / .18); }
 .profile-timeline li { min-width: 0; }
 .profile-milestone { position: relative; display: grid; grid-template-columns: var(--timeline-icon) minmax(0, 1fr); align-items: start; gap: var(--timeline-gap); width: 100%; text-align: left; }
-.profile-milestone-icon { z-index: 1; display: flex; align-items: center; justify-content: center; width: var(--timeline-icon); height: var(--timeline-icon); margin-top: 2.75rem; border-radius: .625rem; background: var(--profile-red); }
+.profile-milestone-icon { z-index: 1; display: flex; align-items: center; justify-content: center; width: var(--timeline-icon); height: var(--timeline-icon); margin-top: 2.75rem; border-radius: .5rem; background: var(--profile-red); }
 .profile-milestone-icon img { max-width: 75%; max-height: 75%; object-fit: contain; }
 .profile-milestone-content { display: block; min-width: 0; }
 .profile-milestone-year { display: block; font-size: clamp(1.75rem, 2.296cqw, 2.5rem); font-weight: 800; line-height: 1.3; letter-spacing: .05em; }
 .profile-milestone-track { position: relative; display: flex; align-items: center; height: .75rem; margin-block: .5rem; }
 .profile-milestone-track::before { position: absolute; inset-inline: 0; height: 2px; background: var(--color-dark-200); content: ''; }
 .profile-milestone-track i { z-index: 1; width: .6875rem; height: .6875rem; border-radius: 50%; background: var(--profile-red); }
-.profile-milestone-title { display: block; font-size: clamp(.875rem, 1.148cqw, 1.25rem); font-weight: 500; line-height: 1.35; letter-spacing: .08em; }
-.profile-milestone-description { display: block; margin-top: .25rem; font-size: clamp(.75rem, .918cqw, 1rem); font-weight: 500; line-height: 1.35; letter-spacing: .08em; color: rgb(0 0 0 / .55); }
-.profile-timeline li:last-child .profile-milestone-description { letter-spacing: .07em; }
+.profile-milestone-title { display: block; font-size: clamp(.875rem, 1.148cqw, 1.25rem); font-weight: 600; line-height: 1.35; }
+.profile-milestone-description { display: block; margin-top: .25rem; font-size: clamp(.75rem, .918cqw, 1rem); font-weight: 500; line-height: 1.45; color: var(--color-dark-600); }
+.profile-pathway { position: relative; isolation: isolate; overflow: clip; background: var(--color-dark-50); padding-block: 3rem; }
+.profile-pathway h2 { position: relative; width: fit-content; max-width: 100%; margin-inline: auto; padding: .5rem .875rem; border-radius: .75rem; background: #ccc; font-size: clamp(1.25rem, 3.67cqw, 4rem); font-weight: 700; line-height: 1.3; text-align: center; text-transform: uppercase; color: #111; }
+.profile-pathway h2 span { color: var(--profile-red); }
+.profile-pathway-motif { position: absolute; z-index: -1; top: 2.5rem; left: -4%; width: 27%; height: auto; }
+.profile-pathway-pattern { position: absolute; z-index: -1; top: 10rem; right: -3%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 24%; gap: .5rem; opacity: .5; }
+.profile-pathway-pattern img { width: 100%; height: auto; mix-blend-mode: multiply; }
+.profile-pathway-list { display: grid; gap: 2.5rem; margin-top: 2.5rem; }
+.profile-pathway-card { position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; padding: 0 1.25rem 1.5rem; color: white; }
+.profile-pathway-card::before { position: absolute; z-index: -1; inset: 4rem 0 0; border-radius: 1.25rem; background: #bd1f25; content: ''; }
+.profile-pathway-student { position: relative; width: 7rem; aspect-ratio: 233 / 397; margin-bottom: 1.25rem; }
+.profile-pathway-cutout { position: absolute; inset: 0; overflow: hidden; }
+.profile-pathway-cutout img { position: absolute; max-width: none; width: 133.05%; height: 139.36%; left: -13.3%; top: -33.5%; }
+.profile-pathway-scholar .profile-pathway-student { justify-self: end; aspect-ratio: 249 / 421; }
+.profile-pathway-scholar .profile-pathway-cutout img { width: 147%; height: 154.92%; left: -27.72%; top: -41.33%; }
+.profile-pathway-professional .profile-pathway-student { aspect-ratio: 271 / 416; }
+.profile-pathway-professional .profile-pathway-cutout img { width: 138.01%; height: 160.1%; left: -13.28%; top: -46.39%; }
+.profile-pathway-rays { position: absolute; top: 0; right: -1rem; width: 2rem; aspect-ratio: 1; overflow: hidden; }
+.profile-pathway-rays img { position: absolute; max-width: none; width: 156.02%; height: 134.99%; left: -35.57%; top: -10.92%; }
+.profile-pathway-professional .profile-pathway-rays { left: -.5rem; right: auto; top: 12%; }
+.profile-pathway-copy { min-width: 0; }
+.profile-pathway-copy h3 { position: relative; width: fit-content; min-width: 10rem; max-width: 100%; margin-bottom: 1rem; padding: .25rem 1.25rem; border-radius: .5rem; background: linear-gradient(182deg, #878787 53%, #212121 204%); box-shadow: 0 4px 4px rgb(0 0 0 / .25); font-size: clamp(1.25rem, 2.3cqw, 2.5rem); font-weight: 700; line-height: 1.3; text-align: center; }
+.profile-pathway-scholar h3 { margin-left: auto; }
+.profile-pathway-copy p { font-size: clamp(.875rem, 1.837cqw, 2rem); font-weight: 500; line-height: 1.5; letter-spacing: .04em; }
+.profile-pathway-icon { position: absolute; top: 6rem; right: 1.5rem; width: 3rem; }
+.profile-pathway-icon img { max-width: 100%; height: auto; }
+.profile-pathway-scholar .profile-pathway-icon { left: 1.5rem; right: auto; }
 @media (max-width: 63.999rem) {
   .profile-timeline li:not(:last-child) .profile-milestone::after { position: absolute; top: calc(2.75rem + var(--timeline-icon) / 2); bottom: calc(-4.75rem - var(--timeline-icon) / 2); left: calc(var(--timeline-icon) / 2); width: 2px; background: var(--color-dark-200); content: ''; }
+}
+@media (max-width: 47.999rem) {
+  .profile-pathway-card { grid-template-columns: clamp(5rem, 28vw, 7rem) minmax(0, 1fr); column-gap: 1rem; }
+  .profile-pathway-student { grid-row: 1; grid-column: 1; width: 100%; }
+  .profile-pathway-copy { display: contents; }
+  .profile-pathway-copy h3 { grid-row: 1; grid-column: 2; align-self: start; min-width: 0; margin-top: 2.75rem; padding-inline: .75rem; font-size: clamp(1rem, 5vw, 1.25rem); }
+  .profile-pathway-copy p { grid-row: 2; grid-column: 1 / -1; }
+  .profile-pathway-icon { top: 7rem; }
+  .profile-pathway-scholar { grid-template-columns: minmax(0, 1fr) clamp(5rem, 28vw, 7rem); }
+  .profile-pathway-scholar .profile-pathway-student { grid-column: 2; }
+  .profile-pathway-scholar h3 { grid-column: 1; }
 }
 @media (min-width: 40rem) {
   .profile-container { padding-inline: 1.5rem; }
   .profile-about-panel { padding: 2rem; }
 }
+@media (min-width: 48rem) {
+  .profile-vision-grid { grid-template-columns: minmax(0, 952fr) minmax(0, 762fr); }
+  .profile-principle-card { min-height: clamp(25rem, 33.123cqw, 36.0625rem); }
+  .profile-principle-vision > .profile-principle-photo { position: absolute; z-index: -1; top: 23.5%; left: -1.68%; width: 103.47%; height: 128.16%; max-width: none; margin: 0; object-fit: cover; }
+  .profile-principle-vision .profile-principle-description { max-width: 88%; }
+  .profile-values-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 1fr; }
+  .profile-value-card { padding: .875rem; gap: .5rem; }
+  .profile-value-card:not(:last-child)::after { position: absolute; z-index: -1; top: calc(50% - .5rem); left: 100%; width: var(--values-gap); height: 1rem; background: linear-gradient(#cd0b20 27%, #960917 27% 73%, #cd0b20 73%); content: ''; }
+  .profile-pathway-list { gap: 3rem; margin-top: 4rem; }
+  .profile-pathway-card { grid-template-columns: 14% minmax(0, 1fr) 9%; align-items: end; column-gap: 1.5rem; padding: 0 1.5rem 0 0; }
+  .profile-pathway-card::before { inset: 26% 0 0 3%; background: linear-gradient(90deg, white, #bd1f25 10%); }
+  .profile-pathway-student { width: 100%; margin: 0; align-self: end; }
+  .profile-pathway-copy { align-self: stretch; padding-top: clamp(1.5rem, 3.3cqw, 3.625rem); padding-bottom: 1.5rem; }
+  .profile-pathway-copy h3 { margin-bottom: 1.5rem; }
+  .profile-pathway-icon { position: static; width: 100%; align-self: center; padding-top: 2rem; }
+  .profile-pathway-scholar { grid-template-columns: 9% minmax(0, 1fr) 14%; padding: 0 0 0 1.5rem; }
+  .profile-pathway-scholar::before { inset: 26% 3% 0 0; background: linear-gradient(270deg, white, #bd1f25 10%); }
+  .profile-pathway-scholar .profile-pathway-student { grid-column: 3; grid-row: 1; }
+  .profile-pathway-scholar .profile-pathway-copy { grid-column: 2; grid-row: 1; }
+  .profile-pathway-scholar .profile-pathway-icon { grid-column: 1; grid-row: 1; }
+  .profile-pathway-professional { grid-template-columns: 14% minmax(0, 1fr); padding-right: 2.5rem; }
+}
 @media (min-width: 64rem) {
   .profile-section { padding-block: 2rem; }
   .profile-container { padding-inline: 2rem; }
   .profile-about-panel { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4rem; padding: 2.5rem; }
-  .profile-about-copy h2 { font-size: 1.875rem; }
-  .profile-about-copy > p { font-size: 1rem; }
-  .profile-timeline { --timeline-icon: clamp(2rem, 3.617cqw, 3.9375rem); --timeline-column-gap: clamp(.75rem, 1.148cqw, 1.25rem); grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--timeline-column-gap); min-height: clamp(15rem, 20.608cqw, 22.4375rem); align-items: start; padding: clamp(1.5rem, 3.444cqw, 3.75rem) clamp(1rem, 1.837cqw, 2rem); }
+  .profile-timeline { --timeline-icon: clamp(2rem, 3.617cqw, 3.9375rem); --timeline-column-gap: clamp(.75rem, 1.148cqw, 1.25rem); grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--timeline-column-gap); padding: clamp(1.5rem, 3.444cqw, 3.75rem) clamp(1rem, 1.837cqw, 2rem); }
   .profile-milestone-icon { margin-top: clamp(2.5rem, 3.157cqw, 3.4375rem); }
   .profile-timeline li:not(:last-child) .profile-milestone-track::before { right: calc(-1 * (var(--timeline-icon) + var(--timeline-gap) + var(--timeline-column-gap))); }
-  .profile-history { padding-bottom: 3rem; }
+  .profile-pathway { padding-block: 3rem; }
+  .profile-pathway-list { gap: 4rem; }
 }
 @media (min-width: 103.75rem) {
   .profile-container { max-width: 112rem; }
   .profile-section { padding-block: 2.5rem; }
   .profile-about-panel { min-height: 36rem; grid-template-columns: minmax(0, 1fr) minmax(0, .95fr); gap: 7rem; padding: 3rem 4rem 3rem 2.5rem; }
-  .profile-about-copy h2 { font-size: 2.5rem; }
-  .profile-about-copy > p { font-size: 1.6875rem; line-height: 1.35; }
   .profile-about-action { margin-top: 2rem; font-size: .9375rem; }
   .profile-video { padding: 1.5rem 1.5rem 1rem; }
-  .profile-video > p { font-size: clamp(1.5rem, 2.411cqw, 2.625rem); }
   .profile-video-logo { width: 4rem; }
-  .profile-section-heading { margin-bottom: 3rem; font-size: 2rem; }
+  .profile-principle-copy { padding: 1.25rem 2.5rem; }
   .profile-history { padding-bottom: 4rem; }
+  .profile-pathway { padding-block: 4rem; }
 }
