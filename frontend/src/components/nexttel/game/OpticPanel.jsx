@@ -92,7 +92,7 @@ export default function OpticPanel({ value, onChange }) {
         </div>
         <div className="ntg-optic__out">
           <span className="ntg-optic__out-label">RCVR OUT</span>
-          <span className="ntg-optic__plug" data-on={state.outlet} aria-hidden="true"><img src={asset('icon-bolt.png')} width="89" height="66" alt="" /></span>
+          <span className="ntg-optic__plug" data-on={state.outlet} data-near={state.lit.includes('D') && !state.outlet} aria-hidden="true"><img src={asset('icon-bolt.png')} width="89" height="66" alt="" /></span>
         </div>
       </div>
       <p className="sr-only">{t('Pipa: A–B, A–C, B–D, C–D. Laser masuk dari kiri optik A, receiver ada di kanan optik D.')}</p>

@@ -253,6 +253,8 @@
 .ntg-optic__out-label { position: absolute; right: 0; bottom: 34%; padding: 4px 8px; background: #1b2230; border: 3px solid #0f131a; font-size: max(13px, calc(var(--u) * 30)); white-space: normal; }
 .ntg-optic__plug { position: absolute; left: 0; top: 80.6%; translate: 0 -50%; display: grid; place-items: center; width: 100%; max-width: 60px; aspect-ratio: 1; background: #5b6170; border: 3px solid #20242c; }
 .ntg-optic__plug img { width: 60%; height: auto; filter: grayscale(1) brightness(.6); }
+.ntg-optic__plug { transition: background-color .25s, box-shadow .25s; }
+.ntg-optic__plug[data-near='true'] { animation: ntg-near 1s steps(2) infinite; }
 .ntg-optic__plug[data-on='true'] { background: #3b4352; box-shadow: 0 0 12px #ffb02e; }
 .ntg-optic__plug[data-on='true'] img { filter: none; }
 
@@ -399,6 +401,7 @@
 @media (prefers-reduced-motion: reduce) {
   .ntg-drone, .ntg-code__drone[data-jump='true'] { animation: none; }
   .ntg *, .ntg-mode * { transition: none !important; }
+  .ntg-optic__beam, .ntg-optic__beam::after, .ntg-optic__pulse, .ntg-optic__pct, .ntg-optic__plug { animation: none !important; }
 }
 
 /* ---------- desktop: Figma stage geometry */
