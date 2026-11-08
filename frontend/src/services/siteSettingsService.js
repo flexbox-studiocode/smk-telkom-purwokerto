@@ -1,7 +1,10 @@
 import { api } from './apiClient';
 import { generalFields, schoolFields, validateSettings } from '../utils/siteSettings';
 
-export const getSiteSettings = async () => (await api.get('/api/settings')).data;
+export const getSiteSettings = async () => {
+  const { data } = await api.get('/api/settings');
+  return { ...data, school_name: data.schoolName ?? data.school_name, academic_year: data.academicYear ?? data.academic_year, spmb_open: data.spmbOpen ?? data.spmb_open, news_page_size: data.newsPageSize ?? data.news_page_size, logo_url: data.logoUrl ?? data.logo_url ?? null };
+};
 
 export async function requireAdmin() {
   const { user } = await api.get('/api/auth/me');
