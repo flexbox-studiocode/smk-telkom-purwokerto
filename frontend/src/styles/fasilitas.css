@@ -9,13 +9,30 @@
   line-height: normal;
   letter-spacing: .05em;
 }
-#fasilitas-grid h3 {
+#fasilitas-grid h3:not(.facility-nametag) {
   font-family: var(--font-poppins);
   font-size: max(20px, calc(40 * var(--facility-type-unit)));
   font-weight: 600;
   line-height: normal;
   letter-spacing: .05em;
 }
+/* Category nametag (Figma 405:1300/405:1301, 36px type on a 68px tab). Every measure is em-based on the Figma size. */
+.facility-nametag { --nt: max(20px, calc(36 * var(--facility-type-unit))); display: flex; align-items: stretch; width: fit-content; max-width: 100%; margin: 0; font-size: var(--nt); }
+#fasilitas-grid .facility-nametag__body {
+  min-width: 0;
+  min-height: calc(var(--nt) * 68 / 36);
+  padding: calc(var(--nt) * 14 / 36) calc(var(--nt) * 15 / 36) 0 calc(var(--nt) * 13 / 36);
+  border-radius: calc(var(--nt) * 30 / 36) calc(var(--nt) * 30 / 36) 0 calc(var(--nt) * 4 / 36);
+  background: #cd0b20;
+  color: #fff;
+  font: inherit;
+  font-family: var(--font-poppins);
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: .05em;
+  text-wrap: balance;
+}
+.facility-nametag__accent { flex: none; align-self: stretch; width: calc(var(--nt) * 57 / 36); height: auto; }
 .facility-filters > button {
   font-family: var(--font-poppins);
   /* Reserve existing button padding at the narrow desktop breakpoint. */
