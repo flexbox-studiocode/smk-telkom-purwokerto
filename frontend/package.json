@@ -26,6 +26,7 @@
     "bkk:uji": "node scripts/uji-bkk-filter.mjs",
     "prestasi:uji": "node scripts/uji-prestasi-instagram-url.mjs",
     "ppdb:uji": "node scripts/uji-ppdb-submission.mjs && node scripts/uji-ppdb-identity.mjs && node scripts/uji-ppdb-service.mjs",
+    "publik:uji": "node scripts/uji-public-services.mjs && node scripts/uji-events.mjs",
     "spmb:qol": "node scripts/uji-spmb-qol.mjs",
     "spmb:qa": "node scripts/uji-spmb-ui-server.mjs",
     "nexttel:bilingual": "node scripts/uji-nexttel-bilingual.mjs",

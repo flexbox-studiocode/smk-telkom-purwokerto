@@ -9,7 +9,9 @@ const parse = (data) => { const p = spmbInfoPayload(data); return { ...p, tangga
 export async function getSpmbInformation(published = false, signal) {
   if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
   const response = await api.get('/api/spmb', { signal });
-  return response.data.filter(row => !published || row.status === 'published').map(normalize);
+  const rows = response.data.map(normalize);
+  // Sesi admin juga menerima Draft; halaman publik tetap hanya Published.
+  return published ? rows.filter((row) => row.status === 'published') : rows;
 }
 export async function getSpmbStatistics(signal) {
   if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
