@@ -18,8 +18,8 @@ const savedGame = () => { try { return loadState(window.localStorage); } catch {
 
 const NextTelPage = () => {
   const { language } = useLanguage();
-  // A game that was in progress reopens straight away after a refresh.
-  const [mode, setMode] = useState(() => { const game = savedGame(); return game && game.screen !== 'intro' ? 'game' : 'intro'; });
+  // The page opens on the mode choice; a game that was in progress reopens straight away after a refresh.
+  const [mode, setMode] = useState(() => { const game = savedGame(); return game && game.screen !== 'intro' ? 'game' : 'select'; });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
@@ -78,8 +78,8 @@ const NextTelPage = () => {
     <MainLayout showSupportSections={false} showMarquees={false}>
       <section className={`nexttel-page nexttel-page--${mode}`}>
         <div className="nexttel-page__container">
-          {mode === 'intro' && <NextTelIntro onStart={() => setMode('select')} />}
-          {mode === 'select' && <NextTelModeSelect onQuiz={mulai} onGame={() => setMode('game')} resumeStep={resumeStep()} />}
+          {mode === 'intro' && <NextTelIntro onStart={mulai} />}
+          {mode === 'select' && <NextTelModeSelect onQuiz={() => setMode('intro')}onGame={() => setMode('game')} resumeStep={resumeStep()} />}
           {mode === 'game' && <NextTelGame onExit={() => setMode('select')} onQuiz={mulai} />}
           {mode === 'questionnaire' && error && <p role="alert" className="mb-4 text-sm text-primary">{error}</p>}
           {mode === 'questionnaire' && <NextTelQuestionnaire questions={QUESTIONS} currentIndex={currentIndex} answers={answers} onAnswer={jawab} onNext={lanjut} onBack={() => setCurrentIndex((value) => Math.max(0, value - 1))} />}
