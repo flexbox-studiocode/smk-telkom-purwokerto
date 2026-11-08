@@ -1,0 +1,52 @@
+/* Figma 420:7184, adapted to the existing native dialog and typography patterns. */
+.certificate-modal { position: fixed; inset: 0; width: calc(100% - 2rem); max-width: 94.875rem; max-height: calc(100dvh - 2rem); margin: auto; padding: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; border: 3px solid var(--color-primary); border-radius: 1.25rem; background: white; color: #090909; box-shadow: var(--shadow-card); font-family: var(--font-jakarta); }
+.certificate-modal::backdrop { background: rgb(15 23 42 / .6); animation: motion-fade-in .18s ease-out both; }
+.certificate-modal[data-closing="true"]::backdrop { animation: certificate-backdrop-exit .18s ease-out both; }
+@keyframes certificate-backdrop-exit { from { opacity: 1; } to { opacity: 0; } }
+.certificate-controls { position: sticky; top: 0; z-index: 2; height: 0; }
+.certificate-close { position: absolute; top: .5rem; right: .5rem; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 1px solid var(--color-dark-200); border-radius: 50%; background: white; color: var(--color-dark-600); cursor: pointer; transition: background .15s, color .15s; }
+.certificate-close:hover { background: var(--color-dark-100); color: var(--color-primary); }
+.certificate-close:active { background: var(--color-dark-200); }
+.certificate-close:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.certificate-content { container-type: inline-size; display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: 2rem; padding: 3.5rem 1.25rem 1.5rem; }
+.certificate-info { min-width: 0; }
+.certificate-heading { display: grid; grid-template-columns: 3rem minmax(0, 1fr); align-items: center; gap: .875rem; }
+.certificate-school-icon { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 1; }
+.certificate-school-icon img:first-child { position: absolute; inset: 0; max-width: 100%; height: auto; }
+.certificate-school-icon img:last-child { position: relative; max-width: 65%; height: auto; }
+.certificate-vertical-divider { display: none; }
+.certificate-heading h2 { min-width: 0; font-size: clamp(1rem, 2.37cqw, 2.25rem); font-weight: 800; line-height: 1.3; letter-spacing: .08em; }
+.certificate-details { display: grid; gap: 1rem; margin-top: 1.5rem; }
+.certificate-details > div { display: grid; grid-template-columns: 2rem minmax(0, 1fr); align-items: center; gap: .75rem; }
+.certificate-details dt { display: flex; justify-content: center; }
+.certificate-details dt img { max-width: 100%; height: auto; }
+.certificate-number { font-size: clamp(1.125rem, 1.58cqw, 1.5rem); font-weight: 800; letter-spacing: .12em; }
+.certificate-address { font-size: clamp(.75rem, 1.055cqw, 1rem); font-weight: 800; line-height: 1.4; letter-spacing: .08em; text-transform: uppercase; }
+.certificate-divider { display: block; max-width: 100%; height: auto; margin-top: 2rem; }
+.certificate-badge { display: flex; align-items: center; justify-content: center; gap: 1rem; width: 100%; max-width: 36.6875rem; min-height: 6.25rem; margin: 1.5rem auto 0; padding: 1rem; border-radius: 6.25rem; background: #cd091d; color: white; }
+.certificate-award { flex: none; width: clamp(2.75rem, 5.6cqw, 5.3125rem); }
+.certificate-award img { max-width: 100%; height: auto; }
+.certificate-badge p { min-width: 0; font-size: clamp(1.125rem, 2.37cqw, 2.25rem); font-weight: 800; line-height: 1.3; letter-spacing: .08em; text-align: center; }
+.certificate-badge p span { display: block; color: #fed103; }
+.certificate-validity { display: grid; grid-template-columns: 1.75rem minmax(0, 1fr); align-items: center; gap: .5rem; margin-top: 1.75rem; font-size: clamp(.75rem, 1.18cqw, 1.125rem); font-weight: 800; line-height: 1.5; letter-spacing: .06em; }
+.certificate-calendar img { max-width: 100%; height: auto; }
+.certificate-validity time { color: #cd091d; }
+.certificate-preview { min-width: 0; overflow: hidden; border: 3px solid #cd091d; border-radius: 1.25rem; background: var(--color-dark-50); }
+.certificate-preview > img { display: block; width: 100%; height: auto; object-fit: contain; }
+@media (min-width: 48rem) {
+  .certificate-content { grid-template-columns: minmax(0, 1.28fr) minmax(0, 1fr); gap: 3.75%; padding: 3rem 2rem; }
+  .certificate-heading { grid-template-columns: clamp(3rem, 5.8cqw, 5.5rem) 2px minmax(0, 1fr); gap: 1rem; }
+  .certificate-vertical-divider { position: relative; display: block; width: 2px; height: 5.0625rem; }
+  .certificate-vertical-divider img { position: absolute; left: 50%; top: 50%; max-width: none; transform: translate(-50%, -50%) rotate(90deg); }
+  .certificate-details { margin-left: calc(clamp(3rem, 5.8cqw, 5.5rem) + 2rem); }
+  .certificate-divider { margin-top: clamp(2rem, 4.7cqw, 4.5rem); }
+  .certificate-badge { width: 85%; min-height: clamp(6.25rem, 8.3cqw, 7.875rem); }
+  .certificate-validity { margin-top: clamp(1.75rem, 3.2cqw, 3rem); }
+}
+@media (min-width: 80rem) {
+  .certificate-content { padding: 3rem; }
+  .certificate-heading h2 { letter-spacing: .12em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .certificate-modal::backdrop, .certificate-modal[data-closing="true"]::backdrop { animation: none; }
+}
