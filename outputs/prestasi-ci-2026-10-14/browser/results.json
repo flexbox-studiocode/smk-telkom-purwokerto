@@ -1,0 +1,115 @@
+{
+  "results": [
+    {
+      "width": 1847,
+      "language": "id",
+      "records": 4,
+      "overflow": false,
+      "columns": 2,
+      "imageFit": "contain",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 1847,
+      "language": "en",
+      "records": 4,
+      "overflow": false,
+      "columns": 2,
+      "imageFit": "contain",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 1440,
+      "language": "id",
+      "records": 4,
+      "overflow": false,
+      "columns": 2,
+      "imageFit": "contain",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 1440,
+      "language": "en",
+      "records": 4,
+      "overflow": false,
+      "columns": 2,
+      "imageFit": "contain",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 1024,
+      "language": "id",
+      "records": 4,
+      "overflow": false,
+      "columns": 2,
+      "imageFit": "contain",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 1024,
+      "language": "en",
+      "records": 4,
+      "overflow": false,
+      "columns": 2,
+      "imageFit": "contain",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 768,
+      "language": "id",
+      "records": 4,
+      "overflow": false,
+      "columns": 2,
+      "imageFit": "contain",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 768,
+      "language": "en",
+      "records": 4,
+      "overflow": false,
+      "columns": 2,
+      "imageFit": "contain",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 390,
+      "language": "id",
+      "records": 4,
+      "overflow": false,
+      "columns": 1,
+      "imageFit": "contain",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 390,
+      "language": "en",
+      "records": 4,
+      "overflow": false,
+      "columns": 1,
+      "imageFit": "contain",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 320,
+      "language": "id",
+      "records": 4,
+      "overflow": false,
+      "columns": 1,
+      "imageFit": "contain",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 320,
+      "language": "en",
+      "records": 4,
+      "overflow": false,
+      "columns": 1,
+      "imageFit": "contain",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    }
+  ],
+  "errors": [],
+  "missingPhoto": "pass",
+  "emptyData": "pass"
+}

@@ -1,0 +1,296 @@
+[
+  {
+    "category": "kesiswaan",
+    "width": 1440,
+    "language": "id",
+    "size": 8,
+    "pages": 2,
+    "heightRange": 0
+  },
+  {
+    "category": "guru",
+    "width": 1440,
+    "language": "id",
+    "size": 8,
+    "pages": 5,
+    "heightRange": 0
+  },
+  {
+    "category": "kesiswaan",
+    "width": 1440,
+    "language": "en",
+    "size": 8,
+    "pages": 2,
+    "heightRange": 0
+  },
+  {
+    "category": "guru",
+    "width": 1440,
+    "language": "en",
+    "size": 8,
+    "pages": 5,
+    "heightRange": 0
+  },
+  {
+    "category": "kesiswaan",
+    "width": 1200,
+    "language": "id",
+    "size": 8,
+    "pages": 2,
+    "heightRange": 0
+  },
+  {
+    "category": "guru",
+    "width": 1200,
+    "language": "id",
+    "size": 8,
+    "pages": 5,
+    "heightRange": 0
+  },
+  {
+    "category": "kesiswaan",
+    "width": 1200,
+    "language": "en",
+    "size": 8,
+    "pages": 2,
+    "heightRange": 0
+  },
+  {
+    "category": "guru",
+    "width": 1200,
+    "language": "en",
+    "size": 8,
+    "pages": 5,
+    "heightRange": 0
+  },
+  {
+    "category": "kesiswaan",
+    "width": 1199,
+    "language": "id",
+    "size": 4,
+    "pages": 4,
+    "heightRange": 0
+  },
+  {
+    "category": "guru",
+    "width": 1199,
+    "language": "id",
+    "size": 4,
+    "pages": 9,
+    "heightRange": 0
+  },
+  {
+    "category": "kesiswaan",
+    "width": 1199,
+    "language": "en",
+    "size": 4,
+    "pages": 4,
+    "heightRange": 0
+  },
+  {
+    "category": "guru",
+    "width": 1199,
+    "language": "en",
+    "size": 4,
+    "pages": 9,
+    "heightRange": 0
+  },
+  {
+    "category": "kesiswaan",
+    "width": 768,
+    "language": "id",
+    "size": 4,
+    "pages": 4,
+    "heightRange": 0
+  },
+  {
+    "category": "guru",
+    "width": 768,
+    "language": "id",
+    "size": 4,
+    "pages": 9,
+    "heightRange": 0
+  },
+  {
+    "category": "kesiswaan",
+    "width": 768,
+    "language": "en",
+    "size": 4,
+    "pages": 4,
+    "heightRange": 0
+  },
+  {
+    "category": "guru",
+    "width": 768,
+    "language": "en",
+    "size": 4,
+    "pages": 9,
+    "heightRange": 0
+  },
+  {
+    "category": "kesiswaan",
+    "width": 767,
+    "language": "id",
+    "size": 2,
+    "pages": 8,
+    "heightRange": 0
+  },
+  {
+    "category": "guru",
+    "width": 767,
+    "language": "id",
+    "size": 2,
+    "pages": 17,
+    "heightRange": 0
+  },
+  {
+    "category": "kesiswaan",
+    "width": 767,
+    "language": "en",
+    "size": 2,
+    "pages": 8,
+    "heightRange": 0
+  },
+  {
+    "category": "guru",
+    "width": 767,
+    "language": "en",
+    "size": 2,
+    "pages": 17,
+    "heightRange": 0
+  },
+  {
+    "category": "kesiswaan",
+    "width": 375,
+    "language": "id",
+    "size": 2,
+    "pages": 8,
+    "heightRange": 0
+  },
+  {
+    "category": "guru",
+    "width": 375,
+    "language": "id",
+    "size": 2,
+    "pages": 17,
+    "heightRange": 0
+  },
+  {
+    "category": "kesiswaan",
+    "width": 375,
+    "language": "en",
+    "size": 2,
+    "pages": 8,
+    "heightRange": 0
+  },
+  {
+    "category": "guru",
+    "width": 375,
+    "language": "en",
+    "size": 2,
+    "pages": 17,
+    "heightRange": 0
+  },
+  {
+    "category": "kesiswaan",
+    "width": 320,
+    "language": "id",
+    "size": 2,
+    "pages": 8,
+    "heightRange": 0
+  },
+  {
+    "category": "guru",
+    "width": 320,
+    "language": "id",
+    "size": 2,
+    "pages": 17,
+    "heightRange": 0
+  },
+  {
+    "category": "kesiswaan",
+    "width": 320,
+    "language": "en",
+    "size": 2,
+    "pages": 8,
+    "heightRange": 0
+  },
+  {
+    "category": "guru",
+    "width": 320,
+    "language": "en",
+    "size": 2,
+    "pages": 17,
+    "heightRange": 0
+  },
+  {
+    "fixture": 0,
+    "passed": true
+  },
+  {
+    "fixture": 1,
+    "passed": true
+  },
+  {
+    "fixture": 7,
+    "passed": true
+  },
+  {
+    "fixture": 8,
+    "passed": true
+  },
+  {
+    "fixture": 9,
+    "passed": true
+  },
+  {
+    "fixture": 15,
+    "passed": true
+  },
+  {
+    "resize": "passed",
+    "keyboard": "passed",
+    "motion": "passed",
+    "transformSamples": [
+      11.0048,
+      13.8353,
+      16.5185,
+      18.8928,
+      20.983,
+      22.7117,
+      24.3168,
+      25.7043,
+      26.8947,
+      27.8528,
+      28.7159,
+      29.398,
+      30,
+      30.491,
+      30.8647,
+      31.1808,
+      31.4258,
+      31.6112,
+      31.7408,
+      31.8398,
+      31.9041,
+      31.9488,
+      31.9757,
+      31.9903,
+      31.9968,
+      31.9994,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32
+    ],
+    "reducedMotion": "passed",
+    "runtimeErrors": []
+  }
+]

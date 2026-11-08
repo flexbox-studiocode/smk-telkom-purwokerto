@@ -1,0 +1,227 @@
+{
+  "results": [
+    {
+      "route": "/",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 40.35178479048112,
+      "medianFrameMs": 16.700000000000045,
+      "slowFrames": 2,
+      "stableHeight": true
+    },
+    {
+      "route": "/jurusan",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 52.626039364277446,
+      "medianFrameMs": 16.699999999999818,
+      "slowFrames": 1,
+      "stableHeight": true
+    },
+    {
+      "route": "/prestasi",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 58.96958410924892,
+      "medianFrameMs": 16.699999999999818,
+      "slowFrames": 0,
+      "stableHeight": true
+    },
+    {
+      "route": "/fasilitas",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 58.98178807947019,
+      "medianFrameMs": 16.699999999999818,
+      "slowFrames": 0,
+      "stableHeight": true
+    },
+    {
+      "route": "/profil-sekolah",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 56.82416079132907,
+      "medianFrameMs": 16.699999999999818,
+      "slowFrames": 1,
+      "stableHeight": true
+    },
+    {
+      "route": "/bkk",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 55.78947368421051,
+      "medianFrameMs": 16.700000000000045,
+      "slowFrames": 1,
+      "stableHeight": true
+    },
+    {
+      "route": "/berita",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 56.830141022942534,
+      "medianFrameMs": 16.700000000000045,
+      "slowFrames": 1,
+      "stableHeight": true
+    },
+    {
+      "route": "/pengumuman",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 53.6729109661124,
+      "medianFrameMs": 16.699999999999932,
+      "slowFrames": 1,
+      "stableHeight": true
+    },
+    {
+      "route": "/profil-sekolah/guru",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 60.004138216428714,
+      "medianFrameMs": 16.699999999999818,
+      "slowFrames": 0,
+      "stableHeight": true
+    },
+    {
+      "route": "/ekstrakurikuler",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 60,
+      "medianFrameMs": 16.699999999999818,
+      "slowFrames": 0,
+      "stableHeight": true
+    },
+    {
+      "route": "/kalender",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 51.573518576991894,
+      "medianFrameMs": 16.600000000000136,
+      "slowFrames": 2,
+      "stableHeight": true
+    },
+    {
+      "route": "/spmb",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 53.68421052631578,
+      "medianFrameMs": 16.699999999999932,
+      "slowFrames": 1,
+      "stableHeight": true
+    },
+    {
+      "route": "/jurusan/rpl",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 60,
+      "medianFrameMs": 16.700000000000045,
+      "slowFrames": 0,
+      "stableHeight": true
+    },
+    {
+      "route": "/jurusan/pg",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 60.004138216428714,
+      "medianFrameMs": 16.700000000000045,
+      "slowFrames": 0,
+      "stableHeight": true
+    },
+    {
+      "route": "/jurusan/tkj",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 59.99368487527629,
+      "medianFrameMs": 16.699999999999818,
+      "slowFrames": 0,
+      "stableHeight": true
+    },
+    {
+      "route": "/jurusan/tjat",
+      "nextCycles": 0,
+      "previousCycles": 0,
+      "averageFps": 60.004138216428714,
+      "medianFrameMs": 16.700000000000045,
+      "slowFrames": 0,
+      "stableHeight": true
+    }
+  ],
+  "destinations": [
+    "/spmb/masuk",
+    "/jurusan",
+    "/fasilitas",
+    "/prestasi",
+    "/profil-sekolah",
+    "/spmb",
+    "/jurusan/rpl",
+    "/jurusan/pg",
+    "/jurusan/tkj",
+    "/jurusan/tjat",
+    "/prestasi#galeri-prestasi",
+    "/prestasi#prestasi-video-title",
+    "/fasilitas#daftar-fasilitas",
+    "/fasilitas?kategori=Laboratorium#fasilitas-lab",
+    "/fasilitas?kategori=Perpustakaan#fasilitas-perpustakaan",
+    "/profil-sekolah#profil",
+    "/fasilitas#school-tour",
+    "/bkk#lowongan",
+    "/bkk#jalur-karier",
+    "/berita#kategori-berita",
+    "/kalender",
+    "/ekstrakurikuler#daftar-ekstrakurikuler",
+    "/kalender#kalender",
+    "/pengumuman",
+    "/spmb/daftar",
+    "/jurusan/rpl#fasilitas-jurusan",
+    "/jurusan/pg#fasilitas-jurusan",
+    "/jurusan/tkj#fasilitas-jurusan",
+    "/jurusan/tjat#fasilitas-jurusan"
+  ],
+  "marqueeSeam": {
+    "easing": "linear",
+    "before": [
+      {
+        "text": "GLOBAL TECHNOPRENEUR",
+        "x": 0.037109375,
+        "width": 412.6875
+      },
+      {
+        "text": "NEXT GENERATION",
+        "x": 436.724609375,
+        "width": 320.0625
+      },
+      {
+        "text": "SMK PUSAT UNGGULAN",
+        "x": 780.787109375,
+        "width": 380.046875
+      },
+      {
+        "text": "AKREDITASI A",
+        "x": 1184.833984375,
+        "width": 257.3125
+      }
+    ],
+    "after": [
+      {
+        "text": "GLOBAL TECHNOPRENEUR",
+        "x": -0.03665273264050484,
+        "width": 412.6875
+      },
+      {
+        "text": "NEXT GENERATION",
+        "x": 436.6508483886719,
+        "width": 320.0624694824219
+      },
+      {
+        "text": "SMK PUSAT UNGGULAN",
+        "x": 780.7133178710938,
+        "width": 380.04693603515625
+      },
+      {
+        "text": "AKREDITASI A",
+        "x": 1184.76025390625,
+        "width": 257.3125
+      }
+    ]
+  },
+  "errors": []
+}

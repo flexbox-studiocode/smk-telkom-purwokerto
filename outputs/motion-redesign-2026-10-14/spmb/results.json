@@ -1,0 +1,74 @@
+{
+  "results": [
+    {
+      "language": "id",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "language": "id",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "language": "id",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "language": "id",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "language": "id",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "language": "id",
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "language": "en",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "language": "en",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "language": "en",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "language": "en",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "language": "en",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "language": "en",
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "baseline": "Beranda",
+      "spmb": {
+        "height": 462,
+        "width": 1214,
+        "qacHeight": 108,
+        "overlap": -39
+      }
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,291 @@
+{
+  "rooms": [
+    {
+      "name": "Kelas A 1.4",
+      "photos": 6
+    },
+    {
+      "name": "Kelas A 2.2",
+      "photos": 6
+    },
+    {
+      "name": "Kelas A 3.4",
+      "photos": 6
+    },
+    {
+      "name": "Kelas A 3.6",
+      "photos": 6
+    },
+    {
+      "name": "Kelas B 1.4",
+      "photos": 7
+    },
+    {
+      "name": "Kelas B 1.5",
+      "photos": 6
+    },
+    {
+      "name": "Kelas B 2.3",
+      "photos": 7
+    },
+    {
+      "name": "Kelas B 2.5",
+      "photos": 6
+    },
+    {
+      "name": "Kelas C 2.2",
+      "photos": 8
+    },
+    {
+      "name": "Kelas C 2.3",
+      "photos": 0
+    },
+    {
+      "name": "Kelas C 3.2",
+      "photos": 5
+    },
+    {
+      "name": "Kelas C 3.3",
+      "photos": 0
+    }
+  ],
+  "responsive": [
+    {
+      "width": 1920,
+      "language": "id",
+      "overflow": false,
+      "columns": 2,
+      "mapWidth": 1280,
+      "mapHeight": 538,
+      "stageWidth": 1600,
+      "mirror": "-1 1",
+      "sameMotif": true,
+      "sameSize": true,
+      "cardAnimation": "none",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 1920,
+      "language": "en",
+      "overflow": false,
+      "columns": 2,
+      "mapWidth": 1280,
+      "mapHeight": 538,
+      "stageWidth": 1600,
+      "mirror": "-1 1",
+      "sameMotif": true,
+      "sameSize": true,
+      "cardAnimation": "none",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 1440,
+      "language": "id",
+      "overflow": false,
+      "columns": 2,
+      "mapWidth": 1280,
+      "mapHeight": 538,
+      "stageWidth": 1600,
+      "mirror": "-1 1",
+      "sameMotif": true,
+      "sameSize": true,
+      "cardAnimation": "none",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 1440,
+      "language": "en",
+      "overflow": false,
+      "columns": 2,
+      "mapWidth": 1280,
+      "mapHeight": 538,
+      "stageWidth": 1600,
+      "mirror": "-1 1",
+      "sameMotif": true,
+      "sameSize": true,
+      "cardAnimation": "none",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 1024,
+      "language": "id",
+      "overflow": false,
+      "columns": 2,
+      "mapWidth": 1024,
+      "mapHeight": 430,
+      "stageWidth": 1280,
+      "mirror": "-1 1",
+      "sameMotif": true,
+      "sameSize": true,
+      "cardAnimation": "none",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 1024,
+      "language": "en",
+      "overflow": false,
+      "columns": 2,
+      "mapWidth": 1024,
+      "mapHeight": 430,
+      "stageWidth": 1280,
+      "mirror": "-1 1",
+      "sameMotif": true,
+      "sameSize": true,
+      "cardAnimation": "none",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 768,
+      "language": "id",
+      "overflow": false,
+      "columns": 2,
+      "mapWidth": 768,
+      "mapHeight": 323,
+      "stageWidth": 960,
+      "mirror": "-1 1",
+      "sameMotif": true,
+      "sameSize": true,
+      "cardAnimation": "none",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 768,
+      "language": "en",
+      "overflow": false,
+      "columns": 2,
+      "mapWidth": 768,
+      "mapHeight": 323,
+      "stageWidth": 960,
+      "mirror": "-1 1",
+      "sameMotif": true,
+      "sameSize": true,
+      "cardAnimation": "none",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 390,
+      "language": "id",
+      "overflow": false,
+      "columns": 1,
+      "mapWidth": 390,
+      "mapHeight": 323,
+      "stageWidth": 960,
+      "mirror": "-1 1",
+      "sameMotif": true,
+      "sameSize": true,
+      "cardAnimation": "none",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 390,
+      "language": "en",
+      "overflow": false,
+      "columns": 1,
+      "mapWidth": 390,
+      "mapHeight": 323,
+      "stageWidth": 960,
+      "mirror": "-1 1",
+      "sameMotif": true,
+      "sameSize": true,
+      "cardAnimation": "none",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 360,
+      "language": "id",
+      "overflow": false,
+      "columns": 1,
+      "mapWidth": 360,
+      "mapHeight": 323,
+      "stageWidth": 960,
+      "mirror": "-1 1",
+      "sameMotif": true,
+      "sameSize": true,
+      "cardAnimation": "none",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    },
+    {
+      "width": 360,
+      "language": "en",
+      "overflow": false,
+      "columns": 1,
+      "mapWidth": 360,
+      "mapHeight": 323,
+      "stageWidth": 960,
+      "mirror": "-1 1",
+      "sameMotif": true,
+      "sameSize": true,
+      "cardAnimation": "none",
+      "headingFont": "Poppins, Inter, system-ui, sans-serif"
+    }
+  ],
+  "teachers": [
+    {
+      "name": "Firda Ayu Nirmala, S.Kom.",
+      "image": "http://127.0.0.1:4174/src/assets/tentang/guru/tp26-27/firda-ayu-nirmala.webp?no-inline",
+      "naturalWidth": 240
+    },
+    {
+      "name": "Agus Indra Cahaya, S.Kom.",
+      "image": "http://127.0.0.1:4174/src/assets/tentang/guru/agus-indra-cahaya.png",
+      "naturalWidth": 577
+    },
+    {
+      "name": "Bayu Aji Sukma, S.Si.",
+      "image": "http://127.0.0.1:4174/src/assets/tentang/guru/bayu-aji-sukma.png",
+      "naturalWidth": 562
+    },
+    {
+      "name": "Herdiyanto, S.Sos.I., M.Pd.",
+      "image": "http://127.0.0.1:4174/src/assets/tentang/guru/tp26-27/herdiyanto.webp?no-inline",
+      "naturalWidth": 240
+    },
+    {
+      "name": "Arif Munandar, S.Si.",
+      "image": "http://127.0.0.1:4174/src/assets/tentang/guru/tp26-27/arif-munandar.webp?no-inline",
+      "naturalWidth": 240
+    },
+    {
+      "name": "Ragil Rudi Priyanto, S.Si.",
+      "image": "http://127.0.0.1:4174/src/assets/tentang/guru/tp26-27/ragil-rudi-priyanto.webp?no-inline",
+      "naturalWidth": 240
+    },
+    {
+      "name": "Andang Jaka Patrianta, S.Pd.",
+      "image": "http://127.0.0.1:4174/src/assets/tentang/guru/tp26-27/andang-jaka-patrianta.webp?no-inline",
+      "naturalWidth": 240
+    },
+    {
+      "name": "Anggita Laras Pratama, S.Pd., M.Pd.",
+      "image": "http://127.0.0.1:4174/src/assets/tentang/guru/tp26-27/anggita-laras-pratama.webp?no-inline",
+      "naturalWidth": 240
+    },
+    {
+      "name": "Keksi Manik Setyawati, S.Pd.",
+      "image": "http://127.0.0.1:4174/src/assets/tentang/guru/tp26-27/keksi-manik-setyawati.webp?no-inline",
+      "naturalWidth": 240
+    },
+    {
+      "name": "Sutri Aniroh, S.Kom.",
+      "image": "http://127.0.0.1:4174/src/assets/tentang/guru/sutri-aniroh.jpeg",
+      "naturalWidth": 1600
+    },
+    {
+      "name": "Desti Nurcahyani, S.Pd.Si.",
+      "image": "http://127.0.0.1:4174/src/assets/tentang/guru/desti-nurcahyani.jpeg",
+      "naturalWidth": 1600
+    },
+    {
+      "name": "Finka Ayu Fitriani, S.Pd.",
+      "image": "http://127.0.0.1:4174/src/assets/tentang/guru/tp26-27/finka-ayu-fitriani.webp?no-inline",
+      "naturalWidth": 240
+    },
+    {
+      "name": "Reza Aditya Permana, S.Kom.",
+      "image": "http://127.0.0.1:4174/src/assets/tentang/guru/tp26-27/reza-aditya-permana.webp?no-inline",
+      "naturalWidth": 240
+    }
+  ],
+  "errors": [],
+  "failedAssets": []
+}

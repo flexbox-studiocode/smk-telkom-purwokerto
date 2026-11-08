@@ -1,0 +1,70 @@
+{
+  "admin": {
+    "total": 51,
+    "new": 49,
+    "originalUnchanged": 2,
+    "noDuplicates": true
+  },
+  "public": {
+    "anonymous": true,
+    "total": 51,
+    "months": [
+      {
+        "month": "2026-07",
+        "events": 5
+      },
+      {
+        "month": "2026-08",
+        "events": 1
+      },
+      {
+        "month": "2026-09",
+        "events": 2
+      },
+      {
+        "month": "2026-10",
+        "events": 6
+      },
+      {
+        "month": "2026-11",
+        "events": 7
+      },
+      {
+        "month": "2026-12",
+        "events": 8
+      },
+      {
+        "month": "2027-01",
+        "events": 7
+      },
+      {
+        "month": "2027-02",
+        "events": 4
+      },
+      {
+        "month": "2027-03",
+        "events": 8
+      },
+      {
+        "month": "2027-04",
+        "events": 2
+      },
+      {
+        "month": "2027-05",
+        "events": 8
+      },
+      {
+        "month": "2027-06",
+        "events": 5
+      },
+      {
+        "month": "2027-07",
+        "events": 2
+      }
+    ],
+    "detail": true,
+    "overlappingEvents": true,
+    "mobileNoOverflow": true,
+    "errors": []
+  }
+}

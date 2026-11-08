@@ -1,0 +1,93 @@
+{
+  "environment": "Local production preview, Chrome, cold context, no throttling, one sample per case; no comparable previous baseline",
+  "cases": [
+    {
+      "slug": "rpl",
+      "width": 1280,
+      "lcp": 1792,
+      "cls": 0.00019784952799479168,
+      "initialImageRequests": 9,
+      "initialImageTransferBytes": 542141,
+      "heroAssets": [
+        "rpl-hero-BN8u-8PE.webp"
+      ]
+    },
+    {
+      "slug": "pg",
+      "width": 1280,
+      "lcp": 352,
+      "cls": 0.00019784952799479168,
+      "initialImageRequests": 11,
+      "initialImageTransferBytes": 642771,
+      "heroAssets": [
+        "pg-hero-DhHpxWS1.webp"
+      ]
+    },
+    {
+      "slug": "tkj",
+      "width": 1280,
+      "lcp": 364,
+      "cls": 0.00019784952799479168,
+      "initialImageRequests": 11,
+      "initialImageTransferBytes": 656769,
+      "heroAssets": [
+        "tkj-hero-CyJp53OI.webp"
+      ]
+    },
+    {
+      "slug": "tjat",
+      "width": 1280,
+      "lcp": 372,
+      "cls": 0.00019784952799479168,
+      "initialImageRequests": 11,
+      "initialImageTransferBytes": 711081,
+      "heroAssets": [
+        "tjat-hero-BBUZV5IM.webp"
+      ]
+    },
+    {
+      "slug": "rpl",
+      "width": 390,
+      "lcp": 1300,
+      "cls": 0,
+      "initialImageRequests": 7,
+      "initialImageTransferBytes": 369297,
+      "heroAssets": [
+        "rpl-hero-BN8u-8PE.webp"
+      ]
+    },
+    {
+      "slug": "pg",
+      "width": 390,
+      "lcp": 1404,
+      "cls": 0,
+      "initialImageRequests": 6,
+      "initialImageTransferBytes": 258377,
+      "heroAssets": [
+        "pg-hero-DhHpxWS1.webp"
+      ]
+    },
+    {
+      "slug": "tkj",
+      "width": 390,
+      "lcp": 1228,
+      "cls": 0,
+      "initialImageRequests": 7,
+      "initialImageTransferBytes": 349991,
+      "heroAssets": [
+        "tkj-hero-CyJp53OI.webp"
+      ]
+    },
+    {
+      "slug": "tjat",
+      "width": 390,
+      "lcp": 1404,
+      "cls": 0,
+      "initialImageRequests": 6,
+      "initialImageTransferBytes": 260893,
+      "heroAssets": [
+        "tjat-hero-BBUZV5IM.webp"
+      ]
+    }
+  ]
+}

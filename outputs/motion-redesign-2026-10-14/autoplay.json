@@ -1,0 +1,98 @@
+[
+  {
+    "route": "/ekstrakurikuler",
+    "cycles": 3,
+    "transitions": 6,
+    "height": 464
+  },
+  {
+    "route": "/profil-sekolah/guru",
+    "cycles": 3,
+    "transitions": 6,
+    "height": 464
+  },
+  {
+    "route": "/kalender",
+    "cycles": 3,
+    "transitions": 6,
+    "height": 464
+  },
+  {
+    "route": "/jurusan/pg",
+    "cycles": 3,
+    "transitions": 6,
+    "height": 464
+  },
+  {
+    "route": "/jurusan/rpl",
+    "cycles": 3,
+    "transitions": 6,
+    "height": 464
+  },
+  {
+    "route": "/pengumuman",
+    "cycles": 3,
+    "transitions": 6,
+    "height": 464
+  },
+  {
+    "route": "/bkk",
+    "cycles": 3,
+    "transitions": 6,
+    "height": 464
+  },
+  {
+    "route": "/spmb",
+    "cycles": 3,
+    "transitions": 6,
+    "height": 464
+  },
+  {
+    "route": "/prestasi",
+    "cycles": 3,
+    "transitions": 6,
+    "height": 464
+  },
+  {
+    "route": "/jurusan/tjat",
+    "cycles": 3,
+    "transitions": 6,
+    "height": 464
+  },
+  {
+    "route": "/jurusan/tkj",
+    "cycles": 3,
+    "transitions": 6,
+    "height": 464
+  },
+  {
+    "route": "/profil-sekolah",
+    "cycles": 3,
+    "transitions": 6,
+    "height": 464
+  },
+  {
+    "route": "/fasilitas",
+    "cycles": 3,
+    "transitions": 9,
+    "height": 471.171875
+  },
+  {
+    "route": "/berita",
+    "cycles": 3,
+    "transitions": 9,
+    "height": 464
+  },
+  {
+    "route": "/jurusan",
+    "cycles": 3,
+    "transitions": 15,
+    "height": 464
+  },
+  {
+    "route": "/",
+    "cycles": 3,
+    "transitions": 15,
+    "height": 464
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "width": 768,
+    "overflow": false,
+    "photos": [
+      {
+        "src": "http://127.0.0.1:4174/assets/firda-ayu-nirmala-vfeRrGWw.webp",
+        "frameRatio": 0.8,
+        "complete": true
+      },
+      {
+        "src": "http://127.0.0.1:4174/assets/agus-indra-cahaya-sBl04Avk.png",
+        "frameRatio": 0.8,
+        "complete": true
+      }
+    ]
+  },
+  {
+    "width": 390,
+    "overflow": false,
+    "photos": [
+      {
+        "src": "http://127.0.0.1:4174/assets/firda-ayu-nirmala-vfeRrGWw.webp",
+        "frameRatio": 0.8,
+        "complete": true
+      }
+    ]
+  }
+]

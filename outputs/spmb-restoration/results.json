@@ -1,0 +1,232 @@
+{
+  "results": [
+    {
+      "admin": "real login, create, edit, publish/draft, delete, date edit, focus sync; public admin-session draft isolation"
+    },
+    {
+      "language": "id",
+      "width": 1920,
+      "reference": {
+        "height": 462,
+        "titleSize": "30.4px",
+        "ctaGap": 152.75,
+        "overflow": false
+      },
+      "spmb": {
+        "height": 462,
+        "titleSize": "30.4px",
+        "ctaGap": 114.75,
+        "overflow": false
+      }
+    },
+    {
+      "language": "id",
+      "width": 1440,
+      "reference": {
+        "height": 462,
+        "titleSize": "30.4px",
+        "ctaGap": 152.75,
+        "overflow": false
+      },
+      "spmb": {
+        "height": 462,
+        "titleSize": "30.4px",
+        "ctaGap": 114.75,
+        "overflow": false
+      }
+    },
+    {
+      "language": "id",
+      "width": 1280,
+      "reference": {
+        "height": 462,
+        "titleSize": "30.4px",
+        "ctaGap": 152.75,
+        "overflow": false
+      },
+      "spmb": {
+        "height": 462,
+        "titleSize": "30.4px",
+        "ctaGap": 114.75,
+        "overflow": false
+      }
+    },
+    {
+      "language": "id",
+      "width": 1024,
+      "reference": {
+        "height": 542,
+        "titleSize": "24px",
+        "ctaGap": 253.09375,
+        "overflow": false
+      },
+      "spmb": {
+        "height": 542,
+        "titleSize": "24px",
+        "ctaGap": 141.65625,
+        "overflow": false
+      }
+    },
+    {
+      "language": "id",
+      "width": 820,
+      "reference": {
+        "height": 742.359375,
+        "titleSize": "26px",
+        "ctaGap": 466.796875,
+        "overflow": false
+      },
+      "spmb": {
+        "height": 738.734375,
+        "titleSize": "26px",
+        "ctaGap": 402.078125,
+        "overflow": false
+      }
+    },
+    {
+      "language": "id",
+      "width": 390,
+      "reference": {
+        "height": 603.078125,
+        "titleSize": "26px",
+        "ctaGap": 304.421875,
+        "overflow": false
+      },
+      "spmb": {
+        "height": 589.578125,
+        "titleSize": "26px",
+        "ctaGap": 177.828125,
+        "overflow": false
+      }
+    },
+    {
+      "language": "id",
+      "width": 320,
+      "reference": {
+        "height": 641.84375,
+        "titleSize": "26px",
+        "ctaGap": 294.09375,
+        "overflow": false
+      },
+      "spmb": {
+        "height": 631.9375,
+        "titleSize": "26px",
+        "ctaGap": 139.90625,
+        "overflow": false
+      }
+    },
+    {
+      "language": "en",
+      "width": 1920,
+      "reference": {
+        "height": 462,
+        "titleSize": "30.4px",
+        "ctaGap": 175.84375,
+        "overflow": false
+      },
+      "spmb": {
+        "height": 462,
+        "titleSize": "30.4px",
+        "ctaGap": 78.265625,
+        "overflow": false
+      }
+    },
+    {
+      "language": "en",
+      "width": 1440,
+      "reference": {
+        "height": 462,
+        "titleSize": "30.4px",
+        "ctaGap": 175.84375,
+        "overflow": false
+      },
+      "spmb": {
+        "height": 462,
+        "titleSize": "30.4px",
+        "ctaGap": 78.265625,
+        "overflow": false
+      }
+    },
+    {
+      "language": "en",
+      "width": 1280,
+      "reference": {
+        "height": 462,
+        "titleSize": "30.4px",
+        "ctaGap": 175.84375,
+        "overflow": false
+      },
+      "spmb": {
+        "height": 462,
+        "titleSize": "30.4px",
+        "ctaGap": 78.265625,
+        "overflow": false
+      }
+    },
+    {
+      "language": "en",
+      "width": 1024,
+      "reference": {
+        "height": 542,
+        "titleSize": "24px",
+        "ctaGap": 253.09375,
+        "overflow": false
+      },
+      "spmb": {
+        "height": 542,
+        "titleSize": "24px",
+        "ctaGap": 134.296875,
+        "overflow": false
+      }
+    },
+    {
+      "language": "en",
+      "width": 820,
+      "reference": {
+        "height": 742.359375,
+        "titleSize": "26px",
+        "ctaGap": 466.796875,
+        "overflow": false
+      },
+      "spmb": {
+        "height": 738.734375,
+        "titleSize": "26px",
+        "ctaGap": 402.078125,
+        "overflow": false
+      }
+    },
+    {
+      "language": "en",
+      "width": 390,
+      "reference": {
+        "height": 579.984375,
+        "titleSize": "26px",
+        "ctaGap": 281.328125,
+        "overflow": false
+      },
+      "spmb": {
+        "height": 620.765625,
+        "titleSize": "26px",
+        "ctaGap": 177.828125,
+        "overflow": false
+      }
+    },
+    {
+      "language": "en",
+      "width": 320,
+      "reference": {
+        "height": 642.125,
+        "titleSize": "26px",
+        "ctaGap": 294.375,
+        "overflow": false
+      },
+      "spmb": {
+        "height": 717.40625,
+        "titleSize": "26px",
+        "ctaGap": 139.90625,
+        "overflow": false
+      }
+    }
+  ],
+  "errors": []
+}

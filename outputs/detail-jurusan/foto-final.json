@@ -1,0 +1,166 @@
+{
+  "photos": [
+    {
+      "slug": "rpl",
+      "sources": [
+        "rpl-lab-CZ7OTIyo.webp",
+        "library-I2PNM9BT.webp",
+        "rpl-class-Ct4gyfmc.webp"
+      ]
+    },
+    {
+      "slug": "pg",
+      "sources": [
+        "pg-lab--lcwetLP.webp",
+        "pg-dlg-D3cMPOAj.webp",
+        "pg-studio-DP_VbnBc.webp"
+      ]
+    },
+    {
+      "slug": "tkj",
+      "sources": [
+        "tkj-lab-Dv9SH3eq.webp",
+        "rpl-lab-CZ7OTIyo.webp",
+        "tkj-class-CzvSNeuS.webp"
+      ]
+    },
+    {
+      "slug": "tjat",
+      "sources": [
+        "tjat-lab-B4VWyDGi.webp",
+        "library-I2PNM9BT.webp",
+        "tjat-class-DJKiyzJS.webp"
+      ]
+    }
+  ],
+  "tkjResponsive": [
+    {
+      "width": 1847,
+      "images": [
+        {
+          "src": "tkj-lab-Dv9SH3eq.webp",
+          "loaded": true
+        },
+        {
+          "src": "rpl-lab-CZ7OTIyo.webp",
+          "loaded": true
+        },
+        {
+          "src": "tkj-class-CzvSNeuS.webp",
+          "loaded": true
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "images": [
+        {
+          "src": "tkj-lab-Dv9SH3eq.webp",
+          "loaded": true
+        },
+        {
+          "src": "rpl-lab-CZ7OTIyo.webp",
+          "loaded": true
+        },
+        {
+          "src": "tkj-class-CzvSNeuS.webp",
+          "loaded": true
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "images": [
+        {
+          "src": "tkj-lab-Dv9SH3eq.webp",
+          "loaded": true
+        },
+        {
+          "src": "rpl-lab-CZ7OTIyo.webp",
+          "loaded": true
+        },
+        {
+          "src": "tkj-class-CzvSNeuS.webp",
+          "loaded": true
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "images": [
+        {
+          "src": "tkj-lab-Dv9SH3eq.webp",
+          "loaded": true
+        },
+        {
+          "src": "rpl-lab-CZ7OTIyo.webp",
+          "loaded": true
+        },
+        {
+          "src": "tkj-class-CzvSNeuS.webp",
+          "loaded": true
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "images": [
+        {
+          "src": "tkj-lab-Dv9SH3eq.webp",
+          "loaded": true
+        },
+        {
+          "src": "rpl-lab-CZ7OTIyo.webp",
+          "loaded": true
+        },
+        {
+          "src": "tkj-class-CzvSNeuS.webp",
+          "loaded": true
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "images": [
+        {
+          "src": "tkj-lab-Dv9SH3eq.webp",
+          "loaded": true
+        },
+        {
+          "src": "rpl-lab-CZ7OTIyo.webp",
+          "loaded": true
+        },
+        {
+          "src": "tkj-class-CzvSNeuS.webp",
+          "loaded": true
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "images": [
+        {
+          "src": "tkj-lab-Dv9SH3eq.webp",
+          "loaded": true
+        },
+        {
+          "src": "rpl-lab-CZ7OTIyo.webp",
+          "loaded": true
+        },
+        {
+          "src": "tkj-class-CzvSNeuS.webp",
+          "loaded": true
+        }
+      ],
+      "overflow": false
+    }
+  ],
+  "englishCases": 2,
+  "errors": []
+}

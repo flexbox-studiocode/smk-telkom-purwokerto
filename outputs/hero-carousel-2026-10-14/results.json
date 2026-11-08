@@ -1,0 +1,88 @@
+[
+  {
+    "motion": {
+      "frames": 40,
+      "averageFps": 50.9,
+      "medianFrameMs": 16.699999999999818
+    }
+  },
+  {
+    "width": 1920,
+    "language": "id",
+    "height": 464,
+    "slides": 5
+  },
+  {
+    "width": 1920,
+    "language": "en",
+    "height": 464,
+    "slides": 5
+  },
+  {
+    "width": 1440,
+    "language": "id",
+    "height": 464,
+    "slides": 5
+  },
+  {
+    "width": 1440,
+    "language": "en",
+    "height": 464,
+    "slides": 5
+  },
+  {
+    "width": 1024,
+    "language": "id",
+    "height": 544,
+    "slides": 5
+  },
+  {
+    "width": 1024,
+    "language": "en",
+    "height": 544,
+    "slides": 5
+  },
+  {
+    "width": 768,
+    "language": "id",
+    "height": 739.1875,
+    "slides": 5
+  },
+  {
+    "width": 768,
+    "language": "en",
+    "height": 739.1875,
+    "slides": 5
+  },
+  {
+    "width": 390,
+    "language": "id",
+    "height": 623.09375,
+    "slides": 5
+  },
+  {
+    "width": 390,
+    "language": "en",
+    "height": 603.59375,
+    "slides": 5
+  },
+  {
+    "width": 320,
+    "language": "id",
+    "height": 668.25,
+    "slides": 5
+  },
+  {
+    "width": 320,
+    "language": "en",
+    "height": 648.75,
+    "slides": 5
+  },
+  {
+    "autoplay": {
+      "realTransitions": 15,
+      "completeCycles": 3,
+      "elapsedSeconds": 104.9
+    }
+  }
+]

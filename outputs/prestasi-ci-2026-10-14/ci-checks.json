@@ -1,0 +1,22 @@
+[
+  {
+    "command": "node scripts/uji-kredensial.mjs --build",
+    "exitCode": 0,
+    "log": "D:\\LombaTelkom\\smk-telkom-purwokerto\\outputs\\prestasi-ci-2026-10-14\\node-scripts-uji-kredensial-mjs---build.log"
+  },
+  {
+    "command": "npm.cmd run security:uji",
+    "exitCode": 0,
+    "log": "D:\\LombaTelkom\\smk-telkom-purwokerto\\outputs\\prestasi-ci-2026-10-14\\npm-cmd-run-security-uji.log"
+  },
+  {
+    "command": "npm.cmd run ppdb:uji",
+    "exitCode": 0,
+    "log": "D:\\LombaTelkom\\smk-telkom-purwokerto\\outputs\\prestasi-ci-2026-10-14\\npm-cmd-run-ppdb-uji.log"
+  },
+  {
+    "command": "node scripts/uji-spmb.mjs",
+    "exitCode": 0,
+    "log": "D:\\LombaTelkom\\smk-telkom-purwokerto\\outputs\\prestasi-ci-2026-10-14\\node-scripts-uji-spmb-mjs.log"
+  }
+]

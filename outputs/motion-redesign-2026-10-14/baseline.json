@@ -1,0 +1,642 @@
+[
+  {
+    "route": "/",
+    "viewport": 1440,
+    "width": 1214,
+    "height": 462,
+    "heading": "Bangun Masa DepanmuBersama Teknologi",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan",
+    "viewport": 1440,
+    "width": 1216,
+    "height": 464,
+    "heading": "Temukan JurusanPilihanmu",
+    "overflow": false
+  },
+  {
+    "route": "/prestasi",
+    "viewport": 1440,
+    "width": 1216,
+    "height": 464,
+    "heading": "Setiap PrestasiAdalah Bukti Nyata\nSemangat Berkarya",
+    "overflow": false
+  },
+  {
+    "route": "/fasilitas",
+    "viewport": 1440,
+    "width": 1216,
+    "height": 471.171875,
+    "heading": "Ruang Kelas Modern,Tempat Inspirasi dan Inovasi Dimulai",
+    "overflow": false
+  },
+  {
+    "route": "/profil-sekolah",
+    "viewport": 1440,
+    "width": 1216,
+    "height": 464,
+    "heading": "Tempat Tumbuhnya\nPara Inovator\nMasa Depan.",
+    "overflow": false
+  },
+  {
+    "route": "/bkk",
+    "viewport": 1440,
+    "width": 1216,
+    "height": 464,
+    "heading": "Langkah Awal MenujuKarier Impian",
+    "overflow": false
+  },
+  {
+    "route": "/berita",
+    "viewport": 1440,
+    "width": 1216,
+    "height": 464,
+    "heading": "Berita &\nKegiatan Terbaru",
+    "overflow": false
+  },
+  {
+    "route": "/pengumuman",
+    "viewport": 1440,
+    "width": 1216,
+    "height": 464,
+    "heading": "Semua Kabar Resmi\nAda di Satu Tempat.",
+    "overflow": false
+  },
+  {
+    "route": "/profil-sekolah/guru",
+    "viewport": 1440,
+    "width": 1216,
+    "height": 464,
+    "heading": "Profil GuruSMK TelkomPurwokerto",
+    "overflow": false
+  },
+  {
+    "route": "/ekstrakurikuler",
+    "viewport": 1440,
+    "width": 1216,
+    "height": 464,
+    "heading": "EKSTRAKURIKULER",
+    "overflow": false
+  },
+  {
+    "route": "/kalender",
+    "viewport": 1440,
+    "width": 1216,
+    "height": 464,
+    "heading": "Kalender Kegiatan Sekolah",
+    "overflow": false
+  },
+  {
+    "route": "/spmb",
+    "viewport": 1440,
+    "width": 1216,
+    "height": 464,
+    "heading": "Wujudkan Mimpimudi Dunia Digital",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/rpl",
+    "viewport": 1440,
+    "width": 1216,
+    "height": 464,
+    "heading": "Rekayasa PerangkatLunak (RPL)",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/pg",
+    "viewport": 1440,
+    "width": 1216,
+    "height": 464,
+    "heading": "PengembanganGame (PG)",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/tkj",
+    "viewport": 1440,
+    "width": 1216,
+    "height": 464,
+    "heading": "Teknik Komputer danJaringan (TKJ)",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/tjat",
+    "viewport": 1440,
+    "width": 1216,
+    "height": 464,
+    "heading": "Teknik Jaringan AksesTelekomunikasi (TJAT)",
+    "overflow": false
+  },
+  {
+    "route": "/",
+    "viewport": 1024,
+    "width": 958,
+    "height": 542,
+    "heading": "Bangun Masa DepanmuBersama Teknologi",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan",
+    "viewport": 1024,
+    "width": 960,
+    "height": 544,
+    "heading": "Temukan JurusanPilihanmu",
+    "overflow": false
+  },
+  {
+    "route": "/prestasi",
+    "viewport": 1024,
+    "width": 960,
+    "height": 544,
+    "heading": "Setiap PrestasiAdalah Bukti Nyata\nSemangat Berkarya",
+    "overflow": false
+  },
+  {
+    "route": "/fasilitas",
+    "viewport": 1024,
+    "width": 960,
+    "height": 544,
+    "heading": "Ruang Kelas Modern,Tempat Inspirasi dan Inovasi Dimulai",
+    "overflow": false
+  },
+  {
+    "route": "/profil-sekolah",
+    "viewport": 1024,
+    "width": 960,
+    "height": 544,
+    "heading": "Tempat Tumbuhnya\nPara Inovator\nMasa Depan.",
+    "overflow": false
+  },
+  {
+    "route": "/bkk",
+    "viewport": 1024,
+    "width": 960,
+    "height": 544,
+    "heading": "Langkah Awal MenujuKarier Impian",
+    "overflow": false
+  },
+  {
+    "route": "/berita",
+    "viewport": 1024,
+    "width": 960,
+    "height": 544,
+    "heading": "Berita &\nKegiatan Terbaru",
+    "overflow": false
+  },
+  {
+    "route": "/pengumuman",
+    "viewport": 1024,
+    "width": 960,
+    "height": 544,
+    "heading": "Semua Kabar Resmi\nAda di Satu Tempat.",
+    "overflow": false
+  },
+  {
+    "route": "/profil-sekolah/guru",
+    "viewport": 1024,
+    "width": 960,
+    "height": 544,
+    "heading": "Profil GuruSMK TelkomPurwokerto",
+    "overflow": false
+  },
+  {
+    "route": "/ekstrakurikuler",
+    "viewport": 1024,
+    "width": 960,
+    "height": 544,
+    "heading": "EKSTRAKURIKULER",
+    "overflow": false
+  },
+  {
+    "route": "/kalender",
+    "viewport": 1024,
+    "width": 960,
+    "height": 544,
+    "heading": "Kalender Kegiatan Sekolah",
+    "overflow": false
+  },
+  {
+    "route": "/spmb",
+    "viewport": 1024,
+    "width": 960,
+    "height": 544,
+    "heading": "Wujudkan Mimpimudi Dunia Digital",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/rpl",
+    "viewport": 1024,
+    "width": 960,
+    "height": 544,
+    "heading": "Rekayasa PerangkatLunak (RPL)",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/pg",
+    "viewport": 1024,
+    "width": 960,
+    "height": 544,
+    "heading": "PengembanganGame (PG)",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/tkj",
+    "viewport": 1024,
+    "width": 960,
+    "height": 544,
+    "heading": "Teknik Komputer danJaringan (TKJ)",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/tjat",
+    "viewport": 1024,
+    "width": 960,
+    "height": 544,
+    "heading": "Teknik Jaringan AksesTelekomunikasi (TJAT)",
+    "overflow": false
+  },
+  {
+    "route": "/",
+    "viewport": 768,
+    "width": 718,
+    "height": 737.1875,
+    "heading": "Bangun Masa DepanmuBersama Teknologi",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan",
+    "viewport": 768,
+    "width": 720,
+    "height": 648.015625,
+    "heading": "Temukan JurusanPilihanmu",
+    "overflow": false
+  },
+  {
+    "route": "/prestasi",
+    "viewport": 768,
+    "width": 720,
+    "height": 802.671875,
+    "heading": "Setiap PrestasiAdalah Bukti Nyata\nSemangat Berkarya",
+    "overflow": false
+  },
+  {
+    "route": "/fasilitas",
+    "viewport": 768,
+    "width": 720,
+    "height": 797.765625,
+    "heading": "Ruang Kelas Modern,Tempat Inspirasi dan Inovasi Dimulai",
+    "overflow": false
+  },
+  {
+    "route": "/profil-sekolah",
+    "viewport": 768,
+    "width": 720,
+    "height": 812.375,
+    "heading": "Tempat Tumbuhnya\nPara Inovator\nMasa Depan.",
+    "overflow": false
+  },
+  {
+    "route": "/bkk",
+    "viewport": 768,
+    "width": 720,
+    "height": 759.484375,
+    "heading": "Langkah Awal MenujuKarier Impian",
+    "overflow": false
+  },
+  {
+    "route": "/berita",
+    "viewport": 768,
+    "width": 720,
+    "height": 762.234375,
+    "heading": "Berita &\nKegiatan Terbaru",
+    "overflow": false
+  },
+  {
+    "route": "/pengumuman",
+    "viewport": 768,
+    "width": 720,
+    "height": 710.625,
+    "heading": "Semua Kabar Resmi\nAda di Satu Tempat.",
+    "overflow": false
+  },
+  {
+    "route": "/profil-sekolah/guru",
+    "viewport": 768,
+    "width": 720,
+    "height": 800.6875,
+    "heading": "Profil GuruSMK TelkomPurwokerto",
+    "overflow": false
+  },
+  {
+    "route": "/ekstrakurikuler",
+    "viewport": 768,
+    "width": 720,
+    "height": 731.484375,
+    "heading": "EKSTRAKURIKULER",
+    "overflow": false
+  },
+  {
+    "route": "/kalender",
+    "viewport": 768,
+    "width": 720,
+    "height": 715.375,
+    "heading": "Kalender Kegiatan Sekolah",
+    "overflow": false
+  },
+  {
+    "route": "/spmb",
+    "viewport": 768,
+    "width": 720,
+    "height": 741.78125,
+    "heading": "Wujudkan Mimpimudi Dunia Digital",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/rpl",
+    "viewport": 768,
+    "width": 720,
+    "height": 1066.125,
+    "heading": "Rekayasa PerangkatLunak (RPL)",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/pg",
+    "viewport": 768,
+    "width": 720,
+    "height": 1088.875,
+    "heading": "PengembanganGame (PG)",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/tkj",
+    "viewport": 768,
+    "width": 720,
+    "height": 1066.125,
+    "heading": "Teknik Komputer danJaringan (TKJ)",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/tjat",
+    "viewport": 768,
+    "width": 720,
+    "height": 1066.125,
+    "heading": "Teknik Jaringan AksesTelekomunikasi (TJAT)",
+    "overflow": false
+  },
+  {
+    "route": "/",
+    "viewport": 390,
+    "width": 356,
+    "height": 621.09375,
+    "heading": "Bangun Masa DepanmuBersama Teknologi",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan",
+    "viewport": 390,
+    "width": 358,
+    "height": 457.15625,
+    "heading": "Temukan JurusanPilihanmu",
+    "overflow": false
+  },
+  {
+    "route": "/prestasi",
+    "viewport": 390,
+    "width": 358,
+    "height": 556.640625,
+    "heading": "Setiap PrestasiAdalah Bukti Nyata\nSemangat Berkarya",
+    "overflow": false
+  },
+  {
+    "route": "/fasilitas",
+    "viewport": 390,
+    "width": 358,
+    "height": 706.296875,
+    "heading": "Ruang Kelas Modern,Tempat Inspirasi dan Inovasi Dimulai",
+    "overflow": false
+  },
+  {
+    "route": "/profil-sekolah",
+    "viewport": 390,
+    "width": 358,
+    "height": 613.59375,
+    "heading": "Tempat Tumbuhnya\nPara Inovator\nMasa Depan.",
+    "overflow": false
+  },
+  {
+    "route": "/bkk",
+    "viewport": 390,
+    "width": 358,
+    "height": 556.640625,
+    "heading": "Langkah Awal MenujuKarier Impian",
+    "overflow": false
+  },
+  {
+    "route": "/berita",
+    "viewport": 390,
+    "width": 358,
+    "height": 529.890625,
+    "heading": "Berita &\nKegiatan Terbaru",
+    "overflow": false
+  },
+  {
+    "route": "/pengumuman",
+    "viewport": 390,
+    "width": 358,
+    "height": 516.59375,
+    "heading": "Semua Kabar Resmi\nAda di Satu Tempat.",
+    "overflow": false
+  },
+  {
+    "route": "/profil-sekolah/guru",
+    "viewport": 390,
+    "width": 358,
+    "height": 615.65625,
+    "heading": "Profil GuruSMK TelkomPurwokerto",
+    "overflow": false
+  },
+  {
+    "route": "/ekstrakurikuler",
+    "viewport": 390,
+    "width": 358,
+    "height": 564.234375,
+    "heading": "EKSTRAKURIKULER",
+    "overflow": false
+  },
+  {
+    "route": "/kalender",
+    "viewport": 390,
+    "width": 358,
+    "height": 591.25,
+    "heading": "Kalender Kegiatan Sekolah",
+    "overflow": false
+  },
+  {
+    "route": "/spmb",
+    "viewport": 390,
+    "width": 358,
+    "height": 636.328125,
+    "heading": "Wujudkan Mimpimudi Dunia Digital",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/rpl",
+    "viewport": 390,
+    "width": 358,
+    "height": 759.09375,
+    "heading": "Rekayasa PerangkatLunak (RPL)",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/pg",
+    "viewport": 390,
+    "width": 358,
+    "height": 778.59375,
+    "heading": "PengembanganGame (PG)",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/tkj",
+    "viewport": 390,
+    "width": 358,
+    "height": 778.59375,
+    "heading": "Teknik Komputer danJaringan (TKJ)",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/tjat",
+    "viewport": 390,
+    "width": 358,
+    "height": 778.59375,
+    "heading": "Teknik Jaringan AksesTelekomunikasi (TJAT)",
+    "overflow": false
+  },
+  {
+    "route": "/",
+    "viewport": 320,
+    "width": 286,
+    "height": 666.25,
+    "heading": "Bangun Masa DepanmuBersama Teknologi",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan",
+    "viewport": 320,
+    "width": 288,
+    "height": 508.78125,
+    "heading": "Temukan JurusanPilihanmu",
+    "overflow": false
+  },
+  {
+    "route": "/prestasi",
+    "viewport": 320,
+    "width": 288,
+    "height": 635.625,
+    "heading": "Setiap PrestasiAdalah Bukti Nyata\nSemangat Berkarya",
+    "overflow": false
+  },
+  {
+    "route": "/fasilitas",
+    "viewport": 320,
+    "width": 288,
+    "height": 749.25,
+    "heading": "Ruang Kelas Modern,Tempat Inspirasi dan Inovasi Dimulai",
+    "overflow": false
+  },
+  {
+    "route": "/profil-sekolah",
+    "viewport": 320,
+    "width": 288,
+    "height": 622.75,
+    "heading": "Tempat Tumbuhnya\nPara Inovator\nMasa Depan.",
+    "overflow": false
+  },
+  {
+    "route": "/bkk",
+    "viewport": 320,
+    "width": 288,
+    "height": 563.625,
+    "heading": "Langkah Awal MenujuKarier Impian",
+    "overflow": false
+  },
+  {
+    "route": "/berita",
+    "viewport": 320,
+    "width": 288,
+    "height": 571.25,
+    "heading": "Berita &\nKegiatan Terbaru",
+    "overflow": false
+  },
+  {
+    "route": "/pengumuman",
+    "viewport": 320,
+    "width": 288,
+    "height": 604.234375,
+    "heading": "Semua Kabar Resmi\nAda di Satu Tempat.",
+    "overflow": false
+  },
+  {
+    "route": "/profil-sekolah/guru",
+    "viewport": 320,
+    "width": 288,
+    "height": 631.28125,
+    "heading": "Profil GuruSMK TelkomPurwokerto",
+    "overflow": false
+  },
+  {
+    "route": "/ekstrakurikuler",
+    "viewport": 320,
+    "width": 288,
+    "height": 621.359375,
+    "heading": "EKSTRAKURIKULER",
+    "overflow": false
+  },
+  {
+    "route": "/kalender",
+    "viewport": 320,
+    "width": 288,
+    "height": 618.375,
+    "heading": "Kalender Kegiatan Sekolah",
+    "overflow": false
+  },
+  {
+    "route": "/spmb",
+    "viewport": 320,
+    "width": 288,
+    "height": 646.90625,
+    "heading": "Wujudkan Mimpimudi Dunia Digital",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/rpl",
+    "viewport": 320,
+    "width": 288,
+    "height": 856.890625,
+    "heading": "Rekayasa PerangkatLunak (RPL)",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/pg",
+    "viewport": 320,
+    "width": 288,
+    "height": 865.890625,
+    "heading": "PengembanganGame (PG)",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/tkj",
+    "viewport": 320,
+    "width": 288,
+    "height": 876.390625,
+    "heading": "Teknik Komputer danJaringan (TKJ)",
+    "overflow": false
+  },
+  {
+    "route": "/jurusan/tjat",
+    "viewport": 320,
+    "width": 288,
+    "height": 926.640625,
+    "heading": "Teknik Jaringan AksesTelekomunikasi (TJAT)",
+    "overflow": false
+  }
+]

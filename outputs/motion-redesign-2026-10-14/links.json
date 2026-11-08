@@ -1,0 +1,82 @@
+{
+  "results": [],
+  "destinations": [
+    "/spmb/masuk",
+    "/jurusan",
+    "/fasilitas",
+    "/prestasi",
+    "/profil-sekolah",
+    "/spmb",
+    "/jurusan/rpl",
+    "/jurusan/pg",
+    "/jurusan/tkj",
+    "/jurusan/tjat",
+    "/prestasi#galeri-prestasi",
+    "/prestasi#prestasi-video-title",
+    "/fasilitas#daftar-fasilitas",
+    "/fasilitas?kategori=Laboratorium#fasilitas-lab",
+    "/fasilitas?kategori=Perpustakaan#fasilitas-perpustakaan",
+    "/profil-sekolah#profil",
+    "/fasilitas#school-tour",
+    "/bkk#lowongan",
+    "/bkk#jalur-karier",
+    "/berita#kategori-berita",
+    "/kalender",
+    "/ekstrakurikuler#daftar-ekstrakurikuler",
+    "/kalender#kalender",
+    "/pengumuman",
+    "/spmb/daftar",
+    "/jurusan/rpl#fasilitas-jurusan",
+    "/jurusan/pg#fasilitas-jurusan",
+    "/jurusan/tkj#fasilitas-jurusan",
+    "/jurusan/tjat#fasilitas-jurusan"
+  ],
+  "marqueeSeam": {
+    "easing": "linear",
+    "before": [
+      {
+        "text": "GLOBAL TECHNOPRENEUR",
+        "x": 0.037109375,
+        "width": 412.6875
+      },
+      {
+        "text": "NEXT GENERATION",
+        "x": 436.724609375,
+        "width": 320.0625
+      },
+      {
+        "text": "SMK PUSAT UNGGULAN",
+        "x": 780.787109375,
+        "width": 380.046875
+      },
+      {
+        "text": "AKREDITASI A",
+        "x": 1184.833984375,
+        "width": 257.3125
+      }
+    ],
+    "after": [
+      {
+        "text": "GLOBAL TECHNOPRENEUR",
+        "x": -0.03665273264050484,
+        "width": 412.6875
+      },
+      {
+        "text": "NEXT GENERATION",
+        "x": 436.6508483886719,
+        "width": 320.0624694824219
+      },
+      {
+        "text": "SMK PUSAT UNGGULAN",
+        "x": 780.7133178710938,
+        "width": 380.04693603515625
+      },
+      {
+        "text": "AKREDITASI A",
+        "x": 1184.76025390625,
+        "width": 257.3125
+      }
+    ]
+  },
+  "errors": []
+}

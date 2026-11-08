@@ -1,0 +1,38 @@
+[
+  {
+    "id": "3e4b7747-f076-430f-ac82-4b6bb4926f9c",
+    "judul": "Persiapan JHIC",
+    "ringkasan": "Dimana Tim FlexBox sedang mempersiapan lomba JHIC",
+    "deskripsi": "Tim FlexBox dari SMK Telkom Puworkerto sedang persiapan lomba JHIC",
+    "kategori": "lomba",
+    "tanggal_mulai": "2026-10-12",
+    "waktu_mulai": "07:00:00",
+    "tanggal_selesai": "2026-10-16",
+    "waktu_selesai": "16:00:00",
+    "lokasi": "Perpustakaan SMK Telkom Purwokerto",
+    "penyelenggara": "Jagoan Hosting",
+    "gambar_url": null,
+    "link_informasi": null,
+    "status": "published",
+    "created_at": "2026-10-13T04:18:49.47139+00:00",
+    "updated_at": "2026-10-13T04:18:49.47139+00:00"
+  },
+  {
+    "id": "12fd9842-b859-4404-a5c0-2170c583d564",
+    "judul": "Pelkasanaan JHIC 2026",
+    "ringkasan": "Lomba JHIC 2026",
+    "deskripsi": "Pelaksanaan lomba website JHIC di UNY",
+    "kategori": "lomba",
+    "tanggal_mulai": "2026-10-17",
+    "waktu_mulai": "07:00:00",
+    "tanggal_selesai": "2026-10-17",
+    "waktu_selesai": "16:00:00",
+    "lokasi": "Universitas Negeri Indonesia",
+    "penyelenggara": "Jagoan Hosting",
+    "gambar_url": null,
+    "link_informasi": null,
+    "status": "published",
+    "created_at": "2026-10-13T07:22:26.961989+00:00",
+    "updated_at": "2026-10-13T07:42:57.031786+00:00"
+  }
+]
