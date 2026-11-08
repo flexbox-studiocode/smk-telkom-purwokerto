@@ -242,24 +242,28 @@
 /* Beam = banded pixel core (dark edge, red body, hot centre) + small glow; ::after is the energy pulse running input -> output. */
 .ntg-optic__beam { position: absolute; z-index: 1; opacity: 0; transition: opacity .25s; pointer-events: none; box-shadow: 0 0 6px 1px rgb(255 40 40 / .6), 0 0 14px 3px rgb(255 40 40 / .25); }
 .ntg-optic__beam::after { content: ''; position: absolute; inset: 0; }
-.ntg-optic__beam--h, .ntg-optic__beam--in, .ntg-optic__beam--out { top: 41%; height: 18%; background: linear-gradient(#b40d0d 0 18%, #ff2a2a 18% 38%, #ffd9d0 38% 62%, #ff2a2a 62% 82%, #b40d0d 82%); }
-.ntg-optic__beam--v { left: 41%; width: 18%; background: linear-gradient(90deg, #b40d0d 0 18%, #ff2a2a 18% 38%, #ffd9d0 38% 62%, #ff2a2a 62% 82%, #b40d0d 82%); }
+.ntg-optic__beam--h, .ntg-optic__beam--in, .ntg-optic__beam--out { top: 41%; height: 18%; background: linear-gradient(#b40d0d 0 16%, #ff2a2a 16% 40%, #ffe3dc 40% 60%, #ff2a2a 60% 84%, #b40d0d 84%); }
+.ntg-optic__beam--v { left: 41%; width: 18%; background: linear-gradient(90deg, #b40d0d 0 16%, #ff2a2a 16% 40%, #ffe3dc 40% 60%, #ff2a2a 60% 84%, #b40d0d 84%); }
 .ntg-optic__beam--h { left: -10%; right: -10%; }
 .ntg-optic__beam--v { top: -10%; bottom: -10%; }
 .ntg-optic__beam--in { left: -52%; right: 50%; }
 .ntg-optic__beam--out { left: 50%; right: -18%; }
-.ntg-optic__beam--h::after, .ntg-optic__beam--in::after, .ntg-optic__beam--out::after { background: repeating-linear-gradient(90deg, transparent 0 18px, rgb(255 255 255 / .55) 18px 24px); background-size: 36px 100%; }
-.ntg-optic__beam--v::after { background: repeating-linear-gradient(180deg, transparent 0 18px, rgb(255 255 255 / .55) 18px 24px); background-size: 100% 36px; }
+.ntg-optic__beam--h::after, .ntg-optic__beam--in::after, .ntg-optic__beam--out::after { background: linear-gradient(90deg, transparent 0 50%, rgb(255 205 190 / .5) 86%, rgb(255 240 234 / .8) 93%, transparent 93%) 0 0 / 120px 100% repeat-x; }
+.ntg-optic__beam--v::after { background: linear-gradient(180deg, transparent 0 50%, rgb(255 205 190 / .5) 86%, rgb(255 240 234 / .8) 93%, transparent 93%) 0 0 / 100% 120px repeat-y; }
 .ntg-optic__beam[data-on='true'] { opacity: 1; animation: ntg-beam-on .35s steps(5); }
-.ntg-optic__beam[data-on='true']::after { animation: ntg-flow-x .8s steps(8) infinite; }
+.ntg-optic__beam[data-on='true']::after { animation: ntg-flow-x 1s steps(10) infinite; }
 .ntg-optic__beam--v[data-on='true']::after { animation-name: ntg-flow-y; }
 .ntg-optic[data-solved='true'] .ntg-optic__beam { box-shadow: 0 0 8px 2px rgb(255 60 40 / .75), 0 0 18px 4px rgb(255 40 40 / .3); }
-.ntg-optic[data-solved='true'] .ntg-optic__beam::after { animation-duration: .5s; }
+.ntg-optic[data-solved='true'] .ntg-optic__beam::after { animation-duration: .6s; }
+.ntg-optic[data-solved='true'] .ntg-optic__beam[data-on='true'] { animation: ntg-solve .7s ease-out; }
+.ntg-optic__emitter[data-on='true'] { filter: drop-shadow(0 0 4px rgb(255 50 40 / .75)); }
 @keyframes ntg-beam-on { 0% { opacity: 0; } 30% { opacity: 1; filter: brightness(1.9); } 100% { filter: none; } }
-@keyframes ntg-flow-x { to { background-position-x: 36px; } }
-@keyframes ntg-flow-y { to { background-position-y: 36px; } }
+@keyframes ntg-solve { 0% { filter: brightness(2.2); } 100% { filter: none; } }
+@keyframes ntg-flow-x { to { background-position-x: 120px; } }
+@keyframes ntg-flow-y { to { background-position-y: 120px; } }
 @keyframes ntg-pct { 0% { color: #ff8c8c; translate: 0 -2px; } 100% { color: inherit; translate: 0; } }
 @keyframes ntg-pulse { from { opacity: .9; scale: .85; } to { opacity: 0; scale: 1.2; } }
+@keyframes ntg-plug-win { from { box-shadow: 0 0 26px 8px #ffd37a; } }
 @keyframes ntg-near { 50% { box-shadow: 0 0 10px #ffb02e; border-color: #8a5a10; } }
 .ntg-optic__node { position: relative; width: 78%; aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; }
 .ntg-optic__node:disabled { cursor: default; }
@@ -285,8 +289,10 @@
 .ntg-optic__plug img { width: 60%; height: auto; filter: grayscale(1) brightness(.6); }
 .ntg-optic__plug { transition: background-color .25s, box-shadow .25s; }
 .ntg-optic__plug[data-near='true'] { animation: ntg-near 1s steps(2) infinite; }
-.ntg-optic__plug[data-on='true'] { background: #3b4352; box-shadow: 0 0 12px #ffb02e; }
-.ntg-optic__plug[data-on='true'] img { filter: none; }
+.ntg-optic__plug[data-on='true'] { background: #3b4352; border-color: #6b5320; box-shadow: 0 0 5px rgb(255 176 46 / .6); }
+.ntg-optic__plug[data-on='true'] img { filter: grayscale(.35) brightness(.8); }
+.ntg-optic[data-solved='true'] .ntg-optic__plug { border-color: #ffb02e; box-shadow: 0 0 14px 2px #ffb02e; animation: ntg-plug-win .5s steps(5); }
+.ntg-optic[data-solved='true'] .ntg-optic__plug img { filter: none; }
 
 /* M5 switches */
 .ntg-switches { display: grid; margin-top: 12px; background: var(--ntg-slate-ink); border: 4px solid #12161f; padding: 6px 16px; }
