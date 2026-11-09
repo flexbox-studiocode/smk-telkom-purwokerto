@@ -167,7 +167,7 @@ export default function FasilitasPage() {
             </div>
           </div>
         </section>
-        <div className="campus-tour-composition"><CampusExplorer request={mapRequest} onViewFacilities={viewCampusList} /><WaveMarquee schoolTour /></div>
+        <div className="campus-tour-composition"><CampusExplorer request={mapRequest} onViewFacilities={viewCampusList} /><WaveMarquee /></div>
         <section id="daftar-fasilitas" aria-labelledby="fasilitas-title" className="relative isolate scroll-mt-28 bg-white py-8 lg:py-12">
         {['right', 'left'].map(side => <div key={side} aria-hidden="true" className={`facility-chain facility-chain--${side}`} />)}
           <div className="facility-content mx-auto max-w-[1644px]">
