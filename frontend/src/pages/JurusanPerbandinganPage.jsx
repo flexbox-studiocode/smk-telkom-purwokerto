@@ -80,6 +80,7 @@ const JurusanPerbandinganPage = () => {
               </tbody>
             </table>
           </div>
+          <p className="mt-2 text-[11px] text-dark-500 md:hidden">{t("Geser ke samping untuk melihat semua kolom")}</p>
         </Reveal>
 
         <h2 className="mt-12 font-heading text-lg font-extrabold text-dark-900">{t("Mana yang cocok untukmu?")} </h2>

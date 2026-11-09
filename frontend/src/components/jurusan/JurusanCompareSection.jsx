@@ -91,6 +91,7 @@ const JurusanCompareSection = () => {
             </tbody>
           </table>
         </div>
+        <p className="mt-2 text-[11px] text-dark-500 md:hidden">{t("Geser ke samping untuk melihat semua kolom")}</p>
 
         <div className="mt-6 flex justify-center">
           <Link
