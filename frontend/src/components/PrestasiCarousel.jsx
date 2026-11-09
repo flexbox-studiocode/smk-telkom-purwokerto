@@ -1,5 +1,5 @@
 import { useLanguage } from '../context/LanguageContext';
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import AchievementCard from './AchievementCard';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { gsap } from 'gsap';
@@ -8,13 +8,15 @@ import { gsap } from 'gsap';
 // 1 kolom di mobile, 2 di sm, 4 di lg.
 const CARD_WIDTH = 'w-full sm:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-3.75rem)/4)]';
 
-const subscribeDesktop = (notify) => {
-  const query = window.matchMedia('(min-width: 1024px)');
-  query.addEventListener('change', notify);
-  return () => query.removeEventListener('change', notify);
+// Mode twoRows: tepat dua halaman (satu jika datanya cuma satu). Kapasitas satu
+// halaman = grid desktop 4x2, jadi paling banyak 16 kartu tampil; urutan sumber
+// dipertahankan dan data tidak dihapus. Pembagian tidak bergantung pada viewport,
+// sehingga halaman aktif tetap sinkron saat layar berubah ukuran.
+const PAGE_CAPACITY = 8;
+const splitTwoPages = (items) => {
+  const size = Math.min(PAGE_CAPACITY, Math.ceil(items.length / 2));
+  return size ? [items.slice(0, size), items.slice(size, size * 2)].filter((page) => page.length) : [];
 };
-const getDesktopSnapshot = () => window.matchMedia('(min-width: 1024px)').matches;
-const getServerSnapshot = () => false;
 
 const getCarouselMetrics = (width, cardWidth, gap, count) => {
   const perPage = Math.max(1, Math.round((width + gap) / (cardWidth + gap)));
@@ -32,8 +34,7 @@ const getCarouselIndex = (scrollLeft, maxScroll, step, groups) => {
 
 const PrestasiCarousel = ({ items, renderCard, labels = {}, showIndicators = true, twoRows = false, animated = false }) => {
   const { t } = useLanguage();
-  const desktop = useSyncExternalStore(subscribeDesktop, getDesktopSnapshot, getServerSnapshot);
-  const grouped = twoRows && desktop;
+  const pages = useMemo(() => (twoRows ? splitTwoPages(items) : null), [twoRows, items]);
   const trackRef = useRef(null);
   const stepRef = useRef(1);
   const drag = useRef({ down: false, moved: false, startX: 0, startLeft: 0 });
@@ -61,11 +62,11 @@ const PrestasiCarousel = ({ items, renderCard, labels = {}, showIndicators = tru
     const el = trackRef.current;
     if (!el?.clientWidth || !el.firstElementChild) return;
     const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
-    const metrics = getCarouselMetrics(el.clientWidth, el.firstElementChild.getBoundingClientRect().width, gap, grouped ? Math.ceil(items.length / 8) : items.length);
+    const metrics = getCarouselMetrics(el.clientWidth, el.firstElementChild.getBoundingClientRect().width, gap, pages ? pages.length : items.length);
     stepRef.current = metrics.step;
     setGroups(metrics.groups);
     setActive(getCarouselIndex(el.scrollLeft, Math.max(0, el.scrollWidth - el.clientWidth), metrics.step, metrics.groups));
-  }, [items.length, grouped]);
+  }, [items.length, pages]);
 
   useEffect(() => {
     measure();
@@ -178,13 +179,17 @@ const PrestasiCarousel = ({ items, renderCard, labels = {}, showIndicators = tru
             : 'cursor-grab snap-x snap-mandatory scroll-smooth'
         }`}
       >
-        {grouped ? Array.from({ length: Math.ceil(items.length / 8) }, (_, pageIndex) => (
-          <div key={pageIndex} className="grid w-full shrink-0 snap-start grid-cols-1 grid-rows-2 auto-rows-fr items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {items.slice(pageIndex * 8, (pageIndex + 1) * 8).map((item) => (
-              <div key={item.id || item.slug} className={renderCard ? undefined : 'flex min-w-0'}>
-                {renderCard ? renderCard(item) : <AchievementCard {...item} category={item.kategori} />}
-              </div>
-            ))}
+        {pages ? pages.map((page, pageIndex) => (
+          // Desktop: grid 4x2. Di bawah lg: satu kartu (mobile) / dua kartu (sm) per tampilan,
+          // digeser di dalam halaman; geser melewati kartu terakhir lanjut ke halaman berikutnya.
+          <div key={pageIndex} className="w-full shrink-0 snap-start">
+            <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-auto [scrollbar-width:none] lg:grid lg:snap-none lg:grid-cols-4 lg:grid-rows-2 lg:items-stretch lg:overflow-visible [&::-webkit-scrollbar]:hidden">
+              {page.map((item) => (
+                <div key={item.id || item.slug} className={`shrink-0 snap-start w-full sm:w-[calc((100%-1.25rem)/2)] lg:w-auto ${renderCard ? '' : 'flex min-w-0'}`}>
+                  {renderCard ? renderCard(item) : <AchievementCard {...item} category={item.kategori} />}
+                </div>
+              ))}
+            </div>
           </div>
         )) : items.map((item) => (
           <div key={item.id || item.slug} className={`shrink-0 snap-start ${CARD_WIDTH} ${renderCard ? '' : 'flex min-w-0'}`}>
