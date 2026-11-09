@@ -89,7 +89,7 @@ const BeritaHeroSection = ({ items = [] }) => {
             className="flex min-w-0 flex-1 flex-wrap items-center gap-x-4 gap-y-1 rounded-lg bg-primary-50 px-4 py-2.5"
           >
             <span className="h-2 w-2 flex-shrink-0 rounded-full bg-primary" />
-            <p className="min-w-0 flex-1 text-[11px] font-semibold tracking-figma-copy text-dark-800">{t(item.text)}</p>
+            <p className="min-w-[12rem] flex-1 text-[11px] font-semibold tracking-figma-copy text-dark-800">{t(item.text)}</p>
             <span className="text-[10px] font-medium tracking-figma-copy text-dark-500">{formatPublicDate(item.iso, {}, locale)}</span>
             <Link
               to={`/berita/${item.slug}`}
