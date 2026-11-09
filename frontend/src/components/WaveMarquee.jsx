@@ -26,7 +26,9 @@ export default function WaveMarquee() {
     const root = ref.current;
     const media = gsap.matchMedia();
     let disposed = false;
-    document.fonts.ready.then(() => {
+    // fonts.ready can resolve before the 800 weight is requested, so measure only after it is loaded.
+    const canvasStyle = getComputedStyle(root.querySelector('svg'));
+    Promise.all([document.fonts.load(`${canvasStyle.fontWeight} ${canvasStyle.fontSize} ${canvasStyle.fontFamily}`), document.fonts.ready]).then(() => {
       if (disposed) return;
       media.add({ motion: '(prefers-reduced-motion: no-preference)', reduced: '(prefers-reduced-motion: reduce)' }, ({ conditions }) => {
         const path = root.querySelector('[data-wave-center]');
