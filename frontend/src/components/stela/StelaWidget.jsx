@@ -19,6 +19,8 @@ const StelaWidget = () => {
   const [reminderVisible, setReminderVisible] = useState(false);
   const [reminderDismissed, setReminderDismissed] = useState(false);
   const triggerRef = useRef(null);
+  const rootRef = useRef(null);
+  const [scrolling, setScrolling] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
   const { pathname } = useLocation();
 
@@ -49,6 +51,19 @@ const StelaWidget = () => {
     };
   }, [pathname, terbuka, reminderDismissed]);
 
+  // On phones the 56px bubble sits over reading text, so it steps aside while the page scrolls.
+  useEffect(() => {
+    let timer;
+    const onScroll = () => {
+      if (rootRef.current?.contains(document.activeElement)) return;
+      setScrolling(true);
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => setScrolling(false), 600);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { window.removeEventListener('scroll', onScroll); window.clearTimeout(timer); };
+  }, []);
+
   useEffect(() => {
     if (pathname !== '/ekstrakurikuler') return undefined;
     const filters = document.getElementById('ekstrakurikuler-filters');
@@ -73,12 +88,12 @@ const StelaWidget = () => {
   };
 
   return (
-    <div onKeyDown={(event) => {
+    <div ref={rootRef} onKeyDown={(event) => {
       if (event.key !== 'Escape' || !terbuka) return;
       event.preventDefault();
       setTerbuka(false);
       triggerRef.current?.focus();
-    }} className={`fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3 sm:bottom-6 sm:right-6 ${pathname === '/ekstrakurikuler' && filterVisible && !terbuka ? 'max-sm:invisible max-sm:pointer-events-none' : ''}`}>
+    }} className={`fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3 transition-[transform,opacity] duration-200 motion-reduce:transition-none sm:bottom-6 sm:right-6 ${scrolling && !terbuka ? 'max-sm:pointer-events-none max-sm:translate-y-6 max-sm:opacity-0' : ''} ${pathname === '/ekstrakurikuler' && filterVisible && !terbuka ? 'max-sm:invisible max-sm:pointer-events-none' : ''}`}>
       {reminderVisible && !terbuka && (
         <aside aria-label={t('Pengingat NEXA')} className="relative flex w-[min(20rem,calc(100vw-2rem))] items-center gap-3 rounded-2xl border border-primary/15 bg-white p-3 pr-10 shadow-card motion-chat-enter motion-reduce:animate-none">
           <button type="button" onClick={tutupPengingat} aria-label={t('Tutup pengingat NEXA')} className="absolute right-2 top-2 rounded-full p-1.5 text-dark-500 hover:bg-dark-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"><X className="h-4 w-4" aria-hidden="true" /></button>
@@ -111,9 +126,9 @@ const StelaWidget = () => {
         aria-expanded={terbuka}
         aria-controls="stela-widget-panel"
         aria-label={t(terbuka ? 'Tutup obrolan NEXA' : 'Buka obrolan dengan NEXA')}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-card transition-transform duration-300 hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary motion-reduce:transition-none motion-reduce:hover:scale-100"
+        className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white shadow-card transition-transform sm:h-14 sm:w-14 duration-300 hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary motion-reduce:transition-none motion-reduce:hover:scale-100"
       >
-        {terbuka ? <X aria-hidden="true" className="h-6 w-6" /> : <img src={maskot} alt="" aria-hidden="true" width="40" height="40" className="h-10 w-10 object-contain" />}
+        {terbuka ? <X aria-hidden="true" className="h-6 w-6" /> : <img src={maskot} alt="" aria-hidden="true" width="40" height="40" className="h-9 w-9 object-contain sm:h-10 sm:w-10" />}
       </button>
     </div>
   );
