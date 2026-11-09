@@ -5,7 +5,8 @@ import PublicDataState from './PublicDataState';
 import SectionAccents from './SectionAccents';
 import laurelBranch from '../assets/landing/laurel-branch.png';
 import { prestasiData } from '../data/dummyData';
-import { toPrestasiItem } from '../utils/publicContent';
+import { Link } from 'react-router-dom';
+import { PRESTASI_PAGE_SIZE, toPrestasiItem } from '../utils/publicContent';
 
 const AchievementsSection = ({ initialItems }) => {
   const { t } = useLanguage();
@@ -64,7 +65,7 @@ const AchievementsSection = ({ initialItems }) => {
           className="hidden h-24 w-auto shrink-0 select-none sm:block lg:h-28"
         />
         <div className="text-center">
-          <h2 className="font-heading text-[1.75rem] font-extrabold leading-tight tracking-tight text-dark-900 sm:text-[2rem] xl:text-[2.5rem]">
+          <h2 className="text-balance font-heading text-[1.75rem] font-extrabold leading-tight tracking-tight text-dark-900 sm:text-[2rem] xl:text-[2.5rem]">
             {t(prestasiData.title)}
           </h2>
           <p className="mx-auto mt-4 max-w-2xl whitespace-pre-line text-base leading-relaxed text-dark-600 sm:text-lg">
@@ -82,6 +83,12 @@ const AchievementsSection = ({ initialItems }) => {
       {/* Delapan kartu per halaman, empat kolom pada desktop */}
       <PublicDataState loading={loading} error={t(error)} empty={!loading && !error && !items.length} label="prestasi" carousel twoRows deferred={!requestStarted} />
       {!loading && !error && items.length > 0 && <PrestasiCarousel items={items} twoRows animated />}
+      {/* Carousel memuat paling banyak dua halaman; sisanya tetap ada di daftar lengkap. */}
+      {!loading && !error && items.length > PRESTASI_PAGE_SIZE * 2 && (
+        <div className="mt-6 text-center">
+          <Link to="/prestasi" className="inline-flex min-h-11 items-center rounded-full border border-primary/40 px-6 text-sm font-bold text-primary transition-colors hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{t('Lihat Semua Prestasi')}</Link>
+        </div>
+      )}
 
     </div>
   </section>

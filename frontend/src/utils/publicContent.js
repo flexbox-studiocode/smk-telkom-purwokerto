@@ -164,3 +164,6 @@ export const toBkkItem = (row) => ({
   tags: [row.tipe_pekerjaan, row.lokasi].filter(Boolean),
   deadlineLabel: row.deadline ? formatPublicDate(row.deadline) : 'Deadline tidak ditentukan',
 });
+
+// Satu halaman carousel prestasi = grid desktop 4x2; dua halaman = 16 kartu.
+export const PRESTASI_PAGE_SIZE = 8;
