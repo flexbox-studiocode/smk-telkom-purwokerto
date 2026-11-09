@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ArrowRight, Check, RotateCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { jurusanData, jurusanQuiz } from '../../data/dummyData';
-import SectionAccents from '../SectionAccents';
+import nexaMotif from '../../assets/jurusan/nexa-motif.png';
 const stelaBot = '/assets/branding/nexa-mark.png';
 
 // Rekomendasi = jurusan dengan skor tertinggi dari opsi yang dipilih.
@@ -34,8 +34,9 @@ const JurusanQuizSection = () => {
   const resultHref = cocok ? `/jurusan/${cocok.slug}` : '/jurusan';
 
   return (
-    <section id="quiz-jurusan" className="relative bg-white py-8 lg:py-12">
-      <SectionAccents variant="departmentsQuiz" />
+    <section id="quiz-jurusan" className="relative overflow-hidden bg-white py-8 lg:py-12">
+      {/* Aksen resmi di margin kanan; overflow-hidden section mengunci dan memotongnya, z-0 di bawah konten (relative). Hanya tampil saat ada margin (>=1440px). */}
+      <img src={nexaMotif} alt="" aria-hidden="true" width="427" height="643" className="pointer-events-none absolute right-[1%] top-1/2 hidden h-[75%] w-auto max-w-none -translate-y-1/2 select-none min-[1440px]:block" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 [container-type:inline-size]">
         <div className="grid grid-cols-1 items-center gap-6 rounded-2xl bg-primary/7 p-5 sm:p-6 lg:grid-cols-[1.4fr_1fr_0.8fr] lg:gap-5 lg:p-4 xl:gap-6 xl:p-5">
           {/* Ajakan */}
