@@ -31,7 +31,8 @@ export const legacyEventCategories = [
 ].map(category => ({ ...neutral, ...category, label: `${category.label} (kategori lama)` }));
 
 export function getEventCategory(value) {
-  return eventCategories.find(category => category.value === value)
-    || legacyEventCategories.find(category => category.value === value)
-    || { ...neutral, value: value || '', label: value ? `Kategori belum dikenali: ${value}` : 'Kategori belum ditentukan' };
+  const normalized = String(value || '').replace(/_/g, '-');
+  return eventCategories.find(category => category.value === normalized)
+    || legacyEventCategories.find(category => category.value === normalized)
+    || { ...neutral, value: normalized, label: normalized ? `Kategori belum dikenali: ${normalized}` : 'Kategori belum ditentukan' };
 }

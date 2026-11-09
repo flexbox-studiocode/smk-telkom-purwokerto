@@ -1,11 +1,11 @@
 import { Eye, Pencil, Trash2 } from 'lucide-react';
+import { formatDateOnly, toDateKey } from '../../../utils/date';
 
-const formatDate = (date) => {
-  if (!date) return '-';
-  return new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(new Date(`${date}T00:00:00`));
+const formatDate = (date) => formatDateOnly(date);
+const isPastDeadline = (deadline) => {
+  const key = toDateKey(deadline);
+  return key ? key < new Date().toISOString().slice(0, 10) : false;
 };
-
-const isPastDeadline = (deadline) => deadline && new Date(`${deadline}T23:59:59`) < new Date();
 
 const StatusBadge = ({ status }) => (
   <span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold ${status === 'aktif' ? 'bg-green-100 text-green-700' : 'bg-dark-100 text-dark-600'}`}>

@@ -13,9 +13,11 @@ function readCookie(name) {
 export class ApiError extends Error {
   constructor(message, status, body) {
     super(message);
+    this.name = 'ApiError';
     this.status = status;
     this.body = body;
-    this.code = body?.code;
+    this.code = body?.code ?? (status === 0 ? 'network_error' : undefined);
+    this.details = body?.details;
   }
 }
 
@@ -58,9 +60,16 @@ export async function apiRequest(path, { method = 'GET', body, headers = {}, raw
   if (body && !(body instanceof FormData)) requestHeaders['content-type'] = 'application/json';
   if (isMutation) requestHeaders['x-csrf-token'] = await ensureCsrf();
   const options = { method, body, headers: requestHeaders, signal, cache };
-  let res = await send(path, options);
-  // 304 Not Modified tidak membawa body. Paksa ambil representasi penuh sekali.
-  if (res.status === 304) res = await send(path, { ...options, cache: 'reload' });
+  let res;
+  try {
+    res = await send(path, options);
+    // 304 Not Modified tidak membawa body. Paksa ambil representasi penuh sekali.
+    if (res.status === 304) res = await send(path, { ...options, cache: 'reload' });
+  } catch (error) {
+    if (error?.name === 'AbortError') throw error;
+    // Koneksi putus/DNS gagal bukan error HTTP, jadi bedakan dari respons server.
+    throw new ApiError('Tidak dapat terhubung ke server. Periksa koneksi lalu coba lagi.', 0, null);
+  }
   if (raw) return res;
   const data = parseBody(await res.text());
   if (!res.ok && res.status !== 304) throw new ApiError(data?.error || 'Permintaan gagal.', res.status, data);

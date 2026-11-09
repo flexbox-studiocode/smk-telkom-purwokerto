@@ -5,10 +5,15 @@ import BkkForm from './BkkForm';
 import BkkModal from './BkkModal';
 import BkkTable from './BkkTable';
 import { createBkk, deleteBkk, getBkk, updateBkk } from '../../../services/bkkService';
+import { formatDateOnly, toDateKey } from '../../../utils/date';
+import { apiErrorMessage } from '../../../utils/apiError';
 
-const getErrorMessage = (error, fallback) => error?.message || fallback;
-const formatDate = (date) => date ? new Intl.DateTimeFormat('id-ID', { dateStyle: 'long' }).format(new Date(`${date}T00:00:00`)) : 'Belum ditentukan';
-const isPastDeadline = (deadline) => deadline && new Date(`${deadline}T23:59:59`) < new Date();
+const getErrorMessage = (error, fallback) => apiErrorMessage(error, fallback);
+const formatDate = (date) => date ? formatDateOnly(date, { dateStyle: 'long' }) : 'Belum ditentukan';
+const isPastDeadline = (deadline) => {
+  const key = toDateKey(deadline);
+  return key ? key < new Date().toISOString().slice(0, 10) : false;
+};
 
 const BkkPage = () => {
   const [items, setItems] = useState([]);
@@ -60,7 +65,7 @@ const BkkPage = () => {
       if (!a.deadline && !b.deadline) return new Date(b.created_at) - new Date(a.created_at);
       if (!a.deadline) return 1;
       if (!b.deadline) return -1;
-      const comparison = new Date(`${a.deadline}T00:00:00`) - new Date(`${b.deadline}T00:00:00`);
+      const comparison = toDateKey(a.deadline).localeCompare(toDateKey(b.deadline));
       return sort === 'deadline-desc' ? -comparison : comparison;
     });
   }, [items, locationFilter, query, sort, statusFilter]);

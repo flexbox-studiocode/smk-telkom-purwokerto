@@ -5,20 +5,12 @@ import PengumumanForm from './PengumumanForm';
 import PengumumanModal from './PengumumanModal';
 import PengumumanTable from './PengumumanTable';
 import { createPengumuman, deletePengumuman, getPengumuman, updatePengumuman } from '../../../services/pengumumanService';
+import { apiErrorMessage } from '../../../utils/apiError';
 
-const getErrorMessage = (error, fallback) => {
-  if (error?.code?.startsWith('CONTENT_IMAGE_')) return error.message;
-  if (error?.code === '23505' || /slug/i.test(error?.message || '')) {
-    return 'Slug tersebut sudah digunakan. Gunakan slug yang berbeda.';
-  }
-  if (error?.code === '23514' || /status.*valid|check constraint/i.test(error?.message || '')) {
-    return 'Gagal menyimpan pengumuman. Pilih status Draft atau Published.';
-  }
-  if (error?.code === '42501' || /permission|row-level security|not found|ditemukan/i.test(error?.message || '')) {
-    return 'Gagal menyimpan pengumuman. Anda tidak memiliki izin atau pengumuman sudah tidak tersedia.';
-  }
-  return fallback;
-};
+const getErrorMessage = (error, fallback) => apiErrorMessage(error, fallback, {
+  duplicate: 'Slug tersebut sudah digunakan. Gunakan slug yang berbeda.',
+  not_found: 'Pengumuman sudah tidak tersedia. Muat ulang daftar pengumuman.',
+});
 
 const formatDateTime = (date) => {
   if (!date) return '-';

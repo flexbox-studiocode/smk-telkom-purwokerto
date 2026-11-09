@@ -1,7 +1,8 @@
 import { api } from './apiClient';
 import { withUploadedImage } from './contentImage';
+import { toDateKey } from '../utils/date';
 
-const normalize = (row) => ({ ...row, gambar_url: row.gambarUrl ?? row.gambar_url, instagram_url: row.instagramUrl ?? row.instagram_url, created_at: row.createdAt ?? row.created_at, updated_at: row.updatedAt ?? row.updated_at, tanggal: row.tanggal ?? null });
+const normalize = (row) => ({ ...row, gambar_url: row.gambarUrl ?? row.gambar_url, instagram_url: row.instagramUrl ?? row.instagram_url, created_at: row.createdAt ?? row.created_at, updated_at: row.updatedAt ?? row.updated_at, tanggal: toDateKey(row.tanggal) || null });
 const parse = (data) => ({ ...data, gambarUrl: data.gambar_url ?? data.gambarUrl, instagramUrl: data.instagram_url ?? data.instagramUrl });
 
 export async function getPrestasi() { const response = await api.get('/api/prestasi?limit=100'); return response.data.map(normalize); }

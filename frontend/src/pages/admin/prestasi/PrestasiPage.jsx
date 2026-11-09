@@ -5,12 +5,12 @@ import PrestasiForm from './PrestasiForm';
 import PrestasiModal from './PrestasiModal';
 import PrestasiTable from './PrestasiTable';
 import { createPrestasi, deletePrestasi, getPrestasi, updatePrestasi } from '../../../services/prestasiService';
+import { apiErrorMessage } from '../../../utils/apiError';
 
-const getErrorMessage = (error, fallback) => {
-  if (error?.code?.startsWith('CONTENT_IMAGE_')) return error.message;
-  if (error?.code === '23505' || /slug/i.test(error?.message || '')) return 'Slug tersebut sudah digunakan. Gunakan slug yang berbeda.';
-  return error?.message || fallback;
-};
+const getErrorMessage = (error, fallback) => apiErrorMessage(error, fallback, {
+  duplicate: 'Slug tersebut sudah digunakan. Gunakan slug yang berbeda.',
+  not_found: 'Prestasi sudah tidak tersedia. Muat ulang daftar prestasi.',
+});
 
 const formatDateTime = (date) => {
   if (!date) return '-';

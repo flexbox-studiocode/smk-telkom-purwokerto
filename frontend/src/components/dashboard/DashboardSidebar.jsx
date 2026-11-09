@@ -7,7 +7,6 @@ import {
   LayoutDashboard,
   Megaphone,
   Newspaper,
-  Settings,
   Trophy,
 } from 'lucide-react';
 import Logo from '../Logo';
@@ -27,7 +26,6 @@ const ikon = {
   berita: Newspaper,
   pengumuman: Megaphone,
   kalender: CalendarDays,
-  pengaturan: Settings,
 };
 
 const DashboardSidebar = ({ onPilihMenu }) => {

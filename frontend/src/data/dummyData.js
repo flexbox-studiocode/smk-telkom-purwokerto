@@ -2364,7 +2364,6 @@ export const adminMenu = [
   { label: 'Berita', to: '/dashboard/berita', icon: 'berita' },
   { label: 'Pengumuman', to: '/dashboard/pengumuman', icon: 'pengumuman' },
   { label: 'Calendar of Events', to: '/dashboard/kalender', icon: 'kalender' },
-  { label: 'Pengaturan', to: '/dashboard/pengaturan', icon: 'pengaturan' },
 ];
 
 /* ── Manajemen Berita ── */

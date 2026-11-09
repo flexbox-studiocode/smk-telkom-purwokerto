@@ -52,7 +52,6 @@ const AdminDataProvider = lazy(() => import('./context/AdminDataContext').then((
 const DashboardLayout = lazy(() => import('./components/dashboard/DashboardLayout'));
 const DashboardHomePage = lazy(() => import('./pages/dashboard/DashboardHomePage'));
 const DashboardJurusanPage = lazy(() => import('./pages/dashboard/JurusanPage'));
-const PengaturanPage = lazy(() => import('./pages/dashboard/PengaturanPage'));
 const AdminBeritaPage = lazy(() => import('./pages/admin/berita/BeritaPage'));
 const AdminPengumumanPage = lazy(() => import('./pages/admin/pengumuman/PengumumanPage'));
 const AdminPrestasiPage = lazy(() => import('./pages/admin/prestasi/PrestasiPage'));
@@ -239,7 +238,8 @@ const App = () => {
               <Route path="prestasi" element={<AdminPrestasiPage />} />
               <Route path="bkk" element={<AdminBkkPage />} />
               <Route path="kalender" element={<KalenderAdminPage />} />
-              <Route path="pengaturan" element={<PengaturanPage />} />
+              {/* Menu Pengaturan dihapus dari dashboard; bookmark lama diarahkan ke beranda dashboard. */}
+              <Route path="pengaturan" element={<Navigate to="/dashboard" replace />} />
             </Route>
           </Route>
         </Route>

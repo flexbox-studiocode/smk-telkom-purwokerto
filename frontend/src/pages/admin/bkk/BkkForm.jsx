@@ -1,13 +1,14 @@
 import RichTextEditor from '../../../components/dashboard/RichTextEditor';
 import { useState } from 'react';
 import ImageUploadField from '../../../components/dashboard/ImageUploadField';
+import { toDateKey } from '../../../utils/date';
 
 const emptyForm = { perusahaan: '', posisi: '', deskripsi: '', lokasi: '', tipe_pekerjaan: '', deadline: '', status: 'aktif', link_pendaftaran: '', logo_url: '' };
 const inputClass = 'w-full rounded-lg border border-dark-200 px-3 py-2.5 text-sm text-dark-900 outline-none transition-colors placeholder:text-dark-400 focus:border-primary';
 const labelClass = 'mb-1.5 block text-xs font-semibold text-dark-700';
 
 const BkkForm = ({ initialData, onSubmit, onCancel, submitting }) => {
-  const [form, setForm] = useState(() => ({ ...emptyForm, ...initialData, deadline: initialData?.deadline || '' }));
+  const [form, setForm] = useState(() => ({ ...emptyForm, ...initialData, deadline: toDateKey(initialData?.deadline) }));
   const [errors, setErrors] = useState({});
   const [imageFile, setImageFile] = useState(null);
   const [imageReady, setImageReady] = useState(true);

@@ -1,9 +1,7 @@
 import { Eye, Pencil, Trash2 } from 'lucide-react';
+import { formatDateOnly } from '../../../utils/date';
 
-const formatDate = (date) => {
-  if (!date) return '-';
-  return new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(new Date(date));
-};
+const formatDate = (date) => (date ? formatDateOnly(date) : '-');
 
 const ActionButtons = ({ item, onDetail, onEdit, onDelete }) => (
   <div className="flex items-center gap-1">

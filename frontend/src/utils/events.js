@@ -16,7 +16,8 @@ export function validateEvent(data) {
   if (data.tanggal_selesai && data.tanggal_selesai < data.tanggal_mulai) errors.tanggal_selesai = 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai.';
   for (const field of ['waktu_mulai', 'waktu_selesai']) if (data[field] && !validTime(data[field])) errors[field] = 'Waktu harus dalam format HH:mm.';
   if ((data.tanggal_selesai || data.tanggal_mulai) === data.tanggal_mulai && data.waktu_mulai && data.waktu_selesai && data.waktu_selesai <= data.waktu_mulai) errors.waktu_selesai = 'Waktu selesai harus setelah waktu mulai pada hari yang sama.';
-  if (![...eventCategories, ...legacyEventCategories].some(category => category.value === data.kategori)) errors.kategori = 'Pilih kategori kegiatan yang tersedia.';
+  const category = String(data.kategori || '').replace(/_/g, '-');
+  if (![...eventCategories, ...legacyEventCategories].some(({ value }) => value === category)) errors.kategori = 'Pilih kategori kegiatan yang tersedia.';
   if (!['draft', 'published'].includes(data.status)) errors.status = 'Pilih Draft atau Published.';
   for (const field of ['gambar_url', 'link_informasi']) {
     const value = String(data[field] || '').trim();

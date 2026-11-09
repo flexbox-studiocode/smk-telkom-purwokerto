@@ -4,9 +4,10 @@ import FormInput from '../../../components/dashboard/FormInput';
 import ImageUploadField from '../../../components/dashboard/ImageUploadField';
 import { emptyEvent, getEventCategory, validateEvent } from '../../../utils/events';
 import EventCategorySelect from './EventCategorySelect';
+import { toDateKey } from '../../../utils/date';
 
 export default function EventForm({ initialData, initialDate = '', onSave, onCancel, submitting }) {
-  const [form, setForm] = useState(() => Object.fromEntries(Object.keys(emptyEvent).map(key => [key, initialData?.[key] ?? (key === 'tanggal_mulai' ? initialDate : emptyEvent[key])])));
+  const [form, setForm] = useState(() => Object.fromEntries(Object.keys(emptyEvent).map(key => [key, ['tanggal_mulai', 'tanggal_selesai'].includes(key) ? toDateKey(initialData?.[key] ?? (key === 'tanggal_mulai' ? initialDate : '')) : initialData?.[key] ?? emptyEvent[key]])));
   const [id] = useState(() => crypto.randomUUID());
   const [errors, setErrors] = useState({}), [file, setFile] = useState(null), [imageReady, setImageReady] = useState(true);
   const locked = useRef(false);

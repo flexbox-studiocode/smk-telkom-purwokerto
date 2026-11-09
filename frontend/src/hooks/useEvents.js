@@ -12,7 +12,7 @@ export default function useEvents(published = false, initialItems) {
       const rows = await getEvents(published, controller.signal);
       if (!controller.signal.aborted) { setItems(rows); setError(''); }
     } catch (cause) {
-      if (!controller.signal.aborted) { setItems([]); setError(published && ['PGRST205', '42P01'].includes(cause?.code) ? 'Jadwal kegiatan belum tersedia. Silakan coba lagi nanti.' : eventError(cause)); }
+      if (!controller.signal.aborted) { setItems([]); setError(eventError(cause)); }
     } finally { if (!controller.signal.aborted) setLoading(false); }
   }, [published]);
   useEffect(() => {

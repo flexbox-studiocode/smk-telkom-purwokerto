@@ -6,20 +6,12 @@ import BeritaForm from './BeritaForm';
 import BeritaModal from './BeritaModal';
 import BeritaTable from './BeritaTable';
 import { createBerita, deleteBerita, getBerita, updateBerita } from '../../../services/beritaService';
+import { apiErrorMessage } from '../../../utils/apiError';
 
-const getErrorMessage = (error, fallback) => {
-  if (error?.code?.startsWith('CONTENT_IMAGE_')) return error.message;
-  if (error?.code === '23505' || /slug/i.test(error?.message || '')) {
-    return 'Slug tersebut sudah digunakan. Gunakan slug yang berbeda.';
-  }
-  if (error?.code === '23514' || /status.*valid|check constraint/i.test(error?.message || '')) {
-    return 'Gagal menyimpan berita. Pilih status Draft atau Published.';
-  }
-  if (error?.code === '42501' || /permission|row-level security|not found|ditemukan/i.test(error?.message || '')) {
-    return 'Gagal menyimpan berita. Anda tidak memiliki izin atau berita sudah tidak tersedia.';
-  }
-  return fallback;
-};
+const getErrorMessage = (error, fallback) => apiErrorMessage(error, fallback, {
+  duplicate: 'Slug tersebut sudah digunakan. Gunakan slug yang berbeda.',
+  not_found: 'Berita sudah tidak tersedia. Muat ulang daftar berita.',
+});
 
 const formatDateTime = (date) => {
   if (!date) return '-';

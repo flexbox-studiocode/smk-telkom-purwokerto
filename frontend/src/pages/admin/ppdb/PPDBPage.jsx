@@ -3,12 +3,13 @@ import { AlertCircle, CheckCircle2, ExternalLink, FileText, RefreshCw, Search, X
 import PPDBModal from './PPDBModal';
 import PPDBTable from './PPDBTable';
 import { getPpdb, getPpdbDocumentUrl, updatePpdbStatus } from '../../../services/ppdbService';
+import { apiErrorMessage } from '../../../utils/apiError';
 
 const statusLabels = { menunggu: 'Menunggu', diproses: 'Diproses', diterima: 'Diterima', ditolak: 'Ditolak' };
 const statusClasses = { menunggu: 'bg-amber-100 text-amber-700', diproses: 'bg-blue-100 text-blue-700', diterima: 'bg-green-100 text-green-700', ditolak: 'bg-red-100 text-red-700' };
 const formatDate = (value) => value ? new Intl.DateTimeFormat('id-ID', { dateStyle: 'long' }).format(new Date(value)) : '-';
 const formatDateTime = (value) => value ? new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value)) : '-';
-const getErrorMessage = (error, fallback) => error?.code === '42501' ? 'Anda tidak memiliki izin untuk melakukan tindakan ini.' : error?.message || fallback;
+const getErrorMessage = (error, fallback) => apiErrorMessage(error, fallback);
 
 const PPDBPage = () => {
   const [items, setItems] = useState([]); const [loading, setLoading] = useState(true); const [error, setError] = useState(''); const [feedback, setFeedback] = useState(null); const [query, setQuery] = useState(''); const [statusFilter, setStatusFilter] = useState('all'); const [modal, setModal] = useState(null); const [status, setStatus] = useState('menunggu'); const [note, setNote] = useState(''); const [saving, setSaving] = useState(false); const [documentLoading, setDocumentLoading] = useState(false);

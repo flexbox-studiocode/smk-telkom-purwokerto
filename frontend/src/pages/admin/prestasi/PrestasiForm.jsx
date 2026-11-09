@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { slugify } from '../../../utils/slug';
 import ImageUploadField from '../../../components/dashboard/ImageUploadField';
 import { isValidInstagramUrl } from '../../../utils/instagramUrl';
+import { toDateKey } from '../../../utils/date';
 
 const emptyForm = {
   judul: '',
@@ -21,7 +22,7 @@ const inputClass = 'w-full rounded-lg border border-dark-200 px-3 py-2.5 text-sm
 const labelClass = 'mb-1.5 block text-xs font-semibold text-dark-700';
 
 const PrestasiForm = ({ initialData, onSubmit, onCancel, submitting }) => {
-  const [form, setForm] = useState(() => ({ ...emptyForm, ...initialData, tanggal: initialData?.tanggal || '' }));
+  const [form, setForm] = useState(() => ({ ...emptyForm, ...initialData, tanggal: toDateKey(initialData?.tanggal) }));
   const [slugEdited, setSlugEdited] = useState(Boolean(initialData));
   const [errors, setErrors] = useState({});
   const [imageFile, setImageFile] = useState(null);
