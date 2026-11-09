@@ -2,16 +2,38 @@ import express from 'express';
 import { z } from 'zod';
 import { prisma } from '../db.js';
 import { optionalAuth, requireAdmin, requireAuth } from '../middleware/auth.js';
-import { asyncHandler, badRequest, notFound, parsePagination } from '../utils/http.js';
+import { HttpError, asyncHandler, notFound, parsePagination } from '../utils/http.js';
 
 export const eventsRouter = express.Router();
 // Harus sinkron dengan enum `EventCategory` di prisma/schema.prisma.
+// Nilai ini adalah kontrak HTTP (hyphen), bukan identifier enum Prisma
+// (underscore). Konversi dilakukan di toPrismaCategory/toApiCategory.
 export const EVENT_CATEGORIES = [
   'kegiatan', 'akademik', 'lomba', 'karier', 'lainnya',
   'awal-pkl', 'penilaian-siswa', 'libur-akhir-semester', 'cuti-bersama',
   'libur-tahun-pelajaran', 'hari-pertama-sekolah', 'upacara-nasional',
   'hut-smk', 'libur-ramadhan', 'perkiraan-kelulusan',
 ];
+
+// Prisma enum identifiers tidak boleh mengandung hyphen, sehingga schema memakai
+// `awal_pkl @map("awal-pkl")`. API dan frontend memakai bentuk hyphen. Tanpa
+// konversi ini, create/update kategori akademik gagal (Prisma validation) dan
+// response GET mengembalikan underscore yang tidak dikenali frontend.
+const PRISMA_CATEGORY = new Map(EVENT_CATEGORIES.map((value) => [value, value.replace(/-/g, '_')]));
+const API_CATEGORY = new Map(EVENT_CATEGORIES.map((value) => [value.replace(/-/g, '_'), value]));
+
+export function toPrismaCategory(value) {
+  if (value === undefined) return undefined;
+  return PRISMA_CATEGORY.get(value) ?? String(value).replace(/-/g, '_');
+}
+
+export function toApiCategory(value) {
+  if (value === undefined || value === null) return value;
+  return API_CATEGORY.get(value) ?? String(value).replace(/_/g, '-');
+}
+
+const serialize = (row) => (row ? { ...row, kategori: toApiCategory(row.kategori) } : row);
+
 const time = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Waktu harus berformat HH:mm.');
 const externalUrl = z.string().max(2048).refine((value) => {
   try {
@@ -27,7 +49,7 @@ const schema = z.object({
   tanggal_selesai: z.coerce.date().nullable().optional(), waktu_selesai: time.nullable().optional(), lokasi: z.string().max(240).default(''), penyelenggara: z.string().max(160).default(''),
   gambar_url: externalUrl.nullable().optional(), link_informasi: externalUrl.nullable().optional(), status: z.enum(['draft', 'published']).default('draft'),
 });
-const mapInput = (data) => ({ judul: data.judul, ringkasan: data.ringkasan, deskripsi: data.deskripsi, kategori: data.kategori, tanggalMulai: data.tanggal_mulai, waktuMulai: data.waktu_mulai, tanggalSelesai: data.tanggal_selesai, waktuSelesai: data.waktu_selesai, lokasi: data.lokasi, penyelenggara: data.penyelenggara, gambarUrl: data.gambar_url, linkInformasi: data.link_informasi, status: data.status });
+const mapInput = (data) => ({ judul: data.judul, ringkasan: data.ringkasan, deskripsi: data.deskripsi, kategori: toPrismaCategory(data.kategori), tanggalMulai: data.tanggal_mulai, waktuMulai: data.waktu_mulai, tanggalSelesai: data.tanggal_selesai, waktuSelesai: data.waktu_selesai, lokasi: data.lokasi, penyelenggara: data.penyelenggara, gambarUrl: data.gambar_url, linkInformasi: data.link_informasi, status: data.status });
 
 const dayKey = (value) => value instanceof Date ? value.toISOString().slice(0, 10) : String(value || '').slice(0, 10);
 // Tanggal/waktu harus konsisten. Dijalankan pada payload gabungan agar PATCH
@@ -35,9 +57,9 @@ const dayKey = (value) => value instanceof Date ? value.toISOString().slice(0, 1
 function assertEventRange(data) {
   const start = data.tanggal_mulai ? dayKey(data.tanggal_mulai) : '';
   const end = data.tanggal_selesai ? dayKey(data.tanggal_selesai) : '';
-  if (start && end && end < start) throw badRequest('Tanggal selesai tidak boleh lebih awal dari tanggal mulai.', { code: 'invalid_date_range', path: 'tanggal_selesai' });
+  if (start && end && end < start) throw new HttpError(400, 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai.', 'invalid_date_range', { path: 'tanggal_selesai' });
   if (start && start === end && data.waktu_mulai && data.waktu_selesai && data.waktu_selesai <= data.waktu_mulai) {
-    throw badRequest('Waktu selesai harus setelah waktu mulai pada hari yang sama.', { code: 'invalid_time_range', path: 'waktu_selesai' });
+    throw new HttpError(400, 'Waktu selesai harus setelah waktu mulai pada hari yang sama.', 'invalid_time_range', { path: 'waktu_selesai' });
   }
 }
 
@@ -50,18 +72,18 @@ eventsRouter.get('/', optionalAuth, asyncHandler(async (req, res) => {
     prisma.event.findMany({ where, orderBy: { tanggalMulai: 'asc' }, skip, take: limit }),
     prisma.event.count({ where }),
   ]);
-  res.json({ data, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
+  res.json({ data: data.map(serialize), pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
 }));
 eventsRouter.get('/:id', optionalAuth, asyncHandler(async (req, res) => {
   const data = await prisma.event.findFirst({ where: { id: req.params.id, ...(req.isAdmin ? {} : { status: 'published' }) } });
   if (!data) throw notFound();
-  res.json({ data });
+  res.json({ data: serialize(data) });
 }));
 eventsRouter.use(requireAuth, requireAdmin);
 eventsRouter.post('/', asyncHandler(async (req, res) => {
   const input = schema.parse(req.body);
   assertEventRange(input);
-  res.status(201).json({ data: await prisma.event.create({ data: mapInput(input) }) });
+  res.status(201).json({ data: serialize(await prisma.event.create({ data: mapInput(input) })) });
 }));
 eventsRouter.patch('/:id', asyncHandler(async (req, res) => {
   const input = schema.partial().parse(req.body);
@@ -73,7 +95,7 @@ eventsRouter.patch('/:id', asyncHandler(async (req, res) => {
     waktu_mulai: input.waktu_mulai === undefined ? current.waktuMulai : input.waktu_mulai,
     waktu_selesai: input.waktu_selesai === undefined ? current.waktuSelesai : input.waktu_selesai,
   });
-  res.json({ data: await prisma.event.update({ where: { id: req.params.id }, data: mapInput(input) }) });
+  res.json({ data: serialize(await prisma.event.update({ where: { id: req.params.id }, data: mapInput(input) })) });
 }));
 eventsRouter.delete('/:id', asyncHandler(async (req, res) => {
   const deleted = await prisma.event.deleteMany({ where: { id: req.params.id } });

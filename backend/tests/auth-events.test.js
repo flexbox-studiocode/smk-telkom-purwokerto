@@ -100,7 +100,7 @@ test('login without a CSRF token is rejected', async () => {
   });
   assert.equal(res.status, 400);
   const body = await res.json();
-  assert.equal(body.code, 'bad_request');
+  assert.equal(body.code, 'csrf_failed');
 });
 
 test('unknown email and wrong password return the same generic error', async () => {

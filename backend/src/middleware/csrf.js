@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { badRequest } from '../utils/http.js';
+import { HttpError } from '../utils/http.js';
 
 export function csrfToken(req, res) {
   const token = crypto.randomBytes(24).toString('base64url');
@@ -12,7 +12,7 @@ export function requireCsrf(req, _res, next) {
   const cookie = req.cookies?.csrf_token;
   const header = req.get('x-csrf-token');
   if (!cookie || !header || cookie.length !== header.length || !crypto.timingSafeEqual(Buffer.from(cookie), Buffer.from(header))) {
-    return next(badRequest('CSRF token tidak valid.', { code: 'csrf_failed' }));
+    return next(new HttpError(400, 'CSRF token tidak valid.', 'csrf_failed'));
   }
   next();
 }
