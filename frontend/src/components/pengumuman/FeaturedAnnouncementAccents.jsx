@@ -45,7 +45,7 @@ export default function FeaturedAnnouncementAccents() {
     <svg viewBox="0 0 1514 548" preserveAspectRatio="none" focusable="false">
       <image href={mask} width="1521" height="548" />
       <path className="announcement-white-end" d="M942 0H1514V548H942Z" fill="white" />
-      <Pieces pieces={top} />
+      <g className="announcement-top-ornaments"><Pieces pieces={top} /></g>
       <g className="announcement-right-ornaments"><Diamonds x={1418} y={2} /><Pieces pieces={corners} /><Diamonds x={1225} y={452} /><Pieces pieces={bottom} /></g>
     </svg>
   </div>;
