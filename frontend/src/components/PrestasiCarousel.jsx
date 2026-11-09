@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import AchievementCard from './AchievementCard';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { gsap } from 'gsap';
+import { PRESTASI_PAGE_SIZE } from '../utils/publicContent';
 
 // Lebar kartu disamakan persis dengan grid aslinya (gap-5 = 1.25rem):
 // 1 kolom di mobile, 2 di sm, 4 di lg.
@@ -12,9 +13,8 @@ const CARD_WIDTH = 'w-full sm:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-3.75re
 // halaman = grid desktop 4x2, jadi paling banyak 16 kartu tampil; urutan sumber
 // dipertahankan dan data tidak dihapus. Pembagian tidak bergantung pada viewport,
 // sehingga halaman aktif tetap sinkron saat layar berubah ukuran.
-const PAGE_CAPACITY = 8;
 const splitTwoPages = (items) => {
-  const size = Math.min(PAGE_CAPACITY, Math.ceil(items.length / 2));
+  const size = Math.min(PRESTASI_PAGE_SIZE, Math.ceil(items.length / 2));
   return size ? [items.slice(0, size), items.slice(size, size * 2)].filter((page) => page.length) : [];
 };
 
@@ -122,32 +122,45 @@ const PrestasiCarousel = ({ items, renderCard, labels = {}, showIndicators = tru
   const onPointerDown = (e) => {
     animation.current?.progress(1);
     if (e.pointerType !== 'mouse') return;
-    const el = trackRef.current;
-    drag.current = { down: true, moved: false, startX: e.clientX, startLeft: el.scrollLeft };
+    // Di bawah lg tiap halaman punya scroller sendiri (1-2 kartu per tampilan):
+    // drag mouse menggeser kartu di dalam halaman; selain itu menggeser halaman.
+    const inner = e.target.closest('[data-page-scroller]');
+    const el = inner && inner.scrollWidth > inner.clientWidth + 1 ? inner : trackRef.current;
+    drag.current = { down: true, moved: false, startX: e.clientX, startLeft: el.scrollLeft, el };
   };
 
   const onPointerMove = (e) => {
     if (!drag.current.down) return;
+    const { el } = drag.current;
     const dx = e.clientX - drag.current.startX;
     if (!drag.current.moved) {
       if (Math.abs(dx) <= 5) return;
       drag.current.moved = true;
-      setDragging(true);
+      if (el === trackRef.current) setDragging(true);
+      else el.style.scrollSnapType = 'none';
       // Capture hanya setelah drag: klik biasa harus tetap menuju Link kartu.
-      try { trackRef.current.setPointerCapture(e.pointerId); } catch { /* pointer tidak aktif */ }
+      try { el.setPointerCapture(e.pointerId); } catch { /* pointer tidak aktif */ }
     }
-    trackRef.current.scrollLeft = drag.current.startLeft - dx;
+    el.scrollLeft = drag.current.startLeft - dx;
   };
 
   const onPointerUp = (e) => {
     if (!drag.current.down) return;
     drag.current.down = false;
     setDragging(false);
-    const el = trackRef.current;
+    const { el } = drag.current;
     if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId);
+    if (!drag.current.moved) return;
 
-    // Snap baru menyala lagi setelah drag selesai, lalu didorong ke slide terdekat.
-    if (drag.current.moved) requestAnimationFrame(() => goTo(getCarouselIndex(el.scrollLeft, Math.max(0, el.scrollWidth - el.clientWidth), stepRef.current, groups)));
+    if (el === trackRef.current) {
+      // Snap baru menyala lagi setelah drag selesai, lalu didorong ke slide terdekat.
+      requestAnimationFrame(() => goTo(getCarouselIndex(el.scrollLeft, Math.max(0, el.scrollWidth - el.clientWidth), stepRef.current, groups)));
+      return;
+    }
+    // Scroller halaman: pulihkan snap lalu rapatkan ke kartu terdekat.
+    const nearest = [...el.children].reduce((best, child) => (Math.abs(child.offsetLeft - el.offsetLeft - el.scrollLeft) < Math.abs(best - el.scrollLeft) ? child.offsetLeft - el.offsetLeft : best), 0);
+    el.style.scrollSnapType = '';
+    el.scrollTo({ left: nearest, behavior: 'smooth' });
   };
 
   // Menggeser bukan mengeklik. Klik dicegat di fase capture supaya <Link> di
@@ -173,6 +186,7 @@ const PrestasiCarousel = ({ items, renderCard, labels = {}, showIndicators = tru
         onPointerCancel={onPointerUp}
         onPointerLeave={onPointerUp}
         onClickCapture={onClickCapture}
+        onDragStart={(e) => e.preventDefault()}
         className={`mt-7 -my-2 flex gap-5 overflow-x-auto py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&_img]:pointer-events-none ${
           dragging
             ? 'cursor-grabbing select-none scroll-auto'
@@ -183,10 +197,10 @@ const PrestasiCarousel = ({ items, renderCard, labels = {}, showIndicators = tru
           // Desktop: grid 4x2. Di bawah lg: satu kartu (mobile) / dua kartu (sm) per tampilan,
           // digeser di dalam halaman; geser melewati kartu terakhir lanjut ke halaman berikutnya.
           <div key={pageIndex} className="w-full shrink-0 snap-start">
-            <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-auto [scrollbar-width:none] lg:grid lg:snap-none lg:grid-cols-4 lg:grid-rows-2 lg:items-stretch lg:overflow-visible [&::-webkit-scrollbar]:hidden">
+            <div data-page-scroller className="-my-2 flex snap-x snap-mandatory items-start gap-5 sm:items-stretch overflow-x-auto overscroll-x-auto py-2 [scrollbar-width:none] lg:my-0 lg:grid lg:snap-none lg:grid-cols-4 lg:grid-rows-2 lg:items-stretch lg:overflow-visible lg:py-0 [&::-webkit-scrollbar]:hidden">
               {page.map((item) => (
                 <div key={item.id || item.slug} className={`shrink-0 snap-start w-full sm:w-[calc((100%-1.25rem)/2)] lg:w-auto ${renderCard ? '' : 'flex min-w-0'}`}>
-                  {renderCard ? renderCard(item) : <AchievementCard {...item} category={item.kategori} />}
+                  {renderCard ? renderCard(item) : <AchievementCard {...item} category={item.kategori} variant="carousel" />}
                 </div>
               ))}
             </div>
@@ -199,7 +213,7 @@ const PrestasiCarousel = ({ items, renderCard, labels = {}, showIndicators = tru
       </div>
 
       {/* Panah tetap tersedia pada layar kecil meskipun indikator disembunyikan. */}
-      {(groups > 1 || showIndicators) && <div className="mt-6 flex items-center justify-center gap-2">
+      {(groups > 1 || showIndicators) && <div className={`flex items-center justify-center gap-2 ${pages ? 'mt-5 sm:mt-6' : 'mt-6'}`}>
         {groups > 1 && <button
           type="button"
           onClick={() => goTo(active - 1)}
