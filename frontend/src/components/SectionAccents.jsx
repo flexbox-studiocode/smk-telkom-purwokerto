@@ -42,14 +42,6 @@ const positions = {
     ['12:76', 'left-[5.01384%] top-[25.76713%] size-[min(12.6115cqw,51.53414cqh)] [transform:matrix(-1,8.742277657347586e-8,-8.742277657347586e-8,-1,0,0)]'],
     ['12:79', 'left-[4.52281%] top-[74.20309%] size-[min(12.6115cqw,51.53414cqh)] [transform:matrix(0.0005942711723037064,-0.9999998211860657,0.9999998211860657,0.0005942711723037064,0,0)]'],
   ],
-  departmentsQuiz: [
-    ['24:2052', 'left-[84.97386%] top-[21.33367%] size-[min(12.6115cqw,27.38426cqh)] [transform:matrix(1,-1.1058862159352145e-16,1.1058862159352145e-16,1,0,0)]'],
-    ['24:2055', 'left-[94.98635%] top-[40.48814%] size-[min(12.6115cqw,27.38426cqh)] [transform:matrix(1,-1.1058862159352145e-16,1.1058862159352145e-16,1,0,0)]'],
-    ['24:2058', 'left-[94.71939%] top-[66.23425%] size-[min(12.6115cqw,27.38426cqh)] [transform:matrix(1,-1.1058862159352145e-16,1.1058862159352145e-16,1,0,0)]'],
-    ['24:2061', 'left-[84.97386%] top-[66.23428%] size-[min(12.6115cqw,27.38426cqh)] [transform:matrix(-4.371139183945161e-8,-1,1,-4.371139183945161e-8,0,0)]'],
-    ['24:2064', 'left-[85.51152%] top-[43.30966%] size-[min(12.6115cqw,27.38426cqh)] [transform:matrix(-4.371139183945161e-8,-1,1,-4.371139183945161e-8,0,0)]'],
-    ['24:2067', 'left-[95.47737%] top-[18.04194%] size-[min(12.6115cqw,27.38426cqh)] [transform:matrix(-0.0005943586002103984,0.9999998211860657,-0.9999998211860657,-0.0005943586002103984,0,0)]'],
-  ],
   activities: [
     ['59:144', 'left-[95.88967%] top-[16.4727%] size-[min(12.6115cqw,15.84125cqh)] [transform:matrix(-0.007671474013477564,0.999970555305481,-0.999970555305481,-0.007671474013477564,0,0)]'],
     ['59:153', 'left-[95.79996%] top-[31.14753%] size-[min(12.6115cqw,15.84125cqh)] [transform:matrix(-0.9999658465385437,-0.008265813812613487,0.008265813812613487,-0.9999658465385437,0,0)]'],
@@ -62,6 +54,17 @@ const positions = {
 };
 
 export default function SectionAccents({ variant }) {
+  // Kluster 2x3 rapat (celah ~11% sisi kotak) mengikuti referensi; orientasi per kotak dari Figma.
+  if (variant === 'departmentsQuiz') {
+    const tiles = ['', 'rotate-90', '-rotate-90', '', '-rotate-90', ''];
+    return (
+      <div aria-hidden="true" data-accent-section={variant} className="pointer-events-none absolute inset-0 hidden overflow-hidden [container-type:size] min-[1440px]:block">
+        <div className="absolute right-[0.5cqw] top-1/2 grid -translate-y-1/2 grid-cols-2 gap-[3.4cqh]">
+          {tiles.map((rotation, index) => <img key={index} src={accent} alt="" className={`aspect-square w-[min(30cqh,12.6cqw)] select-none ${rotation}`} />)}
+        </div>
+      </div>
+    );
+  }
   return (
     <div aria-hidden="true" data-accent-section={variant} className={`pointer-events-none absolute inset-0 overflow-hidden [container-type:size] ${variant === 'achievements' ? '' : 'hidden min-[1440px]:block'} ${variant === 'schoolTeachers' ? 'min-[1660px]:hidden min-[1800px]:block' : ''}`}>
       {variant === 'achievements' && (
