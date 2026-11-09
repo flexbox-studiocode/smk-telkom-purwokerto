@@ -26,11 +26,12 @@ export default function WaveMarquee() {
     const root = ref.current;
     const media = gsap.matchMedia();
     let disposed = false;
+    let refit = () => {};
     // fonts.ready can resolve before the 800 weight is requested, so measure only after it is loaded.
     const canvasStyle = getComputedStyle(root.querySelector('svg'));
     Promise.all([document.fonts.load(`${canvasStyle.fontWeight} ${canvasStyle.fontSize} ${canvasStyle.fontFamily}`), document.fonts.ready]).then(() => {
       if (disposed) return;
-      media.add({ motion: '(prefers-reduced-motion: no-preference)', reduced: '(prefers-reduced-motion: reduce)' }, ({ conditions }) => {
+      const setup = () => media.add({ motion: '(prefers-reduced-motion: no-preference)', reduced: '(prefers-reduced-motion: reduce)' }, ({ conditions }) => {
         const path = root.querySelector('[data-wave-center]');
         const length = path.getTotalLength();
         const widths = [...root.querySelectorAll('[data-wave-measure]')].map(node => node.getComputedTextLength());
@@ -74,8 +75,12 @@ export default function WaveMarquee() {
           document.removeEventListener('visibilitychange', sync);
         };
       });
+      setup();
+      // A late font swap changes glyph widths, so measure again whenever fonts finish loading.
+      refit = () => { media.revert(); setup(); };
+      document.fonts.addEventListener('loadingdone', refit);
     });
-    return () => { disposed = true; media.revert(); };
+    return () => { disposed = true; document.fonts.removeEventListener('loadingdone', refit); media.revert(); };
   }, [language]);
 
   return (
