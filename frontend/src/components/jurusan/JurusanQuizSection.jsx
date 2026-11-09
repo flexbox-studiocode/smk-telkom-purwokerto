@@ -40,7 +40,7 @@ const JurusanQuizSection = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 [container-type:inline-size]">
         <div className="grid grid-cols-1 items-center gap-6 rounded-2xl bg-primary/7 p-5 sm:p-6 lg:grid-cols-[1.4fr_1fr_0.8fr] lg:gap-5 lg:p-4 xl:gap-6 xl:p-5">
           {/* Ajakan */}
-          <div className="flex min-w-0 items-center gap-4">
+          <div className="flex min-w-0 flex-col items-start gap-4 min-[400px]:flex-row min-[400px]:items-center">
             <img src={stelaBot} alt="" aria-hidden="true" width="250" height="250" className="aspect-square h-auto w-24 flex-none rounded-2xl bg-primary object-contain p-4 sm:w-32 sm:p-5 lg:w-36 xl:w-44 xl:p-7" />
             <div className="min-w-0">
               <h2 className="font-heading text-[clamp(.875rem,1.378cqw,1.5rem)] font-bold leading-normal text-dark-900">{t("Belum Tahu Memilih")} <span className="text-primary">{t("Jurusan?")}</span>
