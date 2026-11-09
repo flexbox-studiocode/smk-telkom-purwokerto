@@ -5,6 +5,11 @@ import processor from '../assets/tentang/profile/learning-processor.webp';
 import foundation from '../assets/tentang/profile/learning-foundation.webp';
 import skills from '../assets/tentang/profile/learning-skills.webp';
 import career from '../assets/tentang/profile/learning-career.webp';
+import { navLinks } from './dummyData';
+
+// URL diambil dari dropdown Layanan di Navbar (satu sumber). DITA belum punya URL di sana, jadi tanpa link.
+const serviceHref = (label) => navLinks.find(item => item.label === 'Layanan')?.children.find(child => child.label === label)?.href;
+const platform = (label, serviceLabel = label) => ({ label, href: serviceHref(serviceLabel) });
 
 export const learningMethods = [
   {
@@ -16,7 +21,7 @@ export const learningMethods = [
     image: digital, width: 776, height: 406, icon: processor,
     alt: 'Kolaborasi digital siswa', title: 'Terhubung secara digital',
     description: 'Satu ekosistem untuk mendukung proses belajar.',
-    platforms: ['LMS', 'JUARA', 'LIONS', 'DITA'],
+    platforms: [platform('LMS', 'Mylms'), platform('JUARA'), platform('LIONS'), platform('DITA')],
   },
 ];
 

@@ -23,7 +23,7 @@ const TentangMetodePembelajaranSection = () => {
                   <h3>{t(method.title)}</h3>
                   <p>{t(method.description)}</p>
                   {method.platforms && <ul className="profile-learning-platforms" aria-label={t('Platform digital')}>
-                    {method.platforms.map(platform => <li key={platform}>{platform}</li>)}
+                    {method.platforms.map(({ label, href }) => <li key={label}>{href ? <a href={href} target="_blank" rel="noopener noreferrer">{label}</a> : label}</li>)}
                   </ul>}
                 </div>
               </div>
