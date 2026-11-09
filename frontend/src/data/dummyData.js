@@ -138,8 +138,8 @@ export const navLinks = [
       // Only confirmed service URLs are enabled; credentials are never stored here.
       { label: 'Mylms', href: 'https://mylms.telkomschools.sch.id/' },
       { label: 'STARRY', href: 'https://starry.smktelkom-pwt.sch.id/' },
-      { label: 'DIGITS', href: '/layanan/digits', comingSoon: true },
-      { label: 'SAKU', href: '/layanan/saku', comingSoon: true },
+      { label: 'DIGITS', href: 'https://digits.telkomschools.sch.id/' },
+      { label: 'SAKU', href: 'https://ts.ypt.or.id/ts-auth/login' },
       { label: 'BISA', href: 'https://bisa.smktelkom-pwt.sch.id/' },
       { label: 'JUARA', href: 'https://juara.smktelkom-pwt.sch.id/' },
       { label: 'LIONS', href: 'https://lions.smktelkom-pwt.sch.id/' },
