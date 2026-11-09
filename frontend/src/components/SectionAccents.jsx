@@ -54,17 +54,6 @@ const positions = {
 };
 
 export default function SectionAccents({ variant }) {
-  // Kluster 2x3 rapat (celah ~11% sisi kotak) mengikuti referensi; orientasi per kotak dari Figma.
-  if (variant === 'departmentsQuiz') {
-    const tiles = ['', 'rotate-90', '-rotate-90', '', '-rotate-90', ''];
-    return (
-      <div aria-hidden="true" data-accent-section={variant} className="pointer-events-none absolute inset-0 hidden overflow-hidden [container-type:size] min-[1440px]:block">
-        <div className="absolute right-[0.5cqw] top-1/2 grid -translate-y-1/2 grid-cols-2 gap-[3.4cqh]">
-          {tiles.map((rotation, index) => <img key={index} src={accent} alt="" className={`aspect-square w-[min(30cqh,12.6cqw)] select-none ${rotation}`} />)}
-        </div>
-      </div>
-    );
-  }
   return (
     <div aria-hidden="true" data-accent-section={variant} className={`pointer-events-none absolute inset-0 overflow-hidden [container-type:size] ${variant === 'achievements' ? '' : 'hidden min-[1440px]:block'} ${variant === 'schoolTeachers' ? 'min-[1660px]:hidden min-[1800px]:block' : ''}`}>
       {variant === 'achievements' && (
