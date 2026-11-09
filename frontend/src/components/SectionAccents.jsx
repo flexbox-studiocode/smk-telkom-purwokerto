@@ -62,16 +62,6 @@ const positions = {
 };
 
 export default function SectionAccents({ variant }) {
-  // Halaman jurusan tetap memakai susunan lurus yang sekarang.
-  if (variant === 'departmentsQuiz') {
-    return (
-      <div aria-hidden="true" data-accent-section={variant} className="pointer-events-none absolute inset-0 hidden overflow-hidden min-[1440px]:block">
-        <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-4">
-          {[0, 1, 2].map((index) => <img key={index} src={accent} alt="" className="size-16 select-none" />)}
-        </div>
-      </div>
-    );
-  }
   return (
     <div aria-hidden="true" data-accent-section={variant} className={`pointer-events-none absolute inset-0 overflow-hidden [container-type:size] ${variant === 'achievements' ? '' : 'hidden min-[1440px]:block'} ${variant === 'schoolTeachers' ? 'min-[1660px]:hidden min-[1800px]:block' : ''}`}>
       {variant === 'achievements' && (
