@@ -336,6 +336,7 @@ export default {
   'Perbandingan': 'Compare',
   'Lihat Detail Semua Jurusan': 'View All Program Details',
   'Aspek': 'Aspect',
+  'Geser ke samping untuk melihat semua kolom': 'Swipe sideways to see all columns',
   'Fokus Utama': 'Main Focus',
   'Pengembangan aplikasi dan sistem': 'Application and system development',
   'Pengembangan dan produksi game': 'Game development and production',

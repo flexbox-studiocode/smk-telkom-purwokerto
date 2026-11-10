@@ -257,12 +257,12 @@ const EkstrakurikulerPage = () => {
                 {ekstrakurikulerData.stats.map((stat, index) => {
                   const Icon = STAT_ICONS[index];
                   return (
-                    <div key={stat.label} className="flex min-w-0 items-center gap-2">
-                      <span className="grid h-10 w-10 flex-none place-items-center rounded-full bg-primary text-white">
-                        <Icon className="h-5 w-5" />
+                    <div key={stat.label} className="flex min-w-0 items-center gap-1.5 sm:gap-2">
+                      <span className="grid h-8 w-8 flex-none place-items-center rounded-full bg-primary text-white sm:h-10 sm:w-10">
+                        <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
                       </span>
                       <div className="min-w-0">
-                        <p className="font-[family-name:var(--font-poppins)] text-[clamp(.625rem,.918cqw,1rem)] font-light tracking-[.05em] leading-normal text-dark-600">{t(stat.label)}</p>
+                        <p className="font-[family-name:var(--font-poppins)] text-[clamp(.625rem,.918cqw,1rem)] font-light tracking-normal sm:tracking-[.05em] leading-normal text-dark-600">{t(stat.label)}</p>
                         <p className="mt-0.5 font-[family-name:var(--font-poppins)] text-[clamp(1.125rem,1.378cqw,1.5rem)] font-semibold tracking-[.05em] leading-normal text-dark-900">{stat.value}</p>
                       </div>
                     </div>
