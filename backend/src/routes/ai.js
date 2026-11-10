@@ -2,7 +2,9 @@ import express from 'express';
 import rateLimit from 'express-rate-limit';
 import { z } from 'zod';
 import { prisma } from '../db.js';
-import { asyncHandler, badRequest } from '../utils/http.js';
+import { asyncHandler, badRequest, HttpError } from '../utils/http.js';
+import { hashToken, randomToken } from '../utils/crypto.js';
+import { prechatSchema } from '../modules/stela/prechat.mjs';
 import { hitungHasilNextTel } from '../modules/nexttel/scoring.mjs';
 import { KONTEN_SEKOLAH } from '../modules/stela/konten-sekolah.mjs';
 
@@ -105,7 +107,43 @@ async function callProvider(config, messages) {
   return text;
 }
 
-aiRouter.post('/stela', stelaLimit, asyncHandler(async (req, res) => {
+// Sesi tamu NEXA. Token acak disimpan di cookie httpOnly, hanya hash-nya yang
+// ada di database; klien tidak bisa memalsukan sesi lewat state frontend.
+const NEXA_COOKIE = 'nexa_session';
+const NEXA_SESSION_TTL_MS = 24 * 60 * 60 * 1000;
+const nexaSessionLimit = rateLimit({ windowMs: 60 * 1000, limit: Number(process.env.NEXA_SESSION_MAKS_PER_IP || 10), skipFailedRequests: true, standardHeaders: true, legacyHeaders: false });
+const cookieOpts = { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', path: '/api/ai' };
+
+async function cariSesiNexa(req) {
+  const token = req.cookies?.[NEXA_COOKIE];
+  if (typeof token !== 'string' || !token) return null;
+  const sesi = await prisma.nexaSession.findUnique({ where: { tokenHash: hashToken(token) } });
+  return sesi && sesi.expiresAt > new Date() ? sesi : null;
+}
+
+const wajibSesiNexa = asyncHandler(async (req, _res, next) => {
+  req.nexaSession = await cariSesiNexa(req);
+  if (!req.nexaSession) throw new HttpError(401, 'Isi informasi pengguna terlebih dahulu untuk memulai chat.', 'session_required');
+  next();
+});
+
+aiRouter.get('/stela/session', asyncHandler(async (req, res) => {
+  res.json({ data: { active: Boolean(await cariSesiNexa(req)) } });
+}));
+
+aiRouter.post('/stela/session', nexaSessionLimit, asyncHandler(async (req, res) => {
+  const data = prechatSchema.parse(req.body);
+  const lama = req.cookies?.[NEXA_COOKIE];
+  const token = randomToken();
+  await prisma.$transaction([
+    prisma.nexaSession.deleteMany({ where: { OR: [{ expiresAt: { lt: new Date() } }, ...(typeof lama === 'string' && lama ? [{ tokenHash: hashToken(lama) }] : [])] } }),
+    prisma.nexaSession.create({ data: { tokenHash: hashToken(token), fullName: data.nama, phone: data.telepon, age: data.usia, category: data.kategori, organization: data.organisasi, expiresAt: new Date(Date.now() + NEXA_SESSION_TTL_MS) } }),
+  ]);
+  res.cookie(NEXA_COOKIE, token, { ...cookieOpts, maxAge: NEXA_SESSION_TTL_MS });
+  res.status(201).json({ data: { active: true } });
+}));
+
+aiRouter.post('/stela', wajibSesiNexa, stelaLimit, asyncHandler(async (req, res) => {
   const { pertanyaan } = z.object({ pertanyaan: z.string().trim().min(1).max(500) }).parse(req.body);
   if (process.env.STELA_AKTIF === 'false') return res.status(503).json({ error: 'NEXA sedang nonaktif.', code: 'config' });
   const config = stelaConfig();
@@ -125,7 +163,7 @@ aiRouter.post('/stela', stelaLimit, asyncHandler(async (req, res) => {
     .map((m) => ({ role: m.role, content: m.content.slice(0, 2000) }));
 
   try {
-    const reply = await callProvider(config, buildPrompt(history));
+    const reply = await callProvider(config, buildPrompt(history, req.nexaSession));
     res.json({ reply, sumber: 'provider' });
   } catch (error) {
     const timeout = error?.name === 'TimeoutError' || /timeout/i.test(error?.message || '');
