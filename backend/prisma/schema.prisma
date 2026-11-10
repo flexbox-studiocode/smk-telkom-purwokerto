@@ -49,6 +49,10 @@ enum AiFeature {
   stela
   nexttel
 }
+enum NexaCategory {
+  sekolah
+  instansi
+}
 enum AuthTokenPurpose {
   verify_email
   password_reset
@@ -276,4 +280,18 @@ model SiteVisitor {
   createdAt   DateTime @default(now()) @map("created_at")
   @@id([visitorHash, day])
   @@map("site_visitors")
+}
+
+model NexaSession {
+  id           String       @id @default(uuid()) @db.Char(36)
+  tokenHash    String       @unique @map("token_hash") @db.Char(64)
+  fullName     String       @map("full_name") @db.VarChar(100)
+  phone        String       @db.VarChar(20)
+  age          Int          @db.UnsignedTinyInt
+  category     NexaCategory
+  organization String?      @db.VarChar(100)
+  expiresAt    DateTime     @map("expires_at")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  @@index([expiresAt])
+  @@map("nexa_sessions")
 }

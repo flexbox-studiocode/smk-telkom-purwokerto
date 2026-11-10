@@ -24,6 +24,7 @@ export const KATEGORI_GALAT = {
   RATE_LIMIT: 'rate-limit', // Rate limit/quota exceeded
   TRANSIENT: 'transient',    // Backpressure, timeout, network issues
   CONFIG: 'config',      // Configuration issues
+  SESSION: 'session',    // Sesi pra-chat belum ada / sudah berakhir
   UNKNOWN: 'unknown',    // Generic failure
 };
 
@@ -73,6 +74,19 @@ export const kategorikanGalat = (pesan) => {
   return KATEGORI_GALAT.TRANSIENT;
 };
 
+// Sesi pra-chat: identitas disimpan server di balik cookie httpOnly. Klien hanya
+// tahu aktif atau tidak; tidak ada data pribadi yang disimpan di storage browser.
+export const cekSesiNexa = async ({ signal } = {}) => {
+  const data = await apiRequest('/api/ai/stela/session', { signal });
+  return data?.data?.active === true;
+};
+
+export const mulaiSesiNexa = ({ nama, telepon, usia, kategori, organisasi }, { signal } = {}) => apiRequest('/api/ai/stela/session', {
+  method: 'POST',
+  signal,
+  body: { nama: nama.trim(), telepon, usia: Number(usia), kategori, ...(organisasi?.trim() ? { organisasi: organisasi.trim() } : {}) },
+});
+
 export const tanyaStela = async (pesan, { signal, language = 'id' } = {}) => {
   if (!stelaSiap) throw new Error(PESAN_STELA_BELUM_SIAP);
 
@@ -101,7 +115,8 @@ export const tanyaStela = async (pesan, { signal, language = 'id' } = {}) => {
     if (error?.name === 'AbortError') throw error;
     if (error?.category) throw error;
     const mapped = new Error(error?.message || PESAN_STELA_GAGAL, { cause: error });
-    if (error?.code === 'quota_exhausted') mapped.category = KATEGORI_GALAT.RATE_LIMIT;
+    if (error?.code === 'session_required') mapped.category = KATEGORI_GALAT.SESSION;
+    else if (error?.code === 'quota_exhausted') mapped.category = KATEGORI_GALAT.RATE_LIMIT;
     else if (error?.code === 'provider_timeout') mapped.category = KATEGORI_GALAT.TRANSIENT;
     else if (error?.code === 'config') mapped.category = KATEGORI_GALAT.CONFIG;
     else if (error?.code === 'provider_failed') mapped.category = KATEGORI_GALAT.TRANSIENT;

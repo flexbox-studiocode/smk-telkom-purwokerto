@@ -30,6 +30,7 @@
     "spmb:flag": "node scripts/uji-spmb-feature-flag.mjs",
     "spmb:qol": "node scripts/uji-spmb-qol.mjs",
     "spmb:qa": "node scripts/uji-spmb-ui-server.mjs",
+    "nexa:prechat": "node scripts/uji-nexa-prechat.mjs",
     "nexttel:bilingual": "node scripts/uji-nexttel-bilingual.mjs",
     "nexttel:game": "node scripts/uji-nexttel-game.mjs",
     "security:uji": "node scripts/uji-kredensial.mjs && node scripts/uji-stela.mjs && node scripts/uji-stela-output.mjs && node scripts/uji-nexttel-handler.mjs && node scripts/uji-nexttel-dev.mjs && node scripts/uji-nexttel-score.mjs && node scripts/uji-nexttel-bilingual.mjs && node scripts/uji-nexttel-game.mjs && node scripts/uji-ai-budget.mjs && node scripts/uji-ppdb-contract.mjs && node scripts/uji-admin-settings.mjs",

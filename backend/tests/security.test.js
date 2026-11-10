@@ -26,6 +26,9 @@ async function request(path, options = {}) {
   return { status: res.status, body };
 }
 
+// /api/ai/stela mewajibkan sesi pra-chat; tes ini hanya memeriksa perilaku sesudah gerbang itu.
+const mulaiSesiNexa = () => request('/api/ai/stela/session', { method: 'POST', body: JSON.stringify({ nama: 'Tes Security', telepon: '081234567890', usia: 17, kategori: 'sekolah' }) });
+
 before(async () => {
   server = app.listen(0);
   await new Promise((r) => server.once('listening', r));
@@ -85,6 +88,7 @@ test('STELA returns honest 503 when no provider key is configured', async () => 
   delete process.env.GEMINI_API_KEY;
   delete process.env.NINEROUTER_KEY;
   try {
+    assert.equal((await mulaiSesiNexa()).status, 201);
     const res = await request('/api/ai/stela', { method: 'POST', body: JSON.stringify({ pertanyaan: 'Apa jurusan di sekolah ini?' }) });
     assert.equal(res.status, 503);
     assert.equal(res.body.code, 'config');
@@ -100,6 +104,7 @@ test('STELA never leaks a fabricated fallback answer', async () => {
   const saved = process.env.STELA_AKTIF;
   process.env.STELA_AKTIF = 'true';
   try {
+    assert.equal((await mulaiSesiNexa()).status, 201);
     const res = await request('/api/ai/stela', { method: 'POST', body: JSON.stringify({ pertanyaan: 'Siapa kepala sekolah?' }) });
     assert.equal(res.status, 503);
     assert.equal(res.body.reply, undefined);
