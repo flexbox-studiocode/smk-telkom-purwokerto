@@ -1,7 +1,8 @@
 # Checklist Deployment cPanel — SMK Telkom Purwokerto
 
 Checklist yang dapat dicentang oleh developer maupun administrator hosting.
-Acuan detail: `docs/CPANEL_DEPLOYMENT_GUIDE.md`. Error: `docs/CPANEL_TROUBLESHOOTING.md`.
+Acuan detail: [`./CPANEL_DEPLOYMENT_GUIDE.md`](./CPANEL_DEPLOYMENT_GUIDE.md). Error: [`./CPANEL_TROUBLESHOOTING.md`](./CPANEL_TROUBLESHOOTING.md).
+Halaman awal: [`./README.md`](./README.md).
 
 > Tandai `[x]` hanya setelah **benar-benar diverifikasi**. Langkah berlabel
 > **[KONFIRMASI PROVIDER]** bergantung pada fitur hosting.
@@ -10,7 +11,7 @@ Acuan detail: `docs/CPANEL_DEPLOYMENT_GUIDE.md`. Error: `docs/CPANEL_TROUBLESHOO
 
 ## A. Sebelum Deployment
 
-- [ ] Sudah membaca `docs/CPANEL_DEPLOYMENT_GUIDE.md`.
+- [ ] Sudah membaca [`./CPANEL_DEPLOYMENT_GUIDE.md`](./CPANEL_DEPLOYMENT_GUIDE.md).
 - [ ] Source code di branch `main` commit yang disepakati sudah dikunci (tag/commit hash).
 - [ ] Struktur dipahami: `frontend/` (static) dan `backend/` (Node app) **terpisah**.
 - [ ] Backup database development/lokal dibuat.
@@ -53,6 +54,12 @@ Acuan detail: `docs/CPANEL_DEPLOYMENT_GUIDE.md`. Error: `docs/CPANEL_TROUBLESHOO
 - [ ] Password user DB kuat dan URL-encoded bila perlu.
 - [ ] **[KONFIRMASI PROVIDER]** shared hosting mengizinkan DDL (CREATE/ALTER/DROP) untuk migrasi.
 - [ ] Backup sebelum migrasi dibuat.
+- [ ] File SQL schema-only diperoleh **terpisah dari developer** (bukan dari GitHub).
+- [ ] Database tujuan **kosong** (belum berisi tabel aplikasi).
+- [ ] (Strategi B) SQL diimpor lewat **phpMyAdmin** → verifikasi **15 tabel aplikasi**.
+- [ ] (Strategi B) Developer/provider menjalankan 4 kali `prisma migrate resolve --applied` (baseline resmi).
+- [ ] (Strategi B) `npm run db:status` menyatakan schema **up to date** (bukan pending).
+- [ ] `_prisma_migrations` **tidak** dibuat/diisi manual; total **16 tabel** setelah baseline.
 
 ---
 
@@ -61,11 +68,14 @@ Acuan detail: `docs/CPANEL_DEPLOYMENT_GUIDE.md`. Error: `docs/CPANEL_TROUBLESHOO
 - [ ] `VITE_API_BASE_URL` diset ke URL backend (https, non-localhost).
 - [ ] `VITE_SITE_URL` diset (opsional).
 - [ ] `npm ci` sukses di `frontend/`.
-- [ ] Build dijalankan dengan **`npm run build`** (bukan `build:ci`).
+- [ ] Build dijalankan dari folder **`frontend/`** dengan **`npm run build`** (bukan `build:ci`).
+- [ ] `VITE_API_BASE_URL` dan `VITE_SITE_URL` disesuaikan **sebelum** build.
 - [ ] Build dijalankan di lingkungan yang **dapat menjangkau backend** (mode strict), atau
-      `PRERENDER_MODE=resilient` diset secara sadar.
+      `PRERENDER_MODE=resilient` diset secara sadar (pahami konsekuensi `noindex`).
 - [ ] `frontend/dist/` berisi `index.html`, `<route>/index.html`, `app.html`, `assets/`, `sitemap.xml`, `robots.txt`.
-- [ ] `dist/` diunggah/di-ekstrak ke document root frontend.
+- [ ] **ZIP build** dikemas dari **isi** folder `dist` (bukan folder `frontend/`, bukan subfolder `dist/`).
+- [ ] `.env` **tidak** ikut diunggah dan file build **tidak** di-commit ke Git.
+- [ ] **ZIP build** diunggah/di-ekstrak ke document root frontend (`index.html` di level document root).
 - [ ] `.htaccess` SPA fallback dipasang (fallback ke `app.html`, tidak menangkap `/api`, `/uploads`, `/health`).
 - [ ] `Options -Indexes` diaktifkan.
 - [ ] Cache-Control aset ber-hash diset.
@@ -189,6 +199,8 @@ Acuan detail: `docs/CPANEL_DEPLOYMENT_GUIDE.md`. Error: `docs/CPANEL_TROUBLESHOO
 ## K. Serah Terima
 
 - [ ] Semua kredensial diserahkan via kanal aman (bukan email/chat biasa).
+- [ ] File SQL diserahkan developer secara **terpisah** (bukan tautan GitHub).
+- [ ] File build (ZIP berisi isi `frontend/dist/`) diserahkan **terpisah** dan tidak di-commit.
 - [ ] Akses admin dibuat dan diuji.
 - [ ] Dokumen ini dan `CPANEL_DEPLOYMENT_GUIDE.md` disimpan bersama tim.
 - [ ] Monitoring `/health` disiapkan.

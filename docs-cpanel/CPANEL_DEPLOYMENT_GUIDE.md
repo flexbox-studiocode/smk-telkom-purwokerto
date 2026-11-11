@@ -17,7 +17,11 @@ Dokumen terkait (semuanya di folder `docs-cpanel/`):
 - [`./CPANEL_DEPLOYMENT_CHECKLIST.md`](./CPANEL_DEPLOYMENT_CHECKLIST.md) — checklist yang dapat dicentang.
 - [`./CPANEL_TROUBLESHOOTING.md`](./CPANEL_TROUBLESHOOTING.md) — referensi error dan solusi.
 - [`./sql/README.md`](./sql/README.md) — cara impor SQL & melanjutkan Prisma migration.
-- [`./sql/smk_telkom_purwokerto_schema.sql`](./sql/smk_telkom_purwokerto_schema.sql) — file SQL schema-only.
+
+> **File SQL tidak ada di GitHub.** Atas permintaan guru pembimbing, file SQL
+> schema-only **dikirim terpisah oleh developer** (mis. lewat WhatsApp), bukan lewat
+> tautan repository. File `*.sql` di `docs-cpanel/sql/` **diabaikan Git**; yang tersisa
+> di repo hanya panduan impornya ([`./sql/README.md`](./sql/README.md)).
 
 ---
 
@@ -76,10 +80,12 @@ Source code aktual dipakai sebagai acuan. Ketidaksesuaian yang perlu dicatat:
    perintah `prisma migrate …`/`prisma generate` **berubah/tidak kompatibel** (mis.
    `prisma migrate status` → `prisma migration status`). Untuk proyek yang masih memakai
    migrasi format Prisma 7 ini, **pin CLI ke `prisma@7.10.1`** sebelum deployment, dan
-   pastikan `npx prisma -v` menampilkan `7.10.1`. Lihat §11.1 dan Troubleshooting §22.
-   > **Temuan audit:** working tree saat dokumen ini dibuat memiliki perubahan lokal
-   > (belum di-commit) yang menaikkan `prisma` ke `^8.0.0-rc.33`. Perubahan itu
-   > membuat skrip migrasi gagal. Jangan commit sebelum dipastikan.
+   pastikan `npx prisma -v` menampilkan `7.10.1`. Lihat §11.1 dan Troubleshooting §7.
+   > **Status repo saat ini:** `backend/package.json` dan `backend/package-lock.json`
+   > sudah kembali memakai `prisma: 7.10.1` (selaras dengan `@prisma/client` dan
+   > `@prisma/adapter-mariadb` `^7.10.1`). Bila suatu saat working tree menaikkan
+   > `prisma` ke `^8.0.0-rc.*`, **jangan commit** perubahan itu; pulihkan ke `7.10.1`
+   > lalu `npm ci`.
 
 > Catatan: folder `supabase/` dan referensi README lama tetap ada di repository sebagai
 > artefak ETL/legacy. Dokumen cPanel ini mengabaikannya kecuali untuk backup Storage.
@@ -231,7 +237,7 @@ kompilasi). `npm ci` di server **mungkin gagal** jika:
 - tidak ada outbound ke host prebuilt binary.
 
 WAJIB DIKONFIRMASI KE PROVIDER HOSTING: toolchain build tersedia dan outbound HTTPS
-aman. Lihat juga `docs/CPANEL_TROUBLESHOOTING.md` (kasus "Cannot find module"/"gyp").
+aman. Lihat juga [`./CPANEL_TROUBLESHOOTING.md`](./CPANEL_TROUBLESHOOTING.md) (kasus "Cannot find module"/"gyp").
 
 ### 4.2 Persyaratan MySQL
 
@@ -355,9 +361,10 @@ DATABASE_URL=mysql://smktelkom_app:PASSWORD_KUAT@127.0.0.1:3306/smktelkom_smk
 `ai_daily_attempts`, `site_visitors`.
 
 Prisma membuat satu tabel internal tambahan, **`_prisma_migrations`**. Jadi jumlah
-akhirnya **16 tabel** setelah migration history dicatat. File
-[`./sql/smk_telkom_purwokerto_schema.sql`](./sql/smk_telkom_purwokerto_schema.sql)
-membuat 15 tabel aplikasi; Prisma membuat tabel ke-16 secara resmi saat baseline.
+akhirnya **16 tabel** setelah migration history dicatat. File SQL yang **dikirim
+developer secara terpisah** (bukan dari GitHub) membuat 15 tabel aplikasi; Prisma
+membuat tabel ke-16 secara resmi saat baseline. Detail isi file SQL:
+[`./sql/README.md`](./sql/README.md).
 
 ### 6.4 Pilih satu strategi inisialisasi database
 
@@ -377,6 +384,28 @@ Panduan GUI, SQL, dan baseline lengkap: [`./sql/README.md`](./sql/README.md).
 
 Frontend adalah **build statis**. Build dilakukan di mesin dengan Node 22 +
 devDependencies (lokal/CI), lalu hasilnya diunggah ke cPanel.
+
+### Serah terima build — WAJIB dibaca sebelum menyerahkan file
+
+- **Build dilakukan dari folder `frontend/`**, bukan dari root repository:
+  ```bash
+  cd frontend
+  npm ci
+  npm run build
+  ```
+- **Perintah produksi adalah `npm run build`.** Jangan memakai `npm run build:ci`
+  (lihat §7.4 — outputnya sengaja tidak terindeks dan berisi feed kosong).
+- **Output berada di `frontend/dist/`.**
+- Output **dapat dikompres menjadi ZIP** untuk diserahkan/diunggah.
+- **Isi ZIP yang diunggah adalah isi folder `dist`** (`index.html`, `app.html`,
+  `assets/`, dst.), **bukan folder source `frontend/`** dan **bukan folder `dist`
+  sebagai subfolder**. Jadi di dalam ZIP, `index.html` berada di level paling atas.
+- **`VITE_API_BASE_URL` dan `VITE_SITE_URL` harus disesuaikan sebelum build**, karena
+  Vite menanam nilainya saat build (§7.3).
+- **Jangan mengunggah `.env`.** File itu hanya untuk mesin build dan tidak boleh ikut
+  ke server.
+- **File build dibagikan terpisah** (mis. lewat WhatsApp/file transfer) dan
+  **tidak di-commit ke Git** (`dist/` sudah diabaikan).
 
 ### 7.1 Prasyarat build
 
@@ -412,6 +441,11 @@ Aturan dari `frontend/scripts/validate-deployment-env.mjs` (berjalan pada `npm r
 - Untuk build produksi, `VITE_API_BASE_URL` **wajib** dan **tidak boleh** localhost.
 - `VITE_SITE_URL` (bila diisi) harus URL http(s) absolut.
 
+Keduanya **harus sudah disesuaikan sebelum menjalankan `npm run build`** — setelah build,
+nilainya tertanam dan tidak dapat diubah tanpa build ulang. **Jangan mengunggah file
+`.env`** ke server; `.env` hanya dipakai di mesin build dan sudah diabaikan Git
+(root `.gitignore` dan `frontend/.gitignore`).
+
 ### 7.4 Perbedaan perintah build
 
 | Perintah | Isi (`frontend/package.json`) | Kegunaan |
@@ -434,21 +468,48 @@ terindeks mesin pencari dan berisi feed kosong.
   halaman akun/admin (lihat `frontend/vercel.json` yang me-rewrite `/(.*)` → `/app.html`).
 - `dist/assets/*`, `dist/sitemap.xml`, `dist/robots.txt`, `dist/seo-routes.json`, `dist/og-school.jpg`.
 
-### 7.6 Mode prerender
+### 7.6 Mode prerender: strict vs resilient (dan konsekuensinya)
 
-- `strict` (default) — untuk build di lingkungan yang backend-nya terjangkau
-  (lokal/CI/VPS). Abort bila feed publik gagal → tidak ada halaman rusak.
-- `resilient` — `PRERENDER_MODE=resilient` saat build. Bila data publik tak
-  terjangkau, rute dinamis ditandai `noindex` dan browser mengambil data runtime.
+Mode diatur lewat `PRERENDER_MODE` (`frontend/scripts/prerender-seo.mjs`).
 
-Di cPanel, karena backend dan frontend berbeda host, cara paling aman: **build di
-lokal/CI dengan backend dapat dijangkau**, lalu unggah `dist/`. Bila itu tak
-memungkinkan, set `PRERENDER_MODE=resilient`.
+**`strict` (default) — untuk build produksi di mesin yang backend-nya terjangkau.**
 
-### 7.7 Unggah ke document root
+- Bila data publik (berita, pengumuman, prestasi, BKK, SPMB, events) **tidak** dapat
+  diambil saat build, proses **abort** dan build **gagal**.
+- Konsekuensi baik: tidak akan pernah ter-deploy halaman yang hanya berisi data kosong
+  atau "loading-only"; feed SEO terisi lengkap.
+- Konsekuensi buruk: build **wajib** dilakukan ketika API backend dapat dijangkau.
+  Jika tidak, build tidak menghasilkan output sama sekali.
 
-Opsi 1 — File Manager cPanel: kompres `dist/` → unggah → Extract ke document root
-domain/subdomain frontend (mis. `public_html` atau `public_html/flexbox`).
+**`resilient` — untuk build di lingkungan yang backend-nya mungkin tak terjangkau
+(mis. sandbox CI/Vercel).** Aktifkan dengan `PRERENDER_MODE=resilient npm run build`.
+
+- Bila sumber data publik tak terjangkau, build tetap **selesai**, tetapi: rute dinamis
+  di-prerender **tanpa entri detail**, halaman ditandai **`noindex`**, dan browser
+  mengambil data saat runtime.
+- Konsekuensi baik: SPA tetap berfungsi walau backend mati saat build.
+- Konsekuensi buruk: halaman yang di-prerender **tidak terindeks mesin pencari** dan
+  HTML awal kosong; SEO halaman dinamis hilang sampai build ulang dalam mode `strict`.
+- Mode ini **tidak pernah mengarang data**: sumber yang tak terjangkau menghasilkan
+  daftar kosong, bukan data palsu.
+
+Ringkas: **pakai `strict` bila memungkinkan** (build di lokal/CI dengan backend dapat
+dijangkau). Pakai `resilient` **secara sadar** hanya bila `strict` memang tidak mungkin,
+dan lakukan build ulang `strict` setelah backend tersedia. Di cPanel, cara paling aman:
+**build di lokal/CI dengan backend terjangkau**, lalu unggah `dist/`.
+
+### 7.7 Serah terima & unggah ke document root
+
+**Mengemas ZIP (developer):** masuk ke dalam `frontend/dist/`, lalu kompres **isi**
+folder itu (bukan folder `frontend/`, bukan folder `dist/` sebagai subfolder). Hasil
+ZIP harus langsung berisi `index.html`, `app.html`, `assets/`, `sitemap.xml`, dst. di
+level paling atas. Jangan sertakan `.env`, `node_modules`, atau folder source.
+
+**Mengunggah (administrator hosting):**
+
+Opsi 1 — File Manager cPanel: unggah ZIP tadi → **Extract** ke document root
+domain/subdomain frontend (mis. `public_html` atau `public_html/flexbox`). Pastikan
+`index.html` berada tepat di document root, bukan di dalam subfolder tambahan.
 
 Opsi 2 — SSH/rsync (bila ada): skrip `deploy-remote.sh` di root repo adalah contoh
 nyata (docroot `/home/smktelkom/public_html/flexbox`), **jangan** menyalin `.htaccess`
@@ -645,6 +706,18 @@ Harus mengembalikan (dari `backend/src/app.js:53`):
 `database: "down"` + HTTP 503 → masalah koneksi MySQL.
 
 ### 8.13 Kondisi tanpa Terminal/SSH
+
+Guru pembimbing **belum memiliki akses Terminal**. Dokumentasi ini jujur soal batas
+tersebut: sebagian pekerjaan dapat diselesaikan lewat GUI cPanel, sebagian lagi **tidak
+mungkin** tanpa Terminal, **Run JS Script / Run NPM Install** pada Node.js Application
+Manager, atau **bantuan provider hosting**.
+
+- **SQL import dapat dilakukan lewat phpMyAdmin (GUI).** Tidak perlu Terminal.
+- **Upload frontend dapat dilakukan lewat File Manager (GUI).** Tidak perlu Terminal.
+- **Environment variable dapat diisi lewat Node.js Application Manager** bila panel
+  menyediakannya.
+- **phpMyAdmin TIDAK dapat menjalankan npm atau Prisma.** Tidak ada tombol npm/Prisma
+  di phpMyAdmin.
 
 | Proses | Bisa via GUI? | Kebutuhan lain |
 |---|---|---|
@@ -898,10 +971,10 @@ Ini metode utama karena migration SQL dan riwayatnya dijalankan oleh Prisma send
 
 ### 11.4 Strategi B — SQL phpMyAdmin lalu Prisma baseline (bila tanpa Terminal saat import)
 
-Gunakan hanya bila tabel perlu dibuat melalui GUI terlebih dahulu. Impor SQL
-[`./sql/smk_telkom_purwokerto_schema.sql`](./sql/smk_telkom_purwokerto_schema.sql)
-ke **database baru dan kosong**, lalu minta developer/provider menjalankan empat
-perintah baseline resmi dari Application Root `backend/`:
+Gunakan hanya bila tabel perlu dibuat melalui GUI terlebih dahulu. Minta **file SQL
+schema-only dari developer** (dikirim terpisah, bukan dari GitHub), lalu impor ke
+**database baru dan kosong** melalui phpMyAdmin. Setelah itu minta developer/provider
+menjalankan empat perintah baseline resmi dari Application Root `backend/`:
 
 ```bash
 npm run prisma:generate
@@ -1207,14 +1280,14 @@ gunakan backup manual terjadwal (§13.4). Jangan menjanjikan backup otomatis.
 
 ## 19. Troubleshooting
 
-Lihat `docs/CPANEL_TROUBLESHOOTING.md` untuk tabel lengkap gejala → penyebab →
+Lihat [`./CPANEL_TROUBLESHOOTING.md`](./CPANEL_TROUBLESHOOTING.md) untuk tabel lengkap gejala → penyebab →
 diagnosis → solusi.
 
 ---
 
 ## 20. Checklist Akhir
 
-Lihat `docs/CPANEL_DEPLOYMENT_CHECKLIST.md`.
+Lihat [`./CPANEL_DEPLOYMENT_CHECKLIST.md`](./CPANEL_DEPLOYMENT_CHECKLIST.md).
 
 ---
 

@@ -4,7 +4,7 @@ Referensi error yang sering muncul saat men-deploy aplikasi ke cPanel, spesifik
 untuk source code repository ini. Setiap kasus berisi: **gejala**, **kemungkinan
 penyebab**, **cara diagnosis**, **perintah pemeriksaan**, dan **solusi aman**.
 
-Acuan: `docs/CPANEL_DEPLOYMENT_GUIDE.md`. Checklist: `docs/CPANEL_DEPLOYMENT_CHECKLIST.md`.
+Acuan: [`./CPANEL_DEPLOYMENT_GUIDE.md`](./CPANEL_DEPLOYMENT_GUIDE.md). Checklist: [`./CPANEL_DEPLOYMENT_CHECKLIST.md`](./CPANEL_DEPLOYMENT_CHECKLIST.md).
 
 > Catatan umum: banyak kasus cPanel bergantung pada fitur provider.
 > Langkah yang butuh konfirmasi provider ditandai **[KONFIRMASI PROVIDER]**.
@@ -36,6 +36,7 @@ Acuan: `docs/CPANEL_DEPLOYMENT_GUIDE.md`. Checklist: `docs/CPANEL_DEPLOYMENT_CHE
 | 19 | Cron job tidak berjalan |
 | 20 | SSL error |
 | 21 | Outbound connection tidak tersedia |
+| 22 | Terminal/SSH tidak tersedia (baseline & npm tidak bisa dari phpMyAdmin) |
 
 ---
 
@@ -589,6 +590,36 @@ cd <app-root> && node -e "fetch('https://challenges.cloudflare.com').then(r=>con
 - Bila tidak diizinkan: nonaktifkan fitur yang bergantung outbound (mis. jalankan
   `db:backup --no-upload` dengan prosedur backup alternatif) dan dokumentasikan
   keterbatasannya. Jangan mengklaim fitur berfungsi bila outbound tidak tersedia.
+
+---
+
+## 22. Terminal/SSH tidak tersedia (baseline & npm tidak bisa dari phpMyAdmin)
+
+**Gejala:** guru/administrator hosting tidak punya akses Terminal; muncul kebutuhan
+`npm ci`, `prisma generate`, baseline `prisma migrate resolve --applied`, atau
+`npm run db:status`, tetapi tidak tahu cara menjalankannya.
+
+**Kemungkinan penyebab:**
+- Paket hosting tidak menyediakan Terminal/SSH.
+- phpMyAdmin **tidak** dapat menjalankan npm atau Prisma (tidak ada tombolnya).
+- Node.js Application Manager tidak menyediakan **Run JS Script / Run NPM Install**.
+
+**Cara diagnosis:** cek menu cPanel (Terminal, Setup Node.js App) dan tanyakan ke
+provider **[KONFIRMASI PROVIDER]**.
+
+**Solusi aman:**
+- **Bisa lewat GUI:** SQL import (phpMyAdmin), upload frontend (File Manager), isi
+  environment (Node.js Application Manager bila tersedia).
+- **Tidak bisa lewat phpMyAdmin:** `npm ci`, `prisma generate`, baseline
+  `prisma migrate resolve --applied`, `npm run db:status`, `npm run db:seed`.
+  Jalankan lewat Terminal/SSH, fitur **Run JS Script / Run NPM Install** panel,
+  atau **minta bantuan provider** menjalankan daftar perintah pada
+  [Panduan Deployment](CPANEL_DEPLOYMENT_GUIDE.md) bagian §11.3/§11.4,
+  beserta Application Root dan nama database.
+- **Jangan** memakai workaround tidak aman: jangan mengunggah `node_modules` dari
+  Windows/macOS ke server Linux (modul native `argon2`/`bcrypt` bisa tidak kompatibel),
+  jangan mengisi `_prisma_migrations` manual, jangan menjalankan `prisma db push`
+  sebagai pengganti migration.
 
 ---
 
