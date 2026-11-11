@@ -1,5 +1,6 @@
 /* Shared public hero dimensions; selectors do not affect article or app layouts. */
 .school-hero {
+  --hero-mobile-fade: linear-gradient(to bottom, white, rgb(255 255 255 / .85) 3%, rgb(255 255 255 / .4) 9%, transparent 18%);
   --hero-height: 29rem;
   --hero-overlap: 2.5rem;
   --hero-radius: 2rem;
@@ -9,6 +10,15 @@
   --hero-clearance: 1.5rem;
   padding-top: 1rem;
   padding-bottom: 1.5rem;
+}
+@media (max-width: 63.999rem) {
+  .school-hero .hero-background::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--hero-mobile-fade);
+    pointer-events: none;
+  }
 }
 .hero-container { container-type: inline-size; width: 100%; max-width: 80rem; margin-inline: auto; padding-inline: 1rem; }
 .hero-panel { position: relative; aspect-ratio: auto; border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent); border-radius: var(--hero-radius); background: white; padding: .75rem; }

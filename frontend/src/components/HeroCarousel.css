@@ -35,8 +35,23 @@
 .hero-carousel .hero-panel--news { --hero-artwork-mask: url('../assets/banners/berita-mask.svg'); }
 .hero-carousel .hero-panel--achievements { --hero-artwork-mask: url('../assets/banners/prestasi-mask.svg'); }
 @media (max-width: 63.999rem) {
-  /* The school artwork is bottom-contained inside a taller media box. Fade its visible edge, not the empty band. */
-  .hero-carousel .hero-panel--school .hero-media { mask-image: linear-gradient(to bottom, transparent 16%, rgb(0 0 0 / .5) 20%, black 25%); }
+  /* Anchor the fade to the contained artwork, including any empty band above it. */
+  .hero-carousel .hero-panel--school { --hero-media-ratio: 1600 / 751; }
+  .hero-carousel .hero-panel--school:has(.hero-carousel-profile-en) { --hero-media-ratio: 1277 / 652; }
+  .hero-carousel .hero-panel--admissions { --hero-edge-fade: linear-gradient(to bottom, transparent, rgb(0 0 0 / .15) 3%, rgb(0 0 0 / .6) 9%, black 18%); }
+  .hero-carousel .hero-media::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    aspect-ratio: var(--hero-media-ratio);
+    max-height: 100%;
+    background: var(--hero-mobile-fade);
+    pointer-events: none;
+  }
+  /* These artworks already have a soft top edge in their SVG masks. */
+  .hero-carousel :is(.hero-panel--news, .hero-panel--careers, .hero-panel--achievements) .hero-media::after { content: none; }
 }
 .hero-carousel .hero-grid > .hero-image {
   mask-image: var(--hero-artwork-mask, linear-gradient(black, black)), var(--hero-edge-fade);
