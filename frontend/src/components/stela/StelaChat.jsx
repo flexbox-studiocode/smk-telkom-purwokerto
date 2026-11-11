@@ -62,7 +62,9 @@ const IsiPesan = ({ teks }) =>
     return COCOK_PATH.test(bagian) ? <TautanPath key={i} path={bagian} /> : bagian;
   });
 
-const StelaChat = ({ className = '', tampilkanSaran = true, focusInput = false }) => {
+// kelasPraChat: kelas wadah saat form pra-chat tampil. Form memakai tinggi sesuai isi
+// (dibatasi max-h) sehingga tidak terpotong; bila kosong, memakai className seperti chat.
+const StelaChat = ({ className = '', kelasPraChat, tampilkanSaran = true, focusInput = false }) => {
   const { t, language } = useLanguage();
   const [riwayat, setRiwayat] = useState([{ role: 'assistant', content: stelaData.sapaan }]);
   const [masukan, setMasukan] = useState('');
@@ -179,7 +181,7 @@ const StelaChat = ({ className = '', tampilkanSaran = true, focusInput = false }
 
   if (sesi !== 'siap') {
     return (
-      <div className={`flex min-w-0 max-w-full flex-col overflow-hidden rounded-2xl border border-dark-100 bg-white ${className}`}>
+      <div className={`flex min-w-0 max-w-full flex-col overflow-hidden rounded-2xl border border-dark-100 bg-white ${sesi === 'perlu' && kelasPraChat !== undefined ? kelasPraChat : className}`}>
         {sesi === 'memeriksa' ? (
           <div role="status" className="flex min-h-0 flex-1 items-center justify-center px-4 py-8 text-xs text-dark-600">{t('Memeriksa sesi...')}</div>
         ) : (
