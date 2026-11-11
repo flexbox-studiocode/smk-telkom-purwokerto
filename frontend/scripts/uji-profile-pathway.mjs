@@ -14,7 +14,7 @@ await page.route('**/api/**', route => route.fulfill({ contentType: 'application
 try {
   await page.goto(`${process.env.QA_URL || 'http://localhost:5173'}/profil-sekolah`);
   const section = page.locator('#stematel-next-pathway');
-  for (const width of [320, 360, 375, 390, 412, 430, 640, 767, 768, 820, 1024, 1440, 1920]) {
+  for (const width of (process.env.QA_WIDTHS || '320,360,375,390,412,430,640,767,768,820,1024,1440,1920').split(',').map(Number)) {
     await page.setViewportSize({ width, height: 1000 });
     for (const language of ['id', 'en']) {
       if (await page.locator('html').getAttribute('lang') !== language) await page.getByRole('button', { name: /^Switch to / }).first().click();
@@ -27,8 +27,18 @@ try {
           return { x, y, width, height, right, bottom };
         };
         const separate = (a, b, gap = 0) => a.right + gap <= b.x + 1 || b.right + gap <= a.x + 1 || a.bottom + gap <= b.y + 1 || b.bottom + gap <= a.y + 1;
+        const mobile = window.innerWidth < 768;
+        const title = section.querySelector('h2');
+        const heading = rect(title);
+        const motif = rect(section.querySelector('.profile-pathway-motif'));
+        const titleRange = document.createRange();
+        titleRange.selectNodeContents(title);
+        const titleLines = [...titleRange.getClientRects()];
         return {
           overflow: document.documentElement.scrollWidth > window.innerWidth,
+          headerClear: !mobile || (motif.right + 12 <= heading.x + 1 && motif.x >= 0 && heading.right <= window.innerWidth
+            && Math.abs(motif.y + motif.height / 2 - heading.y - heading.height / 2) < 2
+            && titleLines.every(line => Math.abs(line.y - titleLines[0].y) < 1)),
           cards: [...section.querySelectorAll('article')].map(card => {
             const box = rect(card);
             const photo = rect(card.querySelector('.profile-pathway-student'));
@@ -44,14 +54,16 @@ try {
               contained: elements.every(r => r.x >= box.x - 1 && r.right <= box.right + 1 && r.y >= box.y - 1 && r.bottom <= box.bottom + 1),
               readable: [...card.querySelectorAll('h3, p')].every(el => el.scrollWidth <= el.clientWidth),
               badgeSingleLine: range.getClientRects().length === 1,
+              composition: !mobile || (photo.y >= badge.bottom + 16 - 1 && photo.x >= box.x + 24 - 1
+                && photo.right <= box.right - 24 + 1 && text.y >= photo.bottom + 20 - 1),
               clear: separate(photo, badge, 12) && separate(photo, text, 16) && separate(icon, badge, 16) && separate(icon, text, 16) && separate(icon, photo, 12) && separate(rays, badge, 8) && separate(rays, text, 8),
             };
           }),
         };
       });
-      await section.screenshot({ path: `${output}/pathway-${width}-${language}.png`, style: 'header,nav,.fixed.bottom-4 {visibility:hidden}' });
+      await section.screenshot({ path: `${output}/pathway-${width}-${language}.png`, style: 'header,nav,.fixed.bottom-4 {opacity:0!important}' });
       results.push({ width, language, ...geometry });
-      if (geometry.overflow || geometry.cards.length !== 3 || geometry.cards.some(c => !c.contained || !c.readable || !c.badgeSingleLine || !c.clear)) failures.push(`${width}/${language}: ${geometry.cards.map(c => `${c.title} contained=${c.contained} clear=${c.clear} singleLine=${c.badgeSingleLine}`).join('; ')} overflow=${geometry.overflow}`);
+      if (geometry.overflow || !geometry.headerClear || geometry.cards.length !== 3 || geometry.cards.some(c => !c.contained || !c.readable || !c.badgeSingleLine || !c.clear || !c.composition)) failures.push(`${width}/${language}: headerClear=${geometry.headerClear}; ${geometry.cards.map(c => `${c.title} contained=${c.contained} clear=${c.clear} composition=${c.composition} singleLine=${c.badgeSingleLine}`).join('; ')} overflow=${geometry.overflow}`);
     }
   }
   await writeFile(`${output}/results.json`, JSON.stringify({ results, failures }, null, 2));

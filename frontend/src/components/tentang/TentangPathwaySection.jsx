@@ -14,11 +14,13 @@ export default function TentangPathwaySection() {
   return (
     <section id="stematel-next-pathway" className="profile-section profile-pathway" aria-labelledby="profile-pathway-title">
       <div className="profile-container">
-        <img className="profile-pathway-motif" src={motif} alt="" aria-hidden="true" loading="lazy" />
+        <div className="profile-pathway-heading">
+          <img className="profile-pathway-motif" src={motif} alt="" aria-hidden="true" loading="lazy" />
+          <h2 id="profile-pathway-title">Stematel <span>Next Pathway</span></h2>
+        </div>
         <div className="profile-pathway-pattern" aria-hidden="true">
           {[0, 1, 2, 3].map(index => <img key={index} src={outline} alt="" loading="lazy" />)}
         </div>
-        <h2 id="profile-pathway-title">Stematel <span>Next Pathway</span></h2>
         <div className="profile-pathway-list">
           {profilePathways.map(pathway => (
             <article key={pathway.title} className={`profile-pathway-card profile-pathway-${pathway.variant}`}>
