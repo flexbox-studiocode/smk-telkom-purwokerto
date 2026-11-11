@@ -157,13 +157,14 @@
   .profile-timeline li:not(:last-child) .profile-milestone::after { position: absolute; top: calc(2.75rem + var(--timeline-icon) / 2); bottom: calc(-4.75rem - var(--timeline-icon) / 2); left: calc(var(--timeline-icon) / 2); width: 2px; background: var(--color-dark-200); content: ''; }
 }
 @media (max-width: 47.999rem) {
-  .profile-pathway-heading { display: flex; align-items: center; justify-content: center; gap: .75rem; }
-  .profile-pathway-heading .profile-pathway-motif { position: static; flex: none; width: clamp(2.75rem, 14vw, 3.5rem); }
-  .profile-pathway h2 { min-width: 0; margin-inline: 0; padding-inline: .625rem; font-size: clamp(1rem, 4.3vw, 1.125rem); }
-  .profile-pathway-list { gap: 3rem; }
-  .profile-pathway-card { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto minmax(10.5rem, auto) auto; gap: 1.25rem; }
+  .profile-pathway { padding-block: 2rem; }
+  .profile-pathway-heading { display: flex; align-items: center; justify-content: center; gap: .5rem; }
+  .profile-pathway-heading .profile-pathway-motif { position: static; flex: none; width: clamp(4rem, 20vw, 6rem); }
+  .profile-pathway h2 { min-width: 0; margin-inline: 0; padding-inline: .375rem; font-size: clamp(.9375rem, 4.3vw, 1.125rem); }
+  .profile-pathway-list { gap: 1.75rem; margin-top: 1.5rem; }
+  .profile-pathway-card { --pathway-photo-width: clamp(5rem, 21vw, 5.5rem); grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto calc(var(--pathway-photo-width) * 397 / 233) auto; gap: .75rem; padding-bottom: 1.25rem; }
   .profile-pathway-card::before { inset: 1rem 0 0; }
-  .profile-pathway-student { grid-row: 2; grid-column: 1; align-self: end; width: clamp(5.5rem, 24vw, 6rem); margin: 0 .5rem; }
+  .profile-pathway-student { grid-row: 2; grid-column: 1; align-self: end; width: var(--pathway-photo-width); margin: 0 .5rem; }
   .profile-pathway-cutout { mask-image: linear-gradient(black 88%, transparent); }
   .profile-pathway-copy { display: contents; }
   .profile-pathway-copy h3 { grid-row: 1; grid-column: 1 / -1; justify-self: center; min-width: 0; margin: 0; padding: .375rem 1rem; font-size: 1.125rem; }
@@ -172,7 +173,7 @@
   .profile-pathway-rays, .profile-pathway-professional .profile-pathway-rays { top: 0; right: -.5rem; left: auto; width: 1.5rem; }
   .profile-pathway-scholar .profile-pathway-student { grid-column: 2; }
   .profile-pathway-scholar .profile-pathway-icon { grid-column: 1; justify-self: start; }
-  .profile-pathway-scholar .profile-pathway-rays { left: -.5rem; right: auto; }
+  .profile-pathway-scholar .profile-pathway-rays { left: -.5rem; right: auto; transform: scaleX(-1); }
 }
 @media (min-width: 40rem) {
   .profile-container { padding-inline: 1.5rem; }
