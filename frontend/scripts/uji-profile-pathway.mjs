@@ -1,4 +1,4 @@
-/* global document, window */
+/* global document, window, getComputedStyle */
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
@@ -34,9 +34,16 @@ try {
         const titleRange = document.createRange();
         titleRange.selectNodeContents(title);
         const titleLines = [...titleRange.getClientRects()];
+        const firstCard = rect(section.querySelector('article'));
+        const secondCard = rect(section.querySelectorAll('article')[1]);
+        const headingRow = rect(title.parentElement);
+        const spacing = { logoWidth: motif.width, headerToCard: firstCard.y - headingRow.bottom,
+          betweenCards: secondCard.y - firstCard.bottom, sectionTop: headingRow.y - rect(section).y };
         return {
           overflow: document.documentElement.scrollWidth > window.innerWidth,
-          headerClear: !mobile || (motif.right + 12 <= heading.x + 1 && motif.x >= 0 && heading.right <= window.innerWidth
+          spacing,
+          compact: !mobile || (motif.width >= 64 - 1 && spacing.headerToCard <= 24 + 1 && spacing.betweenCards <= 32 + 1 && spacing.sectionTop <= 32 + 1),
+          headerClear: !mobile || (motif.right + 8 <= heading.x + 1 && motif.x >= 0 && heading.right <= window.innerWidth
             && Math.abs(motif.y + motif.height / 2 - heading.y - heading.height / 2) < 2
             && titleLines.every(line => Math.abs(line.y - titleLines[0].y) < 1)),
           cards: [...section.querySelectorAll('article')].map(card => {
@@ -54,16 +61,17 @@ try {
               contained: elements.every(r => r.x >= box.x - 1 && r.right <= box.right + 1 && r.y >= box.y - 1 && r.bottom <= box.bottom + 1),
               readable: [...card.querySelectorAll('h3, p')].every(el => el.scrollWidth <= el.clientWidth),
               badgeSingleLine: range.getClientRects().length === 1,
-              composition: !mobile || (photo.y >= badge.bottom + 16 - 1 && photo.x >= box.x + 24 - 1
-                && photo.right <= box.right - 24 + 1 && text.y >= photo.bottom + 20 - 1),
-              clear: separate(photo, badge, 12) && separate(photo, text, 16) && separate(icon, badge, 16) && separate(icon, text, 16) && separate(icon, photo, 12) && separate(rays, badge, 8) && separate(rays, text, 8),
+              composition: !mobile || (photo.y >= badge.bottom + 12 - 1 && photo.x >= box.x + 24 - 1
+                && photo.right <= box.right - 24 + 1 && text.y >= photo.bottom + 12 - 1 && text.y - box.y <= 210 + 1),
+              raysFacingOut: !mobile || !card.classList.contains('profile-pathway-scholar') || getComputedStyle(card.querySelector('.profile-pathway-rays')).transform.startsWith('matrix(-1,'),
+              clear: separate(photo, badge, 12) && separate(photo, text, 12) && separate(icon, badge, 16) && separate(icon, text, 16) && separate(icon, photo, 12) && separate(rays, badge, 8) && separate(rays, text, 8),
             };
           }),
         };
       });
       await section.screenshot({ path: `${output}/pathway-${width}-${language}.png`, style: 'header,nav,.fixed.bottom-4 {opacity:0!important}' });
       results.push({ width, language, ...geometry });
-      if (geometry.overflow || !geometry.headerClear || geometry.cards.length !== 3 || geometry.cards.some(c => !c.contained || !c.readable || !c.badgeSingleLine || !c.clear || !c.composition)) failures.push(`${width}/${language}: headerClear=${geometry.headerClear}; ${geometry.cards.map(c => `${c.title} contained=${c.contained} clear=${c.clear} composition=${c.composition} singleLine=${c.badgeSingleLine}`).join('; ')} overflow=${geometry.overflow}`);
+      if (geometry.overflow || !geometry.headerClear || !geometry.compact || geometry.cards.length !== 3 || geometry.cards.some(c => !c.contained || !c.readable || !c.badgeSingleLine || !c.clear || !c.composition || !c.raysFacingOut)) failures.push(`${width}/${language}: headerClear=${geometry.headerClear} compact=${geometry.compact}; ${geometry.cards.map(c => `${c.title} contained=${c.contained} clear=${c.clear} composition=${c.composition} raysFacingOut=${c.raysFacingOut} singleLine=${c.badgeSingleLine}`).join('; ')} overflow=${geometry.overflow}`);
     }
   }
   await writeFile(`${output}/results.json`, JSON.stringify({ results, failures }, null, 2));
