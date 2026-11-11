@@ -56,17 +56,17 @@ const PrestasiPerjalananSection = ({ items = hallOfFame.items }) => {
             }
           }} className="mx-auto flex w-[75%] items-stretch justify-center gap-5 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:w-[80%] lg:w-full lg:gap-[3.1453cqw]">
             {shown.map((person) => (
-              <article key={person.name} className="flex min-h-84 w-full min-w-0 flex-col items-center rounded-[20px] bg-white px-3 pb-6 pt-4 text-center shadow-[0_0_24px_rgba(130,130,130,0.25)] sm:w-[calc((100%-1.25rem)/2)] lg:min-h-[20.12cqw] lg:w-[15.3471cqw] lg:shrink-0 lg:rounded-[1.0846cqw] lg:px-[1.0846cqw] lg:pb-[2.061cqw] lg:pt-[0.8134cqw]">
+              <article key={person.name} className="flex w-full min-w-0 flex-col items-center rounded-[20px] bg-white px-3 pb-4 pt-3 text-center shadow-[0_0_24px_rgba(130,130,130,0.25)] sm:min-h-84 sm:w-[calc((100%-1.25rem)/2)] sm:pb-6 sm:pt-4 lg:min-h-[20.12cqw] lg:w-[15.3471cqw] lg:shrink-0 lg:rounded-[1.0846cqw] lg:px-[1.0846cqw] lg:pb-[2.061cqw] lg:pt-[0.8134cqw]">
                 <ContentImage src={person.image} alt={t(person.imageAlt || person.name)} loading="lazy" className="size-24 shrink-0 rounded-full object-cover object-top lg:size-[6.5629cqw]" />
-                <h3 className="mt-3 text-sm font-bold leading-tight text-black lg:mt-[0.5423cqw] lg:text-[clamp(0.75rem,1.0846cqw,1.25rem)]">
+                <h3 className="mt-2 text-sm font-bold leading-tight text-black sm:mt-3 lg:mt-[0.5423cqw] lg:text-[clamp(0.75rem,1.0846cqw,1.25rem)]">
                   {person.name}
                 </h3>
-                <p className="mt-1 text-xs font-medium leading-snug text-black/70 lg:text-[clamp(0.6875rem,0.8677cqw,1rem)]">{t(person.achievement)}</p>
-                <div className="mt-auto flex flex-col items-center pt-5 lg:pt-[0.7592cqw]">
+                <p className="mt-0.5 text-xs font-medium leading-snug text-black/70 sm:mt-1 lg:text-[clamp(0.6875rem,0.8677cqw,1rem)]">{t(person.achievement)}</p>
+                <div className="mt-3 flex flex-col items-center sm:mt-auto sm:pt-5 lg:pt-[0.7592cqw]">
                   <span className="relative block size-9 overflow-hidden lg:h-[2.4403cqw] lg:w-[2.603cqw]">
                     <img src={profileIcon} alt="" aria-hidden="true" className="absolute left-1/2 top-1/2 max-w-none -translate-x-1/2 -translate-y-1/2 scale-75 lg:scale-[calc(100cqw/1844px)]" />
                   </span>
-                  <p className="mt-2 text-xs font-medium leading-snug text-black/70 lg:text-[clamp(0.6875rem,0.8677cqw,1rem)]">{t(person.role)}{person.company && <><br />{person.company}</>}</p>
+                  <p className="mt-1.5 text-xs font-medium leading-snug text-black/70 sm:mt-2 lg:text-[clamp(0.6875rem,0.8677cqw,1rem)]">{t(person.role)}{person.company && <><br />{person.company}</>}</p>
                 </div>
               </article>
             ))}
