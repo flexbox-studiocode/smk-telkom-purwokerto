@@ -105,13 +105,14 @@ const StelaWidget = () => {
       )}
 
       {pernahDibuka && (
-        <div id="stela-widget-panel" role="region" aria-labelledby="stela-widget-title" className={`${terbuka ? 'motion-chat-enter flex' : 'hidden'} max-h-[calc(100dvh-10rem)] w-[min(22rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl shadow-card sm:max-h-[calc(100dvh-11rem)]`}>
-          <div className="flex shrink-0 items-center gap-2.5 bg-primary px-4 py-3">
-            <img src={maskot} alt="" aria-hidden="true" className="h-7 w-7 object-contain" />
-            <span id="stela-widget-title" className="font-heading text-xs font-bold text-white">{t("Tanya NEXA")}</span>
+        <div id="stela-widget-panel" role="region" aria-labelledby="stela-widget-title" className={`${terbuka ? 'motion-chat-enter flex' : 'hidden'} max-h-[calc(100dvh-8rem)] w-[min(22rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl shadow-card sm:max-h-[calc(100dvh-9rem)]`}>
+          <div className="flex shrink-0 items-center gap-2.5 bg-primary px-4 py-2.5">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-white/15"><img src={maskot} alt="" aria-hidden="true" className="h-6 w-6 object-contain" /></span>
+            <span id="stela-widget-title" className="min-w-0 flex-1 font-heading text-sm font-bold text-white">NEXA AI</span>
+            <button type="button" onClick={() => { setTerbuka(false); triggerRef.current?.focus(); }} aria-label={t('Tutup obrolan NEXA')} className="rounded-full p-1.5 text-white/80 transition-colors hover:bg-white/15 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"><X className="h-4 w-4" aria-hidden="true" /></button>
           </div>
           <Suspense fallback={<div role="status" className="flex h-96 items-center justify-center bg-white text-xs text-dark-600">{t("Memuat obrolan...")}</div>}>
-            <StelaChat focusInput={terbuka} className="min-h-0 h-96 max-h-[calc(100dvh-13rem)] rounded-none border-0 sm:max-h-[calc(100dvh-14rem)]" />
+            <StelaChat focusInput={terbuka} className="min-h-0 h-96 max-h-[calc(100dvh-11.5rem)] rounded-none border-0 sm:max-h-[calc(100dvh-12.5rem)]" kelasPraChat="min-h-0 max-h-[calc(100dvh-11.5rem)] rounded-none border-0 sm:max-h-[calc(100dvh-12.5rem)]" />
           </Suspense>
         </div>
       )}

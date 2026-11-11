@@ -2,7 +2,8 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AlertCircle, Send } from 'lucide-react';
-import { PESAN_STELA_GAGAL, tanyaStela, kategorikanGalat, KATEGORI_GALAT, formatStelaPublicText } from '../../services/stela';
+import { PESAN_STELA_GAGAL, tanyaStela, cekSesiNexa, kategorikanGalat, KATEGORI_GALAT, formatStelaPublicText } from '../../services/stela';
+import NexaPrechatForm from './NexaPrechatForm';
 import { stelaData } from '../../data/dummyData';
 import { canonicalAdmissionsPath, formatAdmissionsText, isHiddenAdmissionsPath, OFFICIAL_ADMISSIONS_URL } from '../../utils/admissions';
 
@@ -61,7 +62,9 @@ const IsiPesan = ({ teks }) =>
     return COCOK_PATH.test(bagian) ? <TautanPath key={i} path={bagian} /> : bagian;
   });
 
-const StelaChat = ({ className = '', tampilkanSaran = true, focusInput = false }) => {
+// kelasPraChat: kelas wadah saat form pra-chat tampil. Form memakai tinggi sesuai isi
+// (dibatasi max-h) sehingga tidak terpotong; bila kosong, memakai className seperti chat.
+const StelaChat = ({ className = '', kelasPraChat, tampilkanSaran = true, focusInput = false }) => {
   const { t, language } = useLanguage();
   const [riwayat, setRiwayat] = useState([{ role: 'assistant', content: stelaData.sapaan }]);
   const [masukan, setMasukan] = useState('');
@@ -73,10 +76,22 @@ const StelaChat = ({ className = '', tampilkanSaran = true, focusInput = false }
   const inputRef = useRef(null);
   const controllerRef = useRef(null);
   const aktifRef = useRef(true);
+  // 'memeriksa' -> 'perlu' (tampilkan form) -> 'siap' (chat). Server tetap menolak
+  // /api/ai/stela tanpa sesi; status ini hanya menentukan apa yang ditampilkan.
+  const [sesi, setSesi] = useState('memeriksa');
+  const [sesiBerakhir, setSesiBerakhir] = useState(false);
 
   useEffect(() => {
-    if (focusInput) inputRef.current?.focus({ preventScroll: true });
-  }, [focusInput]);
+    const controller = new AbortController();
+    cekSesiNexa({ signal: controller.signal })
+      .then((aktif) => setSesi(aktif ? 'siap' : 'perlu'))
+      .catch((error) => { if (error?.name !== 'AbortError') setSesi('perlu'); });
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    if (focusInput && sesi === 'siap') inputRef.current?.focus({ preventScroll: true });
+  }, [focusInput, sesi]);
 
   // Penanda "komponen masih terpasang", dipakai agar setState tidak dipanggil
   // setelah unmount. Nilainya WAJIB dikembalikan ke true di badan efek: di
@@ -98,7 +113,7 @@ const StelaChat = ({ className = '', tampilkanSaran = true, focusInput = false }
 
   const kirim = async (teks, ulang = false) => {
     const pertanyaan = teks.trim();
-    if (!pertanyaan || memuat) return;
+    if (!pertanyaan || memuat || sesi !== 'siap') return;
     if (ulang && pertanyaan !== pertanyaanGagal) return;
 
     // Sapaan pembuka tidak ikut dikirim ke API (Claude/Gemini/OpenAI menolak riwayat yang diawali assistant tanpa user)
@@ -144,6 +159,13 @@ const StelaChat = ({ className = '', tampilkanSaran = true, focusInput = false }
       setPertanyaanGagal('');
     } catch (error) {
       if (!aktifRef.current || error?.name === 'AbortError') return;
+      if (error?.category === KATEGORI_GALAT.SESSION) {
+        // Sesi habis di tengah percakapan: riwayat dipertahankan, form tampil lagi.
+        setPertanyaanGagal(pertanyaan);
+        setSesiBerakhir(true);
+        setSesi('perlu');
+        return;
+      }
       const pesanGalat = error?.message || PESAN_STELA_GAGAL;
       setGalat(pesanGalat);
       // Use error category if already set (e.g., from scope rejection)
@@ -156,6 +178,21 @@ const StelaChat = ({ className = '', tampilkanSaran = true, focusInput = false }
   };
 
   const belumBertanya = riwayat.length === 1;
+
+  if (sesi !== 'siap') {
+    return (
+      <div className={`flex min-w-0 max-w-full flex-col overflow-hidden rounded-2xl border border-dark-100 bg-white ${sesi === 'perlu' && kelasPraChat !== undefined ? kelasPraChat : className}`}>
+        {sesi === 'memeriksa' ? (
+          <div role="status" className="flex min-h-0 flex-1 items-center justify-center px-4 py-8 text-xs text-dark-600">{t('Memeriksa sesi...')}</div>
+        ) : (
+          <>
+            {sesiBerakhir && <p role="status" className="shrink-0 bg-primary-50 px-4 py-2.5 text-[11px] leading-relaxed text-primary-900">{t('Sesi chat berakhir. Isi kembali informasi Anda untuk melanjutkan.')}</p>}
+            <NexaPrechatForm onSelesai={() => { setSesiBerakhir(false); setSesi('siap'); }} />
+          </>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className={`flex min-w-0 max-w-full flex-col overflow-hidden rounded-2xl border border-dark-100 bg-white ${className}`}>

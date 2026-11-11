@@ -14,7 +14,7 @@ const privacySections = {
         },
         {
           subtitle: 'Penggunaan Asisten AI (NEXA & NextTel)',
-          text: 'Pertanyaan yang diajukan kepada sistem AI diproses untuk menghasilkan respons informasi sekolah. Riwayat percakapan tidak disimpan secara permanen dan hanya digunakan selama sesi aktif berlangsung.',
+          text: 'Pertanyaan yang diajukan kepada sistem AI diproses untuk menghasilkan respons informasi sekolah. Riwayat percakapan tidak disimpan secara permanen dan hanya digunakan selama sesi aktif berlangsung. Sebelum memakai NEXA, pengguna mengisi nama, nomor HP, usia, kategori (sekolah atau instansi), dan nama sekolah/instansi bila ingin. Data ini hanya dipakai untuk mengenali kategori pengguna dan menyesuaikan jawaban, tidak dipakai untuk pemasaran, dan dihapus otomatis setelah sesi berakhir (maksimal 24 jam).',
         },
         {
           subtitle: 'Data Log & Analitik (Otomatis)',
@@ -68,7 +68,7 @@ const privacySections = {
         },
         {
           subtitle: 'AI Assistant Usage (NEXA & NextTel)',
-          text: 'Questions submitted to the AI system are processed to generate school information responses. Conversation history is not stored permanently and is only used during the active session.',
+          text: 'Questions submitted to the AI system are processed to generate school information responses. Conversation history is not stored permanently and is only used during the active session. Before using NEXA, users provide their name, phone number, age, category (school or institution), and optionally a school/institution name. This information is only used to identify the type of user and tailor answers, is not used for marketing, and is deleted automatically after the session ends (24 hours at most).',
         },
         {
           subtitle: 'Log & Analytics Data (Automatic)',

@@ -30,7 +30,7 @@ const StelaPage = () => {
           </div>
         </div>
 
-        <StelaChat className="mt-7 h-[32rem] shadow-card" />
+        <StelaChat className="mt-7 h-[32rem] shadow-card" kelasPraChat="mt-7 max-h-[min(44rem,calc(100dvh-6rem))] shadow-card" />
 
         <p className="mt-4 text-[11px] leading-relaxed text-dark-400">{t("NEXA menjawab berdasarkan informasi yang ada di situs ini. Untuk hal yang memerlukan kepastian — biaya, kuota, atau berkas pendaftaran — mohon konfirmasi ke Tata Usaha sekolah.")} </p>
       </div>
