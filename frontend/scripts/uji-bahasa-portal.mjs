@@ -64,10 +64,13 @@ try {
   assert.ok(render(createElement(StelaChat)).includes('Checking your session...'));
   const { default: NexaPrechatForm } = await server.ssrLoadModule('/src/components/stela/NexaPrechatForm.jsx');
   const prechat = render(createElement(NexaPrechatForm, { onSelesai: () => {} }));
-  for (const text of ['Before we begin, please provide the following information', 'Full Name', 'Phone Number', 'Age', 'Start Chat', 'type="tel"', 'type="number"']) {
+  for (const text of ['Hi! Before we start', 'User Information', 'Step 1 of 2', 'Full Name', 'Phone Number', 'Age', 'Continue to Chat', 'type="tel"', 'type="number"']) {
     assert.ok(prechat.includes(text), 'Pre-chat form shows "' + text + '" in English.');
   }
-  assert.ok(!prechat.includes('Mulai Chat') && !prechat.includes('Nama Lengkap'), 'No Indonesian label leaks into the English form.');
+  assert.ok(!prechat.includes('Lanjut ke Chat') && !prechat.includes('Nama Lengkap') && !prechat.includes('Langkah'), 'No Indonesian label leaks into the English form.');
+  for (const text of ['Konfirmasi dan Mulai Chat', 'Langkah 2 dari 2', 'Siap ngobrol,', 'Mulai Percakapan', 'Informasi Anda sudah tercatat. NEXA siap membantu menjawab pertanyaan Anda.', 'Anak-anak · 5–12 tahun', 'Remaja · 13–17 tahun', 'Dewasa muda · 18–24 tahun', 'Dewasa · 25 tahun ke atas']) {
+    assert.notEqual(value.t(text), text, 'Missing English translation: ' + text);
+  }
   for (const text of ['Nama lengkap wajib diisi.', 'Nomor HP wajib diisi.', 'Usia wajib diisi.', 'Pilih salah satu kategori.', 'Nomor HP tidak valid. Contoh: 081234567890 atau +6281234567890.', 'Usia harus berupa bilangan bulat antara 5 dan 100.', 'Nama minimal 2 karakter.', 'Nama tidak valid.', 'Tidak dapat terhubung ke server. Periksa koneksi lalu coba lagi.', 'Gagal memulai chat. Silakan coba lagi.', 'Instansi', 'Nama Sekolah', 'Nama Instansi']) {
     assert.notEqual(value.t(text), text, 'Missing English translation: ' + text);
   }
