@@ -11,10 +11,13 @@ development lokal ke **hosting cPanel**.
 > **WAJIB DIKONFIRMASI KE PROVIDER HOSTING:** paket cPanel memiliki fitur yang
 > berbeda-beda. Setiap langkah yang bergantung pada fitur provider diberi label ini.
 
-Dokumen terkait:
+Dokumen terkait (semuanya di folder `docs-cpanel/`):
 
-- `docs/CPANEL_DEPLOYMENT_CHECKLIST.md` — checklist yang dapat dicentang.
-- `docs/CPANEL_TROUBLESHOOTING.md` — referensi error dan solusi.
+- [`./README.md`](./README.md) — halaman awal & urutan membaca (mulai dari sini).
+- [`./CPANEL_DEPLOYMENT_CHECKLIST.md`](./CPANEL_DEPLOYMENT_CHECKLIST.md) — checklist yang dapat dicentang.
+- [`./CPANEL_TROUBLESHOOTING.md`](./CPANEL_TROUBLESHOOTING.md) — referensi error dan solusi.
+- [`./sql/README.md`](./sql/README.md) — cara impor SQL & melanjutkan Prisma migration.
+- [`./sql/smk_telkom_purwokerto_schema.sql`](./sql/smk_telkom_purwokerto_schema.sql) — file SQL schema-only.
 
 ---
 
@@ -59,11 +62,24 @@ Source code aktual dipakai sebagai acuan. Ketidaksesuaian yang perlu dicatat:
    22 LTS, `README.md` menulis `>=22.12.0`. Source tidak memiliki field `engines`.
    Acuan yang dipakai dokumen ini: **Node.js 22** (selaras `.github/workflows/frontend-ci.yml`
    yang memakai `node-version: '22'` dan `README.md`).
-5. **`docs/MYSQL_SETUP_GUIDE.md` menyebut "16 tabel"**; aktual `backend/prisma/schema.prisma`
-   mendefinisikan **16 model operasional** + tabel `_prisma_migrations` (lihat §6.3).
+5. **`docs/MYSQL_SETUP_GUIDE.md` menyebut "16 tabel"**. Angka 16 benar sebagai *jumlah
+   tabel total*, tetapi rinciannya: `backend/prisma/schema.prisma` mendefinisikan
+   **15 model aplikasi** (15 tabel) **+ 1 tabel internal `_prisma_migrations`** = **16 tabel**
+   (lihat §6.3).
 6. **`README.md` menyebut migration Supabase `001`–`006`** (`supabase/migrations/*`).
    Itu **tidak** dipakai pada arsitektur MySQL. Migrasi yang berlaku adalah
    `backend/prisma/migrations/*` (4 direktori, lihat §11).
+7. **Versi Prisma CLI vs Prisma Client.** `backend/package.json` (versi ter-commit)
+   memakai `@prisma/client: ^7.10.1`, `@prisma/adapter-mariadb: ^7.10.1`, dan
+   `prisma: 7.10.1` (devDependency). Semua skrip `npm run db:*`/`prisma:*` mengasumsikan
+   CLI **Prisma 7**. Jika CLI yang terpasang adalah Prisma 8 RC (`prisma 8.0.0-rc.*`),
+   perintah `prisma migrate …`/`prisma generate` **berubah/tidak kompatibel** (mis.
+   `prisma migrate status` → `prisma migration status`). Untuk proyek yang masih memakai
+   migrasi format Prisma 7 ini, **pin CLI ke `prisma@7.10.1`** sebelum deployment, dan
+   pastikan `npx prisma -v` menampilkan `7.10.1`. Lihat §11.1 dan Troubleshooting §22.
+   > **Temuan audit:** working tree saat dokumen ini dibuat memiliki perubahan lokal
+   > (belum di-commit) yang menaikkan `prisma` ke `^8.0.0-rc.33`. Perubahan itu
+   > membuat skrip migrasi gagal. Jangan commit sebelum dipastikan.
 
 > Catatan: folder `supabase/` dan referensi README lama tetap ada di repository sebagai
 > artefak ETL/legacy. Dokumen cPanel ini mengabaikannya kecuali untuk backup Storage.
@@ -117,7 +133,7 @@ Frontend = unggah file statis. Backend = aplikasi Node.js dengan runtime persist
 |---|---|---|
 | Node.js | **22.x** (minimum 22.12.0) | `README.md`, CI Node 22, Vite 8, Prisma 7 |
 | npm | 10+ (ikut Node.js 22) | — |
-| MySQL/MariaDB | MySQL 8.0+ / MariaDB 10.x+, charset `utf8mb4`, collation `utf8mb4_unicode_ci` | `schema.prisma`, `migrations/*.sql` |
+| MySQL/MariaDB | MySQL 8.0+ (diuji lokal pada MySQL 8.4.3) / MariaDB 10.x+, charset `utf8mb4`, collation `utf8mb4_unicode_ci` | `schema.prisma`, `migrations/*.sql` |
 | Web server | Apache (cPanel) untuk frontend statis + `.htaccess` | `deploy-remote.sh` (docroot `public_html`) |
 | Node app runner | Node.js Application Manager (Passenger) | §4.1 |
 | Terminal/SSH | disarankan (untuk Prisma CLI, native build) | §4.1 |
@@ -144,6 +160,27 @@ Jangan menganggap semua paket cPanel setara. Konfirmasi ke provider:
 - [ ] **Environment variables** aplikasi Node dapat diatur dari panel (atau via `.env`).
 - [ ] **Outbound HTTPS** diizinkan (untuk Supabase Storage, SMTP, provider AI, Turnstile).
 - [ ] **`mysqldump`/`mysql`/`tar`** tersedia di `PATH` (untuk backup/restore); jika tidak, lihat §13.4.
+
+### 3.3 WAJIB DIKONFIRMASI KE PROVIDER HOSTING
+
+Seluruh daftar §3.2 bergantung pada paket hosting dan **belum diuji** (tidak ada akses
+cPanel/provider pada penyusunan dokumen). Mintakan jawaban tertulis dari provider atas
+poin-poin ini sebelum akhir pekan deployment:
+
+| # | Pertanyaan ke provider | Mengapa penting |
+|---|---|---|
+| 1 | Apakah menu **Setup Node.js App** (Passenger/CloudLinux Node.js Selector) tersedia? | Tanpa ini backend Express tidak dapat dijalankan di cPanel. |
+| 2 | Versi Node.js apa saja yang tersedia? Apakah **22.x** ada? | Aplikasi memakai Node 22 (Vite 8, Prisma 7). |
+| 3 | Apakah ada **Terminal/SSH** atau fitur **Run NPM Install / Run JS script** di panel Node.js? | Diperlukan untuk `npm ci`, `prisma generate`, `prisma migrate`. Tanpa itu, SQL import + provider membantu. |
+| 4 | Apakah **cron jobs** tersedia? | Untuk backup harian. |
+| 5 | Apakah **`mysqldump`, `mysql`, `tar`** tersedia untuk user akun? | Backup/restore aplikasi memakai binary ini. |
+| 6 | Apakah **outbound HTTPS** diizinkan (Supabase, SMTP, provider AI, Cloudflare)? | Backup & fitur AI/Turnstile/email. |
+| 7 | Apakah **DDL (CREATE/ALTER/DROP/INDEX/FK)** diizinkan pada database akun? | Prisma migration butuh DDL. |
+| 8 | Apakah `mod_proxy` / reverse proxy tersedia? | Hanya bila memilih Opsi B (satu domain). |
+| 9 | Berapa **kuota disk** dan **memory limit** proses Node? | `node_modules` + `dist` + `uploads` + `backups`. |
+| 10 | Apakah **AutoSSL/Let's Encrypt** mencakup subdomain API? | Cookie `secure` butuh HTTPS. |
+
+Tulis jawaban provider di [`./CPANEL_DEPLOYMENT_CHECKLIST.md`](./CPANEL_DEPLOYMENT_CHECKLIST.md) bagian B.
 
 ---
 
@@ -309,21 +346,30 @@ DATABASE_URL=mysql://smktelkom_app:PASSWORD_KUAT@127.0.0.1:3306/smktelkom_smk
 - Password: URL-encode karakter spesial (`@`, `:`, `/`, `#`) bila ada.
 - Variabel ini **secret**; jangan pernah ditaruh di frontend atau di-commit.
 
-### 6.3 Struktur database (16 model + tabel migrasi)
+### 6.3 Struktur database (15 tabel aplikasi + 1 tabel Prisma)
 
-Dari `backend/prisma/schema.prisma`:
+`backend/prisma/schema.prisma` mendefinisikan **15 model/tabel aplikasi**:
 
-`Admin`, `User`, `AuthToken`, `Session`, `Berita`, `Pengumuman`, `Prestasi`, `Bkk`,
-`Ppdb`, `PpdbDraft`, `Event`, `SpmbInformation`, `SiteSettings`, `AiDailyAttempt`,
-`SiteVisitor` (tabel `@@map` masing-masing: `admins`, `users`, `auth_tokens`,
-`sessions`, `berita`, `pengumuman`, `prestasi`, `bkk`, `ppdb`, `ppdb_drafts`,
-`events`, `spmb_information`, `site_settings`, `ai_daily_attempts`, `site_visitors`)
-+ tabel internal `_prisma_migrations`.
+`admins`, `users`, `auth_tokens`, `sessions`, `berita`, `pengumuman`, `prestasi`,
+`bkk`, `ppdb`, `ppdb_drafts`, `events`, `spmb_information`, `site_settings`,
+`ai_daily_attempts`, `site_visitors`.
 
-### 6.4 Impor SQL (opsional)
+Prisma membuat satu tabel internal tambahan, **`_prisma_migrations`**. Jadi jumlah
+akhirnya **16 tabel** setelah migration history dicatat. File
+[`./sql/smk_telkom_purwokerto_schema.sql`](./sql/smk_telkom_purwokerto_schema.sql)
+membuat 15 tabel aplikasi; Prisma membuat tabel ke-16 secara resmi saat baseline.
 
-Impor SQL **tidak diperlukan** jika akan memakai `prisma migrate deploy` (§11).
-Impor via **phpMyAdmin** hanya jika Anda memulihkan dari dump backup (lihat §13).
+### 6.4 Pilih satu strategi inisialisasi database
+
+> **Jangan memakai dua strategi ini sekaligus.** Menjalankan `prisma migrate deploy`
+> setelah SQL schema diimpor tanpa baseline akan gagal karena tabel sudah ada.
+
+| Strategi | Kapan dipilih | Kebutuhan | Rekomendasi |
+|---|---|---|---|
+| **A. Prisma migration** | SSH/Terminal atau aksi command Node tersedia | Prisma CLI 7.10.1 + privilege DDL | **Utama dan paling aman.** Database kosong, lalu `npm run db:migrate`. |
+| **B. SQL phpMyAdmin + Prisma baseline** | Tidak ada Terminal saat menyiapkan tabel melalui GUI | phpMyAdmin untuk import, lalu developer/provider menjalankan 4 kali `prisma migrate resolve --applied` | Alternatif terkontrol. Tidak ada record migration manual. |
+
+Panduan GUI, SQL, dan baseline lengkap: [`./sql/README.md`](./sql/README.md).
 
 ---
 
@@ -598,6 +644,29 @@ Harus mengembalikan (dari `backend/src/app.js:53`):
 
 `database: "down"` + HTTP 503 → masalah koneksi MySQL.
 
+### 8.13 Kondisi tanpa Terminal/SSH
+
+| Proses | Bisa via GUI? | Kebutuhan lain |
+|---|---|---|
+| SQL import schema | Ya | phpMyAdmin; pilih Strategi B di [`sql/README.md`](./sql/README.md). |
+| Upload frontend | Ya | File Manager; build dilakukan developer lebih dahulu. |
+| Upload backend | Ya | File Manager; unggah ZIP tanpa `.env`, `node_modules`, `uploads`, `backups`. |
+| Setup environment | Sebagian | Isi UI Node App bila tersedia; jika hanya `.env`, File Manager + permission aman. |
+| `npm ci` | Tergantung panel | SSH/Terminal, atau tombol **Run NPM Install** yang dikonfirmasi provider. |
+| `prisma generate` | Tidak dengan phpMyAdmin | SSH/Terminal atau provider/developer menjalankan perintah pada Application Root. |
+| `prisma migrate deploy` | Tidak dengan phpMyAdmin | SSH/Terminal atau provider/developer. Untuk Strategi B gunakan baseline resmi. |
+| Seed admin (`npm run db:seed`) | Tidak | SSH/Terminal atau provider/developer; variabel recovery hanya sementara. |
+| Backup aplikasi terenkripsi | Tidak sepenuhnya | Cron + Node + binary `mysqldump`/`tar` + outbound HTTPS harus disediakan provider. |
+| Restore aplikasi | Tidak sepenuhnya | SSH/Terminal dan database testing; jangan restore production via coba-coba. |
+| Cron job | Ya, jika menu Cron Jobs tersedia | Path Node dan environment cron harus diberikan/dikonfirmasi provider. |
+| Restart aplikasi | Ya | Tombol Restart pada Setup Node.js App, jika provider menyediakannya. |
+
+**Jika Terminal tidak tersedia:** selesaikan database melalui phpMyAdmin dan upload
+melalui File Manager. Lalu kirim provider/developer daftar perintah dari §11.3 atau
+§11.5, Application Root, dan nama database. Jangan mengunggah `node_modules` dari
+Windows/macOS sebagai workaround untuk server Linux; modul native `argon2`/`bcrypt`
+bisa tidak kompatibel.
+
 ---
 
 ## 9. Konfigurasi API (Frontend ↔ Backend)
@@ -791,7 +860,12 @@ Tidak ada nilai secret nyata di dokumen ini. Gunakan placeholder.
 - `schema.prisma`: `generator client { provider = "prisma-client-js" }`,
   `datasource db { provider = "mysql" }` (tanpa `url` — url dari config),
   `@prisma/adapter-mariadb` sebagai adapter runtime (`backend/src/db.js`).
-- `prisma` = devDependency `7.10.1`; `@prisma/client` = dependency `^7.10.1`.
+- Versi yang **harus dipakai untuk deployment ini**: `prisma` CLI **7.10.1**,
+  `@prisma/client ^7.10.1`, dan `@prisma/adapter-mariadb ^7.10.1`.
+- Sebelum menjalankan skrip migrasi, cek `npx prisma -v`. Bila output CLI adalah
+  `8.0.0-rc.*`, hentikan dan pulihkan `backend/package.json`/`package-lock.json`
+  ke `prisma: 7.10.1`, lalu `npm ci`. Prisma 8 RC mengubah nama perintah dan tidak
+  sesuai skrip `db:status`/`db:migrate` proyek ini.
 
 ### 11.2 Kapan memakai perintah apa
 
@@ -805,30 +879,89 @@ Tidak ada nilai secret nyata di dokumen ini. Gunakan placeholder.
 | `npm ci` | — | Install dependency sesuai lockfile |
 | `npm ci --omit=dev` | — | Install tanpa devDeps (hati-hati: menghapus CLI `prisma`) |
 
-### 11.3 Urutan deploy migrasi di cPanel
+### 11.3 Strategi A — database kosong, Prisma membuat schema (REKOMENDASI UTAMA)
 
-1. Backup database sebelum migrasi (§13).
-2. Pastikan `DATABASE_URL` benar.
-3. `npm ci` (atau minimal pastikan CLI prisma ada).
-4. `npm run prisma:generate`.
-5. `npm run db:status` → lihat migrasi tertunda.
-6. `npm run db:migrate` → menerapkan `prisma/migrations/*`.
-7. `npm run db:status` → semua `applied`.
-8. `npm run db:seed` (sekali, untuk `site_settings`).
-9. Restart Node App.
+Pilih ini bila Terminal/SSH atau fasilitas menjalankan perintah Node tersedia.
+Jangan impor SQL schema sebelum langkah ini.
 
-### 11.4 Daftar migrasi yang berlaku
+1. Pastikan cPanel membuat database kosong dan `DATABASE_URL` menunjuk database itu.
+2. Pastikan CLI Prisma adalah versi 7.10.1 (§11.1).
+3. Jalankan `npm ci` dari `backend/` (butuh devDependencies untuk CLI Prisma).
+4. Jalankan `npm run prisma:generate`.
+5. Jalankan `npm run db:status` — untuk database kosong, 4 migration tampil pending.
+6. Jalankan `npm run db:migrate` — menerapkan empat migration resmi dan membuat
+   `_prisma_migrations` otomatis.
+7. Jalankan `npm run db:status` — harus menyatakan schema up to date/semua applied.
+8. Lanjutkan seed awal §15.1, lalu restart Node App.
+
+Ini metode utama karena migration SQL dan riwayatnya dijalankan oleh Prisma sendiri.
+
+### 11.4 Strategi B — SQL phpMyAdmin lalu Prisma baseline (bila tanpa Terminal saat import)
+
+Gunakan hanya bila tabel perlu dibuat melalui GUI terlebih dahulu. Impor SQL
+[`./sql/smk_telkom_purwokerto_schema.sql`](./sql/smk_telkom_purwokerto_schema.sql)
+ke **database baru dan kosong**, lalu minta developer/provider menjalankan empat
+perintah baseline resmi dari Application Root `backend/`:
+
+```bash
+npm run prisma:generate
+npx prisma migrate resolve --applied 20261103000000_init
+npx prisma migrate resolve --applied 20261103010000_auth_tokens
+npx prisma migrate resolve --applied 20261104000000_site_settings_revision_int
+npx prisma migrate resolve --applied 20261104010000_events_category_enum
+npm run db:status
+```
+
+Setelah keempat `resolve` sukses, `db:status` harus menunjukkan schema up to date.
+Perintah `migrate resolve --applied` adalah mekanisme resmi Prisma: Prisma sendiri
+membuat tabel `_prisma_migrations` dan menulis checksum, nama migration, timestamp,
+status selesai, `logs`, dan `applied_steps_count` yang sesuai. **Jangan membuat/isi
+`_prisma_migrations` secara manual** dan jangan menjalankan `npm run db:migrate`
+sebelum baseline selesai; jika dilakukan, migration pertama mencoba membuat tabel
+yang sudah ada (P3005/"already exists").
+
+Baseline menandai migration sebagai sudah diterapkan, **bukan menjalankan isi SQL**.
+Karena itu gunakan hanya SQL final yang sudah disesuaikan dengan semua migration:
+`site_settings.revision` harus `INT` (migration 3) dan `events.kategori` harus enum
+final 15 nilai (migration 4). Jangan baseline schema buatan sendiri atau schema yang
+belum diverifikasi.
+
+Sebelum start aplikasi, validasi drift dari folder `backend/`:
+
+```bash
+npx prisma migrate diff --from-config-datasource --to-schema=prisma/schema.prisma --exit-code
+```
+
+Exit code `0` / `No difference detected` = cocok. Bila ada perbedaan, **berhenti**;
+jangan jalankan `migrate deploy` sebagai percobaan.
+
+### 11.5 Perintah migration dan batasannya
+
+| Perintah | Makna | Kapan |
+|---|---|---|
+| `npm run prisma:generate` | `prisma generate` | Setelah install / schema berubah, sebelum start. |
+| `npm run db:status` | `prisma migrate status` | Periksa riwayat. CLI harus Prisma 7. |
+| `npm run db:migrate` | `prisma migrate deploy` | Produksi; database kosong atau sudah punya history yang cocok. |
+| `npx prisma migrate resolve --applied <nama>` | Menandai migration sudah diterapkan tanpa menjalankan SQL | Baseline SQL import terverifikasi; sekali per migration. |
+| `npm run prisma:migrate` | `prisma migrate dev` | Development saja; jangan di produksi. |
+| `npm ci --omit=dev` | Install tanpa devDependencies | Jangan sebelum semua pekerjaan CLI selesai; menghapus CLI `prisma`. |
+
+`prisma db push` **bukan** pengganti Prisma migration: tidak membangun riwayat
+migration yang dibutuhkan `migrate deploy/status`. Jangan menggunakannya untuk
+menyiasati Terminal yang tidak tersedia.
+
+### 11.6 Daftar migrasi yang berlaku
 
 Dari `backend/prisma/migrations/`:
 
-1. `20261103000000_init` — seluruh tabel inti.
-2. `20261103010000_auth_tokens` — `auth_tokens`.
-3. `20261104000000_site_settings_revision_int` — `site_settings.revision`.
-4. `20261104010000_events_category_enum` — enum `EventCategory` 14 nilai.
+1. `20261103000000_init` — 14 tabel inti, termasuk `users`, `events`, dan `site_settings`.
+2. `20261103010000_auth_tokens` — tabel `auth_tokens` + foreign key.
+3. `20261104000000_site_settings_revision_int` — `site_settings.revision` BIGINT → INT.
+4. `20261104010000_events_category_enum` — perluas enum `events.kategori` dari 5 ke 15 nilai.
 
-**Jangan** melakukan reset database, **jangan** menghapus migration, **jangan**
-`migrate dev` di produksi. WAJIB DIKONFIRMASI KE PROVIDER HOSTING: batasan
-shared hosting terhadap DDL (CREATE/ALTER/DROP) dan locking saat migrasi.
+**Jangan** reset database, menghapus migration, atau menjalankan `migrate dev` di
+produksi. Batasan shared hosting untuk DDL (CREATE/ALTER/INDEX/FOREIGN KEY) wajib
+dikonfirmasi ke provider.
 
 ---
 
