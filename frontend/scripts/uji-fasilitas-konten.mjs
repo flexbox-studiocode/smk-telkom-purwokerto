@@ -109,6 +109,22 @@ try {
     if (classrooms[first].name[6] !== classrooms[second].name[6]) assert.ok(shared < 0.5, `${classrooms[first].name} dan ${classrooms[second].name} terlalu mirip (${shared.toFixed(2)})`);
   }
 
+  // Beyond exact copies: no two facility cards may share half of their meaningful words (Indonesian or English), nor open with the same three words.
+  const stop = new Set(['yang', 'untuk', 'dengan', 'dan', 'di', 'ini', 'atau', 'dari', 'pada', 'the', 'a', 'an', 'and', 'of', 'for', 'in', 'to', 'with', 'is', 'are']);
+  const meaningful = text => new Set(text.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(word => word.length > 2 && !stop.has(word)));
+  const overlap = (one, two) => { const left = meaningful(one), right = meaningful(two); return [...left].filter(word => right.has(word)).length / new Set([...left, ...right]).size; };
+  const pool = Object.entries(fasilitasViews).filter(([view]) => view !== 'Semua').flatMap(([, groups]) => groups.flatMap(group => group.items));
+  const openings = new Map();
+  for (let first = 0; first < pool.length; first++) {
+    const opening = pool[first].preview.split(/\s+/).slice(0, 3).join(' ').toLowerCase();
+    assert.ok(!openings.has(opening), `${pool[first].name} dan ${openings.get(opening)} dibuka dengan kata yang sama: ${opening}`);
+    openings.set(opening, pool[first].name);
+    for (let second = first + 1; second < pool.length; second++) {
+      const id = overlap(pool[first].preview, pool[second].preview), en = overlap(translate(pool[first].preview, 'en'), translate(pool[second].preview, 'en'));
+      assert.ok(Math.max(id, en) < 0.5, `${pool[first].name} dan ${pool[second].name} terlalu mirip (ID ${id.toFixed(2)}, EN ${en.toFixed(2)})`);
+    }
+  }
+
   // No two different facilities share a sentence; the map may reuse a card text only for the same facility (RPS, DLG).
   const everyCard = Object.entries(fasilitasViews).filter(([view]) => view !== 'Semua').flatMap(([, groups]) => groups.flatMap(group => group.items));
   const seen = new Map();
