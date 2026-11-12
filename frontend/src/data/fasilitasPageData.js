@@ -68,7 +68,8 @@ export const fasilitasViews = {
   ],
   Laboratorium: [section('lab', '', [labs[0], labs[2], labs[3], labs[1], ['RPS. Utara', 'Ruang Praktik Siswa'], ['RPS. Selatan', 'Ruang Praktik Siswa']])],
   Kelas: Object.keys(rooms).map(building => section(`kelas-${building.toLowerCase()}`, `Kelas Gedung ${building}`, classroomNames(building))),
-  Perpustakaan: [section('perpustakaan', 'Ruang Perpustakaan', library), section('literasi', 'Digital Literasi Garden', library)],
+  // Photo folders prove the split: Rak Tas, Tempat Baca and Rak Buku come from "Foto Kelas/Perpustakaan" (6 photos), DLG from "Foto Kelas/DLG".
+  Perpustakaan: [section('perpustakaan', 'Ruang Perpustakaan', library.filter(([name]) => name !== 'DLG')), section('literasi', 'Digital Literacy Garden', library.filter(([name]) => name === 'DLG'))],
   Aula: [section('aula', '', hall)],
   GOR: [section('gor', '', sports)],
   Parkiran: [section('parkiran', '', parking)],

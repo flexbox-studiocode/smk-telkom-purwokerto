@@ -52,7 +52,7 @@ export default {
   "Gedung Olahraga": "Sports Hall",
   "Parkiran": "Parking",
   "Ruang Perpustakaan": "Library Room",
-  "Digital Literasi Garden": "Digital Literacy Garden",
+  "Digital Literacy Garden": "Digital Literacy Garden",
   "Lab. Robotik": "Robotics Lab",
   "Lab. TKJ": "Computer and Network Engineering Lab",
   "Lab. TJA": "Access Network Engineering Lab",

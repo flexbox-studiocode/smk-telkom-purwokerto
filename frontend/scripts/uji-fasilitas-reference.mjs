@@ -8,7 +8,7 @@ const expected = {
   Semua: [['Laboratorium', 4], ['Ruang Kelas', 4], ['Perpustakaan', 4], ['Aula', 4], ['GOR', 4], ['Parkiran', 4]],
   Laboratorium: [['', 6]],
   Kelas: ['A', 'B', 'C', 'D'].map(building => [`Kelas Gedung ${building}`, 4]),
-  Perpustakaan: [['Ruang Perpustakaan', 4], ['Digital Literasi Garden', 4]],
+  Perpustakaan: [['Ruang Perpustakaan', 3], ['Digital Literacy Garden', 1]],
   Aula: [['', 4]], GOR: [['', 4]], Parkiran: [['', 4]],
 };
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
