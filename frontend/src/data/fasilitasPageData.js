@@ -55,7 +55,7 @@ const labs = [
   ['Lab. TJA', 'Ruang praktik untuk mempelajari sistem dan jaringan akses telekomunikasi.'],
 ];
 // Neutral on purpose: only the name and the map side are verified, not the equipment or the programs that use the room.
-const practiceRoom = { Utara: ['RPS. Utara', 'Ruang Praktik Siswa (RPS) Utara, ruang yang digunakan siswa untuk kegiatan belajar praktik.'], Selatan: ['RPS. Selatan', 'Ruang Praktik Siswa (RPS) Selatan, ruang yang digunakan siswa untuk kegiatan belajar praktik.'] };
+const practiceRoom = { Utara: ['RPS. Utara', 'Ruang Praktik Siswa (RPS) Utara, ruang yang digunakan siswa untuk kegiatan belajar praktik.'], Selatan: ['RPS. Selatan', 'Ruang Praktik Siswa (RPS) Selatan, tempat siswa mengikuti kegiatan belajar praktik.'] };
 const library = [
   ['Rak Tas', 'Rak untuk menyimpan tas pengunjung perpustakaan dengan rapi.'],
   ['DLG', 'Digital Literacy Garden (DLG), area literasi digital untuk mencari referensi dan mendukung riset.'],
