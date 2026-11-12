@@ -11,8 +11,8 @@ import arrowNext from '../assets/fasilitas/arrow-next.svg';
 import './FacilitiesSection.css';
 
 const defaultSlides = [
-  { name: 'Lab Jaringan', title: 'Laboratorium Jaringan', image: fasilitasData[5].image, category: 'Laboratorium', Icon: Network },
-  { name: 'Ruang Kelas', image: fasilitasData[2].image, preview: fasilitasData[2].preview, category: 'Kelas', Icon: School },
+  { name: 'Lab Jaringan', title: 'Laboratorium Jaringan', image: fasilitasData[5].image, preview: fasilitasData[5].preview, category: 'Laboratorium', Icon: Network },
+  { name: 'Ruang Kelas', image: fasilitasData[2].image, preview: 'Ruang kelas di Gedung A sampai D tempat siswa mengikuti kegiatan belajar mengajar.', category: 'Kelas', Icon: School },
   { name: 'Perpustakaan', image: fasilitasData[7].image, preview: fasilitasData[7].preview, category: 'Perpustakaan', Icon: BookOpen },
   { name: 'Lab Komputer', image: fasilitasData[4].image, preview: fasilitasData[4].preview, category: 'Laboratorium', Icon: Monitor },
   { name: 'Lab Robotik', image: fasilitasData[6].image, preview: fasilitasData[6].preview, category: 'Laboratorium', Icon: Bot },
@@ -210,9 +210,9 @@ export default function FacilitiesSection({ variant = 'default' }) {
           <div className="facilities-motif absolute right-[-8.75%] top-4 aspect-[493.607/179] w-[26.72%] rotate-180 sm:top-10" />
         </div>
         <div className="facilities-heading mx-auto max-w-[1546px] px-6 sm:px-12 lg:px-20">
-          <p className="text-sm text-dark-600">{t('Fasilitas Kelas')} —</p>
+          <p className="text-sm text-dark-600">{t('Sarana Belajar')} —</p>
           <h2 className="mt-3 font-heading text-3xl font-extrabold leading-tight tracking-tight text-dark-900 sm:text-4xl lg:text-5xl">{titleStart} <span className="text-primary">{titleEnd}</span></h2>
-          <p className="mt-4 max-w-lg text-xs leading-relaxed text-dark-600 sm:text-sm">{t('Fasilitas sekolah adalah sarana dan prasarana yang disediakan untuk mendukung kegiatan belajar mengajar, supaya siswa bisa belajar dengan nyaman, aman, dan maksimal.')}</p>
+          <p className="mt-4 max-w-lg text-xs leading-relaxed text-dark-600 sm:text-sm">{t('Jelajahi ruang kelas, laboratorium, perpustakaan, dan fasilitas pendukung lain yang digunakan siswa SMK Telkom Purwokerto untuk kegiatan belajar.')}</p>
         </div>
         <div className="relative mx-auto mt-9 max-w-[1546px] px-12 sm:px-16 lg:px-20" aria-roledescription={t('Karusel')} aria-label={t('Pilihan fasilitas')}>
           <div className="relative mb-20 aspect-[611/354] sm:aspect-[611/134.52]">
@@ -225,7 +225,7 @@ export default function FacilitiesSection({ variant = 'default' }) {
                   aria-label={offset === 0 ? t('Lihat detail {name}', { name: t(slide.name) }) : t('Tampilkan {name}', { name: t(slide.name) })}
                   className={`facility-slide relative aspect-[611/354] shrink-0 rounded-xl border-[3px] border-white bg-white shadow-card focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-primary ${Math.abs(offset) > 1 ? 'hidden' : offset === 0 ? 'z-10 w-full sm:w-[38%]' : `hidden sm:block sm:w-[33%] ${offset < 0 ? '-mr-4 -rotate-2' : '-ml-4 rotate-2'}`}`}>
                   <img src={slide.image} alt={t(slide.name)} width="611" height="354" loading="lazy" className="h-full w-full rounded-lg object-cover" />
-                  <span data-slide-panel aria-hidden={offset !== 0} className={`pointer-events-none absolute -bottom-16 left-[7%] flex min-h-28 w-[86%] flex-col justify-center rounded-xl border-[3px] border-white bg-[#e72033] px-4 py-4 text-left text-white shadow-card lg:min-h-32 lg:px-6 ${offset === 0 ? 'opacity-100' : 'opacity-0'}`}><span className="font-heading text-sm font-bold leading-snug sm:text-base lg:text-xl">{t(slide.title ?? slide.name)}</span><span className="mt-1 text-xs leading-snug">{t(slide.preview ?? 'Ruang praktik untuk belajar mengatur, memasang, dan mengamankan jaringan komputer.')}</span></span>
+                  <span data-slide-panel aria-hidden={offset !== 0} className={`pointer-events-none absolute -bottom-16 left-[7%] flex min-h-28 w-[86%] flex-col justify-center rounded-xl border-[3px] border-white bg-[#e72033] px-4 py-4 text-left text-white shadow-card lg:min-h-32 lg:px-6 ${offset === 0 ? 'opacity-100' : 'opacity-0'}`}><span className="font-heading text-sm font-bold leading-snug sm:text-base lg:text-xl">{t(slide.title ?? slide.name)}</span><span className="mt-1 text-xs leading-snug">{t(slide.preview)}</span></span>
                   <span data-slide-preview data-classroom={slide.name === 'Ruang Kelas' || undefined} aria-hidden={offset === 0} className={`pointer-events-none absolute inset-0 flex items-end rounded-lg facilities-slide-preview p-4 text-left font-heading text-base font-bold leading-snug text-white lg:text-xl ${offset === 0 ? 'opacity-0' : 'opacity-100'}`}>{t(slide.name)}</span>
                 </button>
               );

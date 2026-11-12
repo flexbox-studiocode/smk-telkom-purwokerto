@@ -30,8 +30,8 @@ const nexaIcon = '/assets/branding/nexa-mark.png';
 const nexttelIcon = '/assets/branding/nexttel-mark.png';
 
 const facilityQuickLinks = [
-  { title: 'Ruang Kelas', desc: 'Ruang kelas nyaman berbasis teknologi', linkLabel: 'Lihat Sekarang', href: '/fasilitas?kategori=Kelas#daftar-fasilitas', image: classroomIcon },
-  { title: 'School Tour', desc: 'Jelajahi fasilitas modern sekolah kami', linkLabel: 'Jelajah Sekarang', href: '#school-tour', image: tourIcon },
+  { title: 'Ruang Kelas', desc: 'Lihat ruang kelas di Gedung A sampai D beserta fotonya.', linkLabel: 'Lihat Sekarang', href: '/fasilitas?kategori=Kelas#daftar-fasilitas', image: classroomIcon },
+  { title: 'School Tour', desc: 'Jelajahi fasilitas sekolah melalui peta School Tour.', linkLabel: 'Jelajah Sekarang', href: '#school-tour', image: tourIcon },
   { ...quickLinks[1], image: nexaIcon },
   { ...quickLinks[2], title: 'NexTel', image: nexttelIcon },
 ];
