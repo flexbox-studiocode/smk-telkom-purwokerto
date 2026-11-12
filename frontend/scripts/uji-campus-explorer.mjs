@@ -54,5 +54,19 @@ try {
   assert.equal(campusIdForCard({ name: 'Kelas B 1.4' }), 'kelas-b');
   assert.equal(campusIdForCard({ name: 'RPS. Utara' }), 'rps-utara');
   assert.equal(campusIdForCard({ name: 'Lab. RPL' }), null, 'Do not infer a lab location from an example card');
+  const { campusPanoramas } = await server.ssrLoadModule('/src/data/campusPanoramas.js');
+  const checkPanoramas = panoramas => {
+    for (const [id, pano] of Object.entries(panoramas)) {
+      assert.ok(!pano.src !== !pano.embed, `${id}: exactly one of src or embed`);
+      if (pano.src) assert.match(pano.src, /^\/panorama\/[\w-]+\.(jpe?g|webp)$/, `${id}: src is a local panorama`);
+      if (pano.embed) assert.match(pano.embed, /^https:\/\/www\.google\.com\/maps\/embed\?pb=/, `${id}: embed is an official Google Maps embed`);
+      if (!campusHotspots.some(point => point.id === id)) assert.ok(pano.label && pano.description, `${id}: off-map place needs label and description`);
+      for (const link of pano.links || []) { assert.ok(panoramas[link.to] && link.to !== id, `${id}: link to ${link.to} must reach another panorama`); assert.ok(pano.src && Number.isFinite(link.yaw), `${id}: link needs yaw on a photo panorama`); }
+    }
+  };
+  checkPanoramas(campusPanoramas);
+  assert.throws(() => checkPanoramas({ koridor: { src: '/panorama/koridor.webp' } }), /label and description/);
+  assert.throws(() => checkPanoramas({ 'gedung-a': { src: '/panorama/a.webp', links: [{ to: 'nowhere', yaw: 0 }] } }), /must reach/);
+  assert.throws(() => checkPanoramas({ 'gedung-a': { embed: 'https://example.com/fake' } }), /official Google/);
   console.log('PASS campus bounds/centering, gesture threshold/axis, real movement hint persistence/storage failure, verified hotspot IDs and shared facility data.');
 } finally { await server.close(); }

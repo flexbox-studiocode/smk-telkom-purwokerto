@@ -4,7 +4,9 @@ import { useLanguage } from '../../context/LanguageContext';
 import useCampusPan from '../../hooks/useCampusPan';
 import { campusAnnotations, campusFacilities, campusHotspots } from '../../data/campusData';
 import { readCampusHint, saveCampusHint } from '../../utils/campusPan';
+import { campusPanoramas } from '../../data/campusPanoramas';
 import CampusPreview from './CampusPreview';
+import CampusPanorama from './CampusPanorama';
 import map from '../../assets/fasilitas/campus/campus-map.webp';
 import floor from '../../assets/fasilitas/campus/floor-0.png';
 import motif from '../../assets/fasilitas/campus/tour-logo.webp';
@@ -21,8 +23,6 @@ import decor from '../../assets/fasilitas/campus/tour-decor.svg';
 import accent from '../../assets/fasilitas/campus/tour-accent-left.svg';
 import './CampusExplorer.css';
 
-// Set to an embeddable 360° tour URL (e.g. a Google Street View or Kuula embed) to enable the 360° view.
-const tour360 = import.meta.env.VITE_SCHOOL_TOUR_360_URL?.trim();
 const versions = [['3d', 'Versi 3D'], ['360', 'Versi 360°']];
 
 function CampusDecorations() {
@@ -36,9 +36,11 @@ function CampusDecorations() {
 export default function CampusExplorer({ request, onViewFacilities }) {
   const { t } = useLanguage();
   const [learned, setLearned] = useState(readCampusHint);
-  const [mode, setMode] = useState('3d'), [seenRequest, setSeenRequest] = useState(request);
+  const [mode, setMode] = useState('3d'), [seenRequest, setSeenRequest] = useState(request), [mapRequest, setMapRequest] = useState(request);
+  // The place shown in the 360° version; it carries over when switching versions in either direction.
+  const [place, setPlace] = useState(null);
   // A "show on map" request from the facility list always needs the 3D map.
-  if (request !== seenRequest) { setSeenRequest(request); setMode('3d'); }
+  if (request !== seenRequest) { setSeenRequest(request); setMode('3d'); setMapRequest(request); }
   const [active, setActive] = useState(null), [closing, setClosing] = useState(false), [ready, setReady] = useState(false), [failed, setFailed] = useState(false), [retry, setRetry] = useState(0), [located, setLocated] = useState(null);
   const root = useRef(null), closeTimer = useRef(null), highlightTimer = useRef(null), lastTrigger = useRef(null), restoringFocus = useRef(false);
   const lastRequest = useRef(null), selectionIntent = useRef(0);
@@ -61,23 +63,25 @@ export default function CampusExplorer({ request, onViewFacilities }) {
       }
     }, reduced() ? 0 : 280);
   };
+  const showOnMap = id => { const point = campusHotspots.find(candidate => candidate.id === id); setMode('3d'); if (point) setMapRequest({ id: point.facilityId }); };
+  const openPanorama = () => { setPlace(active.id); close(false); setMode('360'); };
   useEffect(() => { pan.refresh(); }, [ready, failed, pan, mode]);
   useEffect(() => () => { clearTimeout(closeTimer.current); clearTimeout(highlightTimer.current); }, []);
   useEffect(() => {
-    if (!request || !ready || lastRequest.current === request) return;
-    const point = campusHotspots.find(point => point.facilityId === request.id);
+    if (!mapRequest || !ready || lastRequest.current === mapRequest) return;
+    const point = campusHotspots.find(point => point.facilityId === mapRequest.id);
     if (!point) return;
-    lastRequest.current = request;
+    lastRequest.current = mapRequest;
     const intent = ++selectionIntent.current;
     const trigger = root.current.querySelector(`[data-campus-hotspot="${point.id}"]`);
     root.current.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
     pan.locate(point.x, () => {
       if (selectionIntent.current !== intent) return;
-      trigger?.focus({ preventScroll: true }); select({ ...point, roomName: request.roomName }, trigger);
+      trigger?.focus({ preventScroll: true }); select({ ...point, roomName: mapRequest.roomName }, trigger);
       clearTimeout(highlightTimer.current); setLocated(point.id);
       highlightTimer.current = setTimeout(() => setLocated(null), 1500);
     });
-  }, [request, ready, pan, select]);
+  }, [mapRequest, ready, pan, select]);
   return <section ref={root} id="school-tour" aria-labelledby="school-tour-title" data-campus-explorer className="campus-explorer scroll-mt-28 bg-white" onKeyDown={event => { if (event.key === 'Escape' && active) { event.preventDefault(); close(); } }}>
     <div>
       <div className="campus-intro relative">
@@ -88,14 +92,11 @@ export default function CampusExplorer({ request, onViewFacilities }) {
         <p className="mt-2 text-sm font-semibold text-dark-800">{t('Menjelajahi Stematel')}</p>
       </header>
       <div role="group" aria-label={t('Pilih versi School Tour')} className="campus-versions flex justify-center">
-        {versions.map(([id, label]) => <button key={id} type="button" aria-pressed={mode === id} onClick={() => { if (id !== mode) { close(false); setMode(id); } }} className="campus-version focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{t(label)}</button>)}
+        {versions.map(([id, label]) => <button key={id} type="button" aria-pressed={mode === id} onClick={() => { if (id === mode) return; if (id === '3d') return showOnMap(place); if (active) setPlace(active.id); close(false); setMode(id); }} className="campus-version focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{t(label)}</button>)}
       </div>
       </div>
       <p id="campus-instructions" className="sr-only">{t('Geser peta ke kiri atau kanan. Gunakan tombol arah, slider, atau tombol panah pada keyboard. Pilih titik untuk melihat informasi fasilitas.')}</p>
-      {mode === '360' && <div className="campus-360 relative mx-auto max-w-7xl">{tour360
-        ? <iframe src={tour360} title={t('Tur 360° SMK Telkom Purwokerto')} allow="accelerometer; gyroscope; fullscreen; xr-spatial-tracking" allowFullScreen loading="lazy" className="aspect-video w-full rounded-2xl border-0 shadow-card" />
-        : <div role="status" className="flex aspect-video max-h-96 w-full flex-col items-center justify-center gap-3 rounded-2xl bg-dark-50 px-6 text-center text-sm text-dark-500"><p>{t('Tur 360° belum tersedia. Silakan jelajahi sekolah melalui Versi 3D.')}</p><button type="button" onClick={() => setMode('3d')} className="min-h-11 rounded-lg border border-dark-200 px-4 text-xs font-semibold text-primary">{t('Buka Versi 3D')}</button></div>}
-      </div>}
+      {mode === '360' && <CampusPanorama place={place} onPlace={setPlace} onMap={showOnMap} />}
       <div hidden={mode !== '3d'} className="relative mx-auto max-w-7xl">
         {!failed && <div aria-hidden="true" className="campus-scenery pointer-events-none absolute inset-0"><div className="campus-floor absolute"><img src={floor} alt="" /></div><div ref={scenery} className="campus-stage absolute aspect-[3142/1051] w-[960px]"><CampusDecorations /></div></div>}
         <div ref={viewport} className="campus-viewport relative focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" role="region" aria-label={t('Peta kampus SMK Telkom Purwokerto')} aria-describedby="campus-instructions" tabIndex={ready ? 0 : -1} data-map-ready={ready && !failed} data-map-failed={failed} data-lenis-prevent-horizontal>
@@ -127,7 +128,7 @@ export default function CampusExplorer({ request, onViewFacilities }) {
         </div>
         <div className="campus-hint-position relative"><span data-campus-hint data-dismissed={learned || failed} aria-hidden={learned || failed} className="campus-hint pointer-events-none inline-flex items-center justify-center bg-white font-semibold text-primary">{t('Geser Untuk Menjelajah')}</span></div>
       </div>
-      {active && <CampusPreview facility={campusFacilities[active.facilityId]} initialRoomName={active.roomName} closing={closing} onClose={close} onList={list => { close(false); onViewFacilities(list); }} />}
+      {active && <CampusPreview facility={campusFacilities[active.facilityId]} initialRoomName={active.roomName} closing={closing} onClose={close} onList={list => { close(false); onViewFacilities(list); }} onPanorama={campusPanoramas[active.id] ? openPanorama : undefined} />}
     </div>
   </section>;
 }

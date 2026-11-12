@@ -433,7 +433,6 @@ VITE_API_BASE_URL=https://api.smkcontoh.sch.id
 VITE_SITE_URL=https://www.smkcontoh.sch.id
 VITE_TURNSTILE_SITE_KEY=
 VITE_TURNSTILE_ENABLED=false
-VITE_SCHOOL_TOUR_360_URL=
 ```
 
 Aturan dari `frontend/scripts/validate-deployment-env.mjs` (berjalan pada `npm run build`):
@@ -820,7 +819,6 @@ Tidak ada nilai secret nyata di dokumen ini. Gunakan placeholder.
 | `VITE_SITE_URL` | URL kanonik situs untuk SEO | Opsional | Tidak |
 | `VITE_TURNSTILE_SITE_KEY` | Site key Cloudflare Turnstile di login admin | Opsional | Tidak |
 | `VITE_TURNSTILE_ENABLED` | Toggle UI Turnstile | Opsional | Tidak |
-| `VITE_SCHOOL_TOUR_360_URL` | URL embed tour 360° | Opsional | Tidak |
 | `PRERENDER_MODE` | `strict` (default) / `resilient` saat build | Opsional | Tidak |
 
 > `VITE_*` adalah variabel **publik** (tertanam di bundel). **Jangan** menaruh secret di sini.

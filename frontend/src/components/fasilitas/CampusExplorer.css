@@ -118,3 +118,4 @@
 
 /* The source texture has 112px of blank padding after its 912px pattern. */
 .campus-floor > img { display: block; width: 112.281%; max-width: none; height: 100%; }
+.campus-pano-link { display: block; padding: 10px 14px; border: 2px solid white; border-radius: 999px; background: var(--color-primary,#cd091d); box-shadow: 0 4px 14px rgb(0 0 0 / .35); color: white; font: 700 13px/1 var(--font-jakarta); white-space: nowrap; cursor: pointer; }
