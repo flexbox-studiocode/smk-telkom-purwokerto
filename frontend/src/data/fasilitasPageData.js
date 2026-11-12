@@ -20,7 +20,7 @@ const classroomPreviews = {
   C: [
     'Gedung C mendukung pembelajaran aktif dan kolaboratif di ruang kelas yang fleksibel.',
     'Siswa bisa berdiskusi dan bekerja dalam kelompok di ruang kelas Gedung C.',
-    'Ruang kelas Gedung C digunakan siswa untuk presentasi dan mengerjakan proyek bersama.',
+    'Presentasi dan proyek bersama dikerjakan siswa di ruang kelas Gedung C.',
     'Teknologi pendukung di Gedung C membantu guru menyampaikan materi dengan cara yang lebih menarik.',
   ],
   D: [
@@ -53,10 +53,10 @@ const labs = [
   ['Lab. Robotik', 'Ruang praktik tempat siswa merakit, memprogram, dan menguji robot untuk mempelajari dasar otomasi.'],
   ['Lab. RPL', 'Ruang praktik nyaman yang mendukung proses pemrograman dan pengembangan perangkat lunak'],
   ['Lab. TKJ', 'Ruang praktik untuk mempelajari jaringan komputer secara langsung.'],
-  ['Lab. TJA', 'Ruang praktik untuk mempelajari sistem dan jaringan akses telekomunikasi.'],
+  ['Lab. TJA', 'Lab tempat siswa belajar sistem dan jaringan akses telekomunikasi.'],
 ];
 // Neutral on purpose: only the name and the map side are verified, not the equipment or the programs that use the room.
-const practiceRoom = { Utara: ['RPS. Utara', 'Ruang Praktik Siswa (RPS) Utara, ruang yang digunakan siswa untuk kegiatan belajar praktik.'], Selatan: ['RPS. Selatan', 'Ruang Praktik Siswa (RPS) Selatan, tempat siswa mengikuti kegiatan belajar praktik.'] };
+const practiceRoom = { Utara: ['RPS. Utara', 'Ruang Praktik Siswa (RPS) Utara, tempat belajar praktik bagi siswa.'], Selatan: ['RPS. Selatan', 'Siswa mengikuti kegiatan belajar praktik di Ruang Praktik Siswa (RPS) Selatan.'] };
 const library = [
   ['Rak Tas', 'Rak untuk menyimpan tas pengunjung perpustakaan dengan rapi.'],
   ['DLG', 'Digital Literacy Garden (DLG), area literasi digital untuk mencari referensi dan mendukung riset.'],
@@ -71,7 +71,7 @@ const hall = [
 ];
 const sports = [
   ['Lapangan Futsal', 'Lapangan futsal indoor di Gedung Olahraga (GOR) untuk latihan dan pertandingan.'],
-  ['Lapangan Basket', 'Lapangan basket di area Gedung Olahraga (GOR) untuk latihan dan permainan siswa.'],
+  ['Lapangan Basket', 'Siswa berlatih dan bermain basket di lapangan area Gedung Olahraga (GOR).'],
   ['Toilet', 'Toilet untuk pengguna Gedung Olahraga (GOR) di area olahraga.'],
   ['Pintu Masuk', 'Akses utama yang luas dan ramah disabilitas menuju area tribun maupun lapangan.'],
 ];
