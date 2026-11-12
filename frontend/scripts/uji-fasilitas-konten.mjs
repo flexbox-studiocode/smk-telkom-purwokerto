@@ -85,8 +85,8 @@ try {
 
   // Phase 2: card and slide copy states function; unverified quality claims survive only on cards waiting for school confirmation.
   const waiting = card => /^Kelas /.test(card.name) || ['Lab. RPL', 'Halaman Depan', 'Pintu Masuk'].includes(card.name) || card.name.startsWith('Parkiran ');
-  const promoId = /(modern|nyaman|berkualitas|standar|optimal|ratusan|aman|interaktif|kondusif|terbaik|kolaborasi)/i;
-  const promoEn = /(modern|comfortable|quality|standard|optimal|hundreds|secure|interactive|welcoming|best|collaboration)/i;
+  const promoId = /\b(modern|nyaman|berkualitas|standar|optimal|ratusan|aman|interaktif|kondusif|terbaik|kolaborasi)\b/i;
+  const promoEn = /\b(modern|comfortable|quality|standard|optimal|hundreds|secure|interactive|welcoming|best|collaboration)\b/i;
   for (const card of Object.values(fasilitasViews).flat().flatMap(group => group.items)) {
     if (waiting(card)) continue;
     assert.doesNotMatch(card.preview, promoId, `${card.name}: klaim kualitas tanpa bukti`);
