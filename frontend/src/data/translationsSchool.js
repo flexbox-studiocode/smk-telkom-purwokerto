@@ -97,6 +97,8 @@ export default {
   'Foto 360° asli lokasi ini sedang disiapkan. Sementara itu, lihat foto dan informasinya di Versi 3D.': 'A real 360° photo of this location is being prepared. Meanwhile, see its photos and details in the 3D Version.',
   'Tur 360°': '360° tour', 'Belum ada panorama': 'No panorama yet',
   'Street View {name}': 'Street View of {name}',
+  'Gerbang Sekolah': 'School Gate',
+  'Street View Google di depan gerbang Kawasan Pendidikan Telkom Purwokerto, Jl. DI Panjaitan No.128. Geser untuk melihat sekeliling dan gunakan panah di jalan untuk berpindah posisi.': 'Google Street View at the gate of the Telkom Purwokerto education complex, Jl. DI Panjaitan No.128. Drag to look around and use the arrows on the road to move.',
   'Lanjut ke lokasi terhubung': 'Continue to a connected location', 'Menuju {name}': 'Go to {name}', 'Kembali ke {name}': 'Back to {name}',
   'Kembali ke peta': 'Back to map', 'Lihat panorama 360°': 'View 360° panorama',
   'Memuat panorama…': 'Loading panorama…', 'Kembali ke tampilan awal': 'Reset view',

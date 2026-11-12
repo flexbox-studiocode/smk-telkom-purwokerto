@@ -8,6 +8,8 @@ const hotspots = Object.fromEntries(campusHotspots.map(point => [point.id, point
 // Names and descriptions come from the School Tour data; only places off the map carry their own.
 const placeName = id => campusPanoramas[id]?.label || hotspots[id]?.label || '';
 const placeText = id => campusPanoramas[id]?.description || campusFacilities[hotspots[id]?.facilityId]?.content.preview || '';
+// Off-map panoramas (the gate) come first, then the map's locations.
+const places = [...Object.keys(campusPanoramas).filter(id => !hotspots[id]), ...campusHotspots.map(point => point.id)];
 const resetIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>';
 
 function PhotoSphere({ place, onNavigate }) {
@@ -53,25 +55,26 @@ function PhotoSphere({ place, onNavigate }) {
   return <div ref={container} data-campus-sphere={status} className="campus-pano absolute inset-0" />;
 }
 
-export default function CampusPanorama({ place, onPlace, onMap }) {
+export default function CampusPanorama({ place: selected, onPlace, onMap }) {
   const { t } = useLanguage();
+  const place = selected ?? places.find(id => campusPanoramas[id]) ?? null;
   const [trail, setTrail] = useState([]);
   const pano = campusPanoramas[place], name = t(placeName(place));
-  const available = campusHotspots.filter(point => campusPanoramas[point.id]).length;
+  const available = places.filter(id => campusPanoramas[id]).length;
   const go = (id, walked) => { setTrail(walked ? [...trail, place] : []); onPlace(id); };
   const back = () => { onPlace(trail.at(-1)); setTrail(trail.slice(0, -1)); };
   const links = (pano?.links || []).filter(link => campusPanoramas[link.to]);
   return <div data-campus-360={place || ''} className="campus-360 relative mx-auto max-w-5xl">
     <div role="group" aria-label={t('Pilih lokasi tur 360°')} data-lenis-prevent-horizontal className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-visible sm:px-0">
-      {campusHotspots.map(point => <button key={point.id} type="button" data-campus-place={point.id} aria-pressed={place === point.id} onClick={() => go(point.id)} className="campus-place inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full border border-dark-200 bg-white px-4 text-xs font-semibold text-dark-700 transition-colors hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-white sm:text-sm">
-        {t(point.label)}{campusPanoramas[point.id] && <span className="rounded-full bg-primary-50 px-1.5 text-[10px] font-bold text-primary">360°</span>}
+      {places.map(id => <button key={id} type="button" data-campus-place={id} aria-pressed={place === id} onClick={() => go(id)} className="campus-place inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full border border-dark-200 bg-white px-4 text-xs font-semibold text-dark-700 transition-colors hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-white sm:text-sm">
+        {t(placeName(id))}{campusPanoramas[id] && <span className="rounded-full bg-primary-50 px-1.5 text-[10px] font-bold text-primary">360°</span>}
       </button>)}
     </div>
-    <p className="mt-3 text-center text-xs text-dark-500">{t('{count} dari {total} lokasi sudah memiliki panorama 360° asli.', { count: available, total: campusHotspots.length })}</p>
+    <p className="mt-3 text-center text-xs text-dark-500">{t('{count} dari {total} lokasi sudah memiliki panorama 360° asli.', { count: available, total: places.length })}</p>
     <article className="mt-5 overflow-hidden rounded-2xl border border-dark-100 bg-white shadow-card">
       <div className="relative aspect-[4/3] bg-dark-900 sm:aspect-video">
         {pano?.src && <PhotoSphere place={place} onNavigate={id => go(id, true)} />}
-        {pano?.embed && <iframe key={place} src={pano.embed} title={t('Street View {name}', { name })} allow="accelerometer; gyroscope; fullscreen" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="absolute inset-0 size-full border-0" />}
+        {pano?.embed && <iframe key={place} src={pano.embed} title={t('Street View {name}', { name })} allow="accelerometer; gyroscope; fullscreen" allowFullScreen loading="lazy" referrerPolicy="strict-origin-when-cross-origin" className="absolute inset-0 size-full border-0" />}
         {!pano && <div role="status" className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-dark-50 px-6 text-center text-sm text-dark-500">
           <ImageOff className="size-9" aria-hidden="true" />
           <p className="max-w-md font-semibold text-dark-700">{place ? t('Panorama 360° untuk {name} belum tersedia.', { name }) : t('Pilih lokasi untuk membuka panorama 360°.')}</p>
@@ -80,7 +83,7 @@ export default function CampusPanorama({ place, onPlace, onMap }) {
       </div>
       {place && <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-start sm:justify-between sm:p-6">
         <div className="min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-wider text-primary">{pano ? t('Tur 360°') : t('Belum ada panorama')}</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-primary">{pano?.embed ? 'Google Street View' : pano ? t('Tur 360°') : t('Belum ada panorama')}</p>
           <h3 className="mt-1 font-heading text-xl font-bold leading-tight text-dark-900 sm:text-2xl">{name}</h3>
           {placeText(place) && <p className="mt-2 max-w-2xl text-xs leading-relaxed text-dark-600 sm:text-sm">{t(placeText(place))}</p>}
           {links.length > 0 && <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label={t('Lanjut ke lokasi terhubung')}>
