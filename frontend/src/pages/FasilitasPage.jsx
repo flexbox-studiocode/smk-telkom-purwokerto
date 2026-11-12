@@ -94,6 +94,8 @@ export default function FasilitasPage() {
   const campusActionFrame = useRef(null);
   const selectedCampusId = selected ? campusIdForCard(selected) : null;
   const selectedCampus = selectedCampusId ? campusFacilities[selectedCampusId].content : null;
+  // Skip the map note when it only repeats the card's own description (RPS cards share one text with the map).
+  const campusNote = selectedCampus && selectedCampus.preview !== selected.preview ? selectedCampus.preview || 'Deskripsi fasilitas ini sedang disiapkan.' : null;
   const lenis = useLenis();
   const groups = fasilitasViews[category];
   const count = groups.reduce((total, group) => total + group.items.length, 0);
@@ -200,7 +202,7 @@ export default function FasilitasPage() {
         </section>
       <Modal terbuka={selected !== null} onTutup={() => setSelected(null)} judul={selected ? t(selected.name) : ''} labelTutup={t('Tutup')} lebar="max-w-2xl">
         {selected && <div data-lenis-prevent className="max-h-[70dvh] overflow-y-auto overscroll-contain"><FacilityPhotos key={selected.id} item={selected} t={t} /><p className="mt-5 text-sm leading-relaxed text-dark-600">{t(selected.preview)}</p>{!selected.photos && <p className="mt-3 text-xs leading-relaxed text-dark-500">{t('Foto merupakan ilustrasi kegiatan belajar. Dokumentasi khusus ruangan ini belum tersedia.')}</p>}
-          {selectedCampus && <div className="mt-4 rounded-xl bg-dark-50 p-4"><h3 className="font-heading text-sm font-bold text-primary">{t(selectedCampus.name)}</h3><p className="mt-2 text-xs leading-relaxed text-dark-600">{t(selectedCampus.preview || 'Informasi fasilitas ini belum tersedia. Nama dan titik lokasi mengikuti referensi peta sekolah.')}</p><button type="button" onClick={locateCampus} className="mt-3 inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-primary hover:underline focus-visible:outline-2 focus-visible:outline-primary">{t('Lihat lokasi di peta')}<ArrowRight className="size-4" aria-hidden="true" /></button></div>}
+          {selectedCampus && <div className="mt-4 rounded-xl bg-dark-50 p-4"><h3 className="font-heading text-sm font-bold text-primary">{t(selectedCampus.name)}</h3>{campusNote && <p className="mt-2 text-xs leading-relaxed text-dark-600">{t(campusNote)}</p>}<button type="button" onClick={locateCampus} className="mt-3 inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-primary hover:underline focus-visible:outline-2 focus-visible:outline-primary">{t('Lihat lokasi di peta')}<ArrowRight className="size-4" aria-hidden="true" /></button></div>}
         </div>}
       </Modal>
     </MainLayout>

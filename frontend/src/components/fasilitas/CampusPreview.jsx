@@ -89,8 +89,9 @@ function FacilityContent({ facility, outgoing, initialRoomName }) {
   }, [room]);
   const photos = room ? galleries[room.name] || room.photos || [] : facility.photos || (item.image ? [{ source: item.id, src: item.image }] : []);
   const name = room?.name || item.name;
-  const location = facility.location || (item.category === item.name ? 'Fasilitas Sekolah' : item.name);
-  const type = room ? 'Ruang Kelas' : item.category || item.preview || item.name;
+  const type = room ? 'Ruang Kelas' : item.type || item.category || item.name;
+  // The eyebrow must add information: never repeat the title.
+  const location = facility.location || (type === item.name || item.category === item.name ? 'Fasilitas Sekolah' : item.name);
   return (
     <div data-outgoing={outgoing} aria-hidden={outgoing || undefined} inert={outgoing || undefined} className="campus-preview-content grid min-w-0 gap-6 p-5 sm:p-6 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
       <div className="flex min-w-0 flex-col justify-between">
@@ -98,7 +99,7 @@ function FacilityContent({ facility, outgoing, initialRoomName }) {
           <p className="text-sm font-semibold text-primary">{t(location)}</p>
           <h3 id={outgoing ? undefined : 'campus-preview-title'} aria-live={outgoing ? undefined : 'polite'} aria-atomic="true" className="mt-1 font-heading text-2xl font-bold leading-tight text-dark-900 sm:text-3xl">{t(type)}<span className="sr-only"> — {t(location)} {room ? t(room.name) : ''}</span></h3>
           {room && <p className="mt-2 inline-block rounded-md bg-primary px-3 py-1 font-heading text-xl font-bold leading-tight text-white">{room.name.replace(/^Kelas /, '')}</p>}
-          <p className="mt-4 text-xs leading-relaxed text-dark-600 sm:text-sm">{t(room?.preview || item.preview || 'Informasi fasilitas ini belum tersedia. Nama dan titik lokasi mengikuti referensi peta sekolah.')}</p>
+          <p className="mt-4 text-xs leading-relaxed text-dark-600 sm:text-sm">{t(room?.preview || item.preview || 'Deskripsi fasilitas ini sedang disiapkan.')}</p>
           {room?.photoNote && <p className="mt-3 text-xs leading-relaxed text-dark-500">{t(room.photoNote, { name: t(room.photoKey) })}</p>}
           {facility.rooms && <label className="mt-4 block text-xs font-semibold text-dark-600">
             {t('Pilih ruang kelas')}

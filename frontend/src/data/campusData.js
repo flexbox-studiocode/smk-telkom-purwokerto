@@ -18,21 +18,23 @@ import diagonalSouth from '../assets/fasilitas/campus/node-205-1117.svg';
 import diagonalNorth from '../assets/fasilitas/campus/node-205-1150.svg';
 
 const existing = id => fasilitasData.find(item => item.id === id);
-const knownPlace = (id, name, preview = '') => ({ id, name, preview, description: '', image: null });
+// `type` is the modal title when it differs from the map name; `preview` is a description, never a copy of the name.
+const knownPlace = (id, name, { type = '', preview = '' } = {}) => ({ id, name, type, preview, description: '', image: null });
 const classroomGroup = id => fasilitasViews.Kelas.find(group => group.id === id).items;
+const cardPreview = (category, group, name) => fasilitasViews[category].find(item => item.id === group).items.find(card => card.name === name).preview;
 export const campusFacilities = {
   'kelas-a': { content: existing('kelas-a'), rooms: classroomGroup('kelas-a'), location: 'Gedung A', list: { category: 'Kelas', group: 'kelas-a' } },
   'kelas-b': { content: existing('kelas-b'), rooms: classroomGroup('kelas-b'), location: 'Gedung B', list: { category: 'Kelas', group: 'kelas-b' } },
   'kelas-c': { content: existing('kelas-c'), rooms: classroomGroup('kelas-c'), location: 'Gedung C', list: { category: 'Kelas', group: 'kelas-c' } },
-  'kelas-d': { content: knownPlace('kelas-d', 'Gedung D'), rooms: classroomGroup('kelas-d'), location: 'Gedung D', list: { category: 'Kelas', group: 'kelas-d' } },
-  gor: { content: knownPlace('gor', 'GOR', 'Gedung Olahraga'), photos: [...facilityPhotoCovers['Lapangan Futsal'], ...facilityPhotoCovers['Lapangan Basket'], ...facilityPhotoCovers.Toilet, ...facilityPhotoCovers['Pintu Masuk']], location: 'GOR', list: { category: 'GOR', group: 'gor' } },
+  'kelas-d': { content: existing('kelas-d'), rooms: classroomGroup('kelas-d'), location: 'Gedung D', list: { category: 'Kelas', group: 'kelas-d' } },
+  gor: { content: knownPlace('gor', 'GOR', { type: 'Gedung Olahraga', preview: 'Gedung Olahraga sekolah yang memiliki lapangan futsal, lapangan basket, toilet, dan pintu masuk.' }), photos: [...facilityPhotoCovers['Lapangan Futsal'], ...facilityPhotoCovers['Lapangan Basket'], ...facilityPhotoCovers.Toilet, ...facilityPhotoCovers['Pintu Masuk']], location: 'Fasilitas Sekolah', list: { category: 'GOR', group: 'gor' } },
   perpustakaan: { content: existing('perpustakaan'), photos: [...facilityPhotoCovers['Tempat Baca'], ...facilityPhotoCovers['Rak Buku'], ...facilityPhotoCovers['Rak Tas']], list: { category: 'Perpustakaan', group: 'perpustakaan' } },
-  'rps-selatan': { content: knownPlace('rps-selatan', 'RPS Selatan', 'Ruang Praktik Siswa'), photos: facilityPhotoCovers['RPS. Selatan'], list: { category: 'Laboratorium', group: 'lab', item: 'lab-6' } },
-  'rps-utara': { content: knownPlace('rps-utara', 'RPS Utara', 'Ruang Praktik Siswa'), photos: facilityPhotoCovers['RPS. Utara'], list: { category: 'Laboratorium', group: 'lab', item: 'lab-5' } },
-  dlg: { content: knownPlace('dlg', 'DLG', 'Digital Literacy Garden'), photos: facilityPhotoCovers.DLG, list: { category: 'Perpustakaan', group: 'literasi' } },
+  'rps-selatan': { content: knownPlace('rps-selatan', 'RPS Selatan', { type: 'Ruang Praktik Siswa', preview: cardPreview('Laboratorium', 'lab', 'RPS. Selatan') }), photos: facilityPhotoCovers['RPS. Selatan'], list: { category: 'Laboratorium', group: 'lab', item: 'lab-6' } },
+  'rps-utara': { content: knownPlace('rps-utara', 'RPS Utara', { type: 'Ruang Praktik Siswa', preview: cardPreview('Laboratorium', 'lab', 'RPS. Utara') }), photos: facilityPhotoCovers['RPS. Utara'], list: { category: 'Laboratorium', group: 'lab', item: 'lab-5' } },
+  dlg: { content: knownPlace('dlg', 'DLG', { type: 'Digital Literacy Garden', preview: cardPreview('Perpustakaan', 'literasi', 'DLG') }), photos: facilityPhotoCovers.DLG, list: { category: 'Perpustakaan', group: 'literasi' } },
   'lapangan-apel': { content: knownPlace('lapangan-apel', 'Lapangan Apel'), photos: campusFieldPhotos, list: null },
-  aula: { content: knownPlace('aula', 'Aula'), photos: [...facilityPhotoCovers.Panggung, ...facilityPhotoCovers['Halaman Depan'], ...facilityPhotoCovers['Area Integrasi GOR'], ...facilityPhotoCovers['Ruangan yang Luas']], list: null },
-  parkiran: { content: knownPlace('parkiran', 'Parkiran'), photos: [...facilityPhotoCovers['Parkiran Timur'], ...facilityPhotoCovers['Parkiran Utara'], ...facilityPhotoCovers['Parkiran Selatan'], ...facilityPhotoCovers['Parkiran Barat']], list: null },
+  aula: { content: knownPlace('aula', 'Aula', { preview: 'Aula sekolah dengan panggung permanen di bagian depan. Aula ini juga berfungsi sebagai Gedung Olahraga (GOR) indoor dengan lapangan serbaguna untuk kegiatan olahraga siswa.' }), photos: [...facilityPhotoCovers.Panggung, ...facilityPhotoCovers['Halaman Depan'], ...facilityPhotoCovers['Area Integrasi GOR'], ...facilityPhotoCovers['Ruangan yang Luas']], list: { category: 'Aula', group: 'aula' } },
+  parkiran: { content: knownPlace('parkiran', 'Parkiran', { preview: 'Area parkir kendaraan di lingkungan sekolah.' }), photos: [...facilityPhotoCovers['Parkiran Timur'], ...facilityPhotoCovers['Parkiran Utara'], ...facilityPhotoCovers['Parkiran Selatan'], ...facilityPhotoCovers['Parkiran Barat']], list: { category: 'Parkiran', group: 'parkiran' } },
 };
 
 // Pin tips normalized against the Figma image, not the page viewport. Static classes keep Tailwind aware of coordinates.

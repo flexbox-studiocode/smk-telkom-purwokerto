@@ -17,7 +17,8 @@ const section = (id, title, names) => ({
     const photos = classroomPhotoCovers[photoKey] || facilityPhotoCovers[photoKey];
     return { id: `${id}-${index + 1}`, name, image: photos[0].src, photos, preview, photoKey,
       classroomGallery: Boolean(classroomPhotoCovers[photoKey]),
-      photoNote: aliases[name] ? 'Foto ruangan ini belum tersedia. Foto yang ditampilkan berasal dari {name}.' : name.startsWith('Parkiran ') ? 'Dokumentasi area parkir sekolah; arah lokasi pada foto belum terverifikasi.' : null,
+      // Internal QA note, not shown to visitors: the compass direction of each Parkiran photo is not verified yet.
+      photoNote: aliases[name] ? 'Foto ruangan ini belum tersedia. Foto yang ditampilkan berasal dari {name}.' : null,
     };
   }),
 });
