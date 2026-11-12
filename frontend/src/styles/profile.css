@@ -110,13 +110,13 @@
 .profile-value-card h3 { font-size: clamp(1rem, 1.837cqw, 2rem); font-weight: 700; line-height: 1.25; }
 .profile-value-card p { margin-top: .25rem; font-size: clamp(.75rem, .861cqw, .9375rem); font-weight: 500; line-height: 1.4; color: var(--color-dark-600); }
 .profile-history { scroll-margin-top: 6rem; padding-bottom: 3rem; }
-.profile-timeline { --timeline-icon: 2.75rem; --timeline-gap: .75rem; display: grid; gap: 2rem; padding: 1.5rem; border-radius: 1.25rem; background: #fffdfd; box-shadow: 0 0 24px rgb(130 130 130 / .18); }
+.profile-timeline { --timeline-icon: 2.75rem; --timeline-gap: .75rem; --timeline-row-gap: 2rem; --timeline-year-size: clamp(1.75rem, 2.296cqw, 2.5rem); --timeline-year-center: calc(var(--timeline-year-size) * 1.3 / 2); display: grid; gap: var(--timeline-row-gap); padding: 1.5rem; border-radius: 1.25rem; background: #fffdfd; box-shadow: 0 0 24px rgb(130 130 130 / .18); }
 .profile-timeline li { min-width: 0; }
 .profile-milestone { position: relative; display: grid; grid-template-columns: var(--timeline-icon) minmax(0, 1fr); align-items: start; gap: var(--timeline-gap); width: 100%; text-align: left; }
 .profile-milestone-icon { z-index: 1; display: flex; align-items: center; justify-content: center; width: var(--timeline-icon); height: var(--timeline-icon); margin-top: 2.75rem; border-radius: .5rem; background: var(--profile-red); }
 .profile-milestone-icon img { max-width: 75%; max-height: 75%; object-fit: contain; }
 .profile-milestone-content { display: block; min-width: 0; }
-.profile-milestone-year { display: block; font-size: clamp(1.75rem, 2.296cqw, 2.5rem); font-weight: 800; line-height: 1.3; letter-spacing: .05em; }
+.profile-milestone-year { display: block; font-size: var(--timeline-year-size); font-weight: 800; line-height: 1.3; letter-spacing: .05em; }
 .profile-milestone-track { position: relative; display: flex; align-items: center; height: .75rem; margin-block: .5rem; }
 .profile-milestone-track::before { position: absolute; inset-inline: 0; height: 2px; background: var(--color-dark-200); content: ''; }
 .profile-milestone-track i { z-index: 1; width: .6875rem; height: .6875rem; border-radius: 50%; background: var(--profile-red); }
@@ -154,7 +154,13 @@
 .profile-pathway-icon img { max-width: 100%; height: auto; }
 .profile-pathway-scholar .profile-pathway-icon { left: 1.5rem; right: auto; }
 @media (max-width: 63.999rem) {
-  .profile-timeline li:not(:last-child) .profile-milestone::after { position: absolute; top: calc(2.75rem + var(--timeline-icon) / 2); bottom: calc(-4.75rem - var(--timeline-icon) / 2); left: calc(var(--timeline-icon) / 2); width: 2px; background: var(--color-dark-200); content: ''; }
+  /* Stacked layout: one vertical line runs dot to dot, with each dot on the line next to its year; the horizontal tracks are desktop only. */
+  .profile-milestone-track { display: none; }
+  .profile-milestone-year { position: relative; }
+  .profile-milestone-year::before { position: absolute; top: 50%; left: calc(-1 * (var(--timeline-icon) / 2 + var(--timeline-gap) + .34375rem)); z-index: 1; width: .6875rem; height: .6875rem; border-radius: 50%; background: var(--profile-red); transform: translateY(-50%); content: ''; }
+  .profile-timeline li .profile-milestone::after { position: absolute; top: var(--timeline-year-center); left: calc(var(--timeline-icon) / 2 - 1px); width: 2px; background: var(--color-dark-200); content: ''; }
+  .profile-timeline li:not(:last-child) .profile-milestone::after { bottom: calc(-1 * (var(--timeline-row-gap) + var(--timeline-year-center))); }
+  .profile-timeline li:last-child .profile-milestone::after { height: calc(2.75rem + var(--timeline-icon) / 2 - var(--timeline-year-center)); }
 }
 @media (max-width: 47.999rem) {
   .profile-pathway { padding-block: 2rem; }
