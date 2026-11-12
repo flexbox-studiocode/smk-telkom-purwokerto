@@ -1,5 +1,5 @@
 <svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="179" height="179" viewBox="0 0 179 179" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="tabler:border-corner-square">
+<g id="tabler:border-corner-square" transform="rotate(180 89.5 89.5)">
 <path id="Vector" d="M29.834 149.166V37.2913C29.834 35.3133 30.6198 33.4162 32.0185 32.0175C33.4172 30.6188 35.3142 29.833 37.2923 29.833H149.167" stroke="#525252" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 </svg>
