@@ -100,6 +100,17 @@ try {
   assert.equal(translate('Lihat daftar fasilitas', 'en'), 'View facility list');
   for (const key of ['Ruang kelas modern dengan pencahayaan baik dan perangkat belajar lengkap.', 'Ilustrasi kegiatan belajar', 'Fasilitas Kelas', 'Ruang kelas nyaman berbasis teknologi']) assert.equal(dictionary[key], undefined, `kunci usang ${key}`);
 
+  // No two different facilities share a sentence; the map may reuse a card text only for the same facility (RPS, DLG).
+  const everyCard = Object.entries(fasilitasViews).filter(([view]) => view !== 'Semua').flatMap(([, groups]) => groups.flatMap(group => group.items));
+  const seen = new Map();
+  for (const card of everyCard) { assert.ok(!seen.has(card.preview), `${card.name} dan ${seen.get(card.preview)} memakai teks yang sama`); seen.set(card.preview, card.name); assert.notEqual(translate(card.preview, 'en'), card.preview, `${card.name}: EN belum ada`); }
+  const shared = new Set(['rps-utara', 'rps-selatan', 'dlg']);
+  for (const [id, facility] of Object.entries(campusFacilities)) {
+    const { preview } = facility.content;
+    if (preview && seen.has(preview) && !shared.has(id)) assert.fail(`${id}: peta menyalin teks kartu ${seen.get(preview)}`);
+  }
+  for (const sentence of campusFacilities.aula.content.preview.split(/(?<=[.])\s+/)) assert.ok(!seen.has(sentence), 'Kalimat Aula di peta tidak boleh sama persis dengan kartu');
+
   // Every Indonesian description rendered on the page and the map has an English counterpart.
   const strings = new Set([...Object.values(fasilitasViews).flatMap(groups => groups.flatMap(group => group.items.map(card => card.preview))), ...Object.values(campusFacilities).map(facility => facility.content.preview).filter(Boolean)]);
   for (const value of strings) assert.ok(dictionary[value], `EN hilang: ${value}`);
