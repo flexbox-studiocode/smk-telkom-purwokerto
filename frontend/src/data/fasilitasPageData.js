@@ -17,7 +17,8 @@ const section = (id, title, names) => ({
     const photos = classroomPhotoCovers[photoKey] || facilityPhotoCovers[photoKey];
     return { id: `${id}-${index + 1}`, name, image: photos[0].src, photos, preview, photoKey,
       classroomGallery: Boolean(classroomPhotoCovers[photoKey]),
-      photoNote: aliases[name] ? 'Foto ruangan ini belum tersedia. Foto yang ditampilkan berasal dari {name}.' : name.startsWith('Parkiran ') ? 'Dokumentasi area parkir sekolah; arah lokasi pada foto belum terverifikasi.' : null,
+      // Internal QA note, not shown to visitors: the compass direction of each Parkiran photo is not verified yet.
+      photoNote: aliases[name] ? 'Foto ruangan ini belum tersedia. Foto yang ditampilkan berasal dari {name}.' : null,
     };
   }),
 });
@@ -32,6 +33,8 @@ const labs = [
   ['Lab. TKJ', 'Fasilitas interaktif untuk mendalami jaringan komputer dan kolaborasi tim'],
   ['Lab. TJA', 'Ruang belajar kondusif untuk memahami konsep serta sistem telekomunikasi modern'],
 ];
+// Neutral on purpose: only the name and the map side are verified, not the equipment or the programs that use the room.
+const practiceRoom = side => [`RPS. ${side}`, `Ruang Praktik Siswa (RPS) ${side}, ruang yang digunakan siswa untuk kegiatan belajar praktik.`];
 const library = [
   ['Rak Tas', 'Fasilitas penyimpanan tas yang rapi dan aman untuk menjaga kenyamanan pengunjung'],
   ['DLG', 'Area khusus akses literasi digital untuk mendukung riset dan pencarian referensi'],
@@ -66,9 +69,10 @@ export const fasilitasViews = {
     section('semua-gor', 'GOR', sports),
     section('semua-parkiran', 'Parkiran', parking),
   ],
-  Laboratorium: [section('lab', '', [labs[0], labs[2], labs[3], labs[1], ['RPS. Utara', 'Ruang Praktik Siswa'], ['RPS. Selatan', 'Ruang Praktik Siswa']])],
+  Laboratorium: [section('lab', '', [labs[0], labs[2], labs[3], labs[1], practiceRoom('Utara'), practiceRoom('Selatan')])],
   Kelas: Object.keys(rooms).map(building => section(`kelas-${building.toLowerCase()}`, `Kelas Gedung ${building}`, classroomNames(building))),
-  Perpustakaan: [section('perpustakaan', 'Ruang Perpustakaan', library), section('literasi', 'Digital Literasi Garden', library)],
+  // Photo folders prove the split: Rak Tas, Tempat Baca and Rak Buku come from "Foto Kelas/Perpustakaan" (6 photos), DLG from "Foto Kelas/DLG".
+  Perpustakaan: [section('perpustakaan', 'Ruang Perpustakaan', library.filter(([name]) => name !== 'DLG')), section('literasi', 'Digital Literacy Garden', library.filter(([name]) => name === 'DLG'))],
   Aula: [section('aula', '', hall)],
   GOR: [section('gor', '', sports)],
   Parkiran: [section('parkiran', '', parking)],

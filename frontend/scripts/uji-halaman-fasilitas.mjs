@@ -63,7 +63,7 @@ try {
   assert.equal(await page.locator('meta[name="viewport"]').getAttribute('content'), 'width=device-width, initial-scale=1.0');
   assert.equal(await page.locator('[data-facility-card]').count(), 24);
   assert.equal(new Set(await page.locator('[data-facility-card]').evaluateAll(nodes => nodes.map(n => n.dataset.facilityCard))).size, 24);
-  for (const [category, count] of [['Laboratorium', 6], ['Kelas', 16], ['Perpustakaan', 8], ['Aula', 4], ['GOR', 4], ['Parkiran', 4], ['Semua', 24]]) {
+  for (const [category, count] of [['Laboratorium', 6], ['Kelas', 16], ['Perpustakaan', 4], ['Aula', 4], ['GOR', 4], ['Parkiran', 4], ['Semua', 24]]) {
     await page.getByRole('button', { name: category, exact: true }).click();
     // Different categories can have equal card counts; also wait for the selected filter.
     await page.waitForFunction(({ category, count }) => document.querySelectorAll('[data-facility-card]').length === count && [...document.querySelectorAll('#daftar-fasilitas button')].some(button => button.textContent.trim() === category && button.getAttribute('aria-pressed') === 'true'), { category, count });

@@ -32,7 +32,7 @@ try{
    assert.ok(geometry.scroll<=geometry.client);assert.equal(geometry.columns,width>=1024?4:width>=640?2:1);
    assert.equal(await page.locator('#stela').count(),1);assert.equal(await page.locator('#ppdb').count(),1);
    assert.equal(await page.locator('#stela').evaluate(el=>el.nextElementSibling?.id),'ppdb');
-   for(const [name,count] of [['Laboratorium',6],['Kelas',16],['Perpustakaan',8],['Aula',4],['GOR',4],['Parkiran',4],['Semua',24]]){
+   for(const [name,count] of [['Laboratorium',6],['Kelas',16],['Perpustakaan',4],['Aula',4],['GOR',4],['Parkiran',4],['Semua',24]]){
     await page.getByRole('button',{name:translate(name,lang),exact:true}).click();
     await page.waitForFunction(count=>document.querySelectorAll('[data-facility-card]').length===count,count);
     assert.equal(await page.locator('[data-facility-card]').count(),count);
