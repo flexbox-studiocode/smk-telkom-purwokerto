@@ -16,7 +16,7 @@ const defaultSlides = [
   { name: 'Perpustakaan', image: fasilitasData[7].image, preview: fasilitasData[7].preview, category: 'Perpustakaan', Icon: BookOpen },
   { name: 'Lab Komputer', image: fasilitasData[4].image, preview: fasilitasData[4].preview, category: 'Laboratorium', Icon: Monitor },
   { name: 'Lab Robotik', image: fasilitasData[6].image, preview: fasilitasData[6].preview, category: 'Laboratorium', Icon: Bot },
-  { name: 'Fasilitas Lainnya', image: fasilitasData[0].image, preview: fasilitasData[0].preview, category: 'Semua', Icon: Building2 },
+  { name: 'Fasilitas Lainnya', image: fasilitasData[0].image, preview: 'Lihat fasilitas lain di SMK Telkom Purwokerto, seperti perpustakaan, aula, GOR, dan area parkir.', category: 'Semua', Icon: Building2 },
 ];
 // Profile frame places the robotics lab immediately before the network lab.
 const profileSlides = [...defaultSlides.slice(0, 4), defaultSlides[5], defaultSlides[4]];

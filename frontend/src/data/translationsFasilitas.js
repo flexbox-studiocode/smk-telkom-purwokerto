@@ -13,6 +13,7 @@ export default {
   'Parkiran Selatan': 'South Parking',
   'Parkiran Barat': 'West Parking',
   'Ruang Praktik Siswa': 'Student Practical Workshop',
+  'Lihat fasilitas lain di SMK Telkom Purwokerto, seperti perpustakaan, aula, GOR, dan area parkir.': 'Explore other facilities at SMK Telkom Purwokerto, including the library, hall, sports hall, and parking areas.',
   'Foto ruangan ini belum tersedia. Foto yang ditampilkan berasal dari {name}.': 'Photos of this room are not available yet. The displayed photo is from {name}.',
   'Dokumentasi area parkir sekolah; arah lokasi pada foto belum terverifikasi.': 'School parking documentation; the direction of the photographed area has not been verified.',
   'Fasilitas praktik modern untuk merancang dan menguji inovasi teknologi robotika': 'Modern practical facilities for designing and testing robotics innovations',
