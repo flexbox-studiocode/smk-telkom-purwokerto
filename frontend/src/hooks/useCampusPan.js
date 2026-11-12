@@ -53,6 +53,7 @@ export default function useCampusPan({ viewport, stage, scenery, slider, previou
       if (view.hasPointerCapture(gesture.id)) view.releasePointerCapture(gesture.id);
     };
     const measure = () => {
+      if (!view.clientWidth) return; // hidden (360° mode): keep last units so the shared header/toggle don't collapse to 0
       stop(); endGesture(); const fraction = state.fraction;
       state.width = view.clientWidth;
       const failed = view.dataset.mapFailed === 'true', geometry = campusGeometry(state.width);
