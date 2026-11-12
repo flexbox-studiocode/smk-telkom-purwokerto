@@ -54,7 +54,8 @@
 
   /* Token animasi. Didaftarkan di @theme supaya Tailwind v4 membuatkan utility
      `animate-masuk-halaman` dan `animate-naik-halus` — tanpa plugin tambahan. */
-  --animate-masuk-halaman: masuk-halaman 0.4s ease-out both;
+  /* `backwards`, not `both`: a kept end transform would trap `position: fixed` (e.g. iPhone 360° fullscreen) inside <main>. */
+  --animate-masuk-halaman: masuk-halaman 0.4s ease-out backwards;
   --animate-naik-halus: naik-halus 0.5s ease-out both;
 }
 

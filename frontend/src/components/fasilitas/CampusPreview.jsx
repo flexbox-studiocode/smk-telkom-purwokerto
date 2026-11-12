@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, ChevronDown, ImageOff, X } from 'lucide-react';
+import { ArrowRight, ChevronDown, ImageOff, Rotate3d, X } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import useSlidingPage from '../../hooks/useSlidingPage';
 import { useLenis } from 'lenis/react';
@@ -111,6 +111,7 @@ function FacilityContent({ facility, outgoing, initialRoomName }) {
             </span>
           </label>}
           {facility.list && <button type="button" onClick={() => facility.onList(facility.list)} className="mt-3 inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-primary hover:underline">{t('Lihat daftar fasilitas')}<ArrowRight className="size-4" aria-hidden="true" /></button>}
+          {facility.onPanorama && <button type="button" onClick={facility.onPanorama} className="mt-1 flex min-h-11 w-fit items-center gap-2 text-xs font-semibold text-primary hover:underline">{t('Lihat panorama 360°')}<Rotate3d className="size-4" aria-hidden="true" /></button>}
         </div>
         <span aria-hidden="true" className="campus-card-accent mt-4"><img src={accent} alt="" className="max-w-none" /></span>
       </div>
@@ -119,7 +120,7 @@ function FacilityContent({ facility, outgoing, initialRoomName }) {
   );
 }
 
-export default function CampusPreview({ facility, initialRoomName, closing, onClose, onList }) {
+export default function CampusPreview({ facility, initialRoomName, closing, onClose, onList, onPanorama }) {
   const { t } = useLanguage();
   const close = useRef(null), preview = useRef(null);
   const lenis = useLenis();
@@ -153,8 +154,8 @@ export default function CampusPreview({ facility, initialRoomName, closing, onCl
   return (
     <dialog ref={preview} id="campus-preview" aria-modal="true" aria-labelledby="campus-preview-title" data-campus-preview={facility.content.id} data-closing={closing} data-lenis-prevent onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (event.target !== event.currentTarget) return; const bounds = event.currentTarget.getBoundingClientRect(); if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) onClose(); }} className="campus-preview campus-preview-modal relative rounded-2xl border border-primary/40 bg-white shadow-card">
       <button ref={close} type="button" onClick={() => onClose()} aria-label={t('Tutup informasi fasilitas')} className="absolute right-2 top-2 z-40 grid size-11 place-items-center rounded-full bg-white text-dark-500 hover:bg-dark-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"><X className="size-5" aria-hidden="true" /></button>
-      {outgoing && <FacilityContent key={`${outgoing.facility.content.id}:${outgoing.initialRoomName || ''}`} facility={{ ...outgoing.facility, onList }} initialRoomName={outgoing.initialRoomName} outgoing />}
-      <FacilityContent key={`${displayed.facility.content.id}:${displayed.initialRoomName || ''}`} facility={{ ...displayed.facility, onList }} initialRoomName={displayed.initialRoomName} outgoing={false} />
+      {outgoing && <FacilityContent key={`${outgoing.facility.content.id}:${outgoing.initialRoomName || ''}`} facility={{ ...outgoing.facility, onList, onPanorama }} initialRoomName={outgoing.initialRoomName} outgoing />}
+      <FacilityContent key={`${displayed.facility.content.id}:${displayed.initialRoomName || ''}`} facility={{ ...displayed.facility, onList, onPanorama }} initialRoomName={displayed.initialRoomName} outgoing={false} />
     </dialog>
   );
 }
