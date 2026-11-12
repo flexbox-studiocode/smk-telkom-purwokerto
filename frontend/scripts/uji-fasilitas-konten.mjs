@@ -84,7 +84,7 @@ try {
   for (const key of ['Informasi fasilitas ini belum tersedia. Nama dan titik lokasi mengikuti referensi peta sekolah.', 'Dokumentasi area parkir sekolah; arah lokasi pada foto belum terverifikasi.', 'Digital Literasi Garden']) assert.equal(dictionary[key], undefined, `kunci usang ${key}`);
 
   // Phase 2: card and slide copy states function; unverified quality claims survive only on cards waiting for school confirmation.
-  const waiting = card => /^Kelas /.test(card.name) || ['Lab. RPL', 'Halaman Depan', 'Pintu Masuk'].includes(card.name) || card.name.startsWith('Parkiran ');
+  const waiting = card => ['Lab. RPL', 'Halaman Depan', 'Pintu Masuk'].includes(card.name) || card.name.startsWith('Parkiran ');
   const promoId = /\b(modern|nyaman|berkualitas|standar|optimal|ratusan|aman|interaktif|kondusif|terbaik|kolaborasi)\b/i;
   const promoEn = /\b(modern|comfortable|quality|standard|optimal|hundreds|secure|interactive|welcoming|best|collaboration)\b/i;
   for (const card of Object.values(fasilitasViews).flat().flatMap(group => group.items)) {
@@ -99,6 +99,15 @@ try {
   for (const building of 'ABCD') assert.equal(translate(`Kelas Gedung ${building}`, 'en'), `Building ${building} Classrooms`);
   assert.equal(translate('Lihat daftar fasilitas', 'en'), 'View facility list');
   for (const key of ['Ruang kelas modern dengan pencahayaan baik dan perangkat belajar lengkap.', 'Ilustrasi kegiatan belajar', 'Fasilitas Kelas', 'Ruang kelas nyaman berbasis teknologi']) assert.equal(dictionary[key], undefined, `kunci usang ${key}`);
+
+  // The four classroom buildings must read differently, not just reworded: room texts across buildings stay below 50% shared words.
+  const words = text => new Set(text.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(word => word.length > 3));
+  const classrooms = cards('Kelas');
+  for (let first = 0; first < classrooms.length; first++) for (let second = first + 1; second < classrooms.length; second++) {
+    const one = words(classrooms[first].preview), two = words(classrooms[second].preview);
+    const shared = [...one].filter(word => two.has(word)).length / new Set([...one, ...two]).size;
+    if (classrooms[first].name[6] !== classrooms[second].name[6]) assert.ok(shared < 0.5, `${classrooms[first].name} dan ${classrooms[second].name} terlalu mirip (${shared.toFixed(2)})`);
+  }
 
   // No two different facilities share a sentence; the map may reuse a card text only for the same facility (RPS, DLG).
   const everyCard = Object.entries(fasilitasViews).filter(([view]) => view !== 'Semua').flatMap(([, groups]) => groups.flatMap(group => group.items));
