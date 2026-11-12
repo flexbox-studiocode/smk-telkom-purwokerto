@@ -109,7 +109,7 @@ try {
         const body = page.locator('[data-campus-preview] [data-outgoing="false"]');
         assert.ok((await body.innerText()).includes(language === 'id' ? 'GOR' : 'Sports Hall'));
         assert.equal(await body.locator('select').count(), 0, 'GOR must not offer classroom D dropdown');
-        await body.getByRole('button', { name: language === 'id' ? 'Lihat daftar fasilitas' : 'View facility listings', exact: true }).click();
+        await body.getByRole('button', { name: language === 'id' ? 'Lihat daftar fasilitas' : 'View facility list', exact: true }).click();
         await page.waitForURL('**kategori=GOR');
         await page.waitForFunction(() => document.querySelectorAll('[data-facility-card]').length === 4);
         assert.equal(await page.locator('[data-facility-card]').count(), 4);

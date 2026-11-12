@@ -83,6 +83,23 @@ try {
   assert.equal(translate('Digital Literacy Garden', 'en'), 'Digital Literacy Garden');
   for (const key of ['Informasi fasilitas ini belum tersedia. Nama dan titik lokasi mengikuti referensi peta sekolah.', 'Dokumentasi area parkir sekolah; arah lokasi pada foto belum terverifikasi.', 'Digital Literasi Garden']) assert.equal(dictionary[key], undefined, `kunci usang ${key}`);
 
+  // Phase 2: card and slide copy states function; unverified quality claims survive only on cards waiting for school confirmation.
+  const waiting = card => /^Kelas /.test(card.name) || ['Lab. RPL', 'Halaman Depan', 'Pintu Masuk'].includes(card.name) || card.name.startsWith('Parkiran ');
+  const promoId = /\b(modern|nyaman|berkualitas|standar|optimal|ratusan|aman|interaktif|kondusif|terbaik|kolaborasi)\b/i;
+  const promoEn = /\b(modern|comfortable|quality|standard|optimal|hundreds|secure|interactive|welcoming|best|collaboration)\b/i;
+  for (const card of Object.values(fasilitasViews).flat().flatMap(group => group.items)) {
+    if (waiting(card)) continue;
+    assert.doesNotMatch(card.preview, promoId, `${card.name}: klaim kualitas tanpa bukti`);
+    assert.doesNotMatch(translate(card.preview, 'en'), promoEn, `${card.name} (EN): klaim kualitas tanpa bukti`);
+    const words = card.preview.split(/\s+/).length;
+    assert.ok(words >= 7 && words <= 25, `${card.name}: ${words} kata di luar 7-25`);
+  }
+  for (const record of fasilitasData.filter(item => !item.id.startsWith('kelas-'))) assert.doesNotMatch(record.preview, promoId, `${record.id}: preview`);
+  assert.equal(translate('Sarana Belajar', 'en'), 'Learning Facilities');
+  for (const building of 'ABCD') assert.equal(translate(`Kelas Gedung ${building}`, 'en'), `Building ${building} Classrooms`);
+  assert.equal(translate('Lihat daftar fasilitas', 'en'), 'View facility list');
+  for (const key of ['Ruang kelas modern dengan pencahayaan baik dan perangkat belajar lengkap.', 'Ilustrasi kegiatan belajar', 'Fasilitas Kelas', 'Ruang kelas nyaman berbasis teknologi']) assert.equal(dictionary[key], undefined, `kunci usang ${key}`);
+
   // Every Indonesian description rendered on the page and the map has an English counterpart.
   const strings = new Set([...Object.values(fasilitasViews).flatMap(groups => groups.flatMap(group => group.items.map(card => card.preview))), ...Object.values(campusFacilities).map(facility => facility.content.preview).filter(Boolean)]);
   for (const value of strings) assert.ok(dictionary[value], `EN hilang: ${value}`);

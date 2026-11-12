@@ -28,29 +28,29 @@ const rooms = {
 };
 const classroomNames = building => rooms[building].map(room => `Kelas ${building} ${room}`);
 const labs = [
-  ['Lab. Robotik', 'Fasilitas praktik modern untuk merancang dan menguji inovasi teknologi robotika'],
+  ['Lab. Robotik', 'Ruang praktik tempat siswa merakit, memprogram, dan menguji robot untuk mempelajari dasar otomasi.'],
   ['Lab. RPL', 'Ruang praktik nyaman yang mendukung proses pemrograman dan pengembangan perangkat lunak'],
-  ['Lab. TKJ', 'Fasilitas interaktif untuk mendalami jaringan komputer dan kolaborasi tim'],
-  ['Lab. TJA', 'Ruang belajar kondusif untuk memahami konsep serta sistem telekomunikasi modern'],
+  ['Lab. TKJ', 'Ruang praktik untuk mempelajari jaringan komputer secara langsung.'],
+  ['Lab. TJA', 'Ruang praktik untuk mempelajari sistem dan jaringan akses telekomunikasi.'],
 ];
 // Neutral on purpose: only the name and the map side are verified, not the equipment or the programs that use the room.
 const practiceRoom = side => [`RPS. ${side}`, `Ruang Praktik Siswa (RPS) ${side}, ruang yang digunakan siswa untuk kegiatan belajar praktik.`];
 const library = [
-  ['Rak Tas', 'Fasilitas penyimpanan tas yang rapi dan aman untuk menjaga kenyamanan pengunjung'],
-  ['DLG', 'Area khusus akses literasi digital untuk mendukung riset dan pencarian referensi'],
-  ['Tempat Baca', 'Area baca yang nyaman dan kondusif untuk belajar mandiri maupun diskusi'],
-  ['Rak Buku', 'Koleksi buku dan referensi belajar yang tersusun rapi serta mudah diakses'],
+  ['Rak Tas', 'Rak untuk menyimpan tas pengunjung perpustakaan dengan rapi.'],
+  ['DLG', 'Digital Literacy Garden (DLG), area literasi digital untuk mencari referensi dan mendukung riset.'],
+  ['Tempat Baca', 'Area untuk membaca, belajar mandiri, dan berdiskusi.'],
+  ['Rak Buku', 'Rak koleksi buku dan referensi belajar perpustakaan.'],
 ];
 const hall = [
-  ['Panggung', 'Area permanen yang cukup luas di bagian depan untuk pengisi acara, pembicara seminar, podium, atau tempat penampilan seni siswa.'],
+  ['Panggung', 'Panggung permanen di bagian depan aula untuk pengisi acara, pembicara seminar, dan penampilan seni siswa.'],
   ['Halaman Depan', 'Wajah utama sekolah yang menyambut Anda dengan galeri kegiatan dan agenda terupdate.'],
-  ['Area Integrasi GOR', 'Aula ini juga terintegrasi sebagai Gedung Olahraga (GOR) Indoor yang memiliki lapangan serbaguna untuk olahraga siswa'],
-  ['Ruangan yang Luas', 'Ruangan ini dirancang sangat lapang dengan konsep dual-fungsi, sehingga bisa bertransformasi menjadi aula pertemuan besar yang menampung ratusan kursi saat acara seminar atau kelulusan'],
+  ['Area Integrasi GOR', 'Aula ini juga berfungsi sebagai Gedung Olahraga (GOR) indoor dengan lapangan serbaguna untuk kegiatan olahraga siswa.'],
+  ['Ruangan yang Luas', 'Ruangan lapang berfungsi ganda yang dapat disiapkan sebagai aula pertemuan besar untuk seminar atau acara kelulusan.'],
 ];
 const sports = [
-  ['Lapangan Futsal', 'Lapangan indoor standar dengan lantai berkualitas dan pencahayaan optimal untuk pertandingan.'],
-  ['Lapangan Basket', 'Area bermain yang luas, dilengkapi ring standar dan garis lapangan yang jelas.'],
-  ['Toilet', 'Fasilitas sanitasi yang bersih, nyaman, dan terawat di area olahraga.'],
+  ['Lapangan Futsal', 'Lapangan futsal indoor di Gedung Olahraga (GOR) untuk latihan dan pertandingan.'],
+  ['Lapangan Basket', 'Lapangan basket di area Gedung Olahraga (GOR) untuk latihan dan permainan siswa.'],
+  ['Toilet', 'Toilet untuk pengguna Gedung Olahraga (GOR) di area olahraga.'],
   ['Pintu Masuk', 'Akses utama yang luas dan ramah disabilitas menuju area tribun maupun lapangan.'],
 ];
 const parking = [

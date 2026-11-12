@@ -17,7 +17,7 @@ try {
   assert.equal(readLanguage(), 'en');
   assert.equal(translate('Beranda', 'en'), 'Home');
   assert.equal(translate('Beranda', 'id'), 'Beranda');
-  for (const [id, en] of [['Fasilitas Kelas', 'Learning Facilities'], ['Fasilitas Sekolah', 'School Facilities'], ['Laboratorium Jaringan', 'Network Laboratory']]) assert.equal(translate(id, 'en'), en);
+  for (const [id, en] of [['Sarana Belajar', 'Learning Facilities'], ['Fasilitas Sekolah', 'School Facilities'], ['Laboratorium Jaringan', 'Network Laboratory']]) assert.equal(translate(id, 'en'), en);
   assert.equal(translate('Pilihan Jurusan', 'en'), 'Study Programs', 'Portal dictionary must not replace the landing section label.');
   assert.equal(translate('Empat Jurusan, Banyak Peluang', 'en'), 'Four Programs, Endless Opportunities');
   assert.equal(translate('Kurikulum Industri', 'en'), 'Industry-Aligned Curriculum');
