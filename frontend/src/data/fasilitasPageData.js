@@ -2,31 +2,32 @@ import { classroomPhotoCovers } from './classroomPhotoCovers';
 import { facilityPhotoCovers } from './facilityPhotoCovers';
 
 // Inventory follows Figma 242:499 and the user's classroom corrections.
-// Room texts keep the meaning of the four supplied descriptions, reworded per building so no two rooms share a sentence.
+// Each building gets its own facets taken from its supplied building description (A: light and air, desks, devices, focus; B: quiet,
+// theory and discussion, devices, space; C: collaboration, groups, presentations, technology; D: spacious, devices, focus, space).
 const classroomPreviews = {
   A: [
-    'Kelas modern yang dilengkapi teknologi belajar lengkap dan pencahayaan terang agar mata tidak mudah lelah.',
-    'Kelas yang dirancang sangat rapi dan tenang agar siswa bisa fokus belajar tanpa gangguan.',
-    'Kelas dengan tata letak fleksibel yang memudahkan siswa untuk saling berdiskusi dan kerja kelompok.',
-    'Kelas yang sejuk, bersih, dan tenang sehingga suasananya sangat ideal untuk mendukung konsentrasi belajar.',
+    'Ruang kelas di Gedung A dengan pencahayaan alami yang baik dan sirkulasi udara yang lancar.',
+    'Meja dan kursi di ruang kelas Gedung A ditata rapi.',
+    'Proyektor, papan tulis, dan internet di Gedung A dipakai untuk pembelajaran digital.',
+    'Ruang kelas bersih tempat siswa Gedung A dapat fokus, bertanya, dan berdiskusi dengan guru maupun teman.',
   ],
   B: [
-    'Ruang kelas dengan teknologi belajar yang lengkap dan penerangan terang sehingga mata tidak cepat lelah.',
-    'Ruang kelas yang tertata rapi dan tenang agar siswa dapat fokus belajar tanpa terganggu.',
-    'Ruang kelas dengan tata letak yang fleksibel sehingga mudah dipakai untuk diskusi dan kerja kelompok.',
-    'Ruang kelas yang sejuk, bersih, dan tenang sehingga mendukung konsentrasi belajar.',
+    'Lingkungan yang tenang dan tertata di Gedung B membantu siswa berkonsentrasi penuh saat pelajaran.',
+    'Ruang kelas Gedung B yang dipakai untuk pelajaran teori sekaligus diskusi kelompok siswa.',
+    'Fasilitas pendukung Gedung B mencakup proyektor, papan tulis, dan jaringan internet.',
+    'Setiap kelas di Gedung B mendapat ruang yang cukup untuk menjalankan kegiatan belajar mengajar secara teratur.',
   ],
   C: [
-    'Kelas berpencahayaan terang dan berteknologi belajar lengkap, sehingga mata tidak mudah lelah saat belajar.',
-    'Kelas dengan suasana tenang dan tata ruang yang rapi, sehingga siswa bisa fokus tanpa gangguan.',
-    'Kelas bertata letak fleksibel, memudahkan siswa berdiskusi dan mengerjakan tugas kelompok.',
-    'Kelas dengan suasana sejuk, bersih, dan tenang yang membantu siswa berkonsentrasi.',
+    'Gedung C mendukung pembelajaran aktif dan kolaboratif di ruang kelas yang fleksibel.',
+    'Siswa bisa berdiskusi dan bekerja dalam kelompok di ruang kelas Gedung C.',
+    'Ruang kelas Gedung C digunakan siswa untuk presentasi dan mengerjakan proyek bersama.',
+    'Teknologi pendukung di Gedung C membantu guru menyampaikan materi dengan cara yang lebih menarik.',
   ],
   D: [
-    'Kelas yang terang, dengan teknologi belajar lengkap agar mata tidak mudah lelah saat pelajaran.',
-    'Kelas yang rapi dan tenang, dirancang supaya siswa tetap fokus saat belajar.',
-    'Kelas dengan susunan ruang yang fleksibel untuk mendukung diskusi serta kerja kelompok.',
-    'Kelas yang sejuk, bersih, dan tenang, cocok untuk belajar yang membutuhkan konsentrasi.',
+    'Kelas-kelas di Gedung D berukuran luas, bersih, dan tertata rapi.',
+    'Tiap ruangan di Gedung D dilengkapi proyektor, papan tulis, serta akses internet.',
+    'Siswa Gedung D dapat tetap fokus, aktif berdiskusi, dan lebih mudah menyerap materi pelajaran.',
+    'Gedung D melengkapi deretan gedung kelas sekolah dengan ruang yang cukup bagi setiap kelas.',
   ],
 };
 const aliases = { 'Kelas C 2.1': 'Kelas C 2.2', 'Kelas D 2.2': 'Kelas D 2.1', 'Lab. RPL': 'Lab. TKJ' };
