@@ -24,14 +24,13 @@
   box-shadow: var(--shadow-card);
   overflow-wrap: anywhere;
 }
-.teacher-card-label h3 { margin: 0; font-family: var(--font-jakarta); font-size: clamp(10px, 6cqw, 24px); font-weight: 800; letter-spacing: .05em; line-height: 1.35; }
+.teacher-card-label h3 { margin: 0; font-family: var(--font-jakarta); font-size: clamp(10px, 4.6cqw, 18px); font-weight: 800; letter-spacing: .05em; line-height: 1.35; }
 .teacher-card-label p { margin: 3px 0 0; font-family: var(--font-jakarta); font-size: clamp(9px, 3.75cqw, 15px); font-weight: 500; letter-spacing: 0; line-height: 1.4; color: var(--color-dark-600); }
-.teacher-card-label h3.teacher-card-name--long { font-size: clamp(10px, 4cqw, 16px); }
 /* Reserve the same description area across pages, including longer translated roles. */
 .teacher-card-description { min-height: 9rem; padding: 10px 12px 12px; overflow-wrap: anywhere; }
 [data-teacher-grid] .teacher-card-description { min-height: 10rem; }
 @container (max-width: 190px) {
   .teacher-card-label { bottom: 8%; height: 34%; padding: 4px 6px; border-radius: 8px; }
-  .teacher-card-label h3, .teacher-card-label h3.teacher-card-name--long { font-size: 9px; }
+  .teacher-card-label h3 { font-size: 9px; }
   .teacher-card-label p { font-size: 8px; }
 }

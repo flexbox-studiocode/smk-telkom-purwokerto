@@ -6,7 +6,7 @@ export default function TeacherCard({ teacher, name = teacher.nama, role = teach
     <div className="teacher-card-portrait">
       <TeacherPhoto teacher={teacher} alt={alt || name} loading={loading} className="teacher-card-photo" />
       <div className="teacher-card-label">
-        <h3 className={name.length > 24 ? 'teacher-card-name--long' : undefined}>{name}</h3>
+        <h3>{name}</h3>
         {role && <p>{role}</p>}
       </div>
       <TeacherCardBorder />
