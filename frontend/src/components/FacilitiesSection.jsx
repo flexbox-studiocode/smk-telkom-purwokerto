@@ -244,7 +244,7 @@ export default function FacilitiesSection({ variant = 'default' }) {
             return <li key={name} className="relative z-10 flex-1 text-center">
             <button type="button" data-facility-index={index} aria-pressed={active === index} onClick={() => navigate(index)} className={`group w-full text-xs ${active === index ? 'font-bold text-primary' : 'text-dark-500'}`}>
               <span className={`relative mx-auto flex size-12 items-center justify-center rounded-full border-2 transition-[background-color,border-color,color,scale] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:scale-100 ${active === index ? 'scale-[1.04] border-primary bg-primary text-white' : 'border-dark-400 bg-white group-hover:border-primary group-hover:text-primary'}`}><Icon className="size-5" /></span>
-              <span className="mt-3 block">{t(name)}</span><span className="mt-1 block text-[10px] text-dark-500">{String(position + 1).padStart(2, '0')}</span>
+              <span className="mt-3 block">{t(name)}</span><span className="mt-1 block text-[11px] text-dark-500">{String(position + 1).padStart(2, '0')}</span>
             </button>
           </li>;
           })}

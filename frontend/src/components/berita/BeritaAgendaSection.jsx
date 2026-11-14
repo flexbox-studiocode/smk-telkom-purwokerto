@@ -35,7 +35,7 @@ const BeritaAgendaSection = ({ items = [], tampilkanLihatSemua = true }) => {
             {tampilkanLihatSemua && (
               <Link
                 to="/berita#kategori-berita"
-                className="text-[10px] font-extrabold tracking-figma-copy text-primary hover:underline"
+                className="text-[11px] font-extrabold tracking-figma-copy text-primary hover:underline"
               >
                 {t('Lihat Semua')}
               </Link>
@@ -47,17 +47,17 @@ const BeritaAgendaSection = ({ items = [], tampilkanLihatSemua = true }) => {
               <li key={category.name} className="rounded-xl border border-dark-100 px-3 py-2.5">
                 <div className="flex items-center justify-between gap-3">
                   <h3 className="font-heading text-xs font-bold text-dark-900">{t(category.name)}</h3>
-                  <span className="rounded bg-primary-50 px-2 py-1 text-[9px] font-bold text-primary">
+                  <span className="rounded bg-primary-50 px-2 py-1 text-[11px] font-bold text-primary">
                     {t('{count} berita', { count: category.items.length })}
                   </span>
                 </div>
                 <ul className="mt-2 space-y-2">
                   {category.items.map((item) => (
                     <li key={item.slug}>
-                      <Link to={`/berita/${item.slug}`} className="block text-[10px] font-semibold leading-snug text-dark-700 hover:text-primary hover:underline">
+                      <Link to={`/berita/${item.slug}`} className="block text-[11px] font-semibold leading-snug text-dark-700 hover:text-primary hover:underline">
                         {t(item.title)}
                       </Link>
-                      <p className="mt-1 text-[9px] text-dark-400">{formatPublicDate(item.iso, {}, locale)}</p>
+                      <p className="mt-1 text-[11px] text-dark-400">{formatPublicDate(item.iso, {}, locale)}</p>
                     </li>
                   ))}
                 </ul>
@@ -69,7 +69,7 @@ const BeritaAgendaSection = ({ items = [], tampilkanLihatSemua = true }) => {
           {tampilkanLihatSemua && (
             <Link
               to="/berita#kategori-berita"
-              className="mt-4 inline-block text-[10px] font-bold text-primary hover:underline"
+              className="mt-4 inline-block text-[11px] font-bold text-primary hover:underline"
             >
               {t('Lihat Semua Berita')}
             </Link>
@@ -84,7 +84,7 @@ const BeritaAgendaSection = ({ items = [], tampilkanLihatSemua = true }) => {
             </h2>
             <Link
               to="/galeri"
-              className="text-[10px] font-extrabold tracking-figma-copy text-primary hover:underline"
+              className="text-[11px] font-extrabold tracking-figma-copy text-primary hover:underline"
             >
               {t(galeriKegiatan.linkText)}
             </Link>
@@ -103,7 +103,7 @@ const BeritaAgendaSection = ({ items = [], tampilkanLihatSemua = true }) => {
                   loading="lazy"
                   className="aspect-[4/3] w-full rounded-lg object-cover object-top transition-transform duration-500 group-hover:scale-110"
                 />
-                <span className="mt-1.5 block text-[10px] font-semibold leading-snug text-dark-700 group-hover:text-primary">{t(g.title)}</span>
+                <span className="mt-1.5 block text-[11px] font-semibold leading-snug text-dark-700 group-hover:text-primary">{t(g.title)}</span>
               </Link>
             ))}
           </div>
@@ -122,7 +122,7 @@ const BeritaAgendaSection = ({ items = [], tampilkanLihatSemua = true }) => {
           <h3 className="mt-4 font-heading text-base font-extrabold text-dark-900">
             {t(newsletterBerita.heading)}
           </h3>
-          <p className="mt-2 text-[9px] font-medium leading-[normal] tracking-figma-copy text-dark-500">
+          <p className="mt-2 text-[11px] font-medium leading-[normal] tracking-figma-copy text-dark-500">
             {t(newsletterBerita.description)}
           </p>
 
@@ -138,7 +138,7 @@ const BeritaAgendaSection = ({ items = [], tampilkanLihatSemua = true }) => {
                   setSent(false);
                 }}
                 placeholder={t(newsletterBerita.placeholder)}
-                className="w-full rounded-lg border border-dark-200 px-3 py-2.5 text-[10px] font-medium tracking-figma-copy text-dark-700 outline-none transition-colors placeholder:text-dark-400 focus:border-primary"
+                className="w-full rounded-lg border border-dark-200 px-3 py-2.5 text-[11px] font-medium tracking-figma-copy text-dark-700 outline-none transition-colors placeholder:text-dark-400 focus:border-primary"
               />
             </label>
             <button
@@ -151,7 +151,7 @@ const BeritaAgendaSection = ({ items = [], tampilkanLihatSemua = true }) => {
 
           <p
             aria-live="polite"
-            className="mt-3 text-[8px] font-medium leading-[normal] tracking-figma-copy text-dark-400"
+            className="mt-3 text-[11px] font-medium leading-[normal] tracking-figma-copy text-dark-400"
           >
             {sent ? (
               <span className="font-semibold text-primary">

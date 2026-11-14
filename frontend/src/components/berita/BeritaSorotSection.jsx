@@ -25,10 +25,10 @@ const BeritaSorotSection = ({ items = [], tampilkanLihatSemua = true }) => {
         {/* Berita sorotan */}
         <div className="lg:pl-24">
           <div className="flex items-center gap-3">
-            <span className="rounded bg-primary-50 px-2.5 py-1 text-[9px] font-extrabold tracking-figma-copy text-primary">
+            <span className="rounded bg-primary-50 px-2.5 py-1 text-[11px] font-extrabold tracking-figma-copy text-primary">
               {t(featured.kategori)}
             </span>
-            <span className="text-[10px] font-medium tracking-figma-copy text-dark-500">{formatPublicDate(featured.iso, {}, locale)}</span>
+            <span className="text-[11px] font-medium tracking-figma-copy text-dark-500">{formatPublicDate(featured.iso, {}, locale)}</span>
           </div>
 
           <h2 className="mt-3 max-w-md font-heading text-xl sm:text-2xl font-extrabold leading-[normal] tracking-figma-heading text-dark-900">
@@ -40,7 +40,7 @@ const BeritaSorotSection = ({ items = [], tampilkanLihatSemua = true }) => {
 
           <Link
             to={`/berita/${featured.slug}`}
-            className="mt-6 inline-flex items-center gap-2 rounded-full border border-primary/40 px-3.5 py-2 text-[10px] font-extrabold tracking-figma-copy text-primary transition-colors hover:bg-primary hover:text-white"
+            className="mt-6 inline-flex items-center gap-2 rounded-full border border-primary/40 px-3.5 py-2 text-[11px] font-extrabold tracking-figma-copy text-primary transition-colors hover:bg-primary hover:text-white"
           >
             {t(beritaSorot.ctaText)}
           </Link>
@@ -60,13 +60,13 @@ const BeritaSorotSection = ({ items = [], tampilkanLihatSemua = true }) => {
                 onClick={() => setActive(i)}
                 className="block w-full rounded-xl border border-dark-100 bg-white px-4 py-3 text-left shadow-card transition-all hover:-translate-y-0.5 hover:border-primary"
               >
-                <span className="inline-block rounded bg-primary-50 px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-figma-copy text-primary">
+                <span className="inline-block rounded bg-primary-50 px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-figma-copy text-primary">
                   {t(item.kategori)}
                 </span>
                 <p className="mt-1.5 font-heading text-[11px] font-extrabold leading-[normal] tracking-figma-heading text-dark-900">
                   {t(item.title)}
                 </p>
-                <p className="mt-1.5 text-[9px] font-medium tracking-figma-copy text-dark-400">{formatPublicDate(item.iso, {}, locale)}</p>
+                <p className="mt-1.5 text-[11px] font-medium tracking-figma-copy text-dark-400">{formatPublicDate(item.iso, {}, locale)}</p>
               </button>
             ))}
           </div>
@@ -75,7 +75,7 @@ const BeritaSorotSection = ({ items = [], tampilkanLihatSemua = true }) => {
             <div className="mt-5 flex justify-end">
               <Link
                 to="/berita/trending"
-                className="inline-flex items-center gap-2 rounded-full border border-primary/40 px-3.5 py-2 text-[10px] font-extrabold tracking-figma-copy text-primary transition-colors hover:bg-primary hover:text-white"
+                className="inline-flex items-center gap-2 rounded-full border border-primary/40 px-3.5 py-2 text-[11px] font-extrabold tracking-figma-copy text-primary transition-colors hover:bg-primary hover:text-white"
               >
                 {t(beritaSorot.trendingCta)}
                 <ArrowRight className="h-3 w-3" />
