@@ -1,7 +1,11 @@
 import rplHero from '../assets/jurusan-detail/rpl-hero.webp';
+import rplHeroEn from '../assets/jurusan-detail/rpl-hero-en.webp';
 import pgHero from '../assets/jurusan-detail/pg-hero.webp';
+import pgHeroEn from '../assets/jurusan-detail/pg-hero-en.webp';
 import tkjHero from '../assets/jurusan-detail/tkj-hero.webp';
+import tkjHeroEn from '../assets/jurusan-detail/tkj-hero-en.webp';
 import tjatHero from '../assets/jurusan-detail/tjat-hero.webp';
+import tjatHeroEn from '../assets/jurusan-detail/tjat-hero-en.webp';
 import rplLab from '../assets/jurusan-detail/rpl-lab.webp';
 import library from '../assets/jurusan-detail/library.webp';
 import rplClass from '../assets/jurusan-detail/rpl-class.webp';
@@ -24,7 +28,7 @@ const certification = 'Persiapan sertifikasi dan dunia kerja.';
 // Identitas, sertifikasi, dan prospek karier tetap berasal dari data jurusan existing.
 export const jurusanDetailDesign = {
   rpl: {
-    code: 'RPL', hero: rplHero, heroWidth: 445, heroHeight: 347,
+    code: 'RPL', hero: rplHero, heroEn: rplHeroEn, heroWidth: 1927, heroHeight: 1084,
     heroAlt: 'Siswa RPL mempraktikkan pemrograman di laboratorium komputer',
     description: 'Membangun aplikasi web dan mobile dari nol sampai siap digunakan di dunia industri, dirancang terstruktur untuk menjawab kebutuhan bisnis secara nyata.',
     about: [
@@ -45,7 +49,7 @@ export const jurusanDetailDesign = {
     ],
   },
   pg: {
-    code: 'PG', hero: pgHero, heroWidth: 469, heroHeight: 366,
+    code: 'PG', hero: pgHero, heroEn: pgHeroEn, heroWidth: 1920, heroHeight: 1080,
     heroAlt: 'Siswa PG mempraktikkan pengembangan game dan virtual reality',
     description: 'Merancang dan mengembangkan game interaktif dari nol sampai siap dirilis di dunia industri, dirancang terstruktur untuk menghadirkan pengalaman digital dan kebutuhan industri kreatif secara nyata.',
     about: [
@@ -66,7 +70,7 @@ export const jurusanDetailDesign = {
     ],
   },
   tkj: {
-    code: 'TKJ', hero: tkjHero, heroWidth: 489, heroHeight: 373,
+    code: 'TKJ', hero: tkjHero, heroEn: tkjHeroEn, heroWidth: 1920, heroHeight: 1098,
     heroAlt: 'Siswa TKJ melakukan praktik konfigurasi jaringan pada rak perangkat',
     description: 'Membangun dan mengelola infrastruktur jaringan dari nol sampai siap digunakan di dunia industri, dirancang terstruktur untuk menjawab kebutuhan konektivitas bisnis secara nyata.',
     about: [
@@ -87,7 +91,7 @@ export const jurusanDetailDesign = {
     ],
   },
   tjat: {
-    code: 'TJAT', hero: tjatHero, heroWidth: 485, heroHeight: 377,
+    code: 'TJAT', hero: tjatHero, heroEn: tjatHeroEn, heroWidth: 1920, heroHeight: 1080,
     heroAlt: 'Siswa TJAT berlatih instalasi perangkat jaringan telekomunikasi',
     description: 'Merancang dan menginstalasi jaringan telekomunikasi dari nol sampai siap digunakan di dunia industri, dirancang terstruktur untuk mendukung sistem komunikasi bisnis secara nyata.',
     about: [
