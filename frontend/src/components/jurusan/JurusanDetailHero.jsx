@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import Reveal from '../Reveal';
 import HeroBadges from '../HeroBadges';
-import wave from '../../assets/kalender/hero-wave-figma.webp';
 
 const features = [
   [BookOpen, 'Kurikulum Up-to-Date'], [Monitor, 'Praktik Langsung'],
@@ -63,12 +62,7 @@ export default function JurusanDetailHero({ item, design }) {
           </div>
           <div className="hero-background detail-hero-art">
             <img src={design.hero} width={design.heroWidth} height={design.heroHeight} alt={t(design.heroAlt)} fetchPriority="high" className="detail-hero-photo" />
-            <p className="detail-hero-brand font-heading font-extrabold text-white">
-              <span>{t('Raih masa depan')}</span>
-              <span>{t('bersama {program}', { program: design.code })}</span>
-            </p>
           </div>
-          <img src={wave} width={649} height={385} alt="" aria-hidden="true" className="detail-hero-wave" />
         </div>
       </div>
     </section>
