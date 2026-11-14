@@ -11,7 +11,7 @@ const features = [
 ];
 
 export default function JurusanDetailHero({ item, design }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const title = t(item.title);
   const name = title.replace(/\s*\([^)]+\)$/, '');
   const lastSpace = name.lastIndexOf(' ');
@@ -61,7 +61,7 @@ export default function JurusanDetailHero({ item, design }) {
             </Reveal>
           </div>
           <div className="hero-background detail-hero-art">
-            <img src={design.hero} width={design.heroWidth} height={design.heroHeight} alt={t(design.heroAlt)} fetchPriority="high" className="detail-hero-photo" />
+            <img src={language === 'en' ? design.heroEn : design.hero} width={design.heroWidth} height={design.heroHeight} alt={t(design.heroAlt)} fetchPriority="high" className="detail-hero-photo" />
           </div>
         </div>
       </div>
