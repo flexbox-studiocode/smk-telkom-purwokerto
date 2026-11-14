@@ -79,7 +79,8 @@ const BkkLowonganSection = ({ items = [] }) => {
               </article>
             ))}
           </div>
-        ) : (
+        ) : items.length > 0 && (
+          // Only when filters hide existing items; empty/error is shown by the page.
           <p className="mt-8 text-center text-xs text-dark-500">
             {t('Tidak ada lowongan yang cocok. Coba ubah filter atau atur ulang pencarian.')}
           </p>

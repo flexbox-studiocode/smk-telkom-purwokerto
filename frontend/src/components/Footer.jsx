@@ -159,19 +159,19 @@ const Footer = () => {
       </div>
     </div>
     <div className="footer-bottom-bar relative bg-primary text-white">
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 pl-4 pr-24 py-2 text-[10px] sm:flex-row sm:pl-6 lg:pl-8 2xl:pr-8">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 pl-4 pr-24 py-2 text-[11px] sm:flex-row sm:pl-6 lg:pl-8 2xl:pr-8">
         <p>© 2026 {settings?.school_name || 'SMK Telkom Purwokerto'}. All Rights Reserved.</p>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col items-center gap-1 min-[360px]:flex-row min-[360px]:gap-3">
           <Link
             to="/kebijakan-privasi"
-            className="underline underline-offset-2 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="whitespace-nowrap underline underline-offset-2 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             {t('Kebijakan Privasi')}
           </Link>
-          <span aria-hidden="true" className="h-3 border-l border-white/60" />
+          <span aria-hidden="true" className="hidden h-3 border-l border-white/60 min-[360px]:block" />
           <Link
             to="/login"
-            className="inline-flex items-center gap-1.5 underline-offset-2 transition-opacity hover:opacity-80 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="inline-flex items-center gap-1.5 whitespace-nowrap underline-offset-2 transition-opacity hover:opacity-80 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             <LockKeyhole className="h-3 w-3" aria-hidden="true" />
             {t('Akses Staf & Admin')}

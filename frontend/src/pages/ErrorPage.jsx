@@ -34,7 +34,7 @@ export default function ErrorPage({ kind = 'notFound', onRetry }) {
             <Icon className="h-9 w-9" />
           </span>
           {code && <p className="mt-6 font-heading text-7xl font-extrabold tracking-tight text-primary sm:text-8xl" aria-hidden="true">{code}</p>}
-          <h1 id="error-title" className="mt-6 font-heading text-2xl font-extrabold text-dark-900 sm:text-3xl">{heading}</h1>
+          <h1 id="error-title" className="mt-6 font-heading text-2xl font-extrabold text-dark-900 sm:text-3xl">{code && <span className="sr-only">{code} — </span>}{t(title)}</h1>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-dark-600 sm:text-base">{t(description)}</p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link to="/" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">

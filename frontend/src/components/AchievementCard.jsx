@@ -27,7 +27,7 @@ const AchievementCard = ({ title, category, image, imageAlt, slug, highlight = f
         <h3 className={`min-h-[2lh] whitespace-pre-line font-heading text-sm font-bold leading-snug text-dark-900 [overflow-wrap:anywhere] ${carousel ? 'max-sm:min-h-0 max-sm:text-base' : ''}`}>
           {t(title)}
         </h3>
-        <p className={`mt-auto pt-1 text-[10px] text-dark-500 [overflow-wrap:anywhere] ${carousel ? 'max-sm:mt-0 max-sm:text-xs' : ''}`}>{t(category)}</p>
+        <p className={`mt-auto pt-1 text-[11px] text-dark-500 [overflow-wrap:anywhere] ${carousel ? 'max-sm:mt-0 max-sm:text-xs' : ''}`}>{t(category)}</p>
       </div>
     </article>
   </Link>

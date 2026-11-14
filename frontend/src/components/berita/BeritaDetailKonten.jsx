@@ -53,13 +53,13 @@ const BeritaDetailKonten = ({ item, relatedItems = [] }) => {
                   />
                 </div>
                 <div className="px-4 py-3">
-                  <span className="rounded bg-primary-50 px-2 py-0.5 text-[9px] font-bold text-primary">
+                  <span className="rounded bg-primary-50 px-2 py-0.5 text-[11px] font-bold text-primary">
                     {t(b.kategori)}
                   </span>
                   <h3 className="mt-1.5 font-heading text-[11px] font-bold leading-snug text-dark-900">
                     {t(b.title)}
                   </h3>
-                  <span className="mt-1.5 flex items-center gap-1 text-[9px] text-dark-400">
+                  <span className="mt-1.5 flex items-center gap-1 text-[11px] text-dark-400">
                     <CalendarDays className="h-2.5 w-2.5" />
                     {formatPublicDate(b.iso, {}, locale)}
                   </span>

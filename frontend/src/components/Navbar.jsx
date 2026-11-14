@@ -135,7 +135,12 @@ const Navbar = () => {
                   <button
                     type="button"
                     ref={openDropdown === link.label ? desktopTriggerRef : undefined}
-                    onClick={() => setOpenDropdown((open) => open === link.label ? null : link.label)}
+                    onClick={(event) => {
+                      // A mouse click on a menu already opened by hover must not close it;
+                      // keyboard (detail 0) and touch still toggle.
+                      const mouseOnHoverMenu = event.detail > 0 && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+                      setOpenDropdown((open) => open === link.label && !mouseOnHoverMenu ? null : link.label);
+                    }}
                     onKeyDown={(event) => {
                       if (!['ArrowDown', 'ArrowUp'].includes(event.key)) return;
                       event.preventDefault();

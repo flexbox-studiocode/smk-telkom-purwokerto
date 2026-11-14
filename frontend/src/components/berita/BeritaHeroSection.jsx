@@ -90,10 +90,10 @@ const BeritaHeroSection = ({ items = [] }) => {
           >
             <span className="h-2 w-2 flex-shrink-0 rounded-full bg-primary" />
             <p className="min-w-[12rem] flex-1 text-[11px] font-semibold tracking-figma-copy text-dark-800">{t(item.text)}</p>
-            <span className="text-[10px] font-medium tracking-figma-copy text-dark-500">{formatPublicDate(item.iso, {}, locale)}</span>
+            <span className="text-[11px] font-medium tracking-figma-copy text-dark-500">{formatPublicDate(item.iso, {}, locale)}</span>
             <Link
               to={`/berita/${item.slug}`}
-              className="inline-flex items-center gap-1 text-[10px] font-semibold tracking-figma-copy text-primary hover:underline"
+              className="inline-flex items-center gap-1 text-[11px] font-semibold tracking-figma-copy text-primary hover:underline"
             >{t("Baca Berita")}<ArrowRight className="h-3 w-3" />
             </Link>
           </div>

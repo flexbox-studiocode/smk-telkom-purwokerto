@@ -103,7 +103,8 @@ const PrestasiGaleriSection = ({ items = [], tampilkanLihatSemua = true }) => {
               </Link>
             ))}
           </div>
-        ) : (
+        ) : sourceItems.length > 0 && (
+          // Only when filters hide existing items; empty/error is shown by the page.
           <p className="mt-8 text-center text-xs text-dark-500">{t("Tidak ada prestasi yang cocok dengan filter itu.")}</p>
         )}
 

@@ -34,7 +34,7 @@ const DetailLayout = ({ item, backTo, backLabel, children }) => {
             {t(backLabel)}
           </Link>
           <ChevronRight className="h-3 w-3" aria-hidden="true" />
-          <span aria-current="page" className="text-dark-500">{t(item.title)}</span>
+          <span aria-current="page" title={t(item.title)} className="max-w-full truncate text-dark-500">{t(item.title)}</span>
         </nav>
 
         <div className="mt-6 flex flex-wrap items-center gap-3">
