@@ -2,6 +2,7 @@ import { useLanguage } from '../context/LanguageContext';
 import MainLayout from '../layouts/MainLayout';
 import HalamanHeader from '../components/HalamanHeader';
 import Reveal from '../components/Reveal';
+import { Database, Mail, ShieldCheck } from 'lucide-react';
 
 const privacySections = {
   id: [
@@ -137,6 +138,13 @@ const KebijakanPrivasiPage = () => {
   const sections = privacySections[lang];
   const contact = contactInfo[lang];
   const lastUpdated = lang === 'id' ? 'Terakhir Diperbarui: Oktober 2026' : 'Last Updated: October 2026';
+  const tocLabel = lang === 'id' ? 'Di halaman ini' : 'On this page';
+  const summary = lang === 'id'
+    ? 'Ringkasan: kami mengumpulkan data yang diperlukan untuk layanan sekolah, menjaga keamanan portal, dan tidak menjual data pribadi.'
+    : 'Summary: we collect data needed for school services, protect the portal, and never sell personal data.';
+  const principles = lang === 'id'
+    ? [{ icon: Database, title: 'Terbatas', text: 'Hanya data yang relevan dengan layanan.' }, { icon: ShieldCheck, title: 'Dilindungi', text: 'Akses dan transmisi dijaga dengan kontrol keamanan.' }, { icon: Mail, title: 'Terbuka', text: 'Hubungi kami untuk pertanyaan atau permintaan data.' }]
+    : [{ icon: Database, title: 'Limited', text: 'Only data relevant to the service.' }, { icon: ShieldCheck, title: 'Protected', text: 'Access and transmission use security controls.' }, { icon: Mail, title: 'Open', text: 'Contact us with questions or data requests.' }];
 
   return (
     <MainLayout>
@@ -149,16 +157,30 @@ const KebijakanPrivasiPage = () => {
       />
 
       <section className="bg-white px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl">
-          <p className="text-[11px] text-dark-400">{lastUpdated}</p>
-          <p className="mt-1 text-[11px] text-dark-400">
-            Website: flexbox.smktelkom-pwt.sch.id (SMK Telkom Purwokerto)
-          </p>
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-8 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start">
+            <aside className="lg:sticky lg:top-24" aria-label={tocLabel}>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">{tocLabel}</p>
+              <nav className="mt-4 border-l border-dark-100 pl-4">
+                <ol className="space-y-3 text-sm text-dark-500">
+                  {sections.map((section) => <li key={section.title}><a className="transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-primary" href={`#privacy-${section.title.split('. ')[0]}`}>{section.title.replace(/^\d+\. /, '')}</a></li>)}
+                </ol>
+              </nav>
+              <p className="mt-8 text-[11px] text-dark-400">{lastUpdated}<br />flexbox.smktelkom-pwt.sch.id</p>
+            </aside>
 
-          <div className="mt-6 space-y-6">
+            <div className="min-w-0">
+              <div className="rounded-3xl bg-primary-50 p-5 ring-1 ring-primary/10 sm:p-6">
+                <p className="text-sm font-semibold leading-relaxed text-dark-800">{summary}</p>
+              </div>
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                {principles.map(({ icon: Icon, title, text }) => <div key={title} className="rounded-2xl border border-dark-100 bg-white p-4 shadow-sm"><Icon aria-hidden="true" className="h-5 w-5 text-primary" /><h2 className="mt-3 text-sm font-bold text-dark-900">{title}</h2><p className="mt-1 text-xs leading-relaxed text-dark-600">{text}</p></div>)}
+              </div>
+
+              <div className="mt-8 space-y-6">
             {sections.map((section, i) => (
               <Reveal key={section.title} className={i % 2 ? 'delay-100' : ''}>
-                <div className="rounded-2xl border border-dark-100 bg-white p-6 shadow-card">
+                <div id={`privacy-${section.title.split('. ')[0]}`} className="scroll-mt-24 rounded-2xl border border-dark-100 bg-white p-6 shadow-card">
                   <h2 className="flex items-center gap-3 font-heading text-sm font-extrabold text-dark-900">
                     <span aria-hidden="true" className="h-5 w-1 rounded-full bg-primary" />
                     {section.title}
@@ -221,6 +243,8 @@ const KebijakanPrivasiPage = () => {
                 </div>
               </Reveal>
             ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
