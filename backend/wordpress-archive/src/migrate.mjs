@@ -31,6 +31,7 @@ const args = Object.fromEntries(process.argv.slice(2).map((a) => {
 const DRY_RUN = Boolean(args['dry-run']) || !Boolean(args.import);
 const DO_IMPORT = Boolean(args.import);
 const MEDIA_ONLY = Boolean(args['media-only']);
+const MEDIA_DOWNLOAD = MEDIA_ONLY && Boolean(args['media-download']);
 const SKIP_MEDIA = Boolean(args['skip-media']);
 const SKIP_DB = Boolean(args['skip-db']);
 const CONCURRENCY = Number(args['media-concurrency'] || 6);
@@ -90,8 +91,8 @@ report.media.total = media.size;
 if (MEDIA_ONLY || !SKIP_MEDIA) {
   const entries = [...media.values()].map((e) => ({ ...e, suggestedKey: e.suggestedKey }));
   const { manifest, summary } = await resolveMedia(entries, {
-    dryRun: DRY_RUN, uploadRoot: UPLOAD_ROOT, mediaBaseUrl: MEDIA_BASE_URL,
-    concurrency: CONCURRENCY, maxBytes: DRY_RUN ? 2048 : Infinity,
+    dryRun: DRY_RUN && !MEDIA_DOWNLOAD, uploadRoot: UPLOAD_ROOT, mediaBaseUrl: MEDIA_BASE_URL,
+    concurrency: CONCURRENCY, maxBytes: (DRY_RUN && !MEDIA_DOWNLOAD) ? 2048 : Infinity,
   });
   report.media.available = summary.downloaded;
   report.media.unresolved = summary.unresolved;
