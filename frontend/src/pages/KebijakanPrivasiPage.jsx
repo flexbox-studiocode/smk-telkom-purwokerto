@@ -1,12 +1,11 @@
-import { useLanguage } from '../context/LanguageContext';
+import { useEffect, useState } from 'react';
 import MainLayout from '../layouts/MainLayout';
-import HalamanHeader from '../components/HalamanHeader';
-import Reveal from '../components/Reveal';
-import { Database, Mail, ShieldCheck } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const privacySections = {
   id: [
     {
+      slug: 'koleksi',
       title: '1. Informasi yang Kami Kumpulkan',
       items: [
         {
@@ -24,6 +23,7 @@ const privacySections = {
       ],
     },
     {
+      slug: 'penggunaan',
       title: '2. Penggunaan Informasi',
       intro: 'Informasi yang dikumpulkan digunakan secara eksklusif untuk kepentingan operasional dan peningkatan layanan sekolah, antara lain:',
       bullets: [
@@ -34,6 +34,7 @@ const privacySections = {
       ],
     },
     {
+      slug: 'perlindungan',
       title: '3. Perlindungan & Keamanan Data',
       paragraphs: [
         'Kami berkomitmen menjaga keamanan data pribadi pengguna. Seluruh transmisi data dilakukan melalui enkripsi standar SSL/HTTPS.',
@@ -41,26 +42,53 @@ const privacySections = {
       ],
     },
     {
-      title: '4. Layanan Pihak Ketiga',
+      slug: 'pihak-ketiga',
+      title: '4. Layanan Pihak Ketiga & Cookies',
       paragraphs: [
         'Portal web kami menggunakan layanan pihak ketiga untuk operasional, termasuk Cloudflare Turnstile sebagai layanan verifikasi keamanan anti-bot pada halaman login administrator dan portal SPMB. Data operasional disimpan pada database MySQL yang dikelola sekolah; cadangan terenkripsi disimpan pada layanan penyimpanan eksternal.',
         'Website kami juga dapat menggunakan cookies untuk menyimpan preferensi sesi pengguna dan mengoptimalkan pengalaman navigasi web. Pengguna memiliki opsi untuk mematikan cookies melalui pengaturan peramban masing-masing.',
       ],
     },
     {
-      title: '5. Tautan ke Website Pihak Ketiga',
+      slug: 'retensi',
+      title: '5. Retensi Data',
+      intro: 'Kami menyimpan data hanya selama diperlukan untuk tujuan pengumpulannya, lalu menghapusnya secara otomatis:',
+      bullets: [
+        'Data profil sesi NEXA (nama, nomor telepon, usia, kategori, dan nama sekolah/instansi bila diisi) disimpan paling lama 24 jam sejak sesi dimulai, lalu dihapus otomatis oleh sistem.',
+        'Isi percakapan NEXA diproses selama sesi berlangsung dan tidak disimpan server sebagai riwayat permanen.',
+        'Data pendaftaran SPMB/PPDB serta data akun disimpan selama diperlukan untuk proses layanan dan kewajiban administratif sekolah.',
+        'Cadangan (backup) basis data terenkripsi disimpan bergilir sesuai jadwal retensi sistem, lalu dihapus otomatis.',
+        'Data statistik pengunjung dicatat secara anonim dan agregat, tanpa menyimpan alamat IP secara permanen.',
+      ],
+    },
+    {
+      slug: 'hak-pengguna',
+      title: '6. Hak Pengguna',
+      intro: 'Anda berhak mengajukan permintaan terkait data pribadi Anda. Permintaan dapat diajukan melalui kanal pada bagian Kontak di bawah:',
+      bullets: [
+        'Meminta salinan data pribadi yang kami simpan tentang Anda.',
+        'Meminta perbaikan data yang tidak akurat atau tidak lengkap.',
+        'Meminta penghapusan data, sepanjang tidak bertentangan dengan kewajiban hukum sekolah.',
+        'Mengajukan pertanyaan atau keberatan atas pengelolaan data.',
+      ],
+    },
+    {
+      slug: 'tautan',
+      title: '7. Tautan ke Website Pihak Ketiga',
       paragraphs: [
         'Website kami mungkin memuat tautan menuju situs luar seperti sistem pembayaran resmi, media sosial sekolah, atau portal kementerian.',
         'Kami tidak bertanggung jawab atas isi atau kebijakan privasi dari situs luar tersebut.',
       ],
     },
     {
-      title: '6. Hubungi Kami',
+      slug: 'kontak',
+      title: '8. Hubungi Kami',
       contact: true,
     },
   ],
   en: [
     {
+      slug: 'koleksi',
       title: '1. Information We Collect',
       items: [
         {
@@ -78,6 +106,7 @@ const privacySections = {
       ],
     },
     {
+      slug: 'penggunaan',
       title: '2. Use of Information',
       intro: 'The collected information is used exclusively for operational purposes and improvement of school services, including:',
       bullets: [
@@ -88,6 +117,7 @@ const privacySections = {
       ],
     },
     {
+      slug: 'perlindungan',
       title: '3. Data Protection & Security',
       paragraphs: [
         'We are committed to maintaining the security of users\' personal data. All data transmissions are conducted through standard SSL/HTTPS encryption.',
@@ -95,21 +125,47 @@ const privacySections = {
       ],
     },
     {
-      title: '4. Third-Party Services',
+      slug: 'pihak-ketiga',
+      title: '4. Third-Party Services & Cookies',
       paragraphs: [
         'Our web portal uses third-party services for operations, including Cloudflare Turnstile as a security verification service for the administrator login page and SPMB portal. Operational data is stored on a MySQL database managed by the school; encrypted backups are kept on an external storage service.',
         'Our website may also use cookies to store user session preferences and optimize the web navigation experience. Users have the option to disable cookies through their respective browser settings.',
       ],
     },
     {
-      title: '5. Links to Third-Party Websites',
+      slug: 'retensi',
+      title: '5. Data Retention',
+      intro: 'We keep data only as long as needed for the purpose it was collected, then remove it automatically:',
+      bullets: [
+        'NEXA session profile data (name, phone number, age, category, and optionally school/institution name) is kept for at most 24 hours from session start, then deleted automatically by the system.',
+        'NEXA conversation content is processed while the session is active and is not stored by the server as a permanent history.',
+        'SPMB/PPDB registration data and account data are kept as long as needed for the service process and the school\'s administrative obligations.',
+        'Encrypted database backups are retained on a rotating schedule according to the system retention policy, then deleted automatically.',
+        'Visitor statistics are recorded anonymously and in aggregate, without permanently storing IP addresses.',
+      ],
+    },
+    {
+      slug: 'hak-pengguna',
+      title: '6. Your Rights',
+      intro: 'You have the right to make requests regarding your personal data. Requests can be submitted through the channels in the Contact section below:',
+      bullets: [
+        'Request a copy of the personal data we hold about you.',
+        'Request correction of inaccurate or incomplete data.',
+        'Request deletion of data, as long as it does not conflict with the school\'s legal obligations.',
+        'Ask questions or raise objections about how data is managed.',
+      ],
+    },
+    {
+      slug: 'tautan',
+      title: '7. Links to Third-Party Websites',
       paragraphs: [
         'Our website may contain links to external sites such as official payment systems, school social media, or ministry portals.',
         'We are not responsible for the content or privacy policies of those external sites.',
       ],
     },
     {
-      title: '6. Contact Us',
+      slug: 'kontak',
+      title: '8. Contact Us',
       contact: true,
     },
   ],
@@ -133,116 +189,155 @@ const contactInfo = {
 };
 
 const KebijakanPrivasiPage = () => {
-  const { language, t } = useLanguage();
+  const { language } = useLanguage();
   const lang = language === 'en' ? 'en' : 'id';
   const sections = privacySections[lang];
   const contact = contactInfo[lang];
-  const lastUpdated = lang === 'id' ? 'Terakhir Diperbarui: Oktober 2026' : 'Last Updated: October 2026';
-  const tocLabel = lang === 'id' ? 'Di halaman ini' : 'On this page';
+  const lastUpdated = lang === 'id' ? 'Oktober 2026' : 'October 2026';
+  const tocLabel = lang === 'id' ? 'Daftar isi' : 'Table of contents';
+  const hero = lang === 'id'
+    ? {
+        eyebrow: 'Dokumen Resmi',
+        title: 'Kebijakan Privasi',
+        description: 'Penjelasan mengenai bagaimana SMK Telkom Purwokerto mengumpulkan, menggunakan, menyimpan, dan melindungi informasi pengguna website.',
+        meta: [['Terakhir diperbarui', lastUpdated], ['Pengelola', 'SMK Telkom Purwokerto'], ['Bahasa dokumen', 'Indonesia & Inggris']],
+      }
+    : {
+        eyebrow: 'Official Document',
+        title: 'Privacy Policy',
+        description: 'How SMK Telkom Purwokerto collects, uses, stores, and protects website user information.',
+        meta: [['Last updated', lastUpdated], ['Managed by', 'SMK Telkom Purwokerto'], ['Document language', 'Indonesian & English']],
+      };
   const summary = lang === 'id'
     ? 'Ringkasan: kami mengumpulkan data yang diperlukan untuk layanan sekolah, menjaga keamanan portal, dan tidak menjual data pribadi.'
     : 'Summary: we collect data needed for school services, protect the portal, and never sell personal data.';
-  const principles = lang === 'id'
-    ? [{ icon: Database, title: 'Terbatas', text: 'Hanya data yang relevan dengan layanan.' }, { icon: ShieldCheck, title: 'Dilindungi', text: 'Akses dan transmisi dijaga dengan kontrol keamanan.' }, { icon: Mail, title: 'Terbuka', text: 'Hubungi kami untuk pertanyaan atau permintaan data.' }]
-    : [{ icon: Database, title: 'Limited', text: 'Only data relevant to the service.' }, { icon: ShieldCheck, title: 'Protected', text: 'Access and transmission use security controls.' }, { icon: Mail, title: 'Open', text: 'Contact us with questions or data requests.' }];
+
+  const [activeId, setActiveId] = useState(sections[0].slug);
+
+  useEffect(() => {
+    const nodes = sections.map((section) => document.getElementById(section.slug)).filter(Boolean);
+    if (!nodes.length) return undefined;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) setActiveId(visible[0].target.id);
+      },
+      { rootMargin: '-96px 0px -66% 0px', threshold: [0, 1] }
+    );
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, [sections]);
 
   return (
-    <MainLayout>
-      <HalamanHeader
-        eyebrow={lang === 'id' ? 'Dokumen Resmi' : 'Official Document'}
-        title={t('Kebijakan Privasi')}
-        deskripsi={lang === 'id'
-          ? 'Di SMK Telkom Purwokerto, privasi pengunjung dan pengguna portal digital kami adalah hal yang sangat penting. Dokumen ini menjelaskan jenis informasi yang kami kumpulkan, bagaimana informasi tersebut digunakan, serta langkah-langkah perlindungan data yang kami terapkan.'
-          : 'At SMK Telkom Purwokerto, the privacy of our visitors and digital portal users is of the utmost importance. This document explains the types of information we collect, how that information is used, and the data protection measures we implement.'}
-      />
+    <MainLayout showMarquees={false}>
+      <section className="border-b border-dark-100 bg-dark-50">
+        <div className="mx-auto max-w-[1200px] px-4 py-12 sm:px-6 lg:px-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">{hero.eyebrow}</p>
+          <h1 className="mt-4 font-heading text-3xl font-bold text-dark-900 sm:text-4xl">{hero.title}</h1>
+          <p className="mt-5 max-w-3xl text-sm leading-relaxed text-dark-600 sm:text-base">{hero.description}</p>
+          <dl className="mt-8 grid gap-x-8 gap-y-4 border-t border-dark-200 pt-6 sm:grid-cols-3">
+            {hero.meta.map(([label, value]) => (
+              <div key={label}>
+                <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-dark-400">{label}</dt>
+                <dd className="mt-1 text-sm font-semibold text-dark-800">{value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
 
-      <section className="bg-white px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-8 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start">
-            <aside className="lg:sticky lg:top-24" aria-label={tocLabel}>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">{tocLabel}</p>
-              <nav className="mt-4 border-l border-dark-100 pl-4">
-                <ol className="space-y-3 text-sm text-dark-500">
-                  {sections.map((section) => <li key={section.title}><a className="transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-primary" href={`#privacy-${section.title.split('. ')[0]}`}>{section.title.replace(/^\d+\. /, '')}</a></li>)}
-                </ol>
-              </nav>
-              <p className="mt-8 text-[11px] text-dark-400">{lastUpdated}<br />flexbox.smktelkom-pwt.sch.id</p>
+      <section className="bg-white">
+        <div className="mx-auto max-w-[1200px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+          <div className="lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-12">
+            <aside className="mb-10 lg:mb-0" aria-label={tocLabel}>
+              <div className="lg:sticky lg:top-28">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">{tocLabel}</p>
+                <nav className="mt-4 border-l border-dark-100 pl-4">
+                  <ol className="space-y-3">
+                    {sections.map((section) => (
+                      <li key={section.slug}>
+                        <a
+                          href={`#${section.slug}`}
+                          aria-current={activeId === section.slug ? 'true' : undefined}
+                          className={`block text-sm transition-colors ${
+                            activeId === section.slug ? 'font-semibold text-primary' : 'text-dark-500 hover:text-primary'
+                          }`}
+                        >
+                          {section.title.replace(/^\d+\.\s*/, '')}
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                </nav>
+                <p className="mt-8 text-xs text-dark-400">
+                  {lang === 'id' ? 'Diperbarui' : 'Updated'} {lastUpdated}<br />
+                  flexbox.smktelkom-pwt.sch.id
+                </p>
+              </div>
             </aside>
 
-            <div className="min-w-0">
-              <div className="rounded-3xl bg-primary-50 p-5 ring-1 ring-primary/10 sm:p-6">
+            <div className="min-w-0 max-w-[850px]">
+              <div className="rounded-2xl bg-primary-50 p-5 ring-1 ring-primary/10 sm:p-6">
                 <p className="text-sm font-semibold leading-relaxed text-dark-800">{summary}</p>
               </div>
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                {principles.map(({ icon: Icon, title, text }) => <div key={title} className="rounded-2xl border border-dark-100 bg-white p-4 shadow-sm"><Icon aria-hidden="true" className="h-5 w-5 text-primary" /><h2 className="mt-3 text-sm font-bold text-dark-900">{title}</h2><p className="mt-1 text-xs leading-relaxed text-dark-600">{text}</p></div>)}
-              </div>
 
-              <div className="mt-8 space-y-6">
-            {sections.map((section, i) => (
-              <Reveal key={section.title} className={i % 2 ? 'delay-100' : ''}>
-                <div id={`privacy-${section.title.split('. ')[0]}`} className="scroll-mt-24 rounded-2xl border border-dark-100 bg-white p-6 shadow-card">
-                  <h2 className="flex items-center gap-3 font-heading text-sm font-extrabold text-dark-900">
-                    <span aria-hidden="true" className="h-5 w-1 rounded-full bg-primary" />
-                    {section.title}
-                  </h2>
+              <div className="mt-10 space-y-10">
+                {sections.map((section) => (
+                  <section key={section.slug} id={section.slug} className="scroll-mt-28">
+                    <h2 className="font-heading text-base font-bold text-dark-900">{section.title}</h2>
 
-                  {section.items && (
-                    <div className="mt-4 space-y-4">
-                      {section.items.map((item) => (
-                        <div key={item.subtitle}>
-                          <h3 className="text-xs font-bold text-dark-800">{item.subtitle}</h3>
-                          <p className="mt-1 text-xs leading-relaxed text-dark-600">{item.text}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {section.intro && (
-                    <p className="mt-4 text-xs leading-relaxed text-dark-600">{section.intro}</p>
-                  )}
-
-                  {section.bullets && (
-                    <ul className="mt-3 space-y-2 pl-4">
-                      {section.bullets.map((bullet) => (
-                        <li key={bullet} className="list-disc text-xs leading-relaxed text-dark-600">
-                          {bullet}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-
-                  {section.paragraphs && (
-                    <div className="mt-4 space-y-3">
-                      {section.paragraphs.map((para) => (
-                        <p key={para.slice(0, 40)} className="text-xs leading-relaxed text-dark-600">{para}</p>
-                      ))}
-                    </div>
-                  )}
-
-                  {section.contact && (
-                    <div className="mt-4 space-y-3 text-xs leading-relaxed text-dark-600">
-                      <p>{contact.intro}</p>
-                      <div className="space-y-2">
-                        <p>
-                          <span className="font-semibold text-dark-800">{contact.team}:</span>{' '}
-                          {contact.teamValue}
-                        </p>
-                        <p>
-                          <span className="font-semibold text-dark-800">{contact.emailLabel}:</span>{' '}
-                          <a href="mailto:office@smktelkom-pwt.sch.id" className="text-primary underline-offset-2 hover:underline">office@smktelkom-pwt.sch.id</a>
-                          {' / '}
-                          <a href="mailto:flexbox.code@gmail.com" className="text-primary underline-offset-2 hover:underline">flexbox.code@gmail.com</a>
-                        </p>
-                        <p>
-                          <span className="font-semibold text-dark-800">{contact.addressLabel}:</span>{' '}
-                          Jl. DI Panjaitan No.128, Purwokerto, Jawa Tengah
-                        </p>
+                    {section.items && (
+                      <div className="mt-4 space-y-4">
+                        {section.items.map((item) => (
+                          <div key={item.subtitle}>
+                            <h3 className="text-sm font-semibold text-dark-800">{item.subtitle}</h3>
+                            <p className="mt-1 text-sm leading-relaxed text-dark-600">{item.text}</p>
+                          </div>
+                        ))}
                       </div>
-                    </div>
-                  )}
-                </div>
-              </Reveal>
-            ))}
+                    )}
+
+                    {section.intro && <p className="mt-4 text-sm leading-relaxed text-dark-600">{section.intro}</p>}
+
+                    {section.bullets && (
+                      <ul className="mt-3 space-y-2 pl-5">
+                        {section.bullets.map((bullet) => (
+                          <li key={bullet} className="list-disc text-sm leading-relaxed text-dark-600">{bullet}</li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {section.paragraphs && (
+                      <div className="mt-4 space-y-3">
+                        {section.paragraphs.map((para) => (
+                          <p key={para.slice(0, 40)} className="text-sm leading-relaxed text-dark-600">{para}</p>
+                        ))}
+                      </div>
+                    )}
+
+                    {section.contact && (
+                      <div className="mt-4 space-y-3 text-sm leading-relaxed text-dark-600">
+                        <p>{contact.intro}</p>
+                        <div className="space-y-2">
+                          <p>
+                            <span className="font-semibold text-dark-800">{contact.team}:</span>{' '}
+                            {contact.teamValue}
+                          </p>
+                          <p>
+                            <span className="font-semibold text-dark-800">{contact.emailLabel}:</span>{' '}
+                            <a href="mailto:office@smktelkom-pwt.sch.id" className="text-primary underline-offset-2 hover:underline">office@smktelkom-pwt.sch.id</a>
+                            {' / '}
+                            <a href="mailto:flexbox.code@gmail.com" className="text-primary underline-offset-2 hover:underline">flexbox.code@gmail.com</a>
+                          </p>
+                          <p>
+                            <span className="font-semibold text-dark-800">{contact.addressLabel}:</span>{' '}
+                            Jl. DI Panjaitan No.128, Purwokerto, Jawa Tengah
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </section>
+                ))}
               </div>
             </div>
           </div>
