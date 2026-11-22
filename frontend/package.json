@@ -22,6 +22,7 @@
     "ai:benchmark": "node scripts/benchmark-ai.mjs",
     "aset:bersihkan": "node scripts/bersihkan-latar.mjs",
     "aset:ringankan": "node scripts/ringankan-aset.mjs",
+    "aset:optimum": "node scripts/optimalkan-aset-berat.mjs",
     "aset:hero": "node scripts/buat-hero.mjs",
     "bkk:uji": "node scripts/uji-bkk-filter.mjs",
     "prestasi:uji": "node scripts/uji-prestasi-instagram-url.mjs",

@@ -46,7 +46,7 @@ try {
   const order = ['<HeroSection', '<RibbonDivider', '<AboutSection', '<HomeStatistics', '<WaveMarquee', '<DepartmentsSection', '<FacilitiesSection', '<PartnersSection', '<AchievementsSection', '<HallOfFameSection', '<JurusanFaqSection'];
   let previous = -1;
   for (const component of order) { const index = home.indexOf(component); assert.ok(index > previous, `Homepage order: ${component}`); previous = index; }
-  for (const asset of ['about-background.png', 'nexa-banner-1540.webp', 'nexa-mark.png', 'nexttel-mark.png', 'spmb-target.svg']) assert.ok((await stat(new URL(`../public/assets/branding/${asset}`, import.meta.url))).size > 0);
+  for (const asset of ['about-background.webp', 'nexa-banner-1540.webp', 'nexa-mark.png', 'nexttel-mark.png', 'spmb-target.svg']) assert.ok((await stat(new URL(`../public/assets/branding/${asset}`, import.meta.url))).size > 0);
   for (const language of ['id', 'en']) for (const device of ['desktop', 'mobile']) for (const width of device === 'desktop' ? [960, 1540, 2172] : [480, 768, 1024]) {
     const asset = new URL(`../public/assets/branding/nexa-${language}-${device}-${width}.webp`, import.meta.url);
     const metadata = await sharp(await readFile(asset)).metadata();

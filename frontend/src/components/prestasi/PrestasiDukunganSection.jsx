@@ -1,7 +1,7 @@
 import { useLanguage } from '../../context/LanguageContext';
 import VideoEmbed from '../VideoEmbed';
-import partnersCard from '../../assets/prestasi-remake/partnersCard.png';
-import partnersCardEn from '../../assets/prestasi-remake/partnersCard-en.png';
+import partnersCard from '../../assets/prestasi-remake/partnersCard.webp';
+import partnersCardEn from '../../assets/prestasi-remake/partnersCard-en.webp';
 import { videoHighlight } from '../../data/dummyData';
 
 const PrestasiDukunganSection = () => {

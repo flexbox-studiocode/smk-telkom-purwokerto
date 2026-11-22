@@ -3,7 +3,7 @@ import { profileMissions, profilePillars } from '../../data/profilePathway';
 import vision from '../../assets/tentang/profile/vision.svg';
 import mission from '../../assets/tentang/profile/mission.svg';
 import schoolPhoto from '../../assets/tentang/profile/vision-school.png';
-import classroomPhoto from '../../assets/tentang/profile/mission-classroom.png';
+import classroomPhoto from '../../assets/tentang/profile/mission-classroom.webp';
 import visionAccent from '../../assets/tentang/profile/vision-accent.png';
 
 const Card = ({ icon, title, desc }) => {
