@@ -16,3 +16,6 @@ backend/uploads/
 backend/backups/
 # File SQL schema-only dikirim terpisah oleh developer (WhatsApp), tidak di repository.
 /docs-cpanel/sql/*.sql
+
+# Arsip WordPress: hasil analisis/migrasi tidak di-commit.
+backend/wordpress-archive/results/
