@@ -22,15 +22,22 @@ export class ApiError extends Error {
 }
 
 let csrfPromise;
+// Bila API berada di subdomain lain (mis. api-mainweb.* vs mainweb.*), cookie csrf_token
+// milik host API dan tidak terbaca lewat document.cookie halaman ini. Token yang sama
+// dikembalikan di body /api/auth/csrf, jadi simpan di memori; browser tetap mengirim
+// cookie-nya ke API sehingga pemeriksaan double-submit di backend tidak berubah.
+let csrfTokenMemori = '';
 
-async function ensureCsrf() {
-  if (readCookie('csrf_token')) return readCookie('csrf_token');
+async function ensureCsrf({ refresh = false } = {}) {
+  if (!refresh && readCookie('csrf_token')) return readCookie('csrf_token');
+  if (!refresh && csrfTokenMemori) return csrfTokenMemori;
   csrfPromise ??= fetch(`${API_BASE_URL}/api/auth/csrf`, { credentials: 'include', cache: 'no-store' })
     .then((res) => res.json())
+    .then((data) => { csrfTokenMemori = typeof data?.csrfToken === 'string' ? data.csrfToken : ''; })
     .catch(() => null)
     .finally(() => { csrfPromise = undefined; });
   await csrfPromise;
-  return readCookie('csrf_token');
+  return readCookie('csrf_token') || csrfTokenMemori;
 }
 
 function parseBody(text) {
@@ -65,6 +72,14 @@ export async function apiRequest(path, { method = 'GET', body, headers = {}, raw
     res = await send(path, options);
     // 304 Not Modified tidak membawa body. Paksa ambil representasi penuh sekali.
     if (res.status === 304) res = await send(path, { ...options, cache: 'reload' });
+    // Cookie CSRF bisa hilang/kedaluwarsa saat halaman masih terbuka: ambil token baru sekali.
+    if (isMutation && res.status === 400) {
+      const sebelumnya = parseBody(await res.clone().text());
+      if (sebelumnya?.code === 'csrf_failed') {
+        requestHeaders['x-csrf-token'] = await ensureCsrf({ refresh: true });
+        res = await send(path, options);
+      }
+    }
   } catch (error) {
     if (error?.name === 'AbortError') throw error;
     // Koneksi putus/DNS gagal bukan error HTTP, jadi bedakan dari respons server.
