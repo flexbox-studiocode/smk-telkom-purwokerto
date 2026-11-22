@@ -40,6 +40,7 @@ const privacySections = {
         'Kami berkomitmen menjaga keamanan data pribadi pengguna. Seluruh transmisi data dilakukan melalui enkripsi standar SSL/HTTPS.',
         'Kami tidak akan menjual, menyewakan, atau membagikan data pribadi pengguna kepada pihak ketiga tanpa persetujuan, kecuali diwajibkan oleh ketentuan hukum yang berlaku.',
       ],
+      callout: true,
     },
     {
       slug: 'pihak-ketiga',
@@ -123,6 +124,7 @@ const privacySections = {
         'We are committed to maintaining the security of users\' personal data. All data transmissions are conducted through standard SSL/HTTPS encryption.',
         'We will not sell, rent, or share users\' personal data with third parties without consent, unless required by applicable law.',
       ],
+      callout: true,
     },
     {
       slug: 'pihak-ketiga',
@@ -230,15 +232,16 @@ const KebijakanPrivasiPage = () => {
 
   return (
     <MainLayout showMarquees={false}>
-      <section className="border-b border-dark-100 bg-dark-50">
-        <div className="mx-auto max-w-[1200px] px-4 py-12 sm:px-6 lg:px-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">{hero.eyebrow}</p>
-          <h1 className="mt-4 font-heading text-3xl font-bold text-dark-900 sm:text-4xl">{hero.title}</h1>
-          <p className="mt-5 max-w-3xl text-sm leading-relaxed text-dark-600 sm:text-base">{hero.description}</p>
-          <dl className="mt-8 grid gap-x-8 gap-y-4 border-t border-dark-200 pt-6 sm:grid-cols-3">
+      <section className="relative overflow-hidden border-b border-dark-100 bg-dark-50">
+        <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-primary sm:w-1.5" />
+        <div className="mx-auto max-w-[1200px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+          <p className="text-[0.8125rem] font-semibold uppercase tracking-[0.2em] text-primary">{hero.eyebrow}</p>
+          <h1 className="mt-4 max-w-4xl font-heading text-[2rem] font-bold leading-[1.2] text-dark-900 sm:text-[2.375rem] lg:text-[2.625rem]">{hero.title}</h1>
+          <p className="mt-5 max-w-3xl text-[1.0625rem] leading-[1.7] text-dark-600 lg:text-[1.125rem]">{hero.description}</p>
+          <dl className="mt-8 grid gap-x-8 gap-y-5 border-t border-dark-200 pt-6 sm:grid-cols-3">
             {hero.meta.map(([label, value]) => (
               <div key={label}>
-                <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-dark-400">{label}</dt>
+                <dt className="text-[0.8125rem] font-semibold uppercase tracking-[0.12em] text-dark-400">{label}</dt>
                 <dd className="mt-1 text-sm font-semibold text-dark-800">{value}</dd>
               </div>
             ))}
@@ -312,6 +315,12 @@ const KebijakanPrivasiPage = () => {
                         {section.paragraphs.map((para) => (
                           <p key={para.slice(0, 40)} className="text-base leading-[1.75] text-dark-600">{para}</p>
                         ))}
+                      </div>
+                    )}
+
+                    {section.callout && (
+                      <div className="mt-5 border-l-4 border-primary bg-primary-50 px-4 py-3 text-sm leading-relaxed text-dark-700">
+                        {lang === 'id' ? 'Kami tidak menjual atau menyewakan data pribadi pengguna.' : 'We do not sell or rent users\' personal data.'}
                       </div>
                     )}
 
