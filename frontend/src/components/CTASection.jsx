@@ -1,5 +1,5 @@
 import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import CtaLink from './CtaLink';
 import { ctaBanner } from '../data/dummyData';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -16,9 +16,9 @@ const CTASection = ({ variant = 'default', containerClassName, href = ctaBanner.
               <p className="mt-1 max-w-2xl text-sm leading-relaxed text-white/90">{t(ctaBanner.description)}</p>
             </div>
           </div>
-          <Link to={href} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-primary transition-colors hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+          <CtaLink href={href} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-primary transition-colors hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
             {t(ctaBanner.ctaText)}<ArrowRight aria-hidden="true" className="size-4" />
-          </Link>
+          </CtaLink>
         </div>
       </div>
     </section>

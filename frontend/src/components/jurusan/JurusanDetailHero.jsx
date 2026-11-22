@@ -1,6 +1,7 @@
 import { OFFICIAL_ADMISSIONS_URL } from '../../utils/admissions';
 import { ArrowRight, BadgeCheck, BookOpen, BriefcaseBusiness, ChevronRight, Monitor } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import CtaLink from '../CtaLink';
 import { useLanguage } from '../../context/LanguageContext';
 import Reveal from '../Reveal';
 import HeroBadges from '../HeroBadges';
@@ -56,7 +57,7 @@ export default function JurusanDetailHero({ item, design }) {
               ))}
             </Reveal>
             <Reveal className="mt-6 flex flex-wrap gap-3 delay-200">
-              <Link to={OFFICIAL_ADMISSIONS_URL} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-5 py-3 text-xs font-semibold leading-[normal] tracking-figma-copy text-white transition-colors hover:bg-primary-800">{t('Masuk SPMB')}<ArrowRight aria-hidden="true" className="size-4" /></Link>
+              <CtaLink href={OFFICIAL_ADMISSIONS_URL} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-5 py-3 text-xs font-semibold leading-[normal] tracking-figma-copy text-white transition-colors hover:bg-primary-800">{t('Masuk SPMB')}<ArrowRight aria-hidden="true" className="size-4" /></CtaLink>
               <a href="#fasilitas-jurusan" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-dark-200 bg-white px-5 py-3 text-xs font-bold leading-[normal] tracking-figma-copy text-dark-700 transition-colors hover:border-primary hover:text-primary">{t('Lihat Fasilitas')}<ArrowRight aria-hidden="true" className="size-4" /></a>
             </Reveal>
           </div>

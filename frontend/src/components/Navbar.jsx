@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, ChevronDown, Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import navbarLogo from '../assets/landing/beranda-navbar-logo.png';
+import CtaLink from './CtaLink';
 import LanguageToggle from './LanguageToggle';
 import { useLanguage } from '../context/LanguageContext';
 import { ctaMasukPpdb, navLinks } from '../data/dummyData';
@@ -197,13 +198,13 @@ const Navbar = () => {
           {/* Desktop CTA */}
           <div className="ml-auto flex shrink-0 items-center gap-3 min-[1152px]:ml-0">
             <LanguageToggle />
-            <Link
-              to={ctaMasukPpdb.href}
+            <CtaLink
+              href={ctaMasukPpdb.href}
               className="navbar-cta hidden min-[1152px]:inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-primary px-6 py-3 text-white transition-colors hover:bg-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             >
               {t(ctaMasukPpdb.label)}
               <ArrowRight className="w-4 h-4" />
-            </Link>
+            </CtaLink>
           </div>
 
           {/* Mobile toggle */}
@@ -279,14 +280,14 @@ const Navbar = () => {
                   </div>
                 );
               })}
-              <Link
-                to={ctaMasukPpdb.href}
+              <CtaLink
+                href={ctaMasukPpdb.href}
                 onClick={() => setIsMobileOpen(false)}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               >
                 {t(ctaMasukPpdb.label)}
                 <ArrowRight className="w-4 h-4" />
-              </Link>
+              </CtaLink>
             </div>
           </div>
         )}

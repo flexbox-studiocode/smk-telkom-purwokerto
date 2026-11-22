@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import CtaLink from './CtaLink';
 import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import HeroBadges from './HeroBadges';
@@ -30,12 +30,12 @@ export default function HeroPanel({ content, media, breadcrumb, carousel = false
         </Heading>
         <p className="mt-4 max-w-md text-xs sm:text-sm leading-relaxed text-dark-500">{t(content.description)}</p>
         <div className="mt-7 flex flex-wrap items-center gap-3">
-          <Link to={content.primaryCta.href} className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
+          <CtaLink href={content.primaryCta.href} className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
             {t(content.primaryCta.label)}<ArrowRight aria-hidden="true" className="w-4 h-4" />
-          </Link>
-          {content.secondaryCta && <Link to={content.secondaryCta.href} className="inline-flex items-center gap-2 rounded-full border border-dark-200 bg-white px-6 py-3 text-sm font-semibold text-dark-700 transition-colors hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
+          </CtaLink>
+          {content.secondaryCta && <CtaLink href={content.secondaryCta.href} className="inline-flex items-center gap-2 rounded-full border border-dark-200 bg-white px-6 py-3 text-sm font-semibold text-dark-700 transition-colors hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
             {t(content.secondaryCta.label)}<ArrowRight aria-hidden="true" className="w-4 h-4" />
-          </Link>}
+          </CtaLink>}
         </div>
       </div>
       {carousel ? <div className={`hero-media relative ${media?.photo ? 'hero-media--photo' : ''}`}>

@@ -2,7 +2,7 @@ import { OFFICIAL_ADMISSIONS_URL } from '../../utils/admissions';
 import PageHeroCarousel from '../../components/PageHeroCarousel';
 import { useLanguage } from '../../context/LanguageContext';
 import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import CtaLink from '../CtaLink';
 import HeroStatsBar from '../HeroStatsBar';
 import HeroBadges from '../HeroBadges';
 import { jurusanHero, jurusanStats } from '../../data/dummyData';
@@ -28,13 +28,13 @@ const JurusanHeroSection = () => {
               {t(jurusanHero.description)}
             </p>
 
-            <Link
-              to={OFFICIAL_ADMISSIONS_URL}
+            <CtaLink
+              href={OFFICIAL_ADMISSIONS_URL}
               className="mt-7 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-800"
             >
               {t(jurusanHero.ctaText)}
               <ArrowRight className="h-4 w-4" />
-            </Link>
+            </CtaLink>
           </div>
 
           {/* Preserve the complete supplied artwork at its original aspect ratio. */}

@@ -2,7 +2,7 @@ import { OFFICIAL_ADMISSIONS_URL } from '../../utils/admissions';
 import PageHeroCarousel from '../../components/PageHeroCarousel';
 import { useLanguage } from '../../context/LanguageContext';
 import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import CtaLink from '../CtaLink';
 import HeroStatsBar from '../HeroStatsBar';
 import HeroBreadcrumb from '../HeroBreadcrumb';
 import HeroBadges from '../HeroBadges';
@@ -33,13 +33,13 @@ const PengumumanHeroSection = () => {
               {t(pengumumanHero.description)}
             </p>
 
-            <Link
-              to={OFFICIAL_ADMISSIONS_URL}
+            <CtaLink
+              href={OFFICIAL_ADMISSIONS_URL}
               className="mt-7 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-800"
             >
               {t(pengumumanHero.ctaText)}
               <ArrowRight className="h-4 w-4" />
-            </Link>
+            </CtaLink>
           </div>
 
           {/* Ilustrasi megafon + ponsel di atas sapuan merah (satu aset dari Figma) */}
