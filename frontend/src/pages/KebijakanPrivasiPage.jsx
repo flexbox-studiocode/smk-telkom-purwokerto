@@ -254,28 +254,54 @@ const KebijakanPrivasiPage = () => {
           <div className="lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-12">
             <aside className="mb-10 lg:mb-0" aria-label={tocLabel}>
               <div className="lg:sticky lg:top-28">
-                <p className="text-[0.8125rem] font-bold uppercase tracking-[0.18em] text-primary">{tocLabel}</p>
-                <nav className="mt-4 border-l border-dark-100 pl-4">
-                  <ol className="space-y-3.5">
-                    {sections.map((section) => (
-                      <li key={section.slug}>
-                        <a
-                          href={`#${section.slug}`}
-                          aria-current={activeId === section.slug ? 'true' : undefined}
-                          className={`block text-[0.9375rem] leading-snug transition-colors ${
-                            activeId === section.slug ? 'font-semibold text-primary' : 'text-dark-500 hover:text-primary'
-                          }`}
-                        >
-                          {section.title.replace(/^\d+\.\s*/, '')}
-                        </a>
-                      </li>
-                    ))}
-                  </ol>
-                </nav>
-                <p className="mt-8 text-[0.8125rem] leading-normal text-dark-400">
-                  {lang === 'id' ? 'Diperbarui' : 'Updated'} {lastUpdated}<br />
-                  flexbox.smktelkom-pwt.sch.id
-                </p>
+                <details className="group rounded-xl border border-dark-200 bg-white lg:hidden">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 text-sm font-semibold text-dark-800 focus-visible:outline-2 focus-visible:outline-primary">
+                    {tocLabel}
+                    <span aria-hidden="true" className="text-primary transition-transform group-open:rotate-180">⌄</span>
+                  </summary>
+                  <nav className="border-t border-dark-100 px-4 py-3" aria-label={tocLabel}>
+                    <ol className="space-y-1">
+                      {sections.map((section) => (
+                        <li key={section.slug}>
+                          <a
+                            href={`#${section.slug}`}
+                            aria-current={activeId === section.slug ? 'true' : undefined}
+                            className={`flex min-h-11 items-center text-sm leading-snug transition-colors ${
+                              activeId === section.slug ? 'font-semibold text-primary' : 'text-dark-600 hover:text-primary'
+                            }`}
+                          >
+                            {section.title.replace(/^\d+\.\s*/, '')}
+                          </a>
+                        </li>
+                      ))}
+                    </ol>
+                  </nav>
+                </details>
+
+                <div className="hidden lg:block">
+                  <p className="text-[0.8125rem] font-bold uppercase tracking-[0.18em] text-primary">{tocLabel}</p>
+                  <nav className="mt-4 border-l border-dark-100 pl-4" aria-label={tocLabel}>
+                    <ol className="space-y-3.5">
+                      {sections.map((section) => (
+                        <li key={section.slug}>
+                          <a
+                            href={`#${section.slug}`}
+                            aria-current={activeId === section.slug ? 'true' : undefined}
+                            className={`block text-[0.9375rem] leading-snug transition-colors ${
+                              activeId === section.slug ? 'font-semibold text-primary' : 'text-dark-500 hover:text-primary'
+                            }`}
+                          >
+                            {section.title.replace(/^\d+\.\s*/, '')}
+                          </a>
+                        </li>
+                      ))}
+                    </ol>
+                  </nav>
+                  <p className="mt-8 text-[0.8125rem] leading-normal text-dark-400">
+                    {lang === 'id' ? 'Diperbarui' : 'Updated'} {lastUpdated}<br />
+                    flexbox.smktelkom-pwt.sch.id
+                  </p>
+                </div>
               </div>
             </aside>
 
