@@ -83,7 +83,7 @@ test('SPMB disabled: public config reports the safe default', async () => {
   const res = await client.request('/api/config');
   assert.equal(res.status, 200);
   assert.equal(res.body.spmbInternalEnabled, false);
-  assert.equal(res.body.officialAdmissionsUrl, 'https://ppdb.telkomschools.sch.id/welcome');
+  assert.equal(res.body.officialAdmissionsUrl, 'https://ppdb.telkomschools.sch.id/signup?lemdik=5');
   assert.equal(JSON.stringify(res.body).includes('PASSWORD'), false, 'config must not leak secrets');
 });
 

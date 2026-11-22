@@ -5,7 +5,7 @@
 // internal (registrasi peserta, draft, upload dokumen, dashboard internal).
 // SMK Telkom Purwokerto memakai portal resmi Yayasan Telkom Schools, jadi
 // default-nya nonaktif. Lihat docs/SPMB_INTERNAL_FEATURE_FLAG.md.
-export const OFFICIAL_ADMISSIONS_URL = 'https://ppdb.telkomschools.sch.id/welcome';
+export const OFFICIAL_ADMISSIONS_URL = 'https://ppdb.telkomschools.sch.id/signup?lemdik=5';
 
 export function isSpmbInternalEnabled() {
   return String(process.env.SPMB_INTERNAL_ENABLED ?? '').trim().toLowerCase() === 'true';

@@ -1,5 +1,5 @@
 // Keep stored identifiers unchanged; normalize only visible copy and site URLs.
-export const OFFICIAL_ADMISSIONS_URL = 'https://ppdb.telkomschools.sch.id/welcome';
+export const OFFICIAL_ADMISSIONS_URL = 'https://ppdb.telkomschools.sch.id/signup?lemdik=5';
 
 // Saat portal internal aktif (SPMB_INTERNAL_ENABLED=true), route internal
 // dirender normal. Saat nonaktif (default), seluruh alur pendaftaran internal

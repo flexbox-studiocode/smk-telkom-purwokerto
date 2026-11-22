@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { OFFICIAL_ADMISSIONS_URL } from '../src/utils/admissions.js';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const base = process.env.QA_URL || 'http://localhost:5191';
 assert(['localhost', '127.0.0.1'].includes(new URL(base).hostname), 'Local integration QA only.');
@@ -39,7 +40,7 @@ try {
   assert.equal(await page.locator('.spmb-timeline li').count(), 7);
   assert.equal(await page.locator('.spmb-scheme').count(), 3);
   assert.equal(await page.locator('.spmb-info-card a').getAttribute('href'), 'https://wa.me/6281229701800');
-  assert.equal(await opening().getByRole('link', { name: 'Daftar SPMB', exact: true }).getAttribute('href'), 'https://ppdb.telkomschools.sch.id/welcome');
+  assert.equal(await opening().getByRole('link', { name: 'Daftar SPMB', exact: true }).getAttribute('href'), OFFICIAL_ADMISSIONS_URL);
   assert(!await page.locator('body').innerText().then(text => /undefined|Invalid Date/.test(text)));
   await page.getByRole('button', { name: 'Informasi', exact: true }).hover();
   await page.getByRole('link', { name: 'Informasi SPMB', exact: true }).first().click();
