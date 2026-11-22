@@ -250,7 +250,7 @@ const KebijakanPrivasiPage = () => {
       </section>
 
       <section className="bg-white">
-        <div className="mx-auto max-w-[1200px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+        <div className="mx-auto max-w-[1200px] px-4 py-12 pb-28 sm:px-6 lg:px-8 lg:py-16 lg:pb-20">
           <div className="lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-12">
             <aside className="mb-10 lg:mb-0" aria-label={tocLabel}>
               <div className="lg:sticky lg:top-28">
