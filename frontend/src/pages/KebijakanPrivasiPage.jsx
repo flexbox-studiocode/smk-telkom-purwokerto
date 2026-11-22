@@ -251,15 +251,15 @@ const KebijakanPrivasiPage = () => {
           <div className="lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-12">
             <aside className="mb-10 lg:mb-0" aria-label={tocLabel}>
               <div className="lg:sticky lg:top-28">
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">{tocLabel}</p>
+                <p className="text-[0.8125rem] font-bold uppercase tracking-[0.18em] text-primary">{tocLabel}</p>
                 <nav className="mt-4 border-l border-dark-100 pl-4">
-                  <ol className="space-y-3">
+                  <ol className="space-y-3.5">
                     {sections.map((section) => (
                       <li key={section.slug}>
                         <a
                           href={`#${section.slug}`}
                           aria-current={activeId === section.slug ? 'true' : undefined}
-                          className={`block text-sm transition-colors ${
+                          className={`block text-[0.9375rem] leading-snug transition-colors ${
                             activeId === section.slug ? 'font-semibold text-primary' : 'text-dark-500 hover:text-primary'
                           }`}
                         >
@@ -269,7 +269,7 @@ const KebijakanPrivasiPage = () => {
                     ))}
                   </ol>
                 </nav>
-                <p className="mt-8 text-xs text-dark-400">
+                <p className="mt-8 text-[0.8125rem] leading-normal text-dark-400">
                   {lang === 'id' ? 'Diperbarui' : 'Updated'} {lastUpdated}<br />
                   flexbox.smktelkom-pwt.sch.id
                 </p>
@@ -278,45 +278,45 @@ const KebijakanPrivasiPage = () => {
 
             <div className="min-w-0 max-w-[850px]">
               <div className="rounded-2xl bg-primary-50 p-5 ring-1 ring-primary/10 sm:p-6">
-                <p className="text-sm font-semibold leading-relaxed text-dark-800">{summary}</p>
+                <p className="text-base font-semibold leading-[1.7] text-dark-800">{summary}</p>
               </div>
 
-              <div className="mt-10 space-y-10">
+              <div className="mt-12 space-y-12">
                 {sections.map((section) => (
                   <section key={section.slug} id={section.slug} className="scroll-mt-28">
-                    <h2 className="font-heading text-base font-bold text-dark-900">{section.title}</h2>
+                    <h2 className="font-heading text-xl font-bold leading-snug text-dark-900 sm:text-2xl">{section.title}</h2>
 
                     {section.items && (
-                      <div className="mt-4 space-y-4">
+                      <div className="mt-5 space-y-5">
                         {section.items.map((item) => (
                           <div key={item.subtitle}>
-                            <h3 className="text-sm font-semibold text-dark-800">{item.subtitle}</h3>
-                            <p className="mt-1 text-sm leading-relaxed text-dark-600">{item.text}</p>
+                            <h3 className="text-[1.0625rem] font-semibold text-dark-800 sm:text-[1.125rem]">{item.subtitle}</h3>
+                            <p className="mt-2 text-base leading-[1.75] text-dark-600">{item.text}</p>
                           </div>
                         ))}
                       </div>
                     )}
 
-                    {section.intro && <p className="mt-4 text-sm leading-relaxed text-dark-600">{section.intro}</p>}
+                    {section.intro && <p className="mt-4 text-base leading-[1.75] text-dark-600">{section.intro}</p>}
 
                     {section.bullets && (
-                      <ul className="mt-3 space-y-2 pl-5">
+                      <ul className="mt-4 space-y-2.5 pl-5">
                         {section.bullets.map((bullet) => (
-                          <li key={bullet} className="list-disc text-sm leading-relaxed text-dark-600">{bullet}</li>
+                          <li key={bullet} className="list-disc text-base leading-[1.75] text-dark-600">{bullet}</li>
                         ))}
                       </ul>
                     )}
 
                     {section.paragraphs && (
-                      <div className="mt-4 space-y-3">
+                      <div className="mt-4 space-y-4">
                         {section.paragraphs.map((para) => (
-                          <p key={para.slice(0, 40)} className="text-sm leading-relaxed text-dark-600">{para}</p>
+                          <p key={para.slice(0, 40)} className="text-base leading-[1.75] text-dark-600">{para}</p>
                         ))}
                       </div>
                     )}
 
                     {section.contact && (
-                      <div className="mt-4 space-y-3 text-sm leading-relaxed text-dark-600">
+                      <div className="mt-5 space-y-3 text-base leading-[1.75] text-dark-600">
                         <p>{contact.intro}</p>
                         <div className="space-y-2">
                           <p>
