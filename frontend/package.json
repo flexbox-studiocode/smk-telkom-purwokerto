@@ -37,6 +37,7 @@
     "security:uji": "node scripts/uji-kredensial.mjs && node scripts/uji-stela.mjs && node scripts/uji-stela-output.mjs && node scripts/uji-nexttel-handler.mjs && node scripts/uji-nexttel-dev.mjs && node scripts/uji-nexttel-score.mjs && node scripts/uji-nexttel-bilingual.mjs && node scripts/uji-nexttel-game.mjs && node scripts/uji-ai-budget.mjs && node scripts/uji-ppdb-contract.mjs && node scripts/uji-admin-settings.mjs && node scripts/uji-csrf-lintas-subdomain.mjs",
     "database:uji": "node scripts/uji-database-security.mjs",
     "performa:uji": "node scripts/uji-performa.mjs",
+    "privasi:uji": "node scripts/uji-privasi.mjs",
     "richtext:uji": "node scripts/uji-rich-text.mjs",
     "typecheck": "tsc --noEmit"
   },
