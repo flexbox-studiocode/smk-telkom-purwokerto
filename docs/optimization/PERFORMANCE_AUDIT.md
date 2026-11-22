@@ -249,7 +249,7 @@ harian. **WAJIB** migration aman + uji, bukan `DROP`/`TRUNCATE`.
 | 3 | LCP, CSS, font, stabilitas layout | Perbaikan bertarget |
 | 4 | Footer (FlexBox link, hapus tautan admin) | Sudah diterapkan di working tree; tinggal verifikasi/commit |
 | 5 | Navbar SPMB (URL resmi) | Sudah diterapkan di working tree; tinggal verifikasi/commit |
-| 6 | Redesain Kebijakan Privasi | Belum; dikerjakan |
+| 6 | Redesain Kebijakan Privasi | Selesai — lihat `docs/optimization/PRIVACY_REDESIGN.md` |
 | 7 | Tooling arsip WordPress | Belum ada analyzer; dikerjakan |
 | 8 | Pengujian & regresi keamanan | Jalankan suite yang ada |
 | 9 | Audit performa akhir | Setelah semua fase |
