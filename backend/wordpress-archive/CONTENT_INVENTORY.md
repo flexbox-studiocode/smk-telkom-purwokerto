@@ -77,4 +77,4 @@ Sumber angka: `results/dry-run.json` dan `results/migration-plan.json` yang dibu
 2. `page` 45 record mayoritas konten struktural sekolah (Profil, Fasilitas, Struktur Organisasi). Tidak dimigrasi otomatis; tersedia untuk review bila butuh konten statis.
 3. `tribe_events` hanya 3 record tanpa metadata tanggal terstruktur, sehingga ditempatkan di review, bukan otomatis `events`.
 4. Tidak ada record yang dianggap prestasi/pengumuman/event tanpa sinyal judul yang kuat; pasangan yang tidak konklusif masuk `needs_review`.
-5. Media: 2.672 URL gambar merespons sebagai image saat divalidasi read-only, 104 unresolved (sebagian besar host demo Avada), 13 URL bukan media gambar. Belum ada file yang diunduh.
+5. Media: 2.672 URL gambar merespons sebagai image saat divalidasi read-only, 104 unresolved (sebagian besar host demo Avada), 13 URL bukan media gambar. Download aktual selesai: 2.663 berkas (~948 MiB) di `backend/uploads/content-images/wordpress/` (diabaikan Git).

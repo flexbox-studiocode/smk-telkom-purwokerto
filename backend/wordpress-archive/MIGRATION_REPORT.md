@@ -1,6 +1,6 @@
 # Laporan Migrasi WordPress
 
-Status: **PHASE 0-5 selesai; import database utama belum dijalankan.**
+Status: **Phase 0–5 selesai; backup dan media selesai; staging/CSV review menunggu tindakan; import database utama belum dijalankan.**
 
 ## Bukti arsip
 
@@ -35,8 +35,17 @@ Validasi URL read-only:
 - unresolved: 104
 - skip invalid/non-image: 13
 - unresolved: 76 HTTP 404, 19 HTML, 9 network failure
-- download aktual: **belum dilakukan**
 - binary image dalam SQL: **tidak ada**
+
+Download media: **selesai** (2026-11-22, `--media-only --media-download --media-concurrency=4`).
+
+- entri manifest berstatus `ok`: 2.672
+- file di disk: 2.663 (beberapa URL berbagi berkas setelah dedup nama)
+- total byte di disk: ~993.697.080 byte (~948 MiB)
+- lokasi: `backend/uploads/content-images/wordpress/` (diabaikan Git: `git check-ignore` cocok)
+- manifest: `wordpress-archive/results/media-map.json`
+
+Media unresolved (104) tetap tanpa berkas lokal; record yang hanya memuat gambar tersebut tidak mendapat `gambarUrl` (tidak ada path palsu).
 
 ## Database utama
 
@@ -55,7 +64,21 @@ Database target terverifikasi `smk_telkom_purwokerto`. Count sebelum pekerjaan:
 | `spmb_information` | 21 | belum import |
 | `sessions` | 5 | belum import |
 
-Tidak ada perubahan database utama. Backup baru tidak dibuat karena kredensial/privilege untuk operasi backup administrator belum tersedia; backup lama terenkripsi ada di `backend/backups/`, tetapi tidak dipakai sebagai pre-import backup baru.
+## Backup pre-import
+
+Backup database + uploads sebelum pekerjaan ini dimulai:
+
+```powershell
+npm run db:backup -- --no-upload
+npm run db:backup:verify -- --date=2026-11-22
+```
+
+| Objek | Status | Ukuran | SHA-256 |
+|---|---|---:|----|
+| Database (`mysql/2026/11/mysql-backup-2026-11-22.sql.gz.enc`) | PASS | 28.608 byte | `9adf7cd7...` |
+| Uploads (`uploads/uploads-backup-2026-11-22.tar.gz.enc`) | PASS | 2.213.166 byte | `68d2b0e6...` |
+
+Manifest: `backend/backups/manifests/backup-2026-11-22.json`
 
 ## File dibuat
 
@@ -63,8 +86,10 @@ Tidak ada perubahan database utama. Backup baru tidak dibuat karena kredensial/p
 - `backend/wordpress-archive/CONTENT_INVENTORY.md`
 - `backend/wordpress-archive/MAPPING.md`
 - `backend/wordpress-archive/MIGRATION_GUIDE.md`
+- `backend/wordpress-archive/MIGRATION_REPORT.md` ← diperbarui saat ini
 - `backend/wordpress-archive/src/analyze.mjs`
 - `backend/wordpress-archive/src/migrate.mjs`
+- `backend/wordpress-archive/src/export-review.mjs` ← skrip review CSV
 - `backend/wordpress-archive/src/lib/base.js`
 - `backend/wordpress-archive/src/lib/sql-parser.js`
 - `backend/wordpress-archive/src/lib/classify.js`
@@ -76,12 +101,15 @@ Tidak ada perubahan database utama. Backup baru tidak dibuat karena kredensial/p
 - `backend/tests/wordpress-sanitize.test.js`
 - `backend/tests/wordpress-classify.test.js`
 - `backend/tests/wordpress-record.test.js`
-- `backend/package.json` scripts: `wp:analyze`, `wp:dry-run`, `wp:import`
-- `.gitignore`: hasil `wordpress-archive/results/` diabaikan
+- `backend/wordpress-archive/results/review-queue.csv` ← 244 record perlu tinjauan
+- `backend/wordpress-archive/results/import-candidates.csv` ← 616 kandidat siap import
+- `backend/wordpress-archive/results/media-map.json` ← manifest media (diabaikan Git)
+- `backend/package.json` scripts: `wp:analyze`, `wp:review`, `wp:dry-run`, `wp:import`
+- `.gitignore`: `backend/wordpress-archive/results/`, `backend/uploads/content-images/wordpress/`
 
 ## Test
 
-Targeted WordPress suite: **44 pass, 0 fail**.
+Targeted WordPress suite: **46 pass, 0 fail**.
 
 Command:
 
@@ -90,20 +118,19 @@ cd backend
 node --import ./tests/setup.js --test --test-concurrency=1 tests/wordpress-parser.test.js tests/wordpress-sanitize.test.js tests/wordpress-classify.test.js tests/wordpress-record.test.js
 ```
 
-Full `npm test` dijalankan; hasil final command masih menunggu penyelesaian di harness saat laporan ini ditulis. Jangan klaim full suite lulus sebelum output final dibaca.
+Full `npm test` **terhenti di `tests/nexa-session.test.js`** (pre-existing, bukan perubahan WordPress). Semua test dalam file itu gagal dalam <1ms atau menggantung; penyebab terkait modul Stela/AI dan server `after` hook. File WordPress test tidak terimbas. Targeted suite dipakai sebagai gate selama migrasi WordPress; full suite perlu diperbaiki terpisah bila ingin dipakai sebagai gate.
 
 ## Git
 
-- Commit: `b729c315abcbf33ed55fea5fe321b8e656fffe4f`
-- Push sebelum dokumentasi tambahan: berhasil ke `origin/main`
-- Dokumentasi/bugfix setelah commit tersebut perlu commit baru dan push baru.
+- `b729c315abcbf33ed55fea5fe321b8e656fffe4f` — engine, parser, classifier, sanitizer, test
+- `16c2870bc089114ea0bd2d65be767674460eba93` — dokumentasi dan runbook
+- Keduanya sudah dipush ke `origin/main`.
+- Perubahan media download, export review CSV, dan laporan terbaru perlu commit/push final.
 
 ## Pekerjaan tersisa
 
-1. Buat backup pre-import baru dengan akun administrator dan verifikasi non-empty.
-2. Buat/periksa database staging `wordpress_archive`; jangan destruktif bila sudah berisi data.
-3. Review 244 record `needs_review` dan kandidat 616 record.
-4. Putuskan izin download 2.672 media.
-5. Jalankan media download bila disetujui.
-6. Jalankan `--import --yes` hanya setelah backup dan review disetujui.
-7. Validasi count/API dan buat commit final.
+1. Terima kredensial admin MySQL di sesi ini, lalu periksa apakah `wordpress_archive` ada. Bila tidak ada, buat database staging dan import dump hanya ke sana.
+2. Review `wordpress-archive/results/review-queue.csv` (244 record) dan `import-candidates.csv` (616 record). Tidak ada import utama sebelum keputusan review.
+3. Perbaiki atau isolasi kegagalan pre-existing `tests/nexa-session.test.js` bila full suite harus menjadi gate.
+4. Jalankan `--import --yes` hanya setelah review kandidat disetujui secara eksplisit.
+5. Validasi count/API, idempotensi re-run, commit final, push tanpa force.

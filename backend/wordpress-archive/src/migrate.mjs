@@ -46,7 +46,11 @@ const MANIFEST_PATH = args['media-manifest'] ? path.resolve(args['media-manifest
 const stamp = new Date().toISOString().replace(/[:.]/g, '-');
 const report = {
   startedAt: new Date().toISOString(),
-  mode: DO_IMPORT ? 'import' : (MEDIA_ONLY ? 'media-only-dry-run' : 'dry-run'),
+  mode: DO_IMPORT
+    ? 'import'
+    : (MEDIA_ONLY
+      ? (MEDIA_DOWNLOAD ? 'media-only-download' : 'media-only-dry-run')
+      : (MEDIA_DOWNLOAD ? 'dry-run-download' : 'dry-run')),
   dryRun: DRY_RUN,
   sqlFile: path.relative(process.cwd(), SQL_PATH).replace(/\\/g, '/'),
   uploadRoot: UPLOAD_ROOT,
@@ -83,7 +87,8 @@ report.parser = stats;
 // ---- 2. Media ----
 let manifestIndex = new Map();
 if (!MEDIA_ONLY && fs.existsSync(MANIFEST_PATH)) {
-  manifestIndex = indexManifest(JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf8')));
+  const saved = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf8'));
+  manifestIndex = indexManifest(Array.isArray(saved) ? saved : (saved.items || []));
 }
 const media = collectMediaUrls(posts, extractContentImageUrls);
 report.media.total = media.size;

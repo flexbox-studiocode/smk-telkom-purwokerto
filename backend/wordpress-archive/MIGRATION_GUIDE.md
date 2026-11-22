@@ -57,6 +57,8 @@ Gunakan phpMyAdmin/Laragon dengan akun administrator MySQL yang Anda kendalikan:
 
 Engine saat ini membaca file dump langsung dan tidak membutuhkan staging untuk dry-run. Staging tetap direkomendasikan untuk inspeksi SQL di phpMyAdmin dan validasi independen.
 
+Pembuatan staging memerlukan kredensial administrator MySQL. Operator telah memberi izin untuk membuat/mengimpor staging, tetapi kredensial belum diterima. Jangan isi prompt interaktif dengan menebak password atau pakai `smk_app`; proses staging tetap tertunda sampai kredensial aman tersedia.
+
 ## 3. Analisis file
 
 ```powershell

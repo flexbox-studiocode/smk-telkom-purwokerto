@@ -25,6 +25,7 @@
     "db:restore": "node scripts/restore.mjs",
     "db:etl:dry-run": "node scripts/etl/migrate.mjs --dry-run",
     "wp:analyze": "node wordpress-archive/src/analyze.mjs",
+    "wp:review": "node wordpress-archive/src/export-review.mjs",
     "wp:dry-run": "node wordpress-archive/src/migrate.mjs --dry-run",
     "wp:import": "node wordpress-archive/src/migrate.mjs --import",
     "test": "node --import ./tests/setup.js --test --test-concurrency=1"

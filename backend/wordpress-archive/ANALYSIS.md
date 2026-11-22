@@ -144,7 +144,7 @@ Hasil validasi URL mode read-only pada 2.789 URL unik:
 | unresolved | 104 |
 | URL/ekstensi tidak valid untuk media gambar | 13 |
 
-Penyebab unresolved: 76 HTTP 404, 19 respons HTML, 9 kegagalan koneksi. Banyak kegagalan berasal dari aset demo `avada.theme-fusion.com`; aset tersebut tidak boleh diimpor. Media belum diunduh atau ditulis ke `backend/uploads/`.
+Penyebab unresolved: 76 HTTP 404, 19 respons HTML, 9 kegagalan koneksi. Banyak kegagalan berasal dari aset demo `avada.theme-fusion.com`; aset tersebut tidak boleh diimpor. Download aktual sudah selesai ke `backend/uploads/content-images/wordpress/` (2.663 berkas, ~948 MiB); `results/media-map.json` memetakan URL sumber ke path lokal untuk fase import.
 
 ## 7. Risiko dan batasan
 
