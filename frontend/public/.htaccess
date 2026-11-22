@@ -1,5 +1,8 @@
 # .htaccess for SPA + optimal asset cache (JHIC)
 
+# 0. No directory listings (e.g. /assets/ would otherwise list every build file)
+Options -Indexes
+
 # 1. Main SPA HTML: never cache, always revalidate
 <IfModule mod_headers.c>
   <FilesMatch "^(index|app)\.html$">
