@@ -17,10 +17,10 @@ Acuan utama: **[`../CPANEL_DEPLOYMENT_GUIDE.md`](../CPANEL_DEPLOYMENT_GUIDE.md)*
 
 File SQL adalah **schema-only export** (hanya `CREATE TABLE` + foreign key):
 
-- Berisi **15 tabel aplikasi**:
+- Berisi **16 tabel aplikasi**:
   `users`, `admins`, `sessions`, `auth_tokens`, `berita`, `pengumuman`, `prestasi`,
   `bkk`, `ppdb`, `ppdb_drafts`, `events`, `spmb_information`, `site_settings`,
-  `ai_daily_attempts`, `site_visitors`.
+  `ai_daily_attempts`, `site_visitors`, `nexa_sessions`.
 - **Tidak** memuat data konten apa pun (berita, prestasi, dsb. kosong).
 - **Tidak** memuat akun, password hash, auth token, atau session.
 - **Tidak** memuat data pribadi PPDB atau dokumen privat.
@@ -28,11 +28,11 @@ File SQL adalah **schema-only export** (hanya `CREATE TABLE` + foreign key):
 - **Tidak** ada `DROP TABLE` — aman dijalankan pada database kosong.
 - Engine `InnoDB`, charset `utf8mb4`, collation `utf8mb4_unicode_ci`.
 
-### Tabel ke-16: `_prisma_migrations`
+### Tabel ke-17: `_prisma_migrations`
 
-File SQL membuat 15 tabel aplikasi. **Tabel `_prisma_migrations` sengaja TIDAK dibuat
+File SQL membuat 16 tabel aplikasi. **Tabel `_prisma_migrations` sengaja TIDAK dibuat
 di file SQL.** Tabel itu milik Prisma dan dibuat **otomatis** oleh perintah resmi
-Prisma saat baseline (lihat §6). Setelah baseline selesai, total menjadi **16 tabel**.
+Prisma saat baseline (lihat §6). Setelah baseline selesai, total menjadi **17 tabel**.
 
 > **Jangan membuat atau mengisi `_prisma_migrations` secara manual.** Prisma harus
 > menuliskan checksum dan riwayat migration itu sendiri.
@@ -97,7 +97,7 @@ Bila muncul peringatan hak akses atau DDL ditolak: minta provider mengizinkan
 
 Setelah impor, verifikasi di phpMyAdmin:
 
-1. Panel kiri → pilih database → daftar tabel harus memuat **15 tabel aplikasi**
+1. Panel kiri → pilih database → daftar tabel harus memuat **16 tabel aplikasi**
    (lihat daftar di §1).
 2. Jalankan query berikut pada tab **SQL**:
 
@@ -122,19 +122,20 @@ WHERE table_schema = DATABASE()
 
 ---
 
-## 6. Prisma Baseline (4 Migration)
+## 6. Prisma Baseline (5 Migration)
 
 Impor SQL membuat tabel, tetapi **riwayat Prisma belum tercatat**. Karena itu, setelah
 impor, developer/administrator menjalankan **perintah baseline resmi Prisma** dari
-folder `backend/` (Application Root) agar Prisma mengenali 4 migration sebagai sudah
+folder `backend/` (Application Root) agar Prisma mengenali 5 migration sebagai sudah
 diterapkan.
 
-Daftar 4 migration di `backend/prisma/migrations/`:
+Daftar 5 migration di `backend/prisma/migrations/`:
 
 1. `20261103000000_init`
 2. `20261103010000_auth_tokens`
 3. `20261104000000_site_settings_revision_int`
 4. `20261104010000_events_category_enum`
+5. `20261110000000_nexa_sessions`
 
 Prisma harus **7.10.1** (cek `npx prisma -v`). Perintah baseline:
 
@@ -145,6 +146,7 @@ npx prisma migrate resolve --applied 20261103000000_init
 npx prisma migrate resolve --applied 20261103010000_auth_tokens
 npx prisma migrate resolve --applied 20261104000000_site_settings_revision_int
 npx prisma migrate resolve --applied 20261104010000_events_category_enum
+npx prisma migrate resolve --applied 20261110000000_nexa_sessions
 ```
 
 `npx prisma migrate resolve --applied <nama>` adalah **mekanisme resmi Prisma** untuk
@@ -164,7 +166,7 @@ menandai sebuah migration sudah diterapkan. Prisma sendiri yang membuat tabel
 npm run db:status      # = prisma migrate status
 ```
 
-Setelah keempat `resolve` sukses, output harus menyatakan schema **up to date / semua
+Setelah kelima `resolve` sukses, output harus menyatakan schema **up to date / semua
 migration applied**. Bila masih ada yang pending, jangan lanjut — periksa kembali.
 
 Opsional, cek drift schema terhadap file Prisma:

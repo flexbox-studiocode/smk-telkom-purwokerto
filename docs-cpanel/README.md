@@ -57,8 +57,8 @@ Halaman awal dokumentasi pemindahan aplikasi **SMK Telkom Purwokerto** ke hostin
 
 ### Panduan Database
 
-- **[`sql/README.md`](./sql/README.md)** — skema 15 tabel aplikasi, impor SQL lewat
-  phpMyAdmin, verifikasi tabel, dan Prisma baseline 4 migration.
+- **[`sql/README.md`](./sql/README.md)** — skema 16 tabel aplikasi, impor SQL lewat
+  phpMyAdmin, verifikasi tabel, dan Prisma baseline 5 migration.
 
 ---
 

@@ -56,10 +56,10 @@ Halaman awal: [`./README.md`](./README.md).
 - [ ] Backup sebelum migrasi dibuat.
 - [ ] File SQL schema-only diperoleh **terpisah dari developer** (bukan dari GitHub).
 - [ ] Database tujuan **kosong** (belum berisi tabel aplikasi).
-- [ ] (Strategi B) SQL diimpor lewat **phpMyAdmin** → verifikasi **15 tabel aplikasi**.
-- [ ] (Strategi B) Developer/provider menjalankan 4 kali `prisma migrate resolve --applied` (baseline resmi).
+- [ ] (Strategi B) SQL diimpor lewat **phpMyAdmin** → verifikasi **16 tabel aplikasi** (termasuk `nexa_sessions`).
+- [ ] (Strategi B) Developer/provider menjalankan 5 kali `prisma migrate resolve --applied` (baseline resmi).
 - [ ] (Strategi B) `npm run db:status` menyatakan schema **up to date** (bukan pending).
-- [ ] `_prisma_migrations` **tidak** dibuat/diisi manual; total **16 tabel** setelah baseline.
+- [ ] `_prisma_migrations` **tidak** dibuat/diisi manual; total **17 tabel** setelah baseline.
 
 ---
 
