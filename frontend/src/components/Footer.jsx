@@ -1,4 +1,4 @@
-import { LockKeyhole, Mail, MapPin, Phone } from 'lucide-react';
+import { Mail, MapPin, Phone } from 'lucide-react';
 import { FaInstagram, FaTiktok, FaYoutube } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
@@ -94,8 +94,14 @@ const Footer = () => {
             </div>
 
             <div className="mt-4 max-w-[280px]">
-              <h2 className="footer-link-heading text-dark-900">Supported by:</h2>
-              <div className="mt-3 flex items-center gap-3">
+              <h2 className="footer-link-heading text-dark-900">{t('Supported by:')}</h2>
+              <a
+                href="https://microsite.flexbox.web.id/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t('Kunjungi situs tim Flexbox (terbuka di tab baru)')}
+                className="mt-3 inline-flex items-center gap-3 rounded-lg transition-colors hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+              >
                 <img
                   src={flexboxLogo}
                   alt=""
@@ -105,8 +111,8 @@ const Footer = () => {
                   height="190"
                   className="h-auto w-12 shrink-0 object-contain"
                 />
-                <span className="font-heading text-base font-bold text-dark-900">Flexbox</span>
-              </div>
+                <span className="font-heading text-base font-bold text-dark-900">{t('Flexbox')}</span>
+              </a>
             </div>
 
           </div>
@@ -161,20 +167,12 @@ const Footer = () => {
     <div className="footer-bottom-bar relative bg-primary text-white">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 pl-4 pr-24 py-2 text-[11px] sm:flex-row sm:pl-6 lg:pl-8 2xl:pr-8">
         <p>© 2026 {settings?.school_name || 'SMK Telkom Purwokerto'}. All Rights Reserved.</p>
-        <div className="flex flex-col items-center gap-1 min-[360px]:flex-row min-[360px]:gap-3">
+        <div className="flex items-center gap-3">
           <Link
             to="/kebijakan-privasi"
             className="whitespace-nowrap underline underline-offset-2 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             {t('Kebijakan Privasi')}
-          </Link>
-          <span aria-hidden="true" className="hidden h-3 border-l border-white/60 min-[360px]:block" />
-          <Link
-            to="/login"
-            className="inline-flex items-center gap-1.5 whitespace-nowrap underline-offset-2 transition-opacity hover:opacity-80 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-          >
-            <LockKeyhole className="h-3 w-3" aria-hidden="true" />
-            {t('Akses Staf & Admin')}
           </Link>
         </div>
       </div>

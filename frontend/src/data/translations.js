@@ -34,6 +34,7 @@ export default {
   'Informasi': 'Information', 'Informasi SPMB': 'SPMB Information', 'Kontak': 'Contact',
   'Submenu Tentang': 'About submenu', 'Submenu Informasi': 'Information submenu', 'Tutup menu': 'Close menu', 'Buka menu': 'Open menu',
   'Kebijakan Privasi': 'Privacy Policy', 'Akses Staf & Admin': 'Staff & Admin Access',
+  'Kunjungi situs tim Flexbox (terbuka di tab baru)': 'Visit the Flexbox team site (opens in a new tab)',
   'Pendukung lomba': 'Competition supporters', 'Kunjungi {name}': 'Visit {name}',
   'Jeda animasi logo': 'Pause logo animation',
   'Lanjutkan animasi logo': 'Resume logo animation',
