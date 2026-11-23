@@ -1,766 +1,135 @@
-# README — Bahasa Indonesia
+# SMK Telkom Purwokerto
 
-## SMK Telkom Purwokerto — Digital Smart School Platform
+Website sekolah dan dashboard pengelolaan konten. Repository berisi frontend React, backend API Node.js, database MySQL, layanan AI, dokumentasi operasional, serta arsip migrasi konten WordPress.
 
-Platform digital sekolah yang mencakup website publik, dashboard administrator, PPDB online, pengelolaan konten, Supabase backend, authentication, storage, STELA AI, dan NextTel AI. Project dikembangkan secara kolaboratif untuk kebutuhan project sekolah/lomba.
-
-## Fitur dan Route
-
-### Website publik
-
-| Route | Keterangan |
-|---|---|
-| `/` | Homepage sekolah |
-| `/profil-sekolah` | Profil, visi-misi, fasilitas, dan informasi sekolah |
-| `/tentang` | Redirect ke `/profil-sekolah` |
-| `/jurusan` | Program keahlian dan detail jurusan |
-| `/ekstrakurikuler` | Daftar kegiatan ekstrakurikuler, organisasi, prestasi, sentra, dan community |
-| `/prestasi` | Prestasi, galeri, dan detail prestasi |
-| `/bkk` | Bursa Kerja Khusus dan informasi karier |
-| `/berita` | Daftar dan detail berita |
-| `/pengumuman` | Daftar dan detail pengumuman |
-| `/stela` | Halaman chatbot STELA |
-| `/nexttel` | Kuesioner rekomendasi jurusan |
-| `/galeri` | Galeri foto |
-| `/kebijakan-privasi` | Kebijakan Privasi (bilingual) |
-
-Detail dinamis menggunakan route berbasis slug, misalnya `/jurusan/:slug`, `/prestasi/:slug`, `/berita/:slug`, dan `/pengumuman/:slug`.
-
-Sebagian konten publik masih bersumber dari `frontend/src/data/dummyData.js`. Berita, Pengumuman, Prestasi, dan BKK memiliki service Supabase, tetapi tidak semua section publik membaca database secara dinamis.
-
-### Admin dashboard
-
-| Route | Keterangan | Sumber data |
-|---|---|---|
-| `/login` | Login administrator | Supabase Auth |
-| `/dashboard` | Statistik dan ringkasan | Supabase service |
-| `/dashboard/jurusan` | Tambah, edit, dan hapus jurusan | `AdminDataContext` in-memory |
-| `/dashboard/berita` | CRUD berita | Supabase |
-| `/dashboard/pengumuman` | CRUD pengumuman | Supabase |
-| `/dashboard/prestasi` | CRUD prestasi | Supabase |
-| `/dashboard/bkk` | CRUD lowongan BKK | Supabase |
-| `/dashboard/ppdb` | Review pendaftar dan update status | Supabase |
-| `/dashboard/pengaturan` | Pengaturan dashboard | `AdminDataContext` |
-
-Admin routes dilindungi `ProtectedRoute`. User admin harus terautentikasi melalui Supabase Auth dan memiliki relasi pada `public.admins`.
-
-## Tech Stack
-
-### Frontend
-
-- React 19
-- Vite 8
-- Tailwind CSS 4
-- React Router 7
-- `lucide-react`
-- `react-icons`
-- `@supabase/supabase-js`
-- CSS transition dan `IntersectionObserver`
-
-Project tidak menggunakan Axios atau Framer Motion. Request HTTP menggunakan `fetch` bawaan.
-
-### Backend dan platform
-
-- Supabase PostgreSQL
-- Supabase Auth
-- Supabase Storage
-- Supabase Edge Functions berbasis Deno
-- Row Level Security (RLS)
-
-### AI dan deployment
-
-- STELA mendukung 9Router, Anthropic, Google Gemini, dan Groq melalui Edge Function.
-- NextTel menggunakan scoring frontend dan Edge Function dengan provider AI server-side untuk penjelasan hasil.
-- Frontend dapat dideploy ke Vercel; database, Auth, Storage, dan Edge Functions berada di Supabase.
-
-## Arsitektur
+## Arsitektur saat ini
 
 ```text
 Browser
-   ↓
-React / Vite
-   ├── React Router
-   ├── Public pages
-   └── Protected admin pages
-          ↓
-   Supabase client / fetch
-          ↓
-Supabase
-   ├── Authentication
-   ├── PostgreSQL + RLS
-   ├── Storage
-   └── Edge Functions
-          ├── STELA
-          └── NextTel
+  └─ React 19 + Vite 8 frontend
+       └─ REST API (cookie session + CSRF)
+            └─ Express 5 backend
+                 └─ MySQL 8.4 melalui Prisma 7
 ```
 
-Browser merender UI. React/Vite menyediakan komponen, halaman, state, dan build. Supabase client mengakses Auth, database, dan Storage menggunakan key publik yang tunduk pada RLS. Edge Functions menjadi perantara server-side untuk provider AI agar API key tidak masuk ke browser.
+- **Frontend:** React 19, Vite 8, React Router 7, Tailwind CSS 4, Framer Motion, GSAP, Lenis, dan `fetch` terpusat di `frontend/src/services/apiClient.js`.
+- **Backend:** Node.js `>=22.12`, Express 5, Prisma 7, MySQL/MariaDB, session berbasis cookie, validasi Zod, dan rate limiting.
+- **Layanan tambahan:** SMTP untuk verifikasi email/pemulihan sandi, Cloudflare Turnstile, penyimpanan upload persisten, serta STELA/NEXA dan NextTel melalui backend.
+- **Supabase:** migration PostgreSQL di `supabase/migrations/` adalah bagian sistem lama/arsip ETL. Frontend dan backend aktif tidak memakai Supabase sebagai database operasional. Supabase Storage opsional dipakai script backup server-side.
 
-## Struktur Folder
+## Fitur utama
+
+- Website publik: beranda, profil sekolah, guru, fasilitas, jurusan, prestasi, BKK, sinergi, berita, pengumuman, kalender, galeri, panduan, chatbot NEXA/STELA, NextTel, dan kebijakan privasi.
+- Admin: login terlindungi; pengelolaan berita, pengumuman, prestasi, BKK, kalender, pengaturan, dan data PPDB historis.
+- API: konten publik/admin, autentikasi, statistik, event, pengaturan situs, upload, fitur AI, dan informasi SPMB.
+- Portal pendaftaran internal saat ini **nonaktif secara default**. Route `/spmb/*` lama dialihkan ke portal resmi Yayasan Telkom Schools; mutasi API internal diblokir kecuali `SPMB_INTERNAL_ENABLED=true` dikonfigurasi.
+- Sebagian materi halaman tetap berasal dari aset/data statis frontend; konten berita, pengumuman, prestasi, lowongan, event, dan pengaturan menggunakan API backend.
+- Import WordPress tersedia sebagai workflow terpisah. Analisis/dry-run membaca dump; import perlu backup dan pemeriksaan sesuai `backend/wordpress-archive/MIGRATION_GUIDE.md`.
+
+## Route ringkas
+
+| Area | Route |
+|---|---|
+| Situs publik | `/`, `/profil-sekolah`, `/fasilitas`, `/jurusan`, `/prestasi`, `/bkk`, `/sinergi`, `/berita`, `/pengumuman`, `/kalender`, `/galeri`, `/ekstrakurikuler` |
+| Detail/halaman tambahan | `/jurusan/:slug`, `/berita/:slug`, `/pengumuman/:slug`, `/prestasi/:slug`, `/profil-sekolah/guru`, `/bkk/panduan`, `/jurusan/faq`, `/jurusan/perbandingan` |
+| AI dan informasi | `/nexa`, `/stela`, `/nexttel`, `/spmb`, `/kebijakan-privasi` |
+| Admin | `/login`, `/dashboard`, `/dashboard/berita`, `/dashboard/pengumuman`, `/dashboard/prestasi`, `/dashboard/bkk`, `/dashboard/kalender`, `/dashboard/spmb` |
+| Pendaftaran | `/spmb/*` diarahkan ke portal resmi selama fitur internal nonaktif; `/ppdb/*` adalah alias lama yang juga dialihkan |
+
+## Struktur repository
 
 ```text
-smk-telkom-purwokerto/
-├── frontend/
-│   ├── public/
-│   ├── scripts/
-│   ├── src/
-│   │   ├── assets/
-│   │   ├── components/
-│   │   ├── context/
-│   │   ├── data/
-│   │   ├── hooks/
-│   │   ├── layouts/
-│   │   ├── page/Login/
-│   │   ├── pages/
-│   │   │   ├── admin/
-│   │   │   ├── dashboard/
-│   │   │   └── ppdb/
-│   │   ├── router/
-│   │   ├── services/
-│   │   ├── utils/
-│   │   ├── App.jsx
-│   │   ├── index.css
-│   │   └── main.jsx
-│   ├── .env.example
-│   ├── package.json
-│   ├── vite.config.js
-│   └── vite-plugin-stela.js
-├── supabase/
-│   ├── functions/
-│   │   ├── nexttel/
-│   │   └── stela/
-│   ├── migrations/
-│   │   ├── 001_initial_schema.sql
-│   │   ├── 002_ppdb_identity.sql
-│   │   ├── 003_ppdb_storage_owner_and_unique.sql
-│   │   ├── 004_ppdb_drafts.sql
-│   │   ├── 005_ppdb_application_fields.sql
-│   │   └── 006_ppdb_upload_and_input_guard.sql
-│   ├── README.md
-│   └── .temp/                 # State lokal CLI; jangan di-commit
-├── README.md
-├── ai.md
-└── bug.md
+.
+├── frontend/                 # React/Vite, pages, components, services, build scripts
+├── backend/                  # Express API, Prisma schema/migrations, tests, backup/ETL tools
+│   └── wordpress-archive/    # Parser dan workflow migrasi WordPress
+├── supabase/                 # Migration dan Edge Function legacy/arsip
+├── docs/                     # Setup, deployment, audit, keamanan, QA
+├── docs-cpanel/              # Catatan deployment cPanel
+├── outputs/                  # Snapshot hasil audit lokal
+└── README.md
 ```
 
-## PPDB Online
+## Menjalankan lokal
 
-Flow PPDB:
+Prasyarat: Node.js `>=22.12`, npm, dan MySQL 8.4 atau MariaDB yang kompatibel. Untuk setup MySQL lokal/Laragon, lihat [`docs/BACKEND_LOCAL_SETUP.md`](docs/BACKEND_LOCAL_SETUP.md), [`docs/MYSQL_SETUP_GUIDE.md`](docs/MYSQL_SETUP_GUIDE.md), dan [`docs/MYSQL_RUN_GUIDE.md`](docs/MYSQL_RUN_GUIDE.md).
 
-```text
-Register → Email Verification → Login → Formulir → Upload Dokumen → Submit → Status Pendaftaran
-```
+Siapkan database dan salin `backend/.env.example` ke `backend/.env`. Isi setidaknya `DATABASE_URL` dan `SESSION_SECRET` (minimal 32 karakter); sesuaikan `FRONTEND_URL` dan SMTP bila diperlukan. Jangan commit `.env` atau rahasia.
 
-Route yang tersedia:
-
-```text
-/ppdb/daftar
-/ppdb/masuk
-/ppdb/verifikasi
-/ppdb/formulir
-/ppdb/berkas
-/ppdb/selesai
-/ppdb/status
-/ppdb/dokumen-peserta
-```
-
-`/ppdb` mengarahkan pengguna ke `/ppdb/masuk`. Status submission adalah `menunggu`, `diproses`, `diterima`, dan `ditolak`.
-
-`public.ppdb.auth_user_id` mereferensikan `auth.users.id`. Submission baru harus memiliki `auth_user_id` yang sama dengan `auth.uid()`. User hanya dapat membaca submission miliknya melalui RLS, dan unique partial index membatasi satu submission per akun.
-
-Email confirmation Supabase diarahkan ke `/ppdb/verifikasi` dan pemulihan sandi ke `/ppdb/atur-sandi`; kedua URL harus diizinkan pada Supabase Auth. Bucket `ppdb-documents` bersifat private. Path unggahan baru menggunakan `submissions/<auth_user_id>/document.pdf` dan dibuka menggunakan signed URL terbatas waktu, bukan public URL. Admin dapat membaca dan memperbarui data PPDB sesuai policy.
-
-## Supabase
-
-Migration diterapkan berurutan:
-
-1. `001_initial_schema.sql` membuat tabel `admins`, `berita`, `pengumuman`, `prestasi`, `bkk`, `ppdb`, index, trigger `updated_at`, fungsi `is_admin()`, RLS, dan dua bucket Storage.
-2. `002_ppdb_identity.sql` menambahkan `auth_user_id`, foreign key ke `auth.users`, ownership RLS PPDB, serta pembatas upload dokumen per user.
-3. `003_ppdb_storage_owner_and_unique.sql` menambahkan policy pembacaan object milik user dan unique index satu submission per akun.
-4. `004_ppdb_drafts.sql` menambahkan tabel draft PPDB dengan akses hanya untuk pemilik akun.
-5. `005_ppdb_application_fields.sql` menambahkan NIK, agama, tahun lulus, dan nilai rapor.
-6. `006_ppdb_upload_and_input_guard.sql` membatasi path unggahan baru menjadi satu dokumen per akun dan memvalidasi data pendaftaran. Terapkan `004` dan `005` sebelum frontend baru, lalu `006` bersamaan dengan frontend baru.
-
-`AuthContext` membaca session Supabase dan memeriksa user pada `public.admins`. `ProtectedRoute` mengarahkan user tanpa akses admin ke `/login`. Anon/publishable key boleh berada di frontend karena akses database tetap dibatasi RLS; service-role key tidak boleh berada di frontend.
-
-## STELA AI
-
-STELA adalah asisten virtual sekolah untuk pertanyaan tentang profil, jurusan, fasilitas, kegiatan, prestasi, BKK, PPDB, berita, pengumuman, dan kontak.
-
-- Production endpoint: `${VITE_SUPABASE_URL}/functions/v1/stela`.
-- Local endpoint: `/api/stela` dari `frontend/vite-plugin-stela.js`.
-- Provider: 9Router, Anthropic, Google Gemini, dan Groq.
-- Prioritas provider: 9Router, Anthropic, Gemini, lalu Groq (hanya provider dengan kunci yang valid).
-- Model default dan fallback didefinisikan di `supabase/functions/stela/inti.mjs`.
-- Context dinamis mengambil Berita published, Pengumuman published, Prestasi, dan BKK aktif.
-- Context dinamis di-cache selama 60 detik.
-- STELA tidak membaca PPDB, `admins`, draft, atau bucket private.
-- Tersedia validasi input, origin restriction, rate limit, daily limit, IP limit, answer cache, output-token limit, dan emergency switch.
-- Guard tersebut berjalan di memori Edge Function; billing limit provider tetap harus diatur di dashboard provider.
-- API key production disimpan sebagai Supabase Edge Function Secret.
-
-Snapshot pengetahuan statis dibuat dari `dummyData.js`:
-
-```bash
-cd frontend
-npm run stela:konten
-```
-
-Setelah snapshot berubah, deploy ulang function STELA.
-
-## NextTel AI
-
-NextTel menggunakan kuesioner delapan pertanyaan. Scoring dilakukan di frontend untuk menampilkan hasil `RPL`, `PG`, `TKJ`, dan `TJAT`; delapan jawaban dikirim ke `${VITE_SUPABASE_URL}/functions/v1/nexttel` untuk mendapatkan penjelasan.
-
-Edge Function NextTel menggunakan provider AI server-side (9Router, Anthropic, Gemini, atau Groq). Kunci khusus `NEXTTEL_*` dipakai jika tersedia; jika tidak, fungsi memakai kunci provider bersama. Fungsi memvalidasi delapan jawaban, menghitung ulang skor serta rekomendasi, menerapkan origin restriction serta rate limit, dan mengembalikan `explanation`, `strengths`, serta `learningSuggestions`. API key tidak pernah dikirim ke browser.
-
-## Environment Variables
-
-### Frontend dan local mode
-
-| Variable | Digunakan oleh | Wajib | Secret? |
-|---|---|---:|---:|
-| `VITE_SUPABASE_URL` | Supabase client, Auth, database, Storage, STELA, NextTel | Fitur Supabase | Tidak |
-| `VITE_SUPABASE_ANON_KEY` | Supabase client dan Authorization header | Fitur Supabase | Tidak |
-| `VITE_TURNSTILE_SITE_KEY` | Cloudflare Turnstile site key untuk login admin | Opsional | Tidak |
-| `ANTHROPIC_API_KEY` | STELA local | Opsional | Ya |
-| `GEMINI_API_KEY` | STELA local | Opsional | Ya |
-| `GROQ_API_KEY` | STELA local | Opsional | Ya |
-| `NINEROUTER_KEY` | STELA local | Opsional | Ya |
-| `NINEROUTER_URL` | URL API router lokal/VPS; wajib untuk 9Router | Jika memakai 9Router | Tidak |
-| `NINEROUTER_MODEL` | Model 9Router | Opsional | Tidak |
-| `STELA_MODEL` | Model STELA local | Opsional | Tidak |
-| `STELA_AKTIF` | Sakelar STELA | Opsional | Tidak |
-| `STELA_MAKS_PER_HARI` | Batas harian STELA | Opsional | Tidak |
-| `STELA_MAKS_PER_IP` | Batas per-IP STELA | Opsional | Tidak |
-
-### Supabase Edge Function secrets
-
-| Variable | Digunakan oleh | Secret? |
-|---|---|---:|
-| `ANTHROPIC_API_KEY` | STELA Anthropic | Ya |
-| `GEMINI_API_KEY` | STELA Gemini | Ya |
-| `GROQ_API_KEY` | STELA Groq | Ya |
-| `NINEROUTER_KEY` | STELA 9Router | Ya |
-| `NINEROUTER_URL` | URL HTTPS router yang bisa dijangkau Supabase (bukan localhost) | Tidak |
-| `NINEROUTER_MODEL` | Model 9Router | Tidak |
-| `STELA_MODEL` | Model STELA | Tidak |
-| `STELA_AKTIF` | Emergency switch STELA | Tidak |
-| `STELA_MAKS_PER_HARI` | Batas harian STELA | Tidak |
-| `STELA_MAKS_PER_IP` | Batas IP STELA | Tidak |
-| `STELA_ALLOWED_ORIGINS` | Origin STELA | Tidak |
-| `SUPABASE_URL` | Context publik STELA | Tidak |
-| `SUPABASE_ANON_KEY` | REST context STELA | Tidak |
-| `NEXTTEL_ANTHROPIC_API_KEY` | Provider NextTel | Ya |
-| `NEXTTEL_NINEROUTER_KEY` | Provider 9Router khusus NextTel | Ya |
-| `NEXTTEL_GEMINI_API_KEY` | Provider Gemini khusus NextTel | Ya |
-| `NEXTTEL_GROQ_API_KEY` | Provider Groq khusus NextTel | Ya |
-| `NEXTTEL_NINEROUTER_URL` | URL 9Router khusus NextTel; wajib dapat dijangkau saat memakai 9Router | Tidak |
-| `NEXTTEL_NINEROUTER_MODEL` | Model 9Router khusus NextTel | Tidak |
-| `NEXTTEL_MODEL` | Model NextTel | Tidak |
-| `NEXTTEL_ALLOWED_ORIGINS` | Origin NextTel | Tidak |
-| `CF_TURNSTILE_SECRET` | Cloudflare Turnstile secret key | Ya |
-| `TURNSTILE_ALLOWED_ORIGINS` | Origin Turnstile, dipisahkan koma | Tidak |
-
-Jangan commit `.env`, jangan menaruh service-role key di frontend, dan jangan menaruh API key AI pada variable `VITE_*`. Secret production harus disimpan menggunakan Supabase Secrets.
-
-## Instalasi dan Development
-
-Prasyarat: Node.js `>=22.12.0` dan npm.
-
-```bash
-git clone https://github.com/KiandrAHD/smk-telkom-purwokerto.git
-cd smk-telkom-purwokerto/frontend
-npm install
-```
-
-Buat `frontend/.env` berdasarkan `frontend/.env.example`:
-
-```env
-VITE_SUPABASE_URL=
-VITE_SUPABASE_ANON_KEY=
-```
-
-Jalankan aplikasi:
-
-```bash
+```powershell
+cd backend
+npm ci
+npm run prisma:validate
+npm run prisma:generate
+npm run db:migrate
+npm run db:seed
 npm run dev
 ```
 
-Buka [http://localhost:5173](http://localhost:5173). Untuk fitur Supabase, Auth, PPDB, dashboard, STELA production, dan NextTel diperlukan project Supabase yang telah dikonfigurasi.
+Jalankan frontend di terminal lain:
 
-## Supabase CLI
-
-Jalankan dari root repository:
-
-```bash
-npx supabase --version
-npx supabase login
-npx supabase link --project-ref <PROJECT_REF>
-npx supabase db push
-npx supabase functions deploy stela
-npx supabase functions deploy nexttel
+```powershell
+cd frontend
+npm ci
+Copy-Item .env.example .env
+npm run dev
 ```
 
-Buat admin melalui Supabase Dashboard → Authentication → Users, lalu hubungkan UUID user ke `public.admins` melalui SQL Editor. Password tetap dikelola Supabase Auth.
+Frontend lokal tersedia di `http://localhost:5173`, API di `http://localhost:3000`; pemeriksaan kesehatan API ada di `GET /health`. `frontend/.env.example` menyediakan `VITE_API_BASE_URL=http://localhost:3000`. Sebagian fitur membutuhkan SMTP, Turnstile, atau kunci provider AI yang dikonfigurasi pada backend. Jangan letakkan rahasia dalam variabel `VITE_*`.
 
-## Build dan Deployment
+## Environment
 
-Jalankan dari `frontend/`:
+Variabel operasional lengkap dan penjelasannya ada di [`backend/.env.example`](backend/.env.example) dan [`frontend/.env.example`](frontend/.env.example).
 
-```bash
-npm run lint
-npm run build
-npm run preview
-```
-
-`lint` menjalankan ESLint, `build` menghasilkan `frontend/dist/`, dan `preview` menyajikan hasil build lokal.
-
-Konfigurasi Vercel:
-
-```text
-Root Directory: frontend
-Build Command: npm run build
-Output Directory: dist
-```
-
-```text
-Vercel   → React/Vite frontend
-Supabase → PostgreSQL, Auth, Storage, Edge Functions
-```
-
-URL yang dirujuk oleh data aplikasi adalah `https://smk-telkom-purwokerto.vercel.app`. Repository tidak memiliki konfigurasi Vercel formal, sehingga deployment production tidak diklaim terverifikasi dari source. Supabase Authentication → URL Configuration harus memakai domain production aktual serta mengizinkan redirect `/ppdb/verifikasi` dan `/ppdb/atur-sandi`.
-
-## Security
-
-- Gunakan Supabase Auth untuk admin dan akun PPDB.
-- Pertahankan RLS untuk akses publik, user authenticated, admin, dan ownership.
-- Anon/publishable key boleh di frontend; service-role key hanya server-side.
-- API key AI hanya pada Edge Function Secrets.
-- Bucket dokumen PPDB private dan hanya diakses dengan signed URL.
-- Pertahankan `auth_user_id = auth.uid()`.
-- Jangan commit `.env` atau secret.
-- Rate limit/cost guard membantu mengurangi penyalahgunaan, tetapi billing limit provider juga harus diatur.
-
-## Testing Checklist
-
-- Public: homepage, navigasi, profil, jurusan, ekstrakurikuler, prestasi, BKK, berita, pengumuman, STELA, dan NextTel.
-- Admin: login, protected route, dashboard, CRUD Berita, Pengumuman, Prestasi, BKK, PPDB, serta Jurusan.
-- PPDB: signup, verifikasi email, login, formulir, upload PDF, submit, status, duplicate protection, dan signed URL.
-- AI: validasi/rate limit/fallback STELA serta questionnaire, scoring, dan penjelasan NextTel.
-- Tidak ditemukan test runner khusus di `frontend/package.json`; validasi utama menggunakan `npm run lint` dan `npm run build`.
-
-## Status Project
-
-| Feature | Status |
-|---|---|
-| Public Website | Tersedia; sebagian konten masih statis |
-| Admin Login | Tersedia melalui Supabase Auth |
-| Admin Dashboard | Tersedia pada route protected |
-| CRUD Berita | Tersedia melalui Supabase |
-| CRUD Pengumuman | Tersedia melalui Supabase |
-| CRUD Prestasi | Tersedia melalui Supabase |
-| CRUD BKK | Tersedia melalui Supabase pada route admin aktif |
-| Admin PPDB | Tersedia melalui Supabase |
-| Manajemen Jurusan | Tersedia melalui `AdminDataContext` in-memory |
-| PPDB Online | Tersedia dengan Auth, verifikasi, formulir, upload, submit, dan status |
-| STELA | Tersedia; memerlukan provider/API key |
-| NextTel | Tersedia; memerlukan Edge Function dan secret salah satu provider AI |
-| Supabase | Migration, Auth, RLS, Storage, dan Edge Functions tersedia di repository |
-| Deployment | Prosedur Vercel tersedia; deployment aktual tidak diverifikasi |
-| Automated Test Suite | Tidak ditemukan test runner khusus |
-| Cloudflare Turnstile | Tersedia pada login admin; memerlukan site key dan Edge Function secret |
-| Visitor Counter | Tersedia; memerlukan migration `009_visitor_counter.sql` |
-| Kebijakan Privasi | Tersedia pada `/kebijakan-privasi` (bilingual) |
-
-## Catatan
-
-- Terapkan migration `001` sampai `006` secara berurutan. Jalankan `004` dan `005` sebelum frontend baru; terapkan `006` bersamaan dengan frontend baru karena path unggahan PPDB berubah.
-- Jurusan dan beberapa halaman dashboard lama masih menggunakan state context dan tidak dijamin bertahan setelah refresh.
-- Tidak semua data publik membaca Supabase.
-- `supabase/.temp/` adalah state lokal CLI dan tidak boleh di-commit.
-- Untuk troubleshooting Supabase, periksa response `{ data, error }` dan policy/RLS project aktif.
-- Catatan AI tersedia di [`ai.md`](./ai.md), sedangkan catatan bug tersedia di [`bug.md`](./bug.md).
-
----
-
-# README — English Version
-
-## SMK Telkom Purwokerto — Digital Smart School Platform
-
-This platform is a school digital application consisting of a public website, administrator dashboard, online PPDB, content management, Supabase backend, authentication, storage, STELA AI, and NextTel AI. The project is developed collaboratively for a school/project competition context.
-
-## Features and Routes
-
-### Public website
-
-| Route | Description |
-|---|---|
-| `/` | School homepage |
-| `/profil-sekolah` | School profile, vision, facilities, and information |
-| `/tentang` | Redirects to `/profil-sekolah` |
-| `/jurusan` | Study programs and major details |
-| `/ekstrakurikuler` | Extracurricular activities, organizations, achievements, centers, and communities |
-| `/prestasi` | Achievements, gallery, and achievement details |
-| `/bkk` | Special Job Exchange and career information |
-| `/berita` | News list and details |
-| `/pengumuman` | Announcement list and details |
-| `/stela` | STELA chatbot page |
-| `/nexttel` | Major recommendation questionnaire |
-| `/galeri` | Photo gallery |
-| `/kebijakan-privasi` | Privacy Policy (bilingual) |
-
-Dynamic detail routes include `/jurusan/:slug`, `/prestasi/:slug`, `/berita/:slug`, and `/pengumuman/:slug`.
-
-Some public content still comes from `frontend/src/data/dummyData.js`. News, announcements, achievements, and BKK have Supabase services, but not every public section reads dynamically from the database.
-
-### Admin dashboard
-
-| Route | Description | Data source |
+| Variabel | Lokasi | Fungsi |
 |---|---|---|
-| `/login` | Administrator login | Supabase Auth |
-| `/dashboard` | Statistics and overview | Supabase service |
-| `/dashboard/jurusan` | Add, edit, and delete majors | In-memory `AdminDataContext` |
-| `/dashboard/berita` | News CRUD | Supabase |
-| `/dashboard/pengumuman` | Announcement CRUD | Supabase |
-| `/dashboard/prestasi` | Achievement CRUD | Supabase |
-| `/dashboard/bkk` | BKK job CRUD | Supabase |
-| `/dashboard/ppdb` | Applicant review and status updates | Supabase |
-| `/dashboard/pengaturan` | Dashboard settings | `AdminDataContext` |
+| `DATABASE_URL` | Backend | Koneksi database MySQL operasional |
+| `SESSION_SECRET` | Backend | Rahasia session; isi nilai acak minimal 32 karakter |
+| `FRONTEND_URL` | Backend | Origin frontend yang diizinkan untuk CORS/cookie |
+| `VITE_API_BASE_URL` | Frontend | URL absolut API backend; wajib untuk build production |
+| `VITE_SITE_URL` | Frontend | URL situs untuk SEO/prerender; isi URL deployment |
+| `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` | Backend | Pengiriman verifikasi email dan pemulihan sandi |
+| `STELA_API_KEY` atau `GEMINI_API_KEY` | Backend | Provider NEXA/STELA; rahasia server-side |
+| `SPMB_INTERNAL_ENABLED` | Backend | Default `false`; membuka portal internal hanya bila disetel `true` |
 
-Admin routes are protected by `ProtectedRoute`. An administrator must authenticate through Supabase Auth and have a relation in `public.admins`.
+Variabel backup, Turnstile, upload, dan provider lain dijelaskan dalam contoh env. `SOURCE_DATABASE_URL` hanya untuk ETL arsip Supabase; bukan koneksi database aktif.
 
-## Tech Stack
+## Perintah pemeriksaan
 
-### Frontend
+Jalankan sesuai direktori yang disebutkan:
 
-- React 19
-- Vite 8
-- Tailwind CSS 4
-- React Router 7
-- `lucide-react`
-- `react-icons`
-- `@supabase/supabase-js`
-- CSS transitions and `IntersectionObserver`
+```powershell
+# backend/
+npm test
+npm run prisma:validate
+npm run db:status
 
-The project does not use Axios or Framer Motion. HTTP requests use the built-in `fetch` API.
-
-### Backend and platform
-
-- Supabase PostgreSQL
-- Supabase Auth
-- Supabase Storage
-- Deno-based Supabase Edge Functions
-- Row Level Security (RLS)
-
-### AI and deployment
-
-- STELA supports 9Router, Anthropic, Google Gemini, and Groq through an Edge Function.
-- NextTel uses frontend scoring and an Edge Function with server-side AI providers for result explanations.
-- The frontend can be deployed to Vercel; the database, Auth, Storage, and Edge Functions run on Supabase.
-
-## Architecture
-
-```text
-Browser
-   ↓
-React / Vite
-   ├── React Router
-   ├── Public pages
-   └── Protected admin pages
-          ↓
-   Supabase client / fetch
-          ↓
-Supabase
-   ├── Authentication
-   ├── PostgreSQL + RLS
-   ├── Storage
-   └── Edge Functions
-          ├── STELA
-          └── NextTel
-```
-
-The browser renders the UI. React/Vite provides components, pages, state, and builds. The Supabase client accesses Auth, database, and Storage with a public key subject to RLS. Edge Functions provide server-side access to AI providers so AI API keys never reach the browser.
-
-## Folder Structure
-
-```text
-smk-telkom-purwokerto/
-├── frontend/
-│   ├── public/
-│   ├── scripts/
-│   ├── src/
-│   │   ├── assets/
-│   │   ├── components/
-│   │   ├── context/
-│   │   ├── data/
-│   │   ├── hooks/
-│   │   ├── layouts/
-│   │   ├── page/Login/
-│   │   ├── pages/
-│   │   │   ├── admin/
-│   │   │   ├── dashboard/
-│   │   │   └── ppdb/
-│   │   ├── router/
-│   │   ├── services/
-│   │   ├── utils/
-│   │   ├── App.jsx
-│   │   ├── index.css
-│   │   └── main.jsx
-│   ├── .env.example
-│   ├── package.json
-│   ├── vite.config.js
-│   └── vite-plugin-stela.js
-├── supabase/
-│   ├── functions/
-│   │   ├── nexttel/
-│   │   └── stela/
-│   ├── migrations/
-│   │   ├── 001_initial_schema.sql
-│   │   ├── 002_ppdb_identity.sql
-│   │   ├── 003_ppdb_storage_owner_and_unique.sql
-│   │   ├── 004_ppdb_drafts.sql
-│   │   ├── 005_ppdb_application_fields.sql
-│   │   └── 006_ppdb_upload_and_input_guard.sql
-│   ├── README.md
-│   └── .temp/                 # Local CLI state; do not commit
-├── README.md
-├── ai.md
-└── bug.md
-```
-
-## Online PPDB
-
-PPDB flow:
-
-```text
-Register → Email Verification → Login → Form → Document Upload → Submit → Application Status
-```
-
-Available routes:
-
-```text
-/ppdb/daftar
-/ppdb/masuk
-/ppdb/verifikasi
-/ppdb/formulir
-/ppdb/berkas
-/ppdb/selesai
-/ppdb/status
-/ppdb/dokumen-peserta
-```
-
-`/ppdb` redirects to `/ppdb/masuk`. Submission statuses are `menunggu`, `diproses`, `diterima`, and `ditolak`.
-
-`public.ppdb.auth_user_id` references `auth.users.id`. New submissions must use an `auth_user_id` matching `auth.uid()`. Users can only read their own submissions through RLS, and a partial unique index limits one submission per account.
-
-Supabase email confirmation redirects to `/ppdb/verifikasi` and password recovery to `/ppdb/atur-sandi`; allow both URLs in Supabase Auth. The `ppdb-documents` bucket is private. New uploads use `submissions/<auth_user_id>/document.pdf` and are opened through time-limited signed URLs, not public URLs. Administrators can read and update PPDB data according to policy.
-
-## Supabase
-
-Apply migrations in order:
-
-1. `001_initial_schema.sql` creates the `admins`, `berita`, `pengumuman`, `prestasi`, `bkk`, and `ppdb` tables, indexes, `updated_at` triggers, `is_admin()`, RLS, and both Storage buckets.
-2. `002_ppdb_identity.sql` adds `auth_user_id`, the `auth.users` foreign key, PPDB ownership RLS, and user-scoped document uploads.
-3. `003_ppdb_storage_owner_and_unique.sql` adds the owner object-read policy and the one-submission-per-account unique index.
-4. `004_ppdb_drafts.sql` adds an owner-only PPDB draft table.
-5. `005_ppdb_application_fields.sql` adds NIK, religion, graduation year, and report grades.
-6. `006_ppdb_upload_and_input_guard.sql` limits retained uploads to one path per account and validates new submissions. Apply `004` and `005` before deploying the updated frontend, then apply `006` together with it.
-
-`AuthContext` reads the Supabase session and checks the user in `public.admins`. `ProtectedRoute` redirects users without admin access to `/login`. The anon/publishable key may be used in the frontend because database access remains restricted by RLS; service-role keys must never be placed in the frontend.
-
-## STELA AI
-
-STELA is a virtual school assistant for questions about the school profile, majors, facilities, activities, achievements, BKK, PPDB, news, announcements, and contact information.
-
-- Production endpoint: `${VITE_SUPABASE_URL}/functions/v1/stela`.
-- Local endpoint: `/api/stela` from `frontend/vite-plugin-stela.js`.
-- Providers: 9Router, Anthropic, Google Gemini, and Groq.
-- Provider priority: 9Router, Anthropic, Gemini, then Groq (only providers with valid keys).
-- Default and fallback models are defined in `supabase/functions/stela/inti.mjs`.
-- Dynamic context includes published news, published announcements, achievements, and active BKK entries.
-- Dynamic context is cached for 60 seconds.
-- STELA does not read PPDB, `admins`, drafts, or private buckets.
-- Input validation, origin restriction, rate limits, daily limits, per-IP limits, answer caching, output-token limits, and an emergency switch are implemented.
-- These guards run in Edge Function memory; provider billing limits must still be configured in the provider dashboard.
-- Production API keys are stored as Supabase Edge Function Secrets.
-
-Static knowledge is generated from `dummyData.js`:
-
-```bash
-cd frontend
-npm run stela:konten
-```
-
-Redeploy the STELA function after the snapshot changes.
-
-## NextTel AI
-
-NextTel uses an eight-question questionnaire. Frontend scoring displays the result for `RPL`, `PG`, `TKJ`, and `TJAT`; the eight answers are sent to `${VITE_SUPABASE_URL}/functions/v1/nexttel` for an explanation.
-
-The NextTel Edge Function uses server-side AI providers (9Router, Anthropic, Gemini, or Groq). It uses a dedicated `NEXTTEL_*` key when available, falling back to the shared provider key. It validates all eight answers, recalculates scores and recommendations, applies origin and rate restrictions, and returns `explanation`, `strengths`, and `learningSuggestions`. API keys never reach the browser.
-
-## Environment Variables
-
-### Frontend and local mode
-
-| Variable | Used by | Required | Secret? |
-|---|---|---:|---:|
-| `VITE_SUPABASE_URL` | Supabase client, Auth, database, Storage, STELA, NextTel | Supabase features | No |
-| `VITE_SUPABASE_ANON_KEY` | Supabase client and Authorization header | Supabase features | No |
-| `ANTHROPIC_API_KEY` | Local STELA | Optional | Yes |
-| `GEMINI_API_KEY` | Local STELA | Optional | Yes |
-| `GROQ_API_KEY` | Local STELA | Optional | Yes |
-| `NINEROUTER_KEY` | Local STELA | Optional | Yes |
-| `NINEROUTER_URL` | Local/VPS router API URL; required for 9Router | When using 9Router | No |
-| `NINEROUTER_MODEL` | 9Router model | Optional | No |
-| `STELA_MODEL` | Local STELA model | Optional | No |
-| `STELA_AKTIF` | STELA switch | Optional | No |
-| `STELA_MAKS_PER_HARI` | STELA daily limit | Optional | No |
-| `STELA_MAKS_PER_IP` | STELA per-IP limit | Optional | No |
-
-### Supabase Edge Function secrets
-
-| Variable | Used by | Secret? |
-|---|---|---:|
-| `ANTHROPIC_API_KEY` | STELA Anthropic | Yes |
-| `GEMINI_API_KEY` | STELA Gemini | Yes |
-| `GROQ_API_KEY` | STELA Groq | Yes |
-| `NINEROUTER_KEY` | STELA 9Router | Yes |
-| `NINEROUTER_URL` | HTTPS router URL reachable from Supabase (not localhost) | No |
-| `NINEROUTER_MODEL` | 9Router model | No |
-| `STELA_MODEL` | STELA model | No |
-| `STELA_AKTIF` | STELA emergency switch | No |
-| `STELA_MAKS_PER_HARI` | STELA daily limit | No |
-| `STELA_MAKS_PER_IP` | STELA IP limit | No |
-| `STELA_ALLOWED_ORIGINS` | STELA origins | No |
-| `SUPABASE_URL` | STELA public context | No |
-| `SUPABASE_ANON_KEY` | STELA REST context | No |
-| `NEXTTEL_ANTHROPIC_API_KEY` | NextTel provider | Yes |
-| `NEXTTEL_NINEROUTER_KEY` | NextTel 9Router provider | Yes |
-| `NEXTTEL_GEMINI_API_KEY` | NextTel Gemini provider | Yes |
-| `NEXTTEL_GROQ_API_KEY` | NextTel Groq provider | Yes |
-| `NEXTTEL_NINEROUTER_URL` | NextTel 9Router URL; must be reachable when using 9Router | No |
-| `NEXTTEL_NINEROUTER_MODEL` | NextTel 9Router model | No |
-| `NEXTTEL_MODEL` | NextTel model | No |
-| `NEXTTEL_ALLOWED_ORIGINS` | NextTel origins | No |
-
-Never commit `.env`, place a service-role key in the frontend, or put an AI API key in a `VITE_*` variable. Production secrets must be stored with Supabase Secrets.
-
-## Installation and Development
-
-Prerequisites: Node.js `>=22.12.0` and npm.
-
-```bash
-git clone https://github.com/KiandrAHD/smk-telkom-purwokerto.git
-cd smk-telkom-purwokerto/frontend
-npm install
-```
-
-Create `frontend/.env` from `frontend/.env.example`:
-
-```env
-VITE_SUPABASE_URL=
-VITE_SUPABASE_ANON_KEY=
-```
-
-Run the application:
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:5173](http://localhost:5173). A configured Supabase project is required for Supabase, Auth, PPDB, dashboard, production STELA, and NextTel features.
-
-## Supabase CLI
-
-Run from the repository root:
-
-```bash
-npx supabase --version
-npx supabase login
-npx supabase link --project-ref <PROJECT_REF>
-npx supabase db push
-npx supabase functions deploy stela
-npx supabase functions deploy nexttel
-```
-
-Create an administrator through Supabase Dashboard → Authentication → Users, then link the user UUID to `public.admins` through the SQL Editor. Passwords remain managed by Supabase Auth.
-
-## Build and Deployment
-
-Run from `frontend/`:
-
-```bash
+# frontend/
 npm run lint
 npm run build
-npm run preview
 ```
 
-`lint` runs ESLint, `build` creates `frontend/dist/`, and `preview` serves the build locally.
+Frontend `build` memvalidasi environment deployment dan melakukan prerender SEO; build production memerlukan `VITE_API_BASE_URL` publik yang valid. `build:ci` menggunakan mode offline dengan feed kosong dan bukan artefak konten production. `preview` menyajikan hasil build lokal. Pemeriksaan data/fitur khusus tersedia sebagai script `uji-*` di `frontend/package.json`.
 
-Vercel settings:
+## Database, keamanan, dan backup
 
-```text
-Root Directory: frontend
-Build Command: npm run build
-Output Directory: dist
-```
+- Skema aktif ada di `backend/prisma/schema.prisma`; migration MySQL ada di `backend/prisma/migrations/`. Terapkan dengan `npm run db:migrate` dari `backend/` setelah menyiapkan database dan backup sesuai kebutuhan.
+- Backend menggunakan session cookie, CSRF token untuk mutasi, pemeriksaan origin, Helmet, validasi input, dan rate limit. Endpoint admin memerlukan autentikasi/otorisasi.
+- Upload dan backup harus memakai direktori persisten serta izin filesystem yang sesuai. Atur `UPLOAD_ROOT`, `BACKUP_DIR`, dan kunci enkripsi backup di backend.
+- Script tersedia untuk `npm run db:backup`, `npm run db:backup:verify`, `npm run db:restore`, dan tugas backup terjadwal. Baca panduan backup sebelum restore atau operasi database.
+- Gunakan nilai rahasia unik di lingkungan production. Simpan kunci provider AI, SMTP, session, Turnstile, dan kredensial database di server; jangan pernah masukkan ke frontend atau Git.
+- Untuk kebijakan pelaporan kerentanan, lihat [`SECURITY.md`](SECURITY.md).
 
-```text
-Vercel   → React/Vite frontend
-Supabase → PostgreSQL, Auth, Storage, Edge Functions
-```
+## Deployment dan dokumentasi
 
-Application data references `https://smk-telkom-purwokerto.vercel.app`. The repository has no formal Vercel configuration, so production deployment is not claimed as source-verified. Supabase Authentication → URL Configuration must use the actual production domain and allow redirects to `/ppdb/verifikasi` and `/ppdb/atur-sandi`.
+Dokumentasi deployment VPS saat ini ada di [`docs/DEPLOYMENT_GUIDE.md`](docs/DEPLOYMENT_GUIDE.md) dan [`docs/VPS_DEPLOYMENT_GUIDE.md`](docs/VPS_DEPLOYMENT_GUIDE.md); deployment cPanel dibahas di [`docs-cpanel/README.md`](docs-cpanel/README.md). `frontend/vercel.json` menyediakan rewrite SPA; Vercel tetap memerlukan `VITE_API_BASE_URL` ke backend terpisah. Keberadaan konfigurasi di repo tidak membuktikan deployment production aktif.
 
-## Security
+Dokumen lanjutan: [`docs/BACKEND_LOCAL_SETUP.md`](docs/BACKEND_LOCAL_SETUP.md), [`docs/MYSQL_BACKUP_GUIDE.md`](docs/MYSQL_BACKUP_GUIDE.md), [`docs/ROLLBACK_GUIDE.md`](docs/ROLLBACK_GUIDE.md), [`supabase/README.md`](supabase/README.md), dan `backend/wordpress-archive/MIGRATION_GUIDE.md`.
 
-- Use Supabase Auth for administrators and PPDB accounts.
-- Preserve RLS for public, authenticated-user, administrator, and ownership access.
-- The anon/publishable key may be used in the frontend; service-role keys are server-side only.
-- Store AI API keys only in Edge Function Secrets.
-- Keep PPDB documents in the private bucket and use signed URLs.
-- Preserve `auth_user_id = auth.uid()` ownership.
-- Never commit `.env` or secrets.
-- Rate limits and cost guards reduce abuse, but provider billing limits must also be configured.
+## Status dan batasan penting
 
-## Testing Checklist
-
-- Public: homepage, navigation, profile, majors, extracurriculars, achievements, BKK, news, announcements, STELA, and NextTel.
-- Admin: login, protected routes, dashboard, News, Announcement, Achievement, BKK, PPDB, and Major CRUD.
-- PPDB: signup, email verification, login, form, PDF upload, submission, status, duplicate protection, and signed document URLs.
-- AI: STELA validation/rate-limit/provider fallback and NextTel questionnaire, scoring, and explanation.
-- No dedicated test runner was found in `frontend/package.json`; the primary checks are `npm run lint` and `npm run build`.
-
-## Project Status
-
-| Feature | Status |
-|---|---|
-| Public Website | Available; some content remains static |
-| Admin Login | Available through Supabase Auth |
-| Admin Dashboard | Available on protected routes |
-| News CRUD | Available through Supabase |
-| Announcement CRUD | Available through Supabase |
-| Achievement CRUD | Available through Supabase |
-| BKK CRUD | Available through Supabase on the active admin route |
-| Admin PPDB | Available through Supabase |
-| Major Management | Available through in-memory `AdminDataContext` |
-| Online PPDB | Available with Auth, verification, forms, upload, submission, and status |
-| STELA | Available; requires a configured provider/API key |
-| NextTel | Available; requires the Edge Function and a configured AI provider secret |
-| Supabase | Migrations, Auth, RLS, Storage, and Edge Functions are present in the repository |
-| Deployment | Vercel procedure is documented; actual deployment is not verified |
-| Automated Test Suite | No dedicated test runner found |
-| Cloudflare Turnstile | Available on admin login; requires site key and Edge Function secret |
-| Visitor Counter | Available; requires migration `009_visitor_counter.sql` |
-| Privacy Policy | Available at `/kebijakan-privasi` (bilingual) |
-
-## Notes
-
-- Apply migrations `001` through `006` in order: `004` and `005` before the updated frontend, then `006` together with its new upload path.
-- Major data and some legacy dashboard pages remain in context state and are not guaranteed to survive a refresh.
-- Not all public data is read from Supabase.
-- `supabase/.temp/` is local CLI state and should not be committed.
-- For Supabase troubleshooting, inspect the `{ data, error }` response and the policies/RLS of the active project.
-- Additional AI notes are available in [`ai.md`](./ai.md), and bug notes are available in [`bug.md`](./bug.md).
+- Database runtime adalah MySQL melalui Express/Prisma; dokumentasi Supabase lama tidak menggambarkan arsitektur aktif.
+- Pendaftaran online terpusat di portal resmi secara default. Menyalakan fitur internal perlu konfigurasi eksplisit serta kesiapan backend dan data.
+- Konten statis tertentu tidak dikelola melalui dashboard. Konsultasikan sumber tiap halaman sebelum menganggap semua konten dinamis.
+- File di `outputs/` adalah snapshot audit, bukan hasil pemantauan production terkini.
+- Prosedur deployment dan konfigurasi repo tidak membuktikan bahwa DNS, server, database production, email, atau integrasi eksternal sudah berfungsi.
