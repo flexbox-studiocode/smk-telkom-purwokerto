@@ -13,6 +13,7 @@ import {
 } from '../../../services/wordpressArchiveService';
 import { apiErrorMessage } from '../../../utils/apiError';
 import { richTextToPlain } from '../../../utils/richText';
+import { normalizeArchiveNewlineArtifacts } from '../../../utils/normalizeArchiveText';
 
 const TARGET_LABEL = { berita: 'Berita', pengumuman: 'Pengumuman', prestasi: 'Prestasi', needs_review: 'Perlu review' };
 const REVIEW_LABEL = { pending_review: 'Perlu review', ready: 'Siap diaudit', in_audit: 'Sedang diaudit', imported: 'Sudah diimport', skipped: 'Dilewati', failed: 'Gagal' };
@@ -279,7 +280,7 @@ const WordPressArchiveItemModal = ({ itemId, onClose, onChanged }) => {
                   <p className="break-words text-sm leading-7 text-dark-700">{item.summary}</p>
                 </section>}
                 <section className="mt-5 min-w-0 rounded-xl border border-dark-100 bg-white p-4 sm:p-5" aria-label="Preview konten">
-                  <RichContent className="text-[15px] leading-[1.75] text-dark-700" value={item.content || '<p><em>Konten kosong.</em></p>'} />
+                  <RichContent className="text-[15px] leading-[1.75] text-dark-700" value={normalizeArchiveNewlineArtifacts(item.content || '<p><em>Konten kosong.</em></p>')} />
                 </section>
                 {item.reviewNotes && <section className="mt-4 rounded-xl border border-dark-100 bg-dark-50 p-4 text-sm leading-relaxed text-dark-600"><strong className="text-dark-800">Catatan review:</strong> <span className="break-words">{item.reviewNotes}</span></section>}
               </article>
