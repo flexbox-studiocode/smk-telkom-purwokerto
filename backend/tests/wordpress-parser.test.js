@@ -15,7 +15,7 @@ test('parseTuple: string, escape, NULL, angka', () => {
 
 test('parseTuple: newline MySQL dipulihkan, bukan menjadi huruf n/r literal', () => {
   const r = parseTuple("('awal\\nbaris\\r\\nakhir','literal\\\\n')");
-  assert.deepEqual(r.values, ['awal\\nbaris\\r\\nakhir', 'literal\\n']);
+  assert.deepEqual(r.values, ['awal\nbaris\r\nakhir', 'literal\\n']);
 });
 
 test('parseTuple: tanda kutip ganda (dua kutip) menjadi satu', () => {
@@ -63,4 +63,22 @@ test('dump nyata: terbaca, jumlah baris & kolom konsisten', { skip: !fs.existsSy
   // Tidak ada string mojibake palsu yang umum (Ã / Â) pada judul ASCII.
   const asciiTitles = rows.filter((r) => r.post_title && /^[\x20-\x7E]+$/.test(r.post_title));
   assert.ok(asciiTitles.length > 100);
+});
+
+// Regresi artefak newline: escape \n / \r\n pada dump tidak boleh berubah
+// menjadi huruf "n" / "rn" di dalam konten arsip.
+test('dump nyata: escape newline tidak menjadi huruf n/r literal', { skip: !fs.existsSync(SQL) }, () => {
+  const { rows } = readSqlFile(fs, SQL);
+  const artefacts = rows.filter((r) => /(?:^|>|\s)[rn]{2,}(?=[\s<A-Z])/.test(String(r.post_content || '')));
+  assert.equal(artefacts.length, 0, `artefak pada ${artefacts.length} baris`);
+  assert.ok(rows.some((r) => String(r.post_content || '').includes('\n')), 'harus ada baris dengan newline asli');
+});
+
+// Kata Bahasa Indonesia yang mengandung huruf n/r tetap utuh.
+test('dump nyata: kata dengan huruf n/r tidak berubah', { skip: !fs.existsSync(SQL) }, () => {
+  const { rows } = readSqlFile(fs, SQL);
+  const joined = rows.map((r) => String(r.post_content || '')).join(' ');
+  for (const word of ['Pengumuman', 'Sekolah', 'Pendidikan', 'Prestasi', 'internasional']) {
+    assert.ok(joined.includes(word), `kata "${word}" harus tetap ada`);
+  }
 });
