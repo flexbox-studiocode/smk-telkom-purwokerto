@@ -6,6 +6,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { decodeBasicEntities } from './base.js';
+import { fetchImageSafely } from './safe-fetch.js';
 
 const ALLOWED_EXT = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif', 'svg', 'bmp']);
 const MAX_BYTES = 25 * 1024 * 1024;
@@ -68,19 +69,16 @@ export function mediaPublicUrl(base, rel) {
 }
 
 // Mengunduh satu URL. Mengembalikan { ok, bytes, contentType, status } atau status gagal.
-async function fetchOne(url, fetchImpl, maxBytes = Infinity) {
-  const headers = { 'User-Agent': 'smk-wp-archive-migrator/1.0 (+local)' };
-  // Mode dry-run: minta sebagian kecil berkas saja untuk memverifikasi ketersediaan.
-  if (Number.isFinite(maxBytes)) headers.Range = `bytes=0-${maxBytes - 1}`;
-  const res = await fetchImpl(url, { redirect: 'follow', headers });
-  if (!res.ok) return { ok: false, status: res.status };
-  const contentType = res.headers.get('content-type') || '';
-  const buffer = Buffer.from(await res.arrayBuffer());
-  if (buffer.length > MAX_BYTES) return { ok: false, status: res.status, reason: 'too_large' };
-  if (!/^image\//i.test(contentType) && !/octet-stream/i.test(contentType)) {
-    return { ok: false, status: res.status, reason: `unexpected_content_type:${contentType}` };
+// Semua unduhan melewati safe-fetch: tolak host internal, validasi setiap redirect,
+// batasi ukuran saat streaming, dan verifikasi signature gambar.
+async function fetchOne(url, fetchImpl, maxBytes = MAX_BYTES) {
+  const limit = Number.isFinite(maxBytes) ? Math.min(maxBytes, MAX_BYTES) : MAX_BYTES;
+  try {
+    const result = await fetchImageSafely(url, { maxBytes: limit, fetchImpl });
+    return { ok: true, bytes: result.buffer, contentType: result.contentType, status: 200 };
+  } catch (error) {
+    return { ok: false, status: 0, reason: error.message };
   }
-  return { ok: true, bytes: buffer, contentType, status: res.status };
 }
 
 // Mengunduh semua media dengan batas konkurensi.

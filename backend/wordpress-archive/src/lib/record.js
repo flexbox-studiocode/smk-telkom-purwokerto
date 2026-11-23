@@ -123,7 +123,7 @@ export function mapPost(post, context) {
         id: deterministicUuid(WORDPRESS_NAMESPACE, `prestasi:${post.ID}`),
         judul: title, slug, kategori, deskripsi: sanitized || truncateWords(title, 400),
         gambarUrl: image, instagramUrl: null, tingkat: deriveTingkat(`${title} ${summary}`),
-        tanggal: toDateTime(date),
+        tanggal: toDateTime(date), status: 'draft',
         createdAt: toDateTime(date), updatedAt: toDateTime(post.post_modified) || toDateTime(date),
       },
     };

@@ -190,3 +190,95 @@ export function readSqlFile(fs, filePath) {
   const stats = streamInserts(text, (row) => rows.push(row));
   return { rows, stats };
 }
+
+// Mendekode buffer dump SQL. Dump asli adalah UTF-8; membaca sebagai latin1
+// memetakan setiap byte ke U+0000..U+00FF sehingga karakter non-ASCII (tanda
+// kutip pintar, em dash, huruf beraksen) menjadi mojibake. Fungsi ini memakai
+// UTF-8 ketat lebih dulu, lalu jatuh ke latin1 hanya bila byte memang bukan
+// UTF-8 valid (mis. dump charset lain), sehingga tidak ada data yang hilang.
+export function decodeSqlBuffer(input) {
+  if (typeof input === 'string') return { text: input, encoding: 'utf8' };
+  const buffer = Buffer.isBuffer(input) ? input : Buffer.from(input);
+  try {
+    const text = new TextDecoder('utf-8', { fatal: true }).decode(buffer);
+    return { text, encoding: 'utf8' };
+  } catch {
+    return { text: buffer.toString('latin1'), encoding: 'latin1' };
+  }
+}
+
+// Memecah dump menjadi statement tanpa mengeksekusi apa pun. Sadar string,
+// escape, backtick identifier, komentar baris (-- dan #), serta komentar blok.
+// `end` adalah offset karakter akhir statement (untuk progres baca file).
+export function* splitSqlStatements(text) {
+  const source = String(text ?? '');
+  const n = source.length;
+  let start = 0;
+  let i = 0;
+  let state = 'code';
+  while (i < n) {
+    const ch = source[i];
+    if (state === 'code') {
+      if (ch === "'" || ch === '"' || ch === '`') { state = ch; i += 1; continue; }
+      if (ch === '-' && source[i + 1] === '-') { state = 'lineComment'; i += 2; continue; }
+      if (ch === '#') { state = 'lineComment'; i += 1; continue; }
+      if (ch === '/' && source[i + 1] === '*') { state = 'blockComment'; i += 2; continue; }
+      if (ch === ';') {
+        yield { sql: source.slice(start, i), start, end: i + 1 };
+        start = i + 1;
+        i += 1;
+        continue;
+      }
+      i += 1;
+      continue;
+    }
+    if (state === 'lineComment') {
+      if (ch === '\n') state = 'code';
+      i += 1;
+      continue;
+    }
+    if (state === 'blockComment') {
+      if (ch === '*' && source[i + 1] === '/') { state = 'code'; i += 2; continue; }
+      i += 1;
+      continue;
+    }
+    // Di dalam string/identifier berkutip.
+    if (ch === '\\' && state !== '`') { i += 2; continue; }
+    if (ch === state) {
+      if (source[i + 1] === state) { i += 2; continue; }
+      state = 'code';
+      i += 1;
+      continue;
+    }
+    i += 1;
+  }
+  const tail = source.slice(start);
+  if (tail.trim()) yield { sql: tail, start, end: n };
+}
+
+// Mengurai satu statement INSERT menjadi kolom + baris objek.
+// Mengembalikan columns=null bila header tidak memuat daftar kolom.
+export function parseInsertStatement(sql) {
+  const text = String(sql ?? '');
+  const openParen = text.indexOf('(');
+  if (openParen === -1) return { columns: null, rows: [], skippedTuples: 0 };
+  const columnsClose = text.indexOf(')', openParen);
+  if (columnsClose === -1) return { columns: null, rows: [], skippedTuples: 0 };
+  const valuesMatch = /\bVALUES\b/i.exec(text.slice(columnsClose + 1));
+  if (!valuesMatch) return { columns: null, rows: [], skippedTuples: 0 };
+  const columns = parseInsertColumns(text.slice(0, columnsClose + 1));
+  if (!columns) return { columns: null, rows: [], skippedTuples: 0 };
+  const rows = [];
+  let skippedTuples = 0;
+  const valuesStart = columnsClose + 1 + valuesMatch.index + valuesMatch[0].length;
+  for (const values of parseValuesBlock(text.slice(valuesStart))) {
+    if (values.length !== columns.length) { skippedTuples += 1; continue; }
+    const row = {};
+    for (let k = 0; k < columns.length; k += 1) {
+      const value = values[k];
+      row[columns[k]] = typeof value === 'string' ? value.trim() : value;
+    }
+    rows.push(row);
+  }
+  return { columns, rows, skippedTuples };
+}

@@ -2357,6 +2357,8 @@ export const adminSekolah = {
 // tetap bebas dari impor komponen.
 export const adminMenu = [
   { label: 'Dashboard', to: '/dashboard', icon: 'dashboard', end: true },
+  { label: 'Import & Adaptasi WordPress', to: '/dashboard/wordpress/import', icon: 'wordpressImport' },
+  { label: 'Pustaka Konten WordPress', to: '/dashboard/wordpress/library', icon: 'wordpressLibrary' },
   { label: 'Manajemen SPMB', to: '/dashboard/spmb', icon: 'ppdb' },
   { label: 'Informasi SPMB', to: '/dashboard/informasi-spmb', icon: 'informasiSpmb' },
   { label: 'Prestasi', to: '/dashboard/prestasi', icon: 'prestasi' },

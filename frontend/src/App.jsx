@@ -55,6 +55,8 @@ const DashboardJurusanPage = lazy(() => import('./pages/dashboard/JurusanPage'))
 const AdminBeritaPage = lazy(() => import('./pages/admin/berita/BeritaPage'));
 const AdminPengumumanPage = lazy(() => import('./pages/admin/pengumuman/PengumumanPage'));
 const AdminPrestasiPage = lazy(() => import('./pages/admin/prestasi/PrestasiPage'));
+const WordPressImportPage = lazy(() => import('./pages/admin/wordpress/WordPressImportPage'));
+const WordPressLibraryPage = lazy(() => import('./pages/admin/wordpress/WordPressLibraryPage'));
 const AdminBkkPage = lazy(() => import('./pages/admin/bkk/BkkPage'));
 const KalenderAdminPage = lazy(() => import('./pages/admin/kalender/KalenderAdminPage'));
 const SpmbInformationPage = lazy(() => import('./pages/admin/spmb/SpmbInformationPage'));
@@ -236,6 +238,8 @@ const App = () => {
               <Route path="spmb" element={<SpmbInternalGate><AdminPpdbPage /></SpmbInternalGate>} />
               <Route path="jurusan" element={<DashboardJurusanPage />} />
               <Route path="prestasi" element={<AdminPrestasiPage />} />
+              <Route path="wordpress/import" element={<WordPressImportPage />} />
+              <Route path="wordpress/library" element={<WordPressLibraryPage />} />
               <Route path="bkk" element={<AdminBkkPage />} />
               <Route path="kalender" element={<KalenderAdminPage />} />
               {/* Menu Pengaturan dihapus dari dashboard; bookmark lama diarahkan ke beranda dashboard. */}

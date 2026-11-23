@@ -14,12 +14,13 @@ const ActionButtons = ({ item, onDetail, onEdit, onDelete }) => (
 const PrestasiTable = ({ items, onDetail, onEdit, onDelete }) => (
   <div className="overflow-hidden rounded-2xl border border-dark-100 bg-white shadow-card">
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[760px] text-left">
+      <table className="w-full min-w-[820px] text-left">
         <thead className="border-b border-dark-100 bg-dark-50">
           <tr className="text-[11px] font-bold uppercase tracking-wide text-dark-500">
             <th className="px-4 py-3 sm:px-5">Judul</th>
             <th className="px-4 py-3 sm:px-5">Kategori</th>
             <th className="px-4 py-3 sm:px-5">Tingkat</th>
+            <th className="px-4 py-3 sm:px-5">Status</th>
             <th className="px-4 py-3 sm:px-5">Tanggal</th>
             <th className="px-4 py-3 text-right sm:px-5">Aksi</th>
           </tr>
@@ -30,6 +31,7 @@ const PrestasiTable = ({ items, onDetail, onEdit, onDelete }) => (
               <td className="max-w-xs px-4 py-4 sm:px-5"><button type="button" onClick={() => onDetail(item)} className="text-left font-semibold text-dark-900 hover:text-primary">{item.judul}</button><p className="mt-1 truncate text-[11px] text-dark-400">/{item.slug}</p></td>
               <td className="px-4 py-4 text-xs sm:px-5">{item.kategori || '-'}</td>
               <td className="px-4 py-4 text-xs sm:px-5">{item.tingkat || '-'}</td>
+              <td className="px-4 py-4 sm:px-5"><span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${item.status === 'published' ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600'}`}>{item.status === 'published' ? 'Published' : 'Draft'}</span></td>
               <td className="whitespace-nowrap px-4 py-4 text-xs text-dark-500 sm:px-5">{formatDate(item.tanggal)}</td>
               <td className="px-4 py-4 sm:px-5"><div className="flex justify-end"><ActionButtons item={item} onDetail={onDetail} onEdit={onEdit} onDelete={onDelete} /></div></td>
             </tr>

@@ -15,6 +15,7 @@ const emptyForm = {
   tingkat: '',
   tanggal: '',
   instagram_url: '',
+  status: 'draft',
 };
 
 const tingkatOptions = ['Sekolah', 'Kabupaten', 'Provinsi', 'Nasional', 'Internasional', 'Lainnya'];
@@ -68,6 +69,7 @@ const PrestasiForm = ({ initialData, onSubmit, onCancel, submitting }) => {
       tingkat: form.tingkat || null,
       tanggal: form.tanggal || null,
       instagram_url: form.instagram_url.trim() || null,
+      status: form.status || 'draft',
     });
     if (submitError) setErrors({ submit: submitError });
   };
@@ -115,6 +117,14 @@ const PrestasiForm = ({ initialData, onSubmit, onCancel, submitting }) => {
           <label htmlFor="prestasi-tanggal" className={labelClass}>Tanggal</label>
           <input id="prestasi-tanggal" type="date" value={form.tanggal} onChange={(event) => updateField('tanggal', event.target.value)} className={inputClass} />
         </div>
+      </div>
+
+      <div>
+        <label htmlFor="prestasi-status" className={labelClass}>Status publikasi</label>
+        <select id="prestasi-status" value={form.status} onChange={(event) => updateField('status', event.target.value)} className={inputClass}>
+          <option value="draft">Draft (tidak tampil di website)</option>
+          <option value="published">Published (tampil di website)</option>
+        </select>
       </div>
 
       <div>

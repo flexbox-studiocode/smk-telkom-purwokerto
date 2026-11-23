@@ -22,6 +22,7 @@ import { aiRouter } from './routes/ai.js';
 import { uploadsRouter } from './routes/uploads.js';
 import { turnstileRouter } from './routes/turnstile.js';
 import { configRouter } from './routes/config.js';
+import { wordpressAdminRouter } from './routes/wordpress.js';
 
 export const app = express();
 app.disable('x-powered-by');
@@ -71,6 +72,7 @@ app.use('/api/bkk', createContentRouter('bkk'));
 // SPMB internal: mutasi alur pendaftaran ditolak (503 SPMB_DISABLED) saat
 // fitur nonaktif. Pembacaan historis tetap tersedia untuk admin berwenang.
 app.use('/api/admin/ppdb', blockSpmbMutations);
+app.use('/api/admin/wordpress', wordpressAdminRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/ppdb', blockSpmbMutations, ppdbRouter);
 app.use('/api/events', eventsRouter);

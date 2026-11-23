@@ -2,9 +2,11 @@ import { Link, NavLink } from 'react-router-dom';
 import {
   BriefcaseBusiness,
   CalendarDays,
+  FileUp,
   GraduationCap,
   Info,
   LayoutDashboard,
+  Library,
   Megaphone,
   Newspaper,
   Trophy,
@@ -26,6 +28,8 @@ const ikon = {
   berita: Newspaper,
   pengumuman: Megaphone,
   kalender: CalendarDays,
+  wordpressImport: FileUp,
+  wordpressLibrary: Library,
 };
 
 const DashboardSidebar = ({ onPilihMenu }) => {

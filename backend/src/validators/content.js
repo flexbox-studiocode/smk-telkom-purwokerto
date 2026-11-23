@@ -9,7 +9,7 @@ const url = z.string().max(2048).refine((value) => {
     return false;
   }
 }, 'Gunakan tautan HTTP/HTTPS yang valid.').nullable().optional();
-const status = z.enum(['draft', 'published']);
+const status = z.enum(['draft', 'published']).default('draft');
 
 export const beritaSchema = z.object({
   judul: z.string().trim().min(1).max(255), slug: z.string().trim().min(1).max(255),
@@ -20,7 +20,7 @@ export const pengumumanSchema = beritaSchema.extend({ tanggal: z.coerce.date().n
 export const prestasiSchema = z.object({
   judul: z.string().trim().min(1).max(255), slug: z.string().trim().min(1).max(255),
   kategori: z.string().max(120).nullable().optional(), deskripsi: z.string().min(1),
-  gambar_url: url, instagram_url: url, tingkat: z.string().max(120).nullable().optional(), tanggal: z.coerce.date().nullable().optional(),
+  gambar_url: url, instagram_url: url, tingkat: z.string().max(120).nullable().optional(), tanggal: z.coerce.date().nullable().optional(), status,
 });
 export const bkkSchema = z.object({
   perusahaan: z.string().trim().min(1).max(255), posisi: z.string().trim().min(1).max(255), deskripsi: z.string().max(10000).nullable().optional(),

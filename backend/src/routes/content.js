@@ -7,7 +7,7 @@ import { beritaSchema, pengumumanSchema, prestasiSchema, bkkSchema } from '../va
 const definitions = {
   berita: { model: 'berita', schema: beritaSchema, publicWhere: { status: 'published' }, orderBy: { createdAt: 'desc' }, mapInput: mapContentInput },
   pengumuman: { model: 'pengumuman', schema: pengumumanSchema, publicWhere: { status: 'published' }, orderBy: { createdAt: 'desc' }, mapInput: mapContentInput },
-  prestasi: { model: 'prestasi', schema: prestasiSchema, publicWhere: {}, orderBy: { tanggal: 'desc' }, mapInput: mapContentInput },
+  prestasi: { model: 'prestasi', schema: prestasiSchema, publicWhere: { status: 'published' }, orderBy: { tanggal: 'desc' }, mapInput: mapContentInput },
   bkk: { model: 'bkk', schema: bkkSchema, publicWhere: { status: 'aktif' }, orderBy: { createdAt: 'desc' }, mapInput: mapContentInput, publicSlug: false },
 };
 
@@ -37,9 +37,13 @@ export function createContentRouter(type) {
   router.get('/:idOrSlug', optionalAuth, asyncHandler(async (req, res) => {
     const identifier = req.params.idOrSlug;
     // Tidak semua model punya slug (mis. bkk); filter slug hanya jika ada.
+    // `publicSlug: false` menandai model tanpa slug; undefined berarti punya slug.
+    const lookup = def.publicSlug === false
+      ? [{ id: identifier }]
+      : [{ id: identifier }, { slug: identifier }];
     const where = req.isAdmin
-      ? { OR: def.publicSlug ? [{ id: identifier }, { slug: identifier }] : [{ id: identifier }] }
-      : { OR: def.publicSlug ? [{ id: identifier }, { slug: identifier }] : [{ id: identifier }], ...def.publicWhere };
+      ? { OR: lookup }
+      : { OR: lookup, ...def.publicWhere };
     const data = await prisma[def.model].findFirst({ where });
     if (!data) throw notFound();
     res.json({ data });

@@ -139,19 +139,122 @@ model Pengumuman {
 }
 
 model Prestasi {
-  id           String   @id @default(uuid()) @db.Char(36)
-  judul        String   @db.VarChar(255)
-  slug         String   @unique @db.VarChar(255)
-  kategori     String?  @db.VarChar(120)
-  deskripsi    String   @db.Text
-  gambarUrl    String?  @map("gambar_url") @db.VarChar(2048)
-  instagramUrl String?  @map("instagram_url") @db.VarChar(2048)
-  tingkat      String?  @db.VarChar(120)
+  id           String        @id @default(uuid()) @db.Char(36)
+  judul        String        @db.VarChar(255)
+  slug         String        @unique @db.VarChar(255)
+  kategori     String?       @db.VarChar(120)
+  deskripsi    String        @db.Text
+  gambarUrl    String?       @map("gambar_url") @db.VarChar(2048)
+  instagramUrl String?       @map("instagram_url") @db.VarChar(2048)
+  tingkat      String?       @db.VarChar(120)
   tanggal      DateTime?
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  status       ContentStatus @default(draft)
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
   @@index([tanggal])
+  @@index([status, tanggal])
   @@map("prestasi")
+}
+
+enum WordPressJobStatus {
+  uploaded
+  processing
+  completed
+  partially_completed
+  failed
+  cancelled
+}
+
+enum WordPressTargetType {
+  berita
+  pengumuman
+  prestasi
+  needs_review
+}
+
+enum WordPressReviewStatus {
+  pending_review
+  ready
+  imported
+  skipped
+  failed
+}
+
+model WordPressImportJob {
+  id                 String            @id @default(uuid()) @db.Char(36)
+  originalFileName   String            @map("original_file_name") @db.VarChar(255)
+  sourceChecksum     String            @map("source_checksum") @db.Char(64)
+  fileSize           BigInt            @map("file_size")
+  status             WordPressJobStatus @default(uploaded)
+  totalSourceRecords Int               @default(0) @map("total_source_records")
+  candidateCount     Int               @default(0) @map("candidate_count")
+  beritaCount        Int               @default(0) @map("berita_count")
+  pengumumanCount    Int               @default(0) @map("pengumuman_count")
+  prestasiCount      Int               @default(0) @map("prestasi_count")
+  reviewCount        Int               @default(0) @map("review_count")
+  skippedCount       Int               @default(0) @map("skipped_count")
+  failedCount        Int               @default(0) @map("failed_count")
+  progress           Int               @default(0)
+  processedRows      Int               @default(0) @map("processed_rows")
+  errorSummary       String?           @map("error_summary") @db.Text
+  createdBy          String?           @map("created_by") @db.Char(36)
+  createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
+  completedAt        DateTime?         @map("completed_at")
+  items              WordPressArchiveItem[]
+  @@unique([sourceChecksum], map: "wordpress_import_jobs_checksum_key")
+  @@index([status, createdAt])
+  @@index([createdBy, createdAt])
+  @@map("wordpress_import_jobs")
+}
+
+model WordPressArchiveItem {
+  id               String                @id @default(uuid()) @db.Char(36)
+  jobId            String                @map("job_id") @db.Char(36)
+  sourceChecksum   String                @map("source_checksum") @db.Char(64)
+  wordpressId      BigInt                @map("wordpress_id")
+  sourcePostType   String                @default("post") @map("source_post_type") @db.VarChar(64)
+  sourcePostStatus String                @default("") @map("source_post_status") @db.VarChar(32)
+  sourceSlug       String?               @map("source_slug") @db.VarChar(255)
+  sourceUrl        String?               @map("source_url") @db.VarChar(2048)
+  sourceDate       DateTime?             @map("source_date")
+  sourceModified   DateTime?             @map("source_modified")
+  targetType       WordPressTargetType   @default(needs_review) @map("target_type")
+  title            String                @db.VarChar(255)
+  slug             String                @db.VarChar(255)
+  summary          String?               @db.Text
+  content          String?               @db.LongText
+  imageUrl         String?               @map("image_url") @db.VarChar(2048)
+  metadata         Json?                 @map("metadata")
+  reviewStatus     WordPressReviewStatus @default(pending_review) @map("review_status")
+  reviewNotes      String?               @map("review_notes") @db.Text
+  importStatus     String?               @map("import_status") @db.VarChar(32)
+  importedToId     String?               @map("imported_to_id") @db.Char(36)
+  importedAt       DateTime?             @map("imported_at")
+  reviewedBy       String?               @map("reviewed_by") @db.Char(36)
+  reviewedAt       DateTime?             @map("reviewed_at")
+  createdAt        DateTime              @default(now()) @map("created_at")
+  updatedAt        DateTime              @updatedAt @map("updated_at")
+  job              WordPressImportJob    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  revisions        WordPressArchiveRevision[]
+  @@unique([sourceChecksum, wordpressId])
+  @@index([jobId, targetType])
+  @@index([reviewStatus, targetType])
+  @@index([targetType, sourceDate])
+  @@index([title])
+  @@map("wordpress_archive_items")
+}
+
+model WordPressArchiveRevision {
+  id        String   @id @default(uuid()) @db.Char(36)
+  itemId    String   @map("item_id") @db.Char(36)
+  actorId   String?  @map("actor_id") @db.Char(36)
+  action    String   @db.VarChar(48)
+  changes   Json?
+  createdAt DateTime @default(now()) @map("created_at")
+  item      WordPressArchiveItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  @@index([itemId, createdAt])
+  @@map("wordpress_archive_revisions")
 }
 
 model Bkk {

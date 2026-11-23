@@ -13,6 +13,12 @@ const schema = z.object({
   PUBLIC_STORAGE_URL: z.preprocess((value) => value === '' ? undefined : value, z.string().url().optional()),
   // Portal SPMB internal. Default nonaktif; lihat src/config/features.js.
   SPMB_INTERNAL_ENABLED: z.preprocess((value) => String(value ?? 'false').toLowerCase(), z.enum(['true', 'false'])).default('false'),
+  // WordPress archive import: batas ukuran dump (default 64 MiB) dan lokasi
+  // temporary private storage. Tidak ada nilai default yang menunjuk ke folder publik.
+  WORDPRESS_IMPORT_MAX_BYTES: z.coerce.number().int().min(1024).max(512 * 1024 * 1024).default(64 * 1024 * 1024),
+  WORDPRESS_IMPORT_TMP_DIR: z.string().optional(),
+  WORDPRESS_IMPORT_RETENTION_HOURS: z.coerce.number().int().min(1).max(720).default(24),
+  WORDPRESS_MEDIA_MAX_BYTES: z.coerce.number().int().min(1024).max(50 * 1024 * 1024).default(8 * 1024 * 1024),
 });
 
 export const env = schema.parse(process.env);
