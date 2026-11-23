@@ -78,7 +78,7 @@ export function parseTuple(text) {
   for (; i < text.length; i += 1) {
     const ch = text[i];
     if (state === STATE.ESCAPE) {
-      current += ch;
+      current += `\\${ch}`;
       state = STATE.IN_STRING;
       continue;
     }

@@ -13,6 +13,11 @@ test('parseTuple: string, escape, NULL, angka', () => {
   assert.deepEqual(r.values, ['7', "a'b", null, "It's", '0']);
 });
 
+test('parseTuple: newline MySQL dipulihkan, bukan menjadi huruf n/r literal', () => {
+  const r = parseTuple("('awal\\nbaris\\r\\nakhir','literal\\\\n')");
+  assert.deepEqual(r.values, ['awal\\nbaris\\r\\nakhir', 'literal\\n']);
+});
+
 test('parseTuple: tanda kutip ganda (dua kutip) menjadi satu', () => {
   const r = parseTuple("(1,'O''Brien')");
   assert.deepEqual(r.values, ['1', "O'Brien"]);
