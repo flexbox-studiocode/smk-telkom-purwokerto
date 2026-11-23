@@ -62,6 +62,37 @@ export async function skipWordPressArchiveItem(id, { reviewNotes } = {}) {
   return api.post(`/api/admin/wordpress/archive/${encodeURIComponent(id)}/skip`, { reviewNotes });
 }
 
+export async function startWordPressArchiveAudit(id, { targetType, reviewNotes } = {}) {
+  const response = await api.post(`/api/admin/wordpress/archive/${encodeURIComponent(id)}/audit`, { targetType, reviewNotes });
+  return normalize(response.data);
+}
+
+export async function bulkWordPressArchiveAction(ids, action) {
+  return api.post('/api/admin/wordpress/archive/bulk', { ids, action });
+}
+
+export async function getWordPressAudit({ status, search, targetType, page = 1, limit = 20, sort, order } = {}) {
+  const params = new URLSearchParams();
+  if (status) params.set('status', status);
+  if (search) params.set('search', search);
+  if (targetType) params.set('targetType', targetType);
+  if (sort) params.set('sort', sort);
+  if (order) params.set('order', order);
+  params.set('page', String(page));
+  params.set('limit', String(limit));
+  const response = await api.get(`/api/admin/wordpress/audit?${params}`);
+  return { data: response.data.map(normalize), pagination: response.pagination };
+}
+
+export async function getWordPressAuditOverview() {
+  return api.get('/api/admin/wordpress/audit/overview');
+}
+
+export async function getWordPressAuditItem(id) {
+  const response = await api.get(`/api/admin/wordpress/audit/${encodeURIComponent(id)}`);
+  return normalize(response.data);
+}
+
 export async function importWordPressArchiveItem(id, { status = 'draft' } = {}) {
   return api.post(`/api/admin/wordpress/archive/${encodeURIComponent(id)}/import`, { status });
 }

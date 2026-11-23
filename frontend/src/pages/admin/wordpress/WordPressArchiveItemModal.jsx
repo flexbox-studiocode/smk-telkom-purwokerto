@@ -1,18 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { AlertCircle, CheckCircle2, ImageDown, Pencil, Save, SkipForward, Upload } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AlertCircle, CheckCircle2, ClipboardCheck, ImageDown, Pencil, Save, SkipForward } from 'lucide-react';
 import Modal from '../../../components/dashboard/Modal';
 import RichContent from '../../../components/RichContent';
 import RichTextEditor from '../../../components/dashboard/RichTextEditor';
 import {
   getWordPressArchiveItem, importWordPressArchiveItem, resolveWordPressArchiveMedia,
-  reviewWordPressArchiveItem, skipWordPressArchiveItem, updateWordPressArchiveItem,
+  reviewWordPressArchiveItem, skipWordPressArchiveItem, startWordPressArchiveAudit,
+  updateWordPressArchiveItem,
 } from '../../../services/wordpressArchiveService';
 import { apiErrorMessage } from '../../../utils/apiError';
 import { richTextToPlain } from '../../../utils/richText';
 
 const TARGET_LABEL = { berita: 'Berita', pengumuman: 'Pengumuman', prestasi: 'Prestasi', needs_review: 'Perlu review' };
-const REVIEW_LABEL = { pending_review: 'Perlu review', ready: 'Siap', imported: 'Sudah diimport', skipped: 'Dilewati', failed: 'Gagal' };
+const REVIEW_LABEL = { pending_review: 'Perlu review', ready: 'Siap diaudit', in_audit: 'Sedang diaudit', imported: 'Sudah diimport', skipped: 'Dilewati', failed: 'Gagal' };
 const CRUD_PATH = { berita: '/dashboard/berita', pengumuman: '/dashboard/pengumuman', prestasi: '/dashboard/prestasi' };
 
 const inputClass = 'w-full rounded-lg border border-dark-200 px-3 py-2 text-sm text-dark-900 outline-none transition-colors placeholder:text-dark-400 focus:border-primary';
@@ -21,6 +22,7 @@ const labelClass = 'mb-1 block text-xs font-semibold text-dark-700';
 const formatDate = (value) => (value ? new Intl.DateTimeFormat('id-ID', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(value)) : '-');
 
 const WordPressArchiveItemModal = ({ itemId, onClose, onChanged }) => {
+  const navigate = useNavigate();
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -121,6 +123,22 @@ const WordPressArchiveItemModal = ({ itemId, onClose, onChanged }) => {
     }
   };
 
+  const handleAudit = async () => {
+    setBusy(true);
+    try {
+      await startWordPressArchiveAudit(itemId, { targetType: form.targetType });
+      onChanged?.();
+      onClose();
+      navigate(`/dashboard/wordpress/audit/${itemId}`);
+    } catch (auditError) {
+      notify('error', apiErrorMessage(auditError, 'Item gagal dimasukkan ke Audit Konten.', {
+        already_imported: 'Item sudah diimpor ke CMS. Kelola perubahan melalui menu konten tujuan.',
+        not_found: 'Item sudah dihapus. Muat ulang Pustaka Konten.',
+      }));
+      setBusy(false);
+    }
+  };
+
   const handleMedia = async () => {
     setBusy(true);
     try {
@@ -173,7 +191,7 @@ const WordPressArchiveItemModal = ({ itemId, onClose, onChanged }) => {
             <button type="button" disabled={busy || item.reviewStatus === 'imported'} onClick={() => handleReview('ready')} className="rounded-lg border border-dark-200 px-3 py-2 text-xs font-bold text-dark-600 hover:border-primary hover:text-primary disabled:opacity-50">Tandai siap</button>
             <button type="button" disabled={busy || item.reviewStatus === 'imported'} onClick={() => handleReview('pending_review')} className="rounded-lg border border-dark-200 px-3 py-2 text-xs font-bold text-dark-600 hover:border-primary hover:text-primary disabled:opacity-50">Perlu review</button>
             <button type="button" disabled={busy || item.reviewStatus === 'imported'} onClick={handleSkip} className="inline-flex items-center gap-1.5 rounded-lg border border-dark-200 px-3 py-2 text-xs font-bold text-dark-600 hover:border-primary hover:text-primary disabled:opacity-50"><SkipForward className="h-4 w-4" />Lewati</button>
-            <button type="button" disabled={busy || item.reviewStatus === 'imported' || item.targetType === 'needs_review'} onClick={() => setMode('import')} className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-bold text-white hover:bg-primary-800 disabled:opacity-50"><Upload className="h-4 w-4" />Masukkan ke Website</button>
+            <button type="button" disabled={busy || item.reviewStatus === 'imported'} onClick={() => void handleAudit()} className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-bold text-white hover:bg-primary-800 disabled:opacity-50"><ClipboardCheck className="h-4 w-4" />Audit Konten</button>
           </div>
 
           {mode === 'edit' ? (

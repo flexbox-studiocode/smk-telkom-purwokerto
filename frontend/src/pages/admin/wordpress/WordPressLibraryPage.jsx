@@ -1,23 +1,25 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
-  AlertCircle, CheckCircle2, ChevronLeft, ChevronRight, Eye, Library, RefreshCw, Search, Upload, X,
+  AlertCircle, CheckCircle2, ChevronLeft, ChevronRight, ClipboardCheck, Eye, Library, RefreshCw, Search, Upload, X,
 } from 'lucide-react';
 import PageHeader from '../../../components/dashboard/PageHeader';
 import Modal from '../../../components/dashboard/Modal';
+import ContentImage from '../../../components/ContentImage';
 import WordPressArchiveItemModal from './WordPressArchiveItemModal';
 import {
-  getWordPressArchive, getWordPressJobs, importWordPressArchiveItem, skipWordPressArchiveItem,
+  bulkWordPressArchiveAction, getWordPressArchive, getWordPressJobs,
 } from '../../../services/wordpressArchiveService';
 import { apiErrorMessage } from '../../../utils/apiError';
 
 const TARGET_LABEL = { berita: 'Berita', pengumuman: 'Pengumuman', prestasi: 'Prestasi', needs_review: 'Perlu review' };
-const REVIEW_LABEL = { pending_review: 'Perlu review', ready: 'Siap', imported: 'Sudah diimport', skipped: 'Dilewati', failed: 'Gagal' };
-const REVIEW_TONE = { pending_review: 'bg-orange-50 text-orange-600', ready: 'bg-blue-50 text-blue-600', imported: 'bg-green-50 text-green-600', skipped: 'bg-dark-100 text-dark-600', failed: 'bg-primary-50 text-primary' };
+const REVIEW_LABEL = { pending_review: 'Perlu review', ready: 'Siap diaudit', in_audit: 'Sedang diaudit', imported: 'Sudah diimport', skipped: 'Dilewati', failed: 'Gagal' };
+const REVIEW_TONE = { pending_review: 'bg-orange-50 text-orange-600', ready: 'bg-blue-50 text-blue-600', in_audit: 'bg-purple-50 text-purple-700', imported: 'bg-green-50 text-green-600', skipped: 'bg-dark-100 text-dark-600', failed: 'bg-primary-50 text-primary' };
 
 const formatDate = (value) => (value ? new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(new Date(value)) : '-');
 
 const WordPressLibraryPage = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [items, setItems] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 });
@@ -101,24 +103,23 @@ const WordPressLibraryPage = () => {
     const ids = selectedItems.map((item) => item.id);
     if (ids.length === 0) return;
     setBusy(true);
-    let ok = 0;
-    let failed = 0;
     try {
-      for (const id of ids) {
-        try {
-          if (bulkAction === 'import') await importWordPressArchiveItem(id);
-          else await skipWordPressArchiveItem(id);
-          ok += 1;
-        } catch {
-          failed += 1;
-        }
-      }
+      const action = bulkAction === 'audit' ? 'audit' : bulkAction === 'ready' ? 'ready' : 'skip';
+      const result = await bulkWordPressArchiveAction(ids, action);
+      const summary = result.data;
       setFeedback({
-        type: failed > 0 ? 'error' : 'success',
-        message: `${ok} item diproses${failed ? `, ${failed} gagal (cek slug/konten)` : ''}. Konten import selalu berstatus draft.`,
+        type: summary.failed > 0 ? 'error' : 'success',
+        message: `${summary.ok} item diproses${summary.skippedImported ? `, ${summary.skippedImported} item sudah diimpor tetap tidak berubah` : ''}${summary.failed ? `, ${summary.failed} gagal` : ''}.`,
       });
       setBulkAction(null);
       await load();
+      if (action === 'audit' && summary.ok === 1) {
+        const response = await getWordPressArchive({ jobId, search, limit: 100 });
+        const target = response.data.find((item) => ids.includes(item.id));
+        if (target) navigate(`/dashboard/wordpress/audit/${target.id}`);
+      }
+    } catch (actionError) {
+      setFeedback({ type: 'error', message: apiErrorMessage(actionError, 'Aksi massal gagal.') });
     } finally {
       setBusy(false);
     }
@@ -174,47 +175,74 @@ const WordPressLibraryPage = () => {
 
         {selectedItems.length > 0 && <div className="mt-3 flex flex-wrap items-center gap-2 rounded-lg bg-primary-50 px-3 py-2 text-xs font-semibold text-primary-800">
           <span>{selectedItems.length} item dipilih</span>
-          <button type="button" onClick={() => setBulkAction('import')} className="rounded-lg bg-primary px-3 py-1.5 text-[11px] font-bold text-white hover:bg-primary-800">Masukkan ke Website (draft)</button>
+          <button type="button" onClick={() => setBulkAction('audit')} className="rounded-lg bg-primary px-3 py-1.5 text-[11px] font-bold text-white hover:bg-primary-800">Audit Konten</button>
+          <button type="button" onClick={() => setBulkAction('ready')} className="rounded-lg border border-primary/30 px-3 py-1.5 text-[11px] font-bold hover:bg-white">Tandai Siap</button>
           <button type="button" onClick={() => setBulkAction('skip')} className="rounded-lg border border-primary/30 px-3 py-1.5 text-[11px] font-bold hover:bg-white">Lewati</button>
           <button type="button" onClick={() => setSelected(new Set())} className="ml-auto text-[11px] underline">Bersihkan pilihan</button>
         </div>}
       </div>
 
       <div className="mt-5 overflow-hidden rounded-2xl border border-dark-100 bg-white shadow-card">
-        {loading ? <p className="p-10 text-center text-sm text-dark-500">Memuat pustaka arsip...</p> : error ? (
+        {loading ? (
+          <div className="p-4" aria-busy="true" aria-live="polite">
+            <span className="sr-only">Memuat pustaka arsip...</span>
+            <div className="space-y-3">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className="flex animate-pulse items-center gap-4">
+                  <div className="h-4 w-4 rounded bg-dark-100" />
+                  <div className="h-10 w-14 rounded bg-dark-100" />
+                  <div className="flex-1 space-y-2"><div className="h-3.5 w-2/3 rounded bg-dark-100" /><div className="h-3 w-1/3 rounded bg-dark-100" /></div>
+                  <div className="h-6 w-20 rounded-full bg-dark-100" />
+                  <div className="h-8 w-24 rounded bg-dark-100" />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : error ? (
           <div className="p-8 text-center"><AlertCircle className="mx-auto h-8 w-8 text-primary" /><p className="mt-3 text-sm font-semibold text-primary-800">{error}</p><button type="button" onClick={() => void load()} className="mt-4 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white">Coba Lagi</button></div>
         ) : items.length === 0 ? (
-          <div className="p-12 text-center"><Library className="mx-auto h-9 w-9 text-dark-300" /><p className="mt-3 text-sm font-semibold text-dark-700">Belum ada konten yang cocok.</p><p className="mt-1 text-xs text-dark-500">Unggah dump SQL di menu Import & Adaptasi WordPress.</p></div>
+          <div className="p-12 text-center"><Library className="mx-auto h-9 w-9 text-dark-300" /><p className="mt-3 text-sm font-semibold text-dark-700">Belum ada konten yang cocok.</p><p className="mt-1 text-xs text-dark-500">Ubah filter/pencarian, atau unggah dump SQL di menu Import & Adaptasi WordPress.</p></div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[960px] text-left">
+            <table className="w-full min-w-[1080px] table-fixed text-left">
               <thead className="border-b border-dark-100 bg-dark-50 text-[11px] font-bold uppercase tracking-wide text-dark-500">
                 <tr>
                   <th className="w-10 px-4 py-3"><input type="checkbox" checked={allSelected} onChange={toggleAll} aria-label="Pilih semua item di halaman ini" /></th>
-                  <th className="px-3 py-3">Judul</th>
-                  <th className="px-3 py-3">Jenis target</th>
-                  <th className="px-3 py-3">Status review</th>
-                  <th className="px-3 py-3">Tanggal sumber</th>
-                  <th className="px-3 py-3">Gambar</th>
-                  <th className="px-3 py-3">Status import</th>
-                  <th className="px-3 py-3 text-right">Aksi</th>
+                  <th className="w-[34%] px-3 py-3">Judul dan slug</th>
+                  <th className="w-[11%] px-3 py-3">Jenis target</th>
+                  <th className="w-[14%] px-3 py-3">Status review</th>
+                  <th className="w-[11%] px-3 py-3">Tanggal sumber</th>
+                  <th className="w-[10%] px-3 py-3">Gambar</th>
+                  <th className="w-[11%] px-3 py-3">Status import</th>
+                  <th className="w-[9%] px-3 py-3 text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-dark-100">
-                {items.map((item) => (
-                  <tr key={item.id} className="text-sm text-dark-700 hover:bg-dark-50/60">
-                    <td className="px-4 py-3"><input type="checkbox" checked={selected.has(item.id)} onChange={() => toggleOne(item.id)} aria-label={`Pilih ${item.title}`} /></td>
-                    <td className="max-w-[320px] px-3 py-3"><button type="button" onClick={() => setDetailId(item.id)} className="truncate text-left font-semibold text-dark-900 hover:text-primary">{item.title}</button><p className="mt-0.5 truncate text-[11px] text-dark-400">/{item.slug} · WP #{item.wordpressId}</p></td>
-                    <td className="px-3 py-3 text-xs">{TARGET_LABEL[item.targetType] || item.targetType}</td>
-                    <td className="px-3 py-3"><span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${REVIEW_TONE[item.reviewStatus] || 'bg-dark-100 text-dark-600'}`}>{REVIEW_LABEL[item.reviewStatus] || item.reviewStatus}</span></td>
-                    <td className="whitespace-nowrap px-3 py-3 text-xs text-dark-500">{formatDate(item.sourceDate)}</td>
-                    <td className="px-3 py-3">{item.imageUrl ? <img src={item.imageUrl} alt="" className="h-10 w-14 rounded object-cover" /> : <span className="text-xs text-dark-400">-</span>}</td>
-                    <td className="px-3 py-3 text-xs text-dark-500">{item.importedAt ? formatDate(item.importedAt) : '-'}</td>
-                    <td className="px-3 py-3 text-right">
-                      <button type="button" onClick={() => setDetailId(item.id)} className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs font-bold text-primary hover:bg-primary-50"><Eye className="h-4 w-4" />Detail</button>
-                    </td>
-                  </tr>
-                ))}
+                {items.map((item) => {
+                  const imported = Boolean(item.importedAt) || item.reviewStatus === 'imported';
+                  return (
+                    <tr key={item.id} className="align-top text-sm text-dark-700 hover:bg-dark-50/60">
+                      <td className="px-4 py-4"><input type="checkbox" checked={selected.has(item.id)} onChange={() => toggleOne(item.id)} aria-label={`Pilih ${item.title}`} /></td>
+                      <td className="px-3 py-4">
+                        <button type="button" onClick={() => setDetailId(item.id)} title={item.title} className="line-clamp-2 break-words text-left font-semibold leading-snug text-dark-900 hover:text-primary">{item.title || '(tanpa judul)'}</button>
+                        <p className="mt-1 truncate text-[11px] text-dark-400" title={`/${item.slug} · WP #${item.wordpressId}`}>/{item.slug} · WP #{item.wordpressId}</p>
+                      </td>
+                      <td className="px-3 py-4 text-xs">{TARGET_LABEL[item.targetType] || item.targetType}</td>
+                      <td className="px-3 py-4"><span className={`inline-block whitespace-nowrap rounded-full px-2.5 py-1 text-[10px] font-bold ${REVIEW_TONE[item.reviewStatus] || 'bg-dark-100 text-dark-600'}`}>{REVIEW_LABEL[item.reviewStatus] || item.reviewStatus}</span></td>
+                      <td className="whitespace-nowrap px-3 py-4 text-xs text-dark-500">{formatDate(item.sourceDate)}</td>
+                      <td className="px-3 py-4">
+                        <ContentImage src={item.imageUrl} alt={`Gambar ${item.title}`} className="h-10 w-14 rounded object-cover" />
+                      </td>
+                      <td className="px-3 py-4 text-xs">{imported ? <span className="font-semibold text-green-700">{formatDate(item.importedAt)}</span> : <span className="text-dark-400">Belum diimpor</span>}</td>
+                      <td className="px-3 py-4">
+                        <div className="flex flex-col items-end gap-1">
+                          <button type="button" onClick={() => setDetailId(item.id)} className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg px-2 py-1.5 text-xs font-bold text-dark-600 hover:bg-dark-100"><Eye className="h-4 w-4" />Detail</button>
+                          {!imported && <button type="button" onClick={() => navigate(`/dashboard/wordpress/audit/${item.id}`)} className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg px-2 py-1.5 text-xs font-bold text-primary hover:bg-primary-50"><ClipboardCheck className="h-4 w-4" />Audit</button>}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -230,15 +258,17 @@ const WordPressLibraryPage = () => {
         )}
       </div>
 
-      <Modal terbuka={Boolean(bulkAction)} onTutup={() => !busy && setBulkAction(null)} judul={bulkAction === 'import' ? 'Masukkan item terpilih ke Website' : 'Lewati item terpilih'} deskripsi="Tindakan diterapkan satu per satu oleh backend." busy={busy} lebar="max-w-lg">
+      <Modal terbuka={Boolean(bulkAction)} onTutup={() => !busy && setBulkAction(null)} judul={bulkAction === 'audit' ? 'Masukkan ke Audit Konten' : bulkAction === 'ready' ? 'Tandai siap diaudit' : 'Lewati item terpilih'} deskripsi="Tindakan divalidasi backend sesuai state machine." busy={busy} lebar="max-w-lg">
         <p className="text-sm leading-relaxed text-dark-600">
-          {bulkAction === 'import'
-            ? `${selectedItems.length} item akan dibuat sebagai konten DRAFT. Item tanpa target atau dengan slug bentrok akan gagal dan tidak ditandai imported.`
-            : `${selectedItems.length} item akan ditandai dilewati dan tidak dapat diimport lewat aksi massal.`}
+          {bulkAction === 'audit'
+            ? `${selectedItems.length} item akan dimasukkan ke antrean Audit Konten. Item yang sudah diimpor tidak akan diubah.`
+            : bulkAction === 'ready'
+              ? `${selectedItems.length} item akan ditandai siap diaudit.`
+              : `${selectedItems.length} item akan ditandai dilewati.`}
         </p>
         <div className="mt-5 flex justify-end gap-2">
           <button type="button" disabled={busy} onClick={() => setBulkAction(null)} className="rounded-lg border border-dark-200 px-4 py-2 text-xs font-bold text-dark-600 disabled:opacity-50">Batal</button>
-          <button type="button" disabled={busy} onClick={runBulk} className="rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white hover:bg-primary-800 disabled:opacity-60">{busy ? 'Memproses...' : 'Lanjutkan'}</button>
+          <button type="button" disabled={busy} onClick={runBulk} className="rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white hover:bg-primary-800 disabled:opacity-60">{busy ? 'Memproses...' : bulkAction === 'audit' ? 'Masukkan ke Audit' : 'Lanjutkan'}</button>
         </div>
       </Modal>
 

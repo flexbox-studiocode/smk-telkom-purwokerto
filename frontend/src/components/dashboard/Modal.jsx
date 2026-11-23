@@ -34,7 +34,7 @@ const Modal = ({ terbuka, onTutup, judul, deskripsi, children, footer, lebar = '
       className="motion-dialog max-h-none max-w-none bg-transparent p-4 backdrop:bg-dark-950/60 open:fixed open:inset-0 open:m-auto open:flex open:h-full open:w-full open:items-center open:justify-center"
     >
       {terbuka && (
-        <div className={`w-full ${lebar} rounded-2xl bg-white p-6 shadow-card`}>
+        <div className={`w-full ${lebar} max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl bg-white p-6 shadow-card`}>
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 id={titleId} className="font-heading text-base font-extrabold text-dark-900">{judul}</h2>
