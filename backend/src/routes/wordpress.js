@@ -13,7 +13,8 @@ import {
 } from '../wordpress/importService.js';
 import {
   getArchiveItem, getArchiveItems, updateArchiveItem, reviewArchiveItem,
-  skipArchiveItem, importToPublicContent,
+  skipArchiveItem, importToPublicContent, startArchiveAudit, bulkArchiveAction,
+  getAuditQueue, getAuditOverview, getAuditItem,
 } from '../wordpress/archiveRepository.js';
 import { resolveItemMedia, resolveBatch } from '../wordpress/mediaResolver.js';
 import { deleteImportJob } from '../wordpress/jobDeletion.js';
@@ -55,6 +56,26 @@ function enumQuery(value, values, label) {
   if (value === undefined || value === '') return undefined;
   if (!values.includes(value)) throw badRequest(`${label} tidak valid.`);
   return value;
+}
+
+const REVIEW_STATUSES = ['pending_review', 'ready', 'in_audit', 'imported', 'skipped', 'failed'];
+const TARGET_TYPES = ['berita', 'pengumuman', 'prestasi', 'needs_review'];
+
+// Filter pencarian dipakai ulang oleh Pustaka dan Audit.
+function archiveWhere(query) {
+  const targetType = enumQuery(query.targetType, TARGET_TYPES, 'Target');
+  const reviewStatus = enumQuery(query.reviewStatus, REVIEW_STATUSES, 'Status review');
+  const search = typeof query.search === 'string' && query.search.trim() ? query.search.trim().slice(0, 100) : '';
+  return {
+    ...(targetType ? { targetType } : {}),
+    ...(reviewStatus ? { reviewStatus } : {}),
+    ...(query.jobId ? { jobId: parseId(query.jobId) } : {}),
+    ...(search ? { OR: [
+      { title: { contains: search } },
+      { content: { contains: search } },
+      { slug: { contains: search } },
+    ] } : {}),
+  };
 }
 
 wordpressAdminRouter.post('/imports', uploadLimiter, upload.single('file'), asyncHandler(async (req, res) => {
@@ -121,22 +142,20 @@ wordpressAdminRouter.delete('/imports/:id', asyncHandler(async (req, res) => {
 
 wordpressAdminRouter.get('/archive', asyncHandler(async (req, res) => {
   const { page, limit, skip } = parsePagination(req.query, { maxLimit: 100 });
-  const targetType = enumQuery(req.query.targetType, ['berita', 'pengumuman', 'prestasi', 'needs_review'], 'Target');
-  const reviewStatus = enumQuery(req.query.reviewStatus, ['pending_review', 'ready', 'imported', 'skipped', 'failed'], 'Status review');
-  const where = {
-    ...(targetType ? { targetType } : {}),
-    ...(reviewStatus ? { reviewStatus } : {}),
-    ...(req.query.jobId ? { jobId: parseId(req.query.jobId) } : {}),
-    ...(req.query.search ? { OR: [
-      { title: { contains: String(req.query.search).slice(0, 100) } },
-      { content: { contains: String(req.query.search).slice(0, 100) } },
-      { slug: { contains: String(req.query.search).slice(0, 100) } },
-    ] } : {}),
-  };
-  const orderField = ['title', 'sourceDate', 'createdAt', 'reviewStatus'].includes(req.query.sort) ? req.query.sort : 'createdAt';
+  const where = archiveWhere(req.query);
+  const orderField = ['title', 'sourceDate', 'createdAt', 'updatedAt', 'reviewStatus'].includes(req.query.sort) ? req.query.sort : 'createdAt';
   const orderDirection = req.query.order === 'asc' ? 'asc' : 'desc';
   const result = await getArchiveItems({ where, skip, take: limit, orderBy: { [orderField]: orderDirection } });
   res.json({ data: jsonSafe(result.items), pagination: { page, limit, total: result.total, pages: Math.ceil(result.total / limit) } });
+}));
+
+// Aksi massal Pustaka Konten. Divalidasi per item oleh state machine backend.
+wordpressAdminRouter.post('/archive/bulk', asyncHandler(async (req, res) => {
+  const ids = Array.isArray(req.body?.ids) ? req.body.ids.map((id) => parseId(String(id))) : null;
+  if (!ids) throw badRequest('ids wajib berupa array.');
+  const action = enumQuery(req.body?.action, ['audit', 'ready', 'skip'], 'Aksi');
+  if (!action) throw badRequest('Aksi massal wajib diisi.');
+  res.json({ data: await bulkArchiveAction(ids, action, req.user.id) });
 }));
 
 wordpressAdminRouter.get('/archive/:id', asyncHandler(async (req, res) => {
@@ -147,11 +166,20 @@ wordpressAdminRouter.patch('/archive/:id', asyncHandler(async (req, res) => {
   const id = parseId(req.params.id);
   const allowed = ['title', 'slug', 'summary', 'content', 'imageUrl', 'targetType', 'reviewStatus', 'reviewNotes'];
   const patch = Object.fromEntries(Object.entries(req.body || {}).filter(([key]) => allowed.includes(key)));
-  if (patch.targetType && !['berita', 'pengumuman', 'prestasi', 'needs_review'].includes(patch.targetType)) throw badRequest('Target tidak valid.');
-  if (patch.reviewStatus && !['pending_review', 'ready', 'imported', 'skipped', 'failed'].includes(patch.reviewStatus)) throw badRequest('Status review tidak valid.');
+  if (patch.targetType && !TARGET_TYPES.includes(patch.targetType)) throw badRequest('Target tidak valid.');
+  if (patch.reviewStatus && !REVIEW_STATUSES.includes(patch.reviewStatus)) throw badRequest('Status review tidak valid.');
   if (patch.title !== undefined && (typeof patch.title !== 'string' || !patch.title.trim())) throw badRequest('Judul wajib diisi.');
   if (patch.slug !== undefined && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(patch.slug)) throw badRequest('Slug tidak valid.');
   res.json({ data: jsonSafe(await updateArchiveItem(id, patch, req.user.id)) });
+}));
+
+// Memindahkan item ke antrean Audit Konten (idempoten).
+wordpressAdminRouter.post('/archive/:id/audit', asyncHandler(async (req, res) => {
+  res.json({ data: jsonSafe(await startArchiveAudit(parseId(req.params.id), {
+    actorId: req.user.id,
+    targetType: req.body?.targetType,
+    reviewNotes: req.body?.reviewNotes,
+  })) });
 }));
 
 wordpressAdminRouter.post('/archive/:id/review', asyncHandler(async (req, res) => {
@@ -180,4 +208,28 @@ wordpressAdminRouter.post('/archive/:id/media', asyncHandler(async (req, res) =>
 wordpressAdminRouter.post('/archive/media/batch', asyncHandler(async (req, res) => {
   if (!Array.isArray(req.body?.ids)) throw badRequest('ids wajib berupa array.');
   res.json({ data: jsonSafe(await resolveBatch(req.body.ids, req.user.id, { limit: 5 })) });
+}));
+
+// ── Audit Konten ────────────────────────────────────────────────────────────
+wordpressAdminRouter.get('/audit/overview', asyncHandler(async (_req, res) => {
+  res.json({ data: await getAuditOverview() });
+}));
+
+wordpressAdminRouter.get('/audit', asyncHandler(async (req, res) => {
+  const { page, limit, skip } = parsePagination(req.query, { maxLimit: 100 });
+  const status = enumQuery(req.query.status, ['queue', 'pending_review', 'ready', 'in_audit', 'imported', 'skipped', 'failed'], 'Status audit');
+  const base = archiveWhere({ ...req.query, reviewStatus: undefined });
+  const where = {
+    ...base,
+    ...(status === 'queue' ? { reviewStatus: { in: ['ready', 'in_audit'] } }
+      : status ? { reviewStatus: status } : {}),
+  };
+  const orderField = ['title', 'updatedAt', 'createdAt', 'sourceDate'].includes(req.query.sort) ? req.query.sort : 'updatedAt';
+  const orderDirection = req.query.order === 'asc' ? 'asc' : 'desc';
+  const result = await getAuditQueue({ where, skip, take: limit, orderBy: { [orderField]: orderDirection } });
+  res.json({ data: jsonSafe(result.items), pagination: { page, limit, total: result.total, pages: Math.ceil(result.total / limit) } });
+}));
+
+wordpressAdminRouter.get('/audit/:id', asyncHandler(async (req, res) => {
+  res.json({ data: jsonSafe(await getAuditItem(parseId(req.params.id))) });
 }));

@@ -175,6 +175,7 @@ enum WordPressTargetType {
 enum WordPressReviewStatus {
   pending_review
   ready
+  in_audit
   imported
   skipped
   failed
