@@ -142,8 +142,7 @@ after(async () => {
 });
 
 test('upload SQL, proses background, statistik, dan pustaka arsip', async () => {
-  const admin = makeClient();
-  assert.equal((await login(admin, ADMIN_EMAIL)).status, 200);
+  const admin = adminClient;
 
   const sql = buildSql([
     sqlRow({ id: 101, title: `${unique} Kunjungan Industri`, content: narrative('kunjungan'), slug: SLUGS.berita, guid: 'https://example.test/wp-content/uploads/foto.jpg' }),
@@ -187,8 +186,7 @@ test('upload SQL, proses background, statistik, dan pustaka arsip', async () => 
 });
 
 test('duplicate checksum tidak diproses ulang', async () => {
-  const admin = makeClient();
-  await login(admin, ADMIN_EMAIL);
+  const admin = adminClient;
   const job = await prisma.wordPressImportJob.findUnique({ where: { id: jobId } });
   assert.ok(job);
   const sql = buildSql([sqlRow({ id: 201, title: 'Duplikat', content: narrative('duplikat'), slug: `${unique}-dup` })]);
@@ -208,9 +206,47 @@ test('duplicate checksum tidak diproses ulang', async () => {
   assert.equal(second.body.data.id, jobRow.id);
 });
 
+test('detail seluruh item dapat dibuka (serialisasi BigInt) dan status review mengikuti state machine', async () => {
+  const admin = adminClient;
+  const list = await admin.request(`/api/admin/wordpress/archive?jobId=${jobId}&limit=100`);
+  assert.equal(list.status, 200);
+  for (const item of list.body.data) {
+    const detail = await admin.request(`/api/admin/wordpress/archive/${item.id}`);
+    assert.equal(detail.status, 200, `detail ${item.wordpressId} gagal: ${JSON.stringify(detail.body)}`);
+    assert.equal(typeof detail.body.data.wordpressId, 'string');
+    assert.ok(Array.isArray(detail.body.data.revisions));
+  }
+
+  // ID tidak valid / tidak ada menghasilkan error yang jelas, bukan modal kosong.
+  const invalid = await admin.request('/api/admin/wordpress/archive/00000000-0000-0000-0000-000000000000');
+  assert.equal(invalid.status, 404);
+  assert.ok(invalid.body.error);
+
+  const target = list.body.data.find((item) => item.wordpressId === '107');
+  assert.ok(target);
+  const toAudit = await admin.request(`/api/admin/wordpress/archive/${target.id}/audit`, { method: 'POST', body: JSON.stringify({ targetType: 'berita' }) });
+  assert.equal(toAudit.status, 200, JSON.stringify(toAudit.body));
+  assert.equal(toAudit.body.data.reviewStatus, 'in_audit');
+  // Idempoten: klik kedua tidak mengubah apa pun.
+  const again = await admin.request(`/api/admin/wordpress/archive/${target.id}/audit`, { method: 'POST', body: JSON.stringify({ targetType: 'berita' }) });
+  assert.equal(again.status, 200);
+  assert.equal(again.body.data.reviewStatus, 'in_audit');
+
+  const imported = await admin.request(`/api/admin/wordpress/archive/${target.id}`, { method: 'PATCH', body: JSON.stringify({ reviewStatus: 'imported' }) });
+  assert.equal(imported.status, 400, 'status imported tidak boleh diset manual');
+
+  const ready = await admin.request(`/api/admin/wordpress/archive/${target.id}/review`, { method: 'POST', body: JSON.stringify({ reviewStatus: 'ready' }) });
+  assert.equal(ready.status, 200);
+  assert.equal(ready.body.data.reviewStatus, 'ready');
+
+  const detail = await admin.request(`/api/admin/wordpress/archive/${target.id}`);
+  const actions = detail.body.data.revisions.map((revision) => revision.action);
+  assert.ok(actions.includes('audit_started'));
+  assert.ok(actions.includes('item_reviewed'));
+});
+
 test('edit, review, skip, dan ID tidak valid', async () => {
-  const admin = makeClient();
-  await login(admin, ADMIN_EMAIL);
+  const admin = adminClient;
   const list = await admin.request(`/api/admin/wordpress/archive?jobId=${jobId}&limit=50`);
   const target = list.body.data.find((item) => item.wordpressId === '101');
   assert.ok(target);
@@ -242,8 +278,7 @@ test('edit, review, skip, dan ID tidak valid', async () => {
 });
 
 test('import ke konten publik selalu draft dan idempoten', async () => {
-  const admin = makeClient();
-  await login(admin, ADMIN_EMAIL);
+  const admin = adminClient;
   const guest = makeClient();
   await guest.request('/api/auth/csrf');
 
@@ -273,9 +308,30 @@ test('import ke konten publik selalu draft dan idempoten', async () => {
   assert.equal(item.body.data.importedToId, created.id);
 });
 
+test('import publik menerima draft/published dan mencerminkan status CMS di audit', async () => {
+  const admin = adminClient;
+  const sourceList = await admin.request(`/api/admin/wordpress/archive?jobId=${jobId}&targetType=pengumuman&limit=50`);
+  const source = sourceList.body.data.find((item) => item.wordpressId === '103');
+  assert.ok(source);
+
+  const published = await admin.request(`/api/admin/wordpress/archive/${source.id}/import`, {
+    method: 'POST', body: JSON.stringify({ status: 'published' }),
+  });
+  assert.equal(published.status, 201, JSON.stringify(published.body));
+  assert.equal(published.body.data.status, 'published');
+  const auditDetail = await admin.request(`/api/admin/wordpress/audit/${source.id}`);
+  assert.equal(auditDetail.status, 200);
+  assert.equal(auditDetail.body.data.auditState, 'published');
+  assert.equal(auditDetail.body.data.cmsStatus, 'published');
+
+  const invalid = await admin.request(`/api/admin/wordpress/archive/${source.id}/import`, {
+    method: 'POST', body: JSON.stringify({ status: 'garbage' }),
+  });
+  assert.equal(invalid.status, 400, 'status publikasi invalid ditolak backend');
+});
+
 test('slug bentrok menggagalkan import tanpa menandai item imported', async () => {
-  const admin = makeClient();
-  await login(admin, ADMIN_EMAIL);
+  const admin = adminClient;
   const list = await admin.request(`/api/admin/wordpress/archive?jobId=${jobId}&targetType=berita&limit=50`);
   const source = list.body.data.find((item) => item.wordpressId === '102');
   assert.ok(source);
@@ -289,8 +345,7 @@ test('slug bentrok menggagalkan import tanpa menandai item imported', async () =
 });
 
 test('double request hanya membuat satu konten', async (t) => {
-  const admin = makeClient();
-  await login(admin, ADMIN_EMAIL);
+  const admin = adminClient;
   // Isolasi: buat job baru khusus agar tidak memakai item yang sudah diimport.
   const upload = await admin.request('/api/admin/wordpress/imports', {
     method: 'POST',
@@ -322,8 +377,7 @@ function newFormData(t, { id, title, content, slug, type = 'post' }) {
 }
 
 test('prestasi dari arsip draft tidak tampil di API publik', async () => {
-  const admin = makeClient();
-  await login(admin, ADMIN_EMAIL);
+  const admin = adminClient;
   const guest = makeClient();
   await guest.request('/api/auth/csrf');
 
