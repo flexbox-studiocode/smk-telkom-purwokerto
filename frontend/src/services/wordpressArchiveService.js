@@ -25,6 +25,11 @@ export async function cancelWordPressJob(id) {
   return api.post(`/api/admin/wordpress/imports/${encodeURIComponent(id)}/cancel`);
 }
 
+// Menghapus job SQL beserta arsip yang masih terikat. Konten CMS tetap aman.
+export async function deleteWordPressJob(id) {
+  return api.delete(`/api/admin/wordpress/imports/${encodeURIComponent(id)}`);
+}
+
 export async function getWordPressArchive({ targetType, reviewStatus, jobId, search, sort, order, page = 1, limit = 20 } = {}) {
   const params = new URLSearchParams();
   if (targetType) params.set('targetType', targetType);
@@ -57,8 +62,8 @@ export async function skipWordPressArchiveItem(id, { reviewNotes } = {}) {
   return api.post(`/api/admin/wordpress/archive/${encodeURIComponent(id)}/skip`, { reviewNotes });
 }
 
-export async function importWordPressArchiveItem(id) {
-  return api.post(`/api/admin/wordpress/archive/${encodeURIComponent(id)}/import`);
+export async function importWordPressArchiveItem(id, { status = 'draft' } = {}) {
+  return api.post(`/api/admin/wordpress/archive/${encodeURIComponent(id)}/import`, { status });
 }
 
 export async function resolveWordPressArchiveMedia(id) {

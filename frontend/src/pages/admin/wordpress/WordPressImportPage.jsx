@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  AlertCircle, Ban, CheckCircle2, FileUp, Library, RefreshCw, UploadCloud, X,
+  AlertCircle, Ban, CheckCircle2, FileUp, Library, RefreshCw, Trash2, UploadCloud, X,
 } from 'lucide-react';
 import PageHeader from '../../../components/dashboard/PageHeader';
+import Modal from '../../../components/dashboard/Modal';
 import {
-  cancelWordPressJob, getWordPressJobProgress, getWordPressJobs, uploadWordPressSql,
+  cancelWordPressJob, deleteWordPressJob, getWordPressJobProgress, getWordPressJobs, uploadWordPressSql,
 } from '../../../services/wordpressArchiveService';
 import { apiErrorMessage } from '../../../utils/apiError';
 
@@ -53,6 +54,8 @@ const WordPressImportPage = () => {
   const [dragging, setDragging] = useState(false);
   const [selectedJobId, setSelectedJobId] = useState('');
   const [progress, setProgress] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const inputRef = useRef(null);
   const pollRef = useRef(null);
 
@@ -144,6 +147,30 @@ const WordPressImportPage = () => {
       await loadJobs(pagination.page);
     } catch (cancelError) {
       setFeedback({ type: 'error', message: apiErrorMessage(cancelError, 'Job tidak dapat dibatalkan.') });
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      const result = await deleteWordPressJob(deleteTarget.id);
+      const data = result.data || {};
+      setFeedback({
+        type: 'success',
+        message: `Job "${deleteTarget.originalFileName}" dihapus. ${data.deletedItemCount ?? 0} arsip ikut dihapus`
+          + `${data.preservedImportedCount ? `; ${data.preservedImportedCount} konten yang sudah masuk CMS tetap aman` : ''}.`,
+      });
+      if (selectedJobId === deleteTarget.id) setSelectedJobId('');
+      setDeleteTarget(null);
+      await loadJobs(1);
+    } catch (deleteError) {
+      setFeedback({ type: 'error', message: apiErrorMessage(deleteError, 'Job gagal dihapus.', {
+        job_active: 'Job masih diproses. Tunggu hingga selesai atau batalkan terlebih dahulu.',
+        not_found: 'Job sudah tidak ada. Muat ulang daftar job.',
+      }) });
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -267,7 +294,20 @@ const WordPressImportPage = () => {
                     <td className="px-4 py-4 text-xs">{job.candidateCount}</td>
                     <td className="px-4 py-4 text-xs">{job.reviewCount}</td>
                     <td className="whitespace-nowrap px-4 py-4 text-xs text-dark-500">{formatDate(job.createdAt)}</td>
-                    <td className="px-4 py-4 text-right"><Link to={`/dashboard/wordpress/library?jobId=${job.id}`} className="text-xs font-bold text-primary hover:underline">Lihat</Link></td>
+                    <td className="px-4 py-4 text-right">
+                      <div className="flex items-center justify-end gap-3">
+                        <Link to={`/dashboard/wordpress/library?jobId=${job.id}`} className="text-xs font-bold text-primary hover:underline">Lihat</Link>
+                        <button
+                          type="button"
+                          onClick={() => setDeleteTarget(job)}
+                          disabled={['uploaded', 'processing'].includes(job.status)}
+                          className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-primary hover:bg-primary-50 disabled:cursor-not-allowed disabled:opacity-40"
+                          title={['uploaded', 'processing'].includes(job.status) ? 'Job sedang diproses' : 'Hapus file SQL dan arsipnya'}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />Hapus
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -284,6 +324,26 @@ const WordPressImportPage = () => {
           </div>
         )}
       </div>
+
+      <Modal
+        terbuka={Boolean(deleteTarget)}
+        onTutup={() => !deleting && setDeleteTarget(null)}
+        judul="Hapus file SQL dan arsipnya?"
+        deskripsi={deleteTarget ? `${deleteTarget.originalFileName} · ${formatBytes(deleteTarget.fileSize)}` : undefined}
+        busy={deleting}
+        lebar="max-w-lg"
+      >
+        <div className="rounded-lg border border-primary-200 bg-primary-50 px-4 py-3 text-sm leading-relaxed text-primary-900">
+          Penghapusan file SQL akan menghapus histori job dan seluruh arsip konten WordPress yang masih terhubung dengan file ini. Konten yang sudah berhasil dimasukkan ke CMS (Berita, Pengumuman, atau Prestasi) tidak akan dihapus.
+        </div>
+        <p className="mt-3 text-xs leading-relaxed text-dark-500">
+          Tindakan ini permanen dan tidak dapat dibatalkan. Gambar yang sudah diunduh tetap tersimpan selama dipakai konten CMS.
+        </p>
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" disabled={deleting} onClick={() => setDeleteTarget(null)} className="rounded-lg border border-dark-200 px-4 py-2 text-xs font-bold text-dark-600 disabled:opacity-50">Batal</button>
+          <button type="button" disabled={deleting} onClick={() => void handleDelete()} className="rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white hover:bg-primary-800 disabled:opacity-60">{deleting ? 'Menghapus...' : 'Hapus Permanen'}</button>
+        </div>
+      </Modal>
     </section>
   );
 };

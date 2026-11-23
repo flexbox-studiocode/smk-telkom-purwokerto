@@ -1,6 +1,7 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import argon2 from 'argon2';
+import crypto from 'node:crypto';
 import { setTimeout as delay } from 'node:timers/promises';
 import { app } from '../src/app.js';
 import { prisma, closeDatabase } from '../src/db.js';
@@ -14,6 +15,8 @@ let server;
 let baseUrl;
 let adminUserId;
 let jobId;
+let adminClient;
+let applicantClient;
 const createdJobIds = [];
 
 function makeClient() {
@@ -121,10 +124,15 @@ before(async () => {
   const admin = await createUser(ADMIN_EMAIL, { role: 'admin', withAdmin: true });
   adminUserId = admin.id;
   await createUser(APPLICANT_EMAIL);
+  adminClient = makeClient();
+  applicantClient = makeClient();
+  assert.equal((await login(adminClient, ADMIN_EMAIL)).status, 200);
+  assert.equal((await login(applicantClient, APPLICANT_EMAIL)).status, 200);
 });
 
 after(async () => {
   await prisma.wordPressImportJob.deleteMany({ where: { createdBy: adminUserId } });
+  await prisma.wordPressArchiveDeletion.deleteMany({ where: { deletedBy: adminUserId } });
   await prisma.berita.deleteMany({ where: { slug: { startsWith: PREFIX } } });
   await prisma.pengumuman.deleteMany({ where: { slug: { startsWith: PREFIX } } });
   await prisma.prestasi.deleteMany({ where: { slug: { startsWith: PREFIX } } });
@@ -358,11 +366,68 @@ test('otorisasi: tamu 401, non-admin 403', async () => {
 });
 
 test('media resolution menolak sumber internal tanpa request jaringan', async () => {
-  const admin = makeClient();
-  await login(admin, ADMIN_EMAIL);
+  const admin = adminClient;
   const list = await admin.request(`/api/admin/wordpress/archive?jobId=${jobId}&limit=50`);
   const item = list.body.data.find((entry) => entry.metadata?.imageCandidateUrl === null && entry.imageUrl === null);
   assert.ok(item);
   const res = await admin.request(`/api/admin/wordpress/archive/${item.id}/media`, { method: 'POST' });
   assert.equal(res.status, 400);
+});
+
+test('delete job menolak job yang masih diproses', async () => {
+  const admin = adminClient;
+  const active = await prisma.wordPressImportJob.create({
+    data: {
+      originalFileName: `${PREFIX}aktif.sql`,
+      sourceChecksum: crypto.randomUUID().replace(/-/g, '').padEnd(64, 'a').slice(0, 64),
+      fileSize: BigInt(1024),
+      status: 'processing',
+      createdBy: adminUserId,
+    },
+  });
+  const res = await admin.request(`/api/admin/wordpress/imports/${active.id}`, { method: 'DELETE' });
+  assert.equal(res.status, 409, JSON.stringify(res.body));
+  assert.equal(res.body.code, 'job_active');
+  await prisma.wordPressImportJob.delete({ where: { id: active.id } });
+});
+
+test('delete job menghapus arsip tetapi mempertahankan konten CMS', async (t) => {
+  const admin = adminClient;
+
+  const slug = `${unique}-hapus`;
+  const upload = await admin.request('/api/admin/wordpress/imports', {
+    method: 'POST',
+    body: newFormData(t, { id: 901, title: `${unique} Konten Untuk Dihapus`, content: narrative('hapus'), slug }),
+  });
+  assert.equal(upload.status, 202, JSON.stringify(upload.body));
+  const batchId = upload.body.data.id;
+  await waitForJob(admin, batchId);
+
+  const list = await admin.request(`/api/admin/wordpress/archive?jobId=${batchId}&targetType=berita&limit=50`);
+  const source = list.body.data[0];
+  assert.ok(source);
+  const imported = await admin.request(`/api/admin/wordpress/archive/${source.id}/import`, { method: 'POST' });
+  assert.equal(imported.status, 201);
+  const cmsId = imported.body.data.id;
+
+  const removed = await admin.request(`/api/admin/wordpress/imports/${batchId}`, { method: 'DELETE' });
+  assert.equal(removed.status, 200, JSON.stringify(removed.body));
+  assert.ok(removed.body.data.deletedItemCount >= 1);
+  assert.equal(removed.body.data.preservedImportedCount, 1);
+
+  const gone = await admin.request(`/api/admin/wordpress/imports/${batchId}`);
+  assert.equal(gone.status, 404);
+  const remaining = await prisma.wordPressArchiveItem.count({ where: { jobId: batchId } });
+  assert.equal(remaining, 0);
+  const cmsRow = await prisma.berita.findUnique({ where: { id: cmsId } });
+  assert.ok(cmsRow, 'konten CMS tidak boleh ikut terhapus');
+  const log = await prisma.wordPressArchiveDeletion.findFirst({ where: { jobId: batchId } });
+  assert.ok(log, 'penghapusan batch harus tercatat');
+  assert.equal(log.importedItemCount, 1);
+});
+
+test('delete job ditolak untuk non-admin', async () => {
+  const applicant = applicantClient;
+  const res = await applicant.request(`/api/admin/wordpress/imports/${jobId}`, { method: 'DELETE' });
+  assert.equal(res.status, 403);
 });

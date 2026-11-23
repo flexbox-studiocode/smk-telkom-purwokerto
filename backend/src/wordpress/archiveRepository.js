@@ -90,9 +90,11 @@ export async function skipArchiveItem(id, { actorId, reviewNotes }) {
 }
 
 // Import satu archive item ke tabel konten publik.
-// Semua hasil import berstatus DRAFT. Idempoten: bila item sudah diimport
-// sebelumnya (importedToId terisi), konflik dilaporkan.
-export async function importToPublicContent(id, actorId) {
+// `status` hanya boleh draft/published dan divalidasi sebelum transaksi.
+export async function importToPublicContent(id, actorId, requestedStatus = 'draft') {
+  if (!['draft', 'published'].includes(requestedStatus)) {
+    throw badRequest('Status publikasi tidak valid. Gunakan draft atau published.');
+  }
   return prisma.$transaction(async (tx) => {
     const item = await tx.wordPressArchiveItem.findUnique({ where: { id } });
     if (!item) throw notFound();
@@ -124,7 +126,7 @@ export async function importToPublicContent(id, actorId) {
       ringkasan: item.summary,
       konten: item.content ?? item.title,
       gambarUrl: item.imageUrl ?? null,
-      status: 'draft',
+      status: requestedStatus,
     };
 
     if (item.targetType === 'berita') {
@@ -143,7 +145,7 @@ export async function importToPublicContent(id, actorId) {
         gambarUrl: item.imageUrl ?? null,
         instagramUrl: null,
         tanggal: item.sourceDate,
-        status: 'draft',
+        status: requestedStatus,
       });
       created = await tx.prestasi.create({ data });
     } else {

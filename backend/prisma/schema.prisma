@@ -257,6 +257,24 @@ model WordPressArchiveRevision {
   @@map("wordpress_archive_revisions")
 }
 
+// Jejak audit penghapusan batch SQL. Job dan arsipnya memang dihapus, jadi
+// ringkasan ini disimpan terpisah agar admin masih bisa menelusuri asal konten
+// CMS yang pernah dibuat dari batch tersebut. Tidak menyimpan data sensitif.
+model WordPressArchiveDeletion {
+  id                String   @id @default(uuid()) @db.Char(36)
+  jobId             String   @map("job_id") @db.Char(36)
+  originalFileName  String   @map("original_file_name") @db.VarChar(255)
+  sourceChecksum    String   @map("source_checksum") @db.Char(64)
+  jobStatus         String   @map("job_status") @db.VarChar(32)
+  deletedItemCount  Int      @default(0) @map("deleted_item_count")
+  importedItemCount Int      @default(0) @map("imported_item_count")
+  detail            Json?
+  deletedBy         String?  @map("deleted_by") @db.Char(36)
+  createdAt         DateTime @default(now()) @map("created_at")
+  @@index([createdAt])
+  @@map("wordpress_archive_deletions")
+}
+
 model Bkk {
   id              String    @id @default(uuid()) @db.Char(36)
   perusahaan      String    @db.VarChar(255)

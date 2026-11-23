@@ -16,6 +16,7 @@ import {
   skipArchiveItem, importToPublicContent,
 } from '../wordpress/archiveRepository.js';
 import { resolveItemMedia, resolveBatch } from '../wordpress/mediaResolver.js';
+import { deleteImportJob } from '../wordpress/jobDeletion.js';
 
 export const wordpressAdminRouter = express.Router();
 wordpressAdminRouter.use(requireAuth, requireAdmin);
@@ -113,6 +114,11 @@ wordpressAdminRouter.post('/imports/:id/cancel', asyncHandler(async (req, res) =
   res.json({ data: { id, status: 'cancelling' } });
 }));
 
+// Menghapus job + arsipnya. Konten CMS yang sudah dibuat tetap utuh.
+wordpressAdminRouter.delete('/imports/:id', asyncHandler(async (req, res) => {
+  res.json({ data: await deleteImportJob(parseId(req.params.id), req.user.id) });
+}));
+
 wordpressAdminRouter.get('/archive', asyncHandler(async (req, res) => {
   const { page, limit, skip } = parsePagination(req.query, { maxLimit: 100 });
   const targetType = enumQuery(req.query.targetType, ['berita', 'pengumuman', 'prestasi', 'needs_review'], 'Target');
@@ -163,7 +169,8 @@ wordpressAdminRouter.post('/archive/:id/skip', asyncHandler(async (req, res) => 
 }));
 
 wordpressAdminRouter.post('/archive/:id/import', asyncHandler(async (req, res) => {
-  res.status(201).json({ data: jsonSafe(await importToPublicContent(parseId(req.params.id), req.user.id)) });
+  const status = req.body?.status ?? 'draft';
+  res.status(201).json({ data: jsonSafe(await importToPublicContent(parseId(req.params.id), req.user.id, status)) });
 }));
 
 wordpressAdminRouter.post('/archive/:id/media', asyncHandler(async (req, res) => {

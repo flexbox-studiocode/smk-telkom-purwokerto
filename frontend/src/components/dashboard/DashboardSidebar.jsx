@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Link, NavLink, useMatch } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import {
   BriefcaseBusiness,
   CalendarDays,
@@ -38,10 +38,11 @@ const ikon = {
   wordpressAudit: ClipboardCheck,
 };
 
-// Helper kecil: dipanggil di dalam komponen grup (bukan di loop callback),
-// jadi pemakaian hook tetap aman dan tidak melanggar aturan hook.
-function usePathnameIsActive(to) {
-  return Boolean(useMatch({ path: to, end: to === '/dashboard' }));
+// Status aktif grup menu dihitung dari satu hook useLocation, sehingga tidak ada
+// hook yang dipanggil di dalam loop/callback.
+function useMatchGroupActive(children) {
+  const { pathname } = useLocation();
+  return children.some(({ to }) => pathname === to || pathname.startsWith(`${to}/`));
 }
 
 const linkClass = (isActive, nested = false) =>
@@ -49,23 +50,21 @@ const linkClass = (isActive, nested = false) =>
     isActive ? 'bg-primary text-white shadow-card' : 'text-dark-700 hover:bg-primary-50 hover:text-primary'
   }${nested ? ' text-[13.5px]' : ''}`;
 
-// Menu induk dengan submenu (accordion). Status terbuka diturunkan dari rute aktif
-// agar submenu yang sedang dibuka selalu terlihat tanpa state yang bisa basi.
-const MenuGroup = ({ label, icon, children, onPilihMenu, defaultOpen = false }) => {
+// Menu induk dengan submenu (accordion). Status terbuka diturunkan dari rute
+// aktif: bila salah satu submenu sedang dibuka, panel dipaksa terbuka tanpa
+// memerlukan effect/state tambahan.
+const MenuGroup = ({ label, icon, children, onPilihMenu }) => {
   const Ikon = ikon[icon];
-  const groupActive = children.some(({ to }) => usePathnameIsActive(to));
-  const [open, setOpen] = useState(groupActive || defaultOpen);
-
-  useEffect(() => {
-    if (groupActive) setOpen(true);
-  }, [groupActive]);
+  const groupActive = useMatchGroupActive(children);
+  const [manualOpen, setManualOpen] = useState(true);
+  const open = groupActive || manualOpen;
 
   const panelId = `menu-grup-${icon}`;
   return (
     <div>
       <button
         type="button"
-        onClick={() => setOpen((current) => !current)}
+        onClick={() => setManualOpen((current) => !current)}
         aria-expanded={open}
         aria-controls={panelId}
         className={`flex w-full items-center gap-3 rounded-full py-2.5 pl-2.5 pr-4 text-left text-[14.22px] font-bold leading-[normal] tracking-[.03em] transition-colors ${
