@@ -1,8 +1,12 @@
-import { Link, NavLink } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, NavLink, useMatch } from 'react-router-dom';
 import {
   BriefcaseBusiness,
   CalendarDays,
+  ChevronDown,
   FileUp,
+  FolderOpen,
+  ClipboardCheck,
   GraduationCap,
   Info,
   LayoutDashboard,
@@ -28,13 +32,89 @@ const ikon = {
   berita: Newspaper,
   pengumuman: Megaphone,
   kalender: CalendarDays,
+  wordpressFolder: FolderOpen,
   wordpressImport: FileUp,
   wordpressLibrary: Library,
+  wordpressAudit: ClipboardCheck,
+};
+
+// Helper kecil: dipanggil di dalam komponen grup (bukan di loop callback),
+// jadi pemakaian hook tetap aman dan tidak melanggar aturan hook.
+function usePathnameIsActive(to) {
+  return Boolean(useMatch({ path: to, end: to === '/dashboard' }));
+}
+
+const linkClass = (isActive, nested = false) =>
+  `flex items-center gap-3 rounded-full py-2.5 pl-2.5 pr-4 text-[14.22px] font-bold leading-[normal] tracking-[.03em] transition-colors ${
+    isActive ? 'bg-primary text-white shadow-card' : 'text-dark-700 hover:bg-primary-50 hover:text-primary'
+  }${nested ? ' text-[13.5px]' : ''}`;
+
+// Menu induk dengan submenu (accordion). Status terbuka diturunkan dari rute aktif
+// agar submenu yang sedang dibuka selalu terlihat tanpa state yang bisa basi.
+const MenuGroup = ({ label, icon, children, onPilihMenu, defaultOpen = false }) => {
+  const Ikon = ikon[icon];
+  const groupActive = children.some(({ to }) => usePathnameIsActive(to));
+  const [open, setOpen] = useState(groupActive || defaultOpen);
+
+  useEffect(() => {
+    if (groupActive) setOpen(true);
+  }, [groupActive]);
+
+  const panelId = `menu-grup-${icon}`;
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen((current) => !current)}
+        aria-expanded={open}
+        aria-controls={panelId}
+        className={`flex w-full items-center gap-3 rounded-full py-2.5 pl-2.5 pr-4 text-left text-[14.22px] font-bold leading-[normal] tracking-[.03em] transition-colors ${
+          groupActive ? 'bg-primary-50 text-primary' : 'text-dark-700 hover:bg-primary-50 hover:text-primary'
+        }`}
+      >
+        <span className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-colors ${groupActive ? 'bg-primary text-white' : 'bg-dark-500 text-white'}`}>
+          {Ikon && <Ikon className="h-4 w-4" />}
+        </span>
+        <span className="flex-1">{label}</span>
+        <ChevronDown className={`h-4 w-4 flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <ul id={panelId} className="mt-1 space-y-1 border-l border-dark-100 pl-3 ml-[26px]">
+          {children.map(({ label: childLabel, to, icon: childIcon, end }) => {
+            const ChildIcon = ikon[childIcon];
+            return (
+              <li key={to}>
+                <NavLink to={to} end={end} onClick={onPilihMenu} className={({ isActive }) => linkClass(isActive, true)}>
+                  {({ isActive }) => (
+                    <>
+                      <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-colors ${isActive ? 'bg-white text-primary' : 'bg-dark-100 text-dark-600'}`}>
+                        {ChildIcon && <ChildIcon className="h-3.5 w-3.5" />}
+                      </span>
+                      <span className="min-w-0 flex-1">{childLabel}</span>
+                    </>
+                  )}
+                </NavLink>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
 };
 
 const DashboardSidebar = ({ onPilihMenu }) => {
   const { spmbInternalEnabled } = useAppConfig();
-  const menu = spmbInternalEnabled ? adminMenu : adminMenu.filter(({ to }) => !SPMB_INTERNAL_MENU.has(to));
+  // Menu grup (Muat Konten) selalu ditampilkan; hanya menu datar yang disaring
+  // oleh feature flag SPMB.
+  const menu = spmbInternalEnabled
+    ? adminMenu
+    : adminMenu
+      .filter(({ to }) => !SPMB_INTERNAL_MENU.has(to))
+      .map((entry) => (entry.children
+        ? { ...entry, children: entry.children.filter(({ to }) => !SPMB_INTERNAL_MENU.has(to)) }
+        : entry));
+
   return (
   <div className="flex h-full flex-col bg-white">
     <Link to="/" onClick={onPilihMenu} aria-label="Kembali ke beranda SMK Telkom Purwokerto" className="flex items-center gap-3 rounded-lg px-6 py-6 transition-colors hover:bg-dark-50">
@@ -50,7 +130,11 @@ const DashboardSidebar = ({ onPilihMenu }) => {
     </p>
 
     <nav className="flex-1 space-y-1.5 overflow-y-auto px-4" aria-label="Menu admin">
-      {menu.map(({ label, to, icon, end }) => {
+      {menu.map((entry) => {
+        if (Array.isArray(entry.children)) {
+          return <MenuGroup key={entry.label} {...entry} onPilihMenu={onPilihMenu} />;
+        }
+        const { label, to, icon, end } = entry;
         const Ikon = ikon[icon];
         return (
           <NavLink
