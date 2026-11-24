@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import path from 'node:path';
 import { env } from './config/env.js';
+import { resolveTrustProxy } from './config/proxy.js';
 import { createLogger, errorHandler, notFoundHandler } from './middleware/error.js';
 import { requireCsrf, csrfToken } from './middleware/csrf.js';
 import { blockSpmbMutations } from './middleware/spmbGate.js';
@@ -26,6 +27,8 @@ import { wordpressAdminRouter } from './routes/wordpress.js';
 
 export const app = express();
 app.disable('x-powered-by');
+// Real visitor IP behind Cloudflare -> LiteSpeed; required for per-IP rate limits.
+app.set('trust proxy', resolveTrustProxy(process.env.TRUST_PROXY));
 // API JSON here is dynamic and partially session-dependent (admin vs guest).
 // Disable automatic ETag validators so Express never answers API GETs with an
 // empty 304, and let static upload routes keep their own cache validators.
