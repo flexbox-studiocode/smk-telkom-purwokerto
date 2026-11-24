@@ -119,8 +119,21 @@ model Berita {
   status    ContentStatus @default(draft)
   createdAt DateTime      @default(now()) @map("created_at")
   updatedAt DateTime      @updatedAt @map("updated_at")
+  slugAlias BeritaSlugAlias[]
   @@index([status, createdAt])
   @@map("berita")
+}
+
+// Pemetaan URL lama -> berita. Dipakai agar tautan berita yang sudah beredar
+// (sebelum slug diberi kode unik) tetap dapat dibuka dan dialihkan ke URL baru.
+model BeritaSlugAlias {
+  id        String   @id @default(uuid()) @db.Char(36)
+  beritaId  String   @map("berita_id") @db.Char(36)
+  slug      String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  berita    Berita   @relation(fields: [beritaId], references: [id], onDelete: Cascade)
+  @@index([beritaId])
+  @@map("berita_slug_alias")
 }
 
 model Pengumuman {

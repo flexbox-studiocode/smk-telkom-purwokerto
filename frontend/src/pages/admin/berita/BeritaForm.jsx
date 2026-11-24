@@ -1,6 +1,8 @@
 import RichTextEditor from '../../../components/dashboard/RichTextEditor';
 import { richTextToPlain } from '../../../utils/richText';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { RefreshCw } from 'lucide-react';
 import { slugify } from '../../../utils/slug';
 import ImageUploadField from '../../../components/dashboard/ImageUploadField';
 
@@ -19,8 +21,8 @@ const labelClass = 'mb-1.5 block text-xs font-semibold text-dark-700';
 
 const BeritaForm = ({ initialData, onSubmit, onCancel, submitting }) => {
   const [form, setForm] = useState(() => ({ ...emptyForm, ...initialData }));
-  const [slugEdited, setSlugEdited] = useState(Boolean(initialData));
   const [errors, setErrors] = useState({});
+  const [regenerate, setRegenerate] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [imageReady, setImageReady] = useState(true);
 
@@ -33,7 +35,7 @@ const BeritaForm = ({ initialData, onSubmit, onCancel, submitting }) => {
     setForm((current) => ({
       ...current,
       judul: value,
-      ...(slugEdited ? {} : { slug: slugify(value) }),
+      slug: slugify(value),
     }));
     setErrors((current) => ({ ...current, judul: '', slug: '' }));
   };
@@ -41,10 +43,8 @@ const BeritaForm = ({ initialData, onSubmit, onCancel, submitting }) => {
   const validate = () => {
     const nextErrors = {};
     if (!form.judul.trim()) nextErrors.judul = 'Judul wajib diisi.';
-    if (!form.slug.trim()) nextErrors.slug = 'Slug wajib diisi.';
-    else if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(form.slug.trim())) {
-      nextErrors.slug = 'Slug hanya boleh berisi huruf kecil, angka, dan tanda hubung.';
-    }
+    // Slug final ditentukan backend; form hanya memeriksa slug yang sudah ada saat edit.
+    if (initialData && !form.slug.trim()) nextErrors.slug = 'Slug wajib diisi.';
     if (!richTextToPlain(form.konten).trim()) nextErrors.konten = 'Konten wajib diisi.';
     if (!form.status) nextErrors.status = 'Status wajib dipilih.';
     return nextErrors;
@@ -60,15 +60,17 @@ const BeritaForm = ({ initialData, onSubmit, onCancel, submitting }) => {
     }
 
     setErrors({});
+    // `slug` sengaja tidak dikirim: backend membuat slug judul + kode unik saat
+    // create, dan mempertahankan slug lama saat edit kecuali regenerasi diminta.
     const submitError = await onSubmit({
       judul: form.judul.trim(),
-      slug: form.slug.trim(),
       ringkasan: form.ringkasan.trim() || null,
       konten: form.konten.trim(),
       gambar_url: form.gambar_url?.trim() || null,
       image_file: imageFile,
       penulis: form.penulis.trim() || null,
       status: form.status,
+      ...(regenerate ? { regenerateSlug: true } : {}),
     });
     if (submitError) setErrors({ submit: submitError });
   };
@@ -82,19 +84,31 @@ const BeritaForm = ({ initialData, onSubmit, onCancel, submitting }) => {
       </div>
 
       <div>
-        <label htmlFor="berita-slug" className={labelClass}>Slug *</label>
-        <input
-          id="berita-slug"
-          value={form.slug}
-          onChange={(event) => {
-            setSlugEdited(true);
-            updateField('slug', event.target.value);
-          }}
-          className={inputClass}
-          placeholder="judul-berita"
-          required
-        />
-        {errors.slug && <p className="mt-1 text-xs text-primary-700">{errors.slug}</p>}
+        <span className={labelClass}>Slug URL Berita</span>
+        {initialData ? (
+          <>
+            <input id="berita-slug" value={form.slug} readOnly aria-readonly="true" className={`${inputClass} bg-dark-50 font-mono text-dark-700`} />
+            <p className="mt-1 text-xs leading-relaxed text-dark-500">
+              Slug ini adalah URL publik berita dan tidak berubah saat judul diedit. Perubahan judul tidak mengubah tautan lama.
+              <Link to={`/berita/${form.slug}`} target="_blank" rel="noopener noreferrer" className="ml-1 font-semibold text-primary hover:underline">Lihat halaman</Link>
+            </p>
+            <button type="button" onClick={() => setRegenerate(true)} className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-dark-200 px-3 py-2 text-xs font-bold text-dark-600 transition-colors hover:border-primary hover:text-primary">
+              <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
+              Buat slug baru dari judul
+            </button>
+            {regenerate && <p role="status" className="mt-1 text-xs text-primary-700">Slug baru akan dibuat saat disimpan. Simpan pemetaan URL lama agar pengunjung tidak menemui 404.</p>}
+          </>
+        ) : (
+          <>
+            <div aria-live="polite">
+              <input id="berita-slug" value={`${form.slug || 'judul-berita'}-xxxxx`} readOnly aria-readonly="true" className={`${inputClass} bg-dark-50 font-mono text-dark-700`} />
+            </div>
+            <p className="mt-1 text-xs leading-relaxed text-dark-500">
+              Slug dibuat otomatis dari judul oleh server. <code className="font-mono text-dark-700">xxxxx</code> adalah kode angka unik
+              3–8 digit yang ditentukan saat berita disimpan agar setiap URL berita berbeda.
+            </p>
+          </>
+        )}
       </div>
 
       <div>

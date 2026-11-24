@@ -4,6 +4,7 @@
 import { prisma } from '../db.js';
 import { badRequest, conflict, notFound } from '../utils/http.js';
 import { beritaSchema, pengumumanSchema, prestasiSchema } from '../validators/content.js';
+import { createBeritaWithSlug } from '../services/beritaSlug.js';
 
 export async function getArchiveItems({ where = {}, orderBy = { createdAt: 'desc' }, skip = 0, take = 20, include } = {}) {
   const [items, total] = await prisma.$transaction([
@@ -198,7 +199,10 @@ export async function importToPublicContent(id, actorId, requestedStatus = 'draf
   if (!['draft', 'published'].includes(requestedStatus)) {
     throw badRequest('Status publikasi tidak valid. Gunakan draft atau published.');
   }
-  return prisma.$transaction(async (tx) => {
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    try {
+      // eslint-disable-next-line no-await-in-loop -- retry transaksi penuh pada collision slug
+      return await prisma.$transaction(async (tx) => {
     const item = await tx.wordPressArchiveItem.findUnique({ where: { id } });
     if (!item) throw notFound();
     if (item.importedAt && item.importedToId) {
@@ -233,8 +237,14 @@ export async function importToPublicContent(id, actorId, requestedStatus = 'draf
     };
 
     if (item.targetType === 'berita') {
-      const data = beritaSchema.parse({ ...base, penulis: null });
-      created = await tx.berita.create({ data });
+      // Slug arsip WordPress tidak dipakai langsung: URL berita wajib memakai
+      // judul adaptasi + kode unik 3-8 digit. Slug sumber tetap tersimpan di
+      // item.sourceSlug/metadata arsip dan tidak diubah.
+      const payload = beritaSchema.parse({ ...base, penulis: null });
+      delete payload.regenerateSlug;
+      // Hanya retry konflik slug. Transaksi dibatalkan pada error, sehingga
+      // item arsip tetap belum imported bila operasi ini tidak berhasil.
+      created = await createBeritaWithSlug(payload, { db: tx, retry: false });
     } else if (item.targetType === 'pengumuman') {
       const data = pengumumanSchema.parse({ ...base, tanggal: item.sourceDate });
       created = await tx.pengumuman.create({ data });
@@ -272,8 +282,14 @@ export async function importToPublicContent(id, actorId, requestedStatus = 'draf
       action: 'item_imported',
       changes: { targetType: item.targetType, publicId: created.id, slug: item.slug },
     });
-    return created;
-  });
+      return created;
+      });
+    } catch (error) {
+      if (error?.code === 'P2002' && (/slug/i.test(String(error?.meta?.target ?? '')) || !error?.meta?.target) && attempt < 4) continue;
+      throw error;
+    }
+  }
+  throw conflict('Slug unik bentrok berulang saat import berita. Coba lagi.', 'slug_generation_failed');
 }
 
 export async function recordRevision(prismaInstance, { itemId, actorId, action, changes }) {

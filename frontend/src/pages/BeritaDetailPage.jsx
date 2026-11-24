@@ -1,6 +1,6 @@
 import { useLanguage } from '../context/LanguageContext';
 import { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import DetailLayout from '../components/DetailLayout';
 import BeritaDetailKonten from '../components/berita/BeritaDetailKonten';
 import MainLayout from '../layouts/MainLayout';
@@ -11,6 +11,7 @@ import { toBeritaItem } from '../utils/publicContent';
 
 const BeritaDetail = ({ slug }) => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const fromGallery = searchParams.get('from') === 'galeri';
 
@@ -29,6 +30,11 @@ const BeritaDetail = ({ slug }) => {
     Promise.all([getBeritaBySlug(slug), getPublishedBerita().catch(() => [])])
       .then(([row, rows]) => {
         if (!active) return;
+        // URL lama (alias) dialihkan ke slug kanonis tanpa menambah riwayat.
+        if (row && row.canonicalSlug && row.canonicalSlug !== slug) {
+          navigate({ pathname: `/berita/${row.canonicalSlug}`, search: searchParams.toString() }, { replace: true });
+          return;
+        }
         const current = row ? toBeritaItem(row) : null;
         setItem(current);
         setRelated(rows.map(toBeritaItem).filter((entry) => entry.slug !== slug).slice(0, 3));
@@ -36,7 +42,7 @@ const BeritaDetail = ({ slug }) => {
       .catch(() => active && setError('Berita belum dapat dimuat. Silakan coba lagi nanti.'))
       .finally(() => active && setLoading(false));
     return () => { active = false; };
-  }, [slug, requestVersion]);
+  }, [slug, requestVersion, navigate, searchParams]);
 
   if (!loading && !error && !item) return <ErrorPage />;
 

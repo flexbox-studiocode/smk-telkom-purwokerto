@@ -6,7 +6,7 @@ const parse = (data) => ({ ...data, gambarUrl: data.gambar_url ?? data.gambarUrl
 
 export async function getBerita() { const response = await api.get('/api/berita?limit=100'); return response.data.map(normalize); }
 export async function getPublishedBerita() { return (await getBerita()).filter((row) => row.status === 'published'); }
-export async function getBeritaBySlug(slug) { const response = await api.get(`/api/berita/${encodeURIComponent(slug)}`); return normalize(response.data); }
+export async function getBeritaBySlug(slug) { const response = await api.get(`/api/berita/${encodeURIComponent(slug)}`); return { ...normalize(response.data), canonicalSlug: response.canonicalSlug ?? response.data.slug }; }
 export async function createBerita(data) { const payload = await withUploadedImage(data, 'gambar_url'); const response = await api.post('/api/berita', parse(payload)); return normalize(response.data); }
 export async function updateBerita(id, data) { const payload = await withUploadedImage(data, 'gambar_url'); const response = await api.patch(`/api/berita/${id}`, parse(payload)); return normalize(response.data); }
 export async function deleteBerita(id) { return api.delete(`/api/berita/${id}`); }

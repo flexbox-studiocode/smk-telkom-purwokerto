@@ -144,16 +144,64 @@ test('admin can create, read, update, and delete every content type', async () =
   }
 });
 
+test('berita dengan judul sama mendapat slug unik 3-8 digit yang berbeda', async () => {
+  const admin = makeClient();
+  await login(admin, ADMIN_EMAIL);
+  const payload = { ...resources[0].payload, judul: `${PREFIX}duplicate`, slug: `${PREFIX}manual-diabaikan` };
+  const created = [];
+  for (let i = 0; i < 3; i += 1) {
+    const res = await admin.request('/api/berita', { method: 'POST', body: JSON.stringify(payload) });
+    assert.equal(res.status, 201, JSON.stringify(res.body));
+    assert.match(res.body.data.slug, /^[a-z0-9]+(?:-[a-z0-9]+)*-[1-9][0-9]{2,7}$/);
+    created.push(res.body.data);
+  }
+  const slugs = new Set(created.map((row) => row.slug));
+  assert.equal(slugs.size, 3, 'setiap berita harus punya slug berbeda');
+  for (const row of created) {
+    await admin.request(`/api/berita/${row.id}`, { method: 'DELETE' });
+  }
+});
+
 test('duplicate slug is reported as a conflict', async () => {
   const admin = makeClient();
   await login(admin, ADMIN_EMAIL);
-  const payload = { ...resources[0].payload, slug: `${PREFIX}duplicate`, judul: `${PREFIX}duplicate` };
-  const first = await admin.request('/api/berita', { method: 'POST', body: JSON.stringify(payload) });
+  // Pengumuman masih memakai slug manual, jadi konflik unik tetap relevan di sana.
+  const payload = { ...resources[1].payload, slug: `${PREFIX}duplicate` };
+  const first = await admin.request('/api/pengumuman', { method: 'POST', body: JSON.stringify(payload) });
   assert.equal(first.status, 201);
-  const second = await admin.request('/api/berita', { method: 'POST', body: JSON.stringify({ ...payload, judul: `${PREFIX}duplicate-2` }) });
+  const second = await admin.request('/api/pengumuman', { method: 'POST', body: JSON.stringify({ ...payload, judul: `${PREFIX}duplicate-2` }) });
   assert.equal(second.status, 409);
   assert.equal(second.body.code, 'duplicate');
-  await admin.request(`/api/berita/${first.body.data.id}`, { method: 'DELETE' });
+  await admin.request(`/api/pengumuman/${first.body.data.id}`, { method: 'DELETE' });
+});
+
+test('slug manual berita diabaikan dan slug tetap stabil saat edit', async () => {
+  const admin = makeClient();
+  await login(admin, ADMIN_EMAIL);
+  const created = await admin.request('/api/berita', {
+    method: 'POST',
+    body: JSON.stringify({ ...resources[0].payload, judul: `${PREFIX}stabil`, slug: `${PREFIX}slug-palsu` }),
+  });
+  assert.equal(created.status, 201);
+  const { id, slug } = created.body.data;
+  assert.ok(!slug.includes('slug-palsu'), 'slug manual tidak dipakai backend');
+
+  const edited = await admin.request(`/api/berita/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ judul: `${PREFIX}stabil-judul-baru`, status: 'published' }),
+  });
+  assert.equal(edited.status, 200, JSON.stringify(edited.body));
+  assert.equal(edited.body.data.slug, slug, 'judul berubah tanpa mengubah slug lama');
+
+  const regenerated = await admin.request(`/api/berita/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ regenerateSlug: true }),
+  });
+  assert.equal(regenerated.status, 200, JSON.stringify(regenerated.body));
+  assert.match(regenerated.body.data.slug, /^[a-z0-9]+(?:-[a-z0-9]+)*-[1-9][0-9]{2,7}$/);
+  assert.notEqual(regenerated.body.data.slug, slug, 'regenerasi menghasilkan slug baru');
+
+  await admin.request(`/api/berita/${id}`, { method: 'DELETE' });
 });
 
 test('invalid payload is rejected with validation_error', async () => {

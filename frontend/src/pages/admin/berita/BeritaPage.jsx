@@ -9,7 +9,8 @@ import { createBerita, deleteBerita, getBerita, updateBerita } from '../../../se
 import { apiErrorMessage } from '../../../utils/apiError';
 
 const getErrorMessage = (error, fallback) => apiErrorMessage(error, fallback, {
-  duplicate: 'Slug tersebut sudah digunakan. Gunakan slug yang berbeda.',
+  duplicate: 'Slug tersebut sudah digunakan. Muat ulang dan coba lagi.',
+  slug_generation_failed: 'Slug unik gagal dibuat. Coba simpan lagi.',
   not_found: 'Berita sudah tidak tersedia. Muat ulang daftar berita.',
 });
 
@@ -70,11 +71,11 @@ const BeritaPage = () => {
     setSubmitting(true);
     try {
       if (modal.type === 'create') {
-        await createBerita(data);
-        setFeedback({ type: 'success', message: 'Berita berhasil ditambahkan.' });
+        const created = await createBerita(data);
+        setFeedback({ type: 'success', message: `Berita berhasil ditambahkan dengan URL /berita/${created.slug}.` });
       } else {
-        await updateBerita(modal.item.id, data);
-        setFeedback({ type: 'success', message: 'Berita berhasil diperbarui.' });
+        const updated = await updateBerita(modal.item.id, data);
+        setFeedback({ type: 'success', message: `Berita berhasil diperbarui. URL aktif: /berita/${updated.slug}.` });
       }
       setModal(null);
       await loadBerita();

@@ -290,7 +290,9 @@ test('import ke konten publik selalu draft dan idempoten', async () => {
   assert.equal(imported.status, 201, JSON.stringify(imported.body));
   const created = imported.body.data;
   assert.equal(created.status, 'draft');
-  assert.equal(created.slug, target.slug);
+  // Slug berita dari WordPress sekarang selalu judul + kode unik 3-8 digit.
+  assert.match(created.slug, /^[a-z0-9]+(?:-[a-z0-9]+)*-[1-9][0-9]{2,7}$/);
+  assert.ok(created.slug !== target.slug || !created.slug.endsWith(target.slug), 'slug final berbeda dari slug arsip');
 
   const again = await admin.request(`/api/admin/wordpress/archive/${target.id}/import`, { method: 'POST' });
   assert.equal(again.status, 409);
@@ -365,7 +367,8 @@ test('double request hanya membuat satu konten', async (t) => {
   ]);
   const statuses = results.map((result) => result.status).sort();
   assert.deepEqual(statuses, [201, 409]);
-  const rows = await prisma.berita.findMany({ where: { slug: source.slug } });
+  const createdId = results.find((result) => result.status === 201).body.data.id;
+  const rows = await prisma.berita.findMany({ where: { id: createdId } });
   assert.equal(rows.length, 1);
 });
 
