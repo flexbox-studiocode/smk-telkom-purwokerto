@@ -24,6 +24,8 @@
     "db:backup:verify": "node scripts/backup-verify.mjs",
     "db:restore": "node scripts/restore.mjs",
     "db:etl:dry-run": "node scripts/etl/migrate.mjs --dry-run",
+    "db:berita-slug:dry-run": "node scripts/migrate-berita-slugs.mjs",
+    "db:berita-slug:apply": "node scripts/migrate-berita-slugs.mjs --apply",
     "wp:analyze": "node wordpress-archive/src/analyze.mjs",
     "wp:review": "node wordpress-archive/src/export-review.mjs",
     "wp:dry-run": "node wordpress-archive/src/migrate.mjs --dry-run",

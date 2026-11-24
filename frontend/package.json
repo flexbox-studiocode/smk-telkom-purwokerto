@@ -8,6 +8,7 @@
     "build": "node scripts/validate-deployment-env.mjs && vite build && node scripts/prerender-seo.mjs",
     "build:ci": "vite build && node scripts/prerender-seo.mjs --offline",
     "seo:uji": "node scripts/uji-seo.mjs",
+    "berita:uji": "node scripts/uji-slug-berita.mjs && node scripts/uji-berita-galeri.mjs",
     "lint": "eslint .",
     "animasi:uji": "node scripts/uji-animasi.mjs",
     "hero:uji": "node scripts/uji-floating-hero-structure.mjs",

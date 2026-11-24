@@ -238,7 +238,9 @@ const WordPressArchiveItemModal = ({ itemId, onClose, onChanged }) => {
                 <input id="wp-edit-title" value={form.title} onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))} className={inputClass} />
               </div>
               <div className="grid min-w-0 gap-3 sm:grid-cols-2">
-                <div className="min-w-0"><label htmlFor="wp-edit-slug" className={labelClass}>Slug</label><input id="wp-edit-slug" value={form.slug} onChange={(event) => setForm((current) => ({ ...current, slug: event.target.value }))} className={inputClass} /></div>
+                <div className="min-w-0"><label htmlFor="wp-edit-slug" className={labelClass}>Slug arsip</label><input id="wp-edit-slug" value={form.slug} onChange={(event) => setForm((current) => ({ ...current, slug: event.target.value }))} className={inputClass} />
+                  <p className="mt-1 text-[11px] leading-snug text-dark-500">Slug internal arsip untuk penelusuran. Import ke Berita selalu membuat URL judul + kode unik 3–8 digit.</p>
+                </div>
                 <div className="min-w-0"><label htmlFor="wp-edit-target" className={labelClass}>Target konten</label><select id="wp-edit-target" value={form.targetType} onChange={(event) => setForm((current) => ({ ...current, targetType: event.target.value }))} className={inputClass}>{Object.entries(TARGET_LABEL).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></div>
               </div>
               <div><label htmlFor="wp-edit-summary" className={labelClass}>Ringkasan</label><textarea id="wp-edit-summary" value={form.summary} onChange={(event) => setForm((current) => ({ ...current, summary: event.target.value }))} rows={3} className={`${inputClass} resize-y`} /></div>
@@ -253,7 +255,8 @@ const WordPressArchiveItemModal = ({ itemId, onClose, onChanged }) => {
             <div className="min-w-0">
               <p className="text-sm leading-relaxed text-dark-700">Konten akan dibuat di <strong>{TARGET_LABEL[item.targetType]}</strong> dengan status <strong>DRAFT</strong>. Periksa daftar berikut sebelum melanjutkan.</p>
               <ul className="mt-3 space-y-2 break-words text-sm text-dark-600">
-                <li>Target: {TARGET_LABEL[item.targetType]}</li><li>Judul: {item.title}</li><li>Slug: {item.slug} (bentrok slug akan ditolak backend)</li>
+                <li>Target: {TARGET_LABEL[item.targetType]}</li><li>Judul: {item.title}</li><li>Slug arsip: {item.slug}</li>
+                <li>URL publik: judul + kode unik 3–8 digit dibuat otomatis oleh server saat import</li>
                 <li>Konten: {richTextToPlain(item.content).trim() ? 'terisi' : 'KOSONG — perbaiki dahulu'}</li>
                 <li>Gambar: {item.imageUrl ? 'sudah tersimpan' : item.metadata?.imageCandidateUrl ? 'kandidat tersedia (opsional diambil)' : 'tidak digunakan'}</li>
                 <li>Status import: {item.reviewStatus === 'imported' ? 'sudah pernah diimport' : 'belum pernah diimport'}</li>

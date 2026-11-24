@@ -20,6 +20,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run richtext:uji
+      - run: npm run berita:uji
       # Validate the production bundle without secrets or a live school database.
       # Vercel must keep using npm run build (strict public-data prerender).
       - run: npm run build:ci

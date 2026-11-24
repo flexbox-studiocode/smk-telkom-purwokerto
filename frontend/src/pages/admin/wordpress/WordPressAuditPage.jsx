@@ -114,7 +114,8 @@ function AuditEditor({ itemId }) {
         <label className={labelClass} htmlFor="audit-title">Judul</label>
         <input id="audit-title" className={inputClass} value={form.title} onChange={(e) => update('title', e.target.value)} disabled={imported} />
         <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <div><label className={labelClass} htmlFor="audit-slug">Slug</label><input id="audit-slug" className={inputClass} value={form.slug} onChange={(e) => update('slug', e.target.value)} disabled={imported} /></div>
+          <div><label className={labelClass} htmlFor="audit-slug">Slug arsip</label><input id="audit-slug" className={inputClass} value={form.slug} onChange={(e) => update('slug', e.target.value)} disabled={imported} />
+            <p className="mt-1 text-[11px] leading-snug text-dark-500">Hanya untuk arsip. URL Berita dibuat server: judul + kode unik 3–8 digit.</p></div>
           <div><label className={labelClass} htmlFor="audit-target">Jenis tujuan</label><select id="audit-target" className={inputClass} value={form.targetType} onChange={(e) => update('targetType', e.target.value)} disabled={imported}>{Object.entries(TARGET_LABEL).filter(([key]) => key !== 'needs_review').map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></div>
         </div>
         <label className={`mt-4 ${labelClass}`} htmlFor="audit-summary">Ringkasan</label>
