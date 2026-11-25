@@ -15,7 +15,7 @@ import { formatPublicDate } from '../utils/publicContent';
 // kategori apa pun: seluruh isinya datang dari objek `item` yang dicari lewat
 // slug di halaman detail masing-masing, jadi tidak ada teks yang dipaku di sini.
 // Penekanan yang berbeda tiap kategori dititipkan lewat `children`.
-const DetailLayout = ({ item, backTo, backLabel, children }) => {
+const DetailLayout = ({ item, backTo, backLabel, imageVariant = 'umum', children }) => {
   const { pathname } = useLocation();
   const { t, locale } = useLanguage();
   useEffect(() => {
@@ -60,6 +60,7 @@ const DetailLayout = ({ item, backTo, backLabel, children }) => {
             <TeacherPhoto teacher={item} alt={t(item.imageAlt)} className="mx-auto w-full max-w-sm" />
           ) : (
             <ContentImage
+              variant={imageVariant}
               src={item.image}
               alt={t(item.imageAlt || 'Foto ilustrasi; dokumentasi belum terverifikasi')}
               className="w-full object-cover object-top aspect-[16/9] transition-transform duration-700 hover:scale-105"

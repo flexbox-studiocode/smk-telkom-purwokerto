@@ -48,7 +48,7 @@ const ActivityCard = ({ item, onOpen }) => {
   return (
   <article data-activity={item.title} className="group flex h-full flex-col overflow-hidden [container-type:inline-size] rounded-2xl border border-dark-100 bg-white transition-colors duration-200 hover:border-primary">
     <div className="aspect-[2/1] flex-none overflow-hidden">
-      <ContentImage
+      <ContentImage variant="agenda"
         src={item.image}
         alt={t('Kegiatan {title}', { title: t(item.title) })}
         loading="lazy"
@@ -126,7 +126,7 @@ const ActivityDetailDialog = ({ item, onClose, returnFocusRef }) => {
       className="motion-dialog m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-2xl overflow-hidden rounded-3xl border border-dark-200 bg-white p-0 backdrop:bg-dark-900/70"
     >
       <div data-lenis-prevent className="relative max-h-[90dvh] overflow-y-auto overscroll-contain">
-        <ContentImage src={item.image} alt={t('Kegiatan {title}', { title: t(item.title) })} className={`aspect-[16/7] w-full object-cover ${item.imageClassName ?? ''}`} />
+        <ContentImage variant="agenda" src={item.image} alt={t('Kegiatan {title}', { title: t(item.title) })} className={`aspect-[16/7] w-full object-cover ${item.imageClassName ?? ''}`} />
         <button
           type="button"
           onClick={() => dialogRef.current?.close()}

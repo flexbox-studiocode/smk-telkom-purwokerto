@@ -53,7 +53,7 @@ const BeritaDetail = ({ slug }) => {
   );
 
   return (
-    <DetailLayout item={item} backTo={fromGallery ? '/galeri' : '/berita'} backLabel={fromGallery ? 'Galeri' : 'Berita'}>
+    <DetailLayout imageVariant="berita" item={item} backTo={fromGallery ? '/galeri' : '/berita'} backLabel={fromGallery ? 'Galeri' : 'Berita'}>
       <BeritaDetailKonten item={item} relatedItems={related} />
     </DetailLayout>
   );

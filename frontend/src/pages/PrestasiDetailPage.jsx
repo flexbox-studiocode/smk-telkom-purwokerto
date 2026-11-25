@@ -44,7 +44,7 @@ const PrestasiDetail = ({ slug }) => {
   );
 
   return (
-    <DetailLayout item={item} backTo="/prestasi" backLabel="Prestasi">
+    <DetailLayout imageVariant="prestasi" item={item} backTo="/prestasi" backLabel="Prestasi">
       <PrestasiDetailKonten item={item} relatedItems={related} />
     </DetailLayout>
   );

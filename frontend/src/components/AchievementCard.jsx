@@ -16,7 +16,7 @@ const AchievementCard = ({ title, category, image, imageAlt, slug, highlight = f
   >
     <article className="flex min-w-0 flex-1 flex-col">
       <div className="aspect-[16/9] shrink-0 overflow-hidden">
-        <ContentImage
+        <ContentImage variant="prestasi"
           src={image}
           alt={t(imageAlt || title)}
           loading="lazy"

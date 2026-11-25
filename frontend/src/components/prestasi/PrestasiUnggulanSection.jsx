@@ -29,7 +29,7 @@ const PrestasiUnggulanSection = ({ items = [] }) => {
         <div className="mt-7 grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,28%)]">
           {/* Prestasi terpilih */}
           <article data-featured-slug={featured.slug} className="grid min-w-0 items-start gap-5 md:grid-cols-[minmax(0,45fr)_minmax(0,55fr)]">
-            <ContentImage src={featured.image} alt={t(featured.title)} loading="lazy" decoding="async" className="aspect-[535/393] w-full rounded-xl bg-dark-50 object-contain" />
+            <ContentImage variant="prestasi" src={featured.image} alt={t(featured.title)} loading="lazy" decoding="async" className="aspect-[535/393] w-full rounded-xl bg-dark-50 object-contain" />
             <div className="min-w-0">
             <span className="inline-block rounded bg-primary-50 px-2.5 py-1 text-[clamp(.5625rem,.746cqw,.8125rem)] font-extrabold tracking-[.12em] text-primary">
               {t(featured.level)}

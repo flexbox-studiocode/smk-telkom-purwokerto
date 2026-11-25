@@ -97,7 +97,7 @@ const BeritaAgendaSection = ({ items = [], tampilkanLihatSemua = true }) => {
                 to={`/berita/${g.slug}?from=galeri`}
                 className="group block overflow-hidden rounded-lg"
               >
-                <ContentImage
+                <ContentImage variant="berita"
                   src={g.image}
                   alt={t(g.title)}
                   loading="lazy"

@@ -58,7 +58,7 @@ const PrestasiDetailKonten = ({ item, relatedItems = [] }) => {
         </a>
       )}
 
-      <GaleriFoto
+      <GaleriFoto variant="prestasi"
         items={item.galeri}
         title={t("Momen Juara")}
         description={t("Dokumentasi kegiatan dan hasil karya di balik prestasi ini.")}
@@ -75,7 +75,7 @@ const PrestasiDetailKonten = ({ item, relatedItems = [] }) => {
                 className="group flex flex-col overflow-hidden rounded-xl border border-dark-100 bg-white shadow-card transition-transform duration-300 hover:-translate-y-1"
               >
                 <div className="overflow-hidden">
-                  <ContentImage
+                  <ContentImage variant="prestasi"
                     src={p.image}
                     alt={t(p.title)}
                     loading="lazy"

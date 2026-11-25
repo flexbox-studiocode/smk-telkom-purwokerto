@@ -78,7 +78,7 @@ const PrestasiGaleriSection = ({ items = [], tampilkanLihatSemua = true }) => {
                 className="group flex flex-col overflow-hidden [container-type:inline-size] rounded-xl border border-dark-100 bg-white shadow-card transition-transform hover:-translate-y-1"
               >
                 <div className="relative overflow-hidden">
-                  <ContentImage
+                  <ContentImage variant="prestasi"
                     src={item.image}
                     alt={t(item.imageAlt || item.title)}
                     className="w-full aspect-[16/10] object-cover object-top transition-transform duration-500 group-hover:scale-110"

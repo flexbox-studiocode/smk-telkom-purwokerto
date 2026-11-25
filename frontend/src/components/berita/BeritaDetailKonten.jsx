@@ -28,7 +28,7 @@ const BeritaDetailKonten = ({ item, relatedItems = [] }) => {
         </blockquote>
       )}
 
-      <GaleriFoto
+      <GaleriFoto variant="berita"
         items={item.galeri}
         title={t("Galeri Liputan")}
         description={t("Dokumentasi foto dari kegiatan yang diberitakan.")}
@@ -45,7 +45,7 @@ const BeritaDetailKonten = ({ item, relatedItems = [] }) => {
                 className="group flex flex-col overflow-hidden rounded-xl border border-dark-100 bg-white shadow-card transition-transform duration-300 hover:-translate-y-1"
               >
                 <div className="overflow-hidden">
-                  <ContentImage
+                  <ContentImage variant="berita"
                     src={b.image}
                     alt={t(b.title)}
                     loading="lazy"

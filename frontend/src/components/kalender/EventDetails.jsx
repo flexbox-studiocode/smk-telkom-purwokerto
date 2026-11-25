@@ -1,4 +1,5 @@
 import RichContent from '../RichContent';
+import ContentImage from '../ContentImage';
 import { useLanguage } from '../../context/LanguageContext';
 import { eventTimeLabel } from '../../utils/events';
 import EventCategoryLabel from './EventCategoryLabel';
@@ -9,7 +10,7 @@ export default function EventDetails({ event, showStatus = false }) {
   const date = key => new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'UTC' }).format(dateFromKey(key));
   const safeLink = value => /^https?:\/\/\S+$/i.test(value || '');
   return <div className="space-y-4 text-sm text-dark-600">
-    {safeLink(event.image) && <img src={event.image} alt={event.title} className="max-h-72 w-full rounded-xl object-contain" />}
+    {safeLink(event.image) && <ContentImage variant="agenda" src={event.image} alt={event.title} className="max-h-72 min-h-40 w-full rounded-xl object-contain" />}
     {showStatus && <span className="inline-flex rounded-full bg-dark-100 px-3 py-1 text-xs font-semibold">{event.status === 'published' ? 'Published' : 'Draft'}</span>}
     {event.summary && <p className="rounded-lg bg-dark-50 p-3 leading-relaxed">{event.summary}</p>}
     <dl className="grid gap-3 sm:grid-cols-2">
