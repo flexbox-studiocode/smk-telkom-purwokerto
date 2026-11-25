@@ -21,7 +21,7 @@ const BkkAlumniSection = () => {
               className="rounded-xl border border-dark-100 bg-white p-4 transition-all hover:-translate-y-1 hover:border-primary"
             >
               <div className="flex items-center gap-3">
-                <ContentImage src={alum.image} alt={alum.name} loading="lazy" className="h-12 w-12 flex-shrink-0 rounded-full object-cover" />
+                <ContentImage variant="orang" src={alum.image} alt={alum.name} loading="lazy" className="h-12 w-12 flex-shrink-0 rounded-full object-cover" />
                 <figcaption className="min-w-0">
                   <p className="font-heading text-[16.63px] font-extrabold leading-[normal] tracking-[.05em] text-dark-900">{alum.name}</p>
                   <p className="mt-1 text-[13.86px] font-semibold leading-[normal] tracking-[.05em] text-dark-500">{t(alum.meta)}</p>

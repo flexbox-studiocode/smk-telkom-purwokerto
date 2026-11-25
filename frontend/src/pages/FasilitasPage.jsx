@@ -54,13 +54,13 @@ function FacilityPhotos({ item, t }) {
   }, [item.classroomGallery, item.photoKey, item.photos]);
   const photo = photos?.[index];
   return <>
-    <ContentImage src={photo?.src || item.image} srcSet={photo?.srcSet} sizes="(min-width: 704px) 624px, calc(100vw - 5rem)" alt={t('Foto fasilitas {name}', { name: t(item.photoKey) })} width={photo?.width} height={photo?.height} decoding="async" className="aspect-[4/3] w-full rounded-xl object-cover object-center" />
+    <ContentImage variant="fasilitas" src={photo?.src || item.image} srcSet={photo?.srcSet} sizes="(min-width: 704px) 624px, calc(100vw - 5rem)" alt={t('Foto fasilitas {name}', { name: t(item.photoKey) })} width={photo?.width} height={photo?.height} decoding="async" className="aspect-[4/3] w-full rounded-xl object-cover object-center" />
     {item.photoNote && <p className="mt-3 text-xs leading-relaxed text-dark-500">{t(item.photoNote, { name: t(item.photoKey) })}</p>}
     {photos && <>
       <p className="mt-3 text-xs text-dark-600" aria-live="polite">{t('Foto {current} dari {total}', { current: index + 1, total: photos.length })}</p>
       <div className="mt-2 flex gap-2 overflow-x-auto pb-2" role="group" aria-label={t('Foto fasilitas {name}', { name: t(item.name) })}>
         {photos.map((candidate, photoIndex) => <button key={candidate.source} type="button" aria-pressed={photoIndex === index} aria-label={t('Lihat foto {number} untuk {name}', { number: photoIndex + 1, name: t(item.name) })} onClick={() => setIndex(photoIndex)} className={`w-20 shrink-0 overflow-hidden rounded-lg border-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${photoIndex === index ? 'border-primary' : 'border-transparent hover:border-primary/50'}`}>
-          <ContentImage src={candidate.thumbnail} alt="" width="320" height="240" loading="lazy" decoding="async" className="aspect-[4/3] w-full object-cover" />
+          <ContentImage variant="fasilitas" src={candidate.thumbnail} alt="" width="320" height="240" loading="lazy" decoding="async" className="aspect-[4/3] w-full object-cover" />
         </button>)}
       </div>
     </>}
@@ -81,7 +81,7 @@ function FacilityCardPhoto({ item, t }) {
     return () => observer.disconnect();
   }, []);
   return <div ref={container} className="h-full w-full">
-    {visible && <ContentImage src={item.image} srcSet={item.photos[0].srcSet} sizes="(min-width: 1847px) 357px, (min-width: 1024px) 22vw, (min-width: 640px) 45vw, calc(100vw - 32px)" alt={t('Foto fasilitas {name}', { name: t(item.photoKey) })} width={item.photos[0].width} height={item.photos[0].height} loading="lazy" decoding="async" className="block h-full w-full object-cover object-center" />}
+    {visible && <ContentImage variant="fasilitas" src={item.image} srcSet={item.photos[0].srcSet} sizes="(min-width: 1847px) 357px, (min-width: 1024px) 22vw, (min-width: 640px) 45vw, calc(100vw - 32px)" alt={t('Foto fasilitas {name}', { name: t(item.photoKey) })} width={item.photos[0].width} height={item.photos[0].height} loading="lazy" decoding="async" className="block h-full w-full object-cover object-center" />}
   </div>;
 }
 

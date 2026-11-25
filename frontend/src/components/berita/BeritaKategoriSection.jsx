@@ -6,7 +6,6 @@ import { ArrowRight, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { kategoriBerita } from '../../data/dummyData';
 import ContentImage from '../ContentImage';
-import sekolahLogo from '../../assets/landing/beranda-navbar-logo.png';
 import SearchResultStatus from '../SearchResultStatus';
 
 const BeritaKategoriSection = ({ items = [], children }) => {
@@ -142,17 +141,11 @@ const BeritaKategoriSection = ({ items = [], children }) => {
                 className="group relative flex flex-col overflow-hidden rounded-2xl border border-dark-100 bg-white shadow-[0_1px_2px_rgba(17,24,39,0.04),0_4px_16px_-6px_rgba(17,24,39,0.08)] transition-[box-shadow,transform,border-color] duration-300 hover:-translate-y-0.5 hover:border-dark-200 hover:shadow-[0_2px_4px_rgba(17,24,39,0.04),0_12px_28px_-10px_rgba(17,24,39,0.16)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/60"
               >
                 <div className="relative overflow-hidden bg-dark-50">
-                  <ContentImage
+                  <ContentImage variant="berita"
                     src={n.image}
                     alt={t(n.title)}
                     className="aspect-[16/10] w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                     loading="lazy"
-                    placeholder={(
-                      <>
-                        <img src={sekolahLogo} alt="" aria-hidden="true" className="h-7 w-auto opacity-40 grayscale" />
-                        <span className="text-xs text-dark-400">{t('Foto belum tersedia')}</span>
-                      </>
-                    )}
                   />
                   <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold leading-none text-primary shadow-sm">
                     {t(n.kategori)}

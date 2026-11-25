@@ -52,7 +52,7 @@ const GaleriPage = () => {
               to={`/berita/${foto.slug}?from=galeri`}
               className="group flex h-full flex-col overflow-hidden rounded-2xl border border-dark-100 bg-white shadow-card transition-transform hover:-translate-y-1"
             >
-              <ContentImage
+              <ContentImage variant="berita"
                 src={foto.image}
                 alt={t(foto.title)}
                 loading="lazy"

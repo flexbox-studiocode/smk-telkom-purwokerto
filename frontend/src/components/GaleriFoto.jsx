@@ -2,6 +2,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import Reveal from './Reveal';
+import ContentImage from './ContentImage';
 
 // Jeda bertingkat untuk kartu foto. Ditulis sebagai kelas utuh (bukan dirakit
 // dari potongan string) supaya Tailwind ikut memindainya saat build.
@@ -10,7 +11,7 @@ const JEDA = ['', 'delay-100', 'delay-200', 'delay-300', 'delay-100', 'delay-200
 // Galeri foto dengan penampil layar penuh. Memakai elemen <dialog> bawaan
 // browser, bukan div buatan sendiri: tombol Esc, penguncian fokus, dan lapisan
 // latar sudah ditangani browser, jadi tidak perlu menulis ulang semuanya.
-const GaleriFoto = ({ items, title, description }) => {
+const GaleriFoto = ({ items, title, description, variant = 'umum' }) => {
   const { t } = useLanguage();
 
   const [aktif, setAktif] = useState(null);
@@ -46,7 +47,8 @@ const GaleriFoto = ({ items, title, description }) => {
               aria-label={t('Perbesar foto: {alt}', { alt: t(foto.alt) })}
               className="group block w-full overflow-hidden rounded-xl border border-dark-100 bg-dark-50"
             >
-              <img
+              <ContentImage
+                variant={variant}
                 src={foto.image}
                 alt={t(foto.alt)}
                 loading="lazy"

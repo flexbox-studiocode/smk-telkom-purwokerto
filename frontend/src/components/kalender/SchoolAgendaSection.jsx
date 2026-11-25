@@ -1,22 +1,22 @@
 import { richTextToPlain } from '../../utils/richText';
 import { useState } from 'react';
-import { ArrowRight, CalendarDays, ImageOff } from 'lucide-react';
+import { ArrowRight, CalendarDays } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { dateFromKey } from '../../utils/calendar';
 import { selectSchoolAgenda } from '../../utils/events';
 import Reveal from '../Reveal';
+import ContentImage from '../ContentImage';
 import Modal from '../dashboard/Modal';
 import EventCategoryLabel from './EventCategoryLabel';
 import EventDetails from './EventDetails';
 
 function AgendaImage({ event }) {
-  const { t } = useLanguage();
   const [failed, setFailed] = useState(false);
   const hasImage = /^https?:\/\/\S+$/i.test(event.image || '') && !failed;
   return <span className="block rounded-t-2xl bg-primary/50 px-2.5 pt-2.5">
     <span data-agenda-image className="flex aspect-[477/346] items-center justify-center overflow-hidden rounded-t-xl bg-primary-50">
       {hasImage ? <img src={event.image} alt="" loading="lazy" width="477" height="346" onError={() => setFailed(true)} className="h-full w-full object-cover" /> :
-        <span data-agenda-fallback className="flex flex-col items-center gap-3 px-4 text-center text-sm text-primary"><ImageOff className="size-10" aria-hidden="true" /><span>{t('Foto kegiatan belum tersedia')}</span></span>}
+        <span data-agenda-fallback className="block w-full self-stretch"><ContentImage variant="agenda" src="" className="h-full w-full" /></span>}
     </span>
   </span>;
 }

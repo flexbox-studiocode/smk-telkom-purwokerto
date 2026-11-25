@@ -44,7 +44,7 @@ const PengumumanDetail = ({ slug }) => {
   );
 
   return (
-    <DetailLayout item={item} backTo="/pengumuman" backLabel="Pengumuman">
+    <DetailLayout imageVariant="pengumuman" item={item} backTo="/pengumuman" backLabel="Pengumuman">
       <PengumumanDetailKonten item={item} relatedItems={related} />
     </DetailLayout>
   );

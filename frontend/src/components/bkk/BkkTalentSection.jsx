@@ -28,7 +28,7 @@ const BkkTalentSection = () => {
             <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {shown.map((item) => (
                 <article key={item.name} className="min-w-0 rounded-2xl border border-dark-100 bg-white p-5 shadow-card">
-                  <ContentImage src={item.image} alt={item.name} loading="lazy" className="h-16 w-16 rounded-full object-cover" />
+                  <ContentImage variant="orang" src={item.image} alt={item.name} loading="lazy" className="h-16 w-16 rounded-full object-cover" />
                   <h3 className="mt-4 break-words font-heading text-sm font-bold text-dark-900">{item.name}</h3>
                   <p className="mt-1 text-xs text-dark-500">{t(item.meta)}</p>
                   <p className="mt-2 break-words text-sm text-dark-700">{t(item.role)}</p>

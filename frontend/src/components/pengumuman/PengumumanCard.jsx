@@ -23,7 +23,7 @@ const PengumumanCard = ({ item }) => {
     <div className="grid grid-cols-[76px_minmax(0,1fr)] items-start gap-4 sm:grid-cols-[17.05%_minmax(0,1fr)] sm:gap-[6.08%]">
       {/* Foto berasal dari pengumuman ini, dengan fallback bersama jika kosong/rusak. */}
       <div className="overflow-hidden rounded-md bg-white p-1.5">
-        <ContentImage src={item.image} alt={t(item.title)} loading="lazy" className="aspect-[155/161] w-full rounded-sm object-cover" />
+        <ContentImage variant="pengumuman" src={item.image} alt={t(item.title)} loading="lazy" className="aspect-[155/161] w-full rounded-sm object-cover" />
       </div>
 
     <div className="flex min-w-0 flex-1 flex-col">
