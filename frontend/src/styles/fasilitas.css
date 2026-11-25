@@ -41,7 +41,7 @@
   letter-spacing: .05em;
 }
 [data-facility-card] h4 {
-  font-family: var(--font-jakarta);
+  font-family: var(--font-poppins);
   font-size: max(18px, calc(32 * var(--facility-type-unit)));
   line-height: normal;
 }
@@ -50,13 +50,13 @@
   font-size: max(18px, calc(30 * var(--facility-type-unit)));
 }
 [data-facility-card] p {
-  font-family: var(--font-jakarta);
+  font-family: var(--font-poppins);
   font-size: max(11px, calc(12 * var(--facility-type-unit)));
   font-weight: 500;
   line-height: normal;
 }
 [data-facility-card] button {
-  font-family: var(--font-jakarta);
+  font-family: var(--font-poppins);
   font-size: max(11px, calc(13 * var(--facility-type-unit)));
   font-weight: 400;
   line-height: normal;

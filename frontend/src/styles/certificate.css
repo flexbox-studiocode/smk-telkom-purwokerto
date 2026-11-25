@@ -1,5 +1,5 @@
 /* Figma 420:7184, adapted to the existing native dialog and typography patterns. */
-.certificate-modal { position: fixed; inset: 0; width: calc(100% - 2rem); max-width: 94.875rem; max-height: calc(100dvh - 2rem); margin: auto; padding: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; border: 3px solid var(--color-primary); border-radius: 1.25rem; background: white; color: #090909; box-shadow: var(--shadow-card); font-family: var(--font-jakarta); }
+.certificate-modal { position: fixed; inset: 0; width: calc(100% - 2rem); max-width: 94.875rem; max-height: calc(100dvh - 2rem); margin: auto; padding: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; border: 3px solid var(--color-primary); border-radius: 1.25rem; background: white; color: #090909; box-shadow: var(--shadow-card); font-family: var(--font-poppins); }
 .certificate-modal::backdrop { background: rgb(15 23 42 / .6); animation: motion-fade-in .18s ease-out both; }
 .certificate-modal[data-closing="true"]::backdrop { animation: certificate-backdrop-exit .18s ease-out both; }
 @keyframes certificate-backdrop-exit { from { opacity: 1; } to { opacity: 0; } }

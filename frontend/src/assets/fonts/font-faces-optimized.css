@@ -1,24 +1,6 @@
 /* Original OFL font files; variable faces load once for all their real weights. */
 
 @font-face {
-  font-family: 'Plus Jakarta Sans';
-  font-style: normal;
-  font-weight: 200 800;
-  font-display: swap;
-  src: url('./plusjakartasans-v12-LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko20yw.woff2') format('woff2');
-}
-
-/* Match Jakarta's measured x-height and vertical metrics while its file loads. */
-@font-face {
-  font-family: 'Jakarta Fallback';
-  src: local('Arial'), local('ArialMT');
-  size-adjust: 103.36%;
-  ascent-override: 100.42%;
-  descent-override: 21.48%;
-  line-gap-override: 0%;
-}
-
-@font-face {
   font-family: 'Inter';
   font-style: normal;
   font-weight: 100 900;

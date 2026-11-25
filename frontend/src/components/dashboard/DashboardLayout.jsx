@@ -11,7 +11,7 @@ const DashboardLayout = () => {
   const { pathname } = useLocation();
 
   return (
-    <div className="min-h-screen bg-white font-sans [--font-sans:var(--font-jakarta)] [--font-heading:var(--font-jakarta)] lg:flex">
+    <div className="min-h-screen bg-white font-sans [--font-sans:var(--font-poppins)] [--font-heading:var(--font-poppins)] lg:flex">
       {/* Sidebar layar lebar */}
       <aside className="hidden w-72 flex-shrink-0 border-r border-dark-100 lg:sticky lg:top-0 lg:block lg:h-screen">
         <DashboardSidebar />

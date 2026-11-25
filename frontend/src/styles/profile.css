@@ -72,8 +72,8 @@
 /* Profile frame 415:6487: reuse global containers, fonts and color tokens. */
 .profile-section { background: white; padding-block: 1.5rem; }
 .profile-container { width: 100%; max-width: 80rem; margin-inline: auto; padding-inline: 1rem; }
-.profile-section-heading { margin-bottom: 1.25rem; font-family: var(--font-jakarta); font-size: clamp(1.5rem, 2.755cqw, 3rem); font-weight: 700; line-height: 1.25; color: var(--color-primary); }
-.profile-about { scroll-margin-top: 6rem; font-family: var(--font-jakarta); }
+.profile-section-heading { margin-bottom: 1.25rem; font-family: var(--font-poppins); font-size: clamp(1.5rem, 2.755cqw, 3rem); font-weight: 700; line-height: 1.25; color: var(--color-primary); }
+.profile-about { scroll-margin-top: 6rem; font-family: var(--font-poppins); }
 .profile-about-panel { container-type: inline-size; display: grid; align-items: center; gap: 2rem; padding: 1.5rem; border: 2px solid var(--color-primary); border-radius: 1.25rem; box-shadow: var(--shadow-card); }
 .profile-about-copy { min-width: 0; }
 .profile-about-copy h2 { white-space: pre-line; font-size: clamp(1.5rem, 2.3cqw, 2.5rem); font-weight: 800; line-height: 1.3; color: var(--color-primary); }
@@ -85,7 +85,7 @@
 .profile-video > p { margin-top: .75rem; font-size: clamp(.875rem, 2.2cqw, 2.625rem); font-weight: 800; line-height: 1.3; text-align: center; color: white; }
 .profile-video-logo { position: absolute; top: .5rem; right: .5rem; width: 3rem; aspect-ratio: 1; padding: .25rem; border-radius: .5rem; background: var(--color-primary); pointer-events: none; }
 .profile-video-logo > span { display: block; width: 100%; height: 100%; background: white; mask-size: contain; mask-position: center; mask-repeat: no-repeat; }
-.profile-principles-section, .profile-history, .profile-pathway { --profile-red: #cd0b20; font-family: var(--font-jakarta); }
+.profile-principles-section, .profile-history, .profile-pathway { --profile-red: #cd0b20; font-family: var(--font-poppins); }
 .profile-principles-section > .profile-container, .profile-history > .profile-container, .profile-pathway > .profile-container { container-type: inline-size; }
 .profile-principles { display: grid; gap: 2.5rem; }
 .profile-vision-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }

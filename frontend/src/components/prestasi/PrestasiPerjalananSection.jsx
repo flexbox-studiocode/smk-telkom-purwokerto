@@ -34,7 +34,7 @@ const PrestasiPerjalananSection = ({ items = hallOfFame.items }) => {
   );
 
   return (
-    <section id="hall-of-fame" aria-labelledby="hall-of-fame-title" className="relative isolate overflow-hidden bg-[#cd091d] py-6 font-[family-name:'Plus_Jakarta_Sans',var(--font-sans)] [container-type:inline-size] lg:pb-[1.6811cqw] lg:pt-[1.3015cqw]">
+    <section id="hall-of-fame" aria-labelledby="hall-of-fame-title" className="relative isolate overflow-hidden bg-[#cd091d] py-6 font-[family-name:var(--font-poppins)] [container-type:inline-size] lg:pb-[1.6811cqw] lg:pt-[1.3015cqw]">
       <PrestasiHallDecoration />
       <h2 id="hall-of-fame-title" className="relative flex items-center justify-center gap-2 text-2xl font-extrabold leading-tight text-white lg:gap-[0.4338cqw] lg:text-[2.603cqw]">
         <span aria-hidden="true" className="relative block size-6 lg:size-[2.17cqw]">

@@ -7,7 +7,7 @@ import { videoHighlight } from '../../data/dummyData';
 const PrestasiDukunganSection = () => {
   const { t, language } = useLanguage();
   return (
-    <section aria-labelledby="prestasi-video-title" className="bg-white pb-6 pt-8 font-[family-name:'Plus_Jakarta_Sans',var(--font-sans)] lg:pb-[1.5184vw] lg:pt-[2.2777vw]">
+    <section aria-labelledby="prestasi-video-title" className="bg-white pb-6 pt-8 font-[family-name:var(--font-poppins)] lg:pb-[1.5184vw] lg:pt-[2.2777vw]">
       <div className="mx-auto grid w-[calc(100%-2rem)] max-w-[1769px] grid-cols-1 items-end gap-6 sm:w-[calc(100%-3rem)] lg:w-[91.76%] lg:grid-cols-[41.017%_1fr] lg:gap-[3.1726%]">
         <figure className="overflow-hidden rounded-[20px] lg:rounded-[1.0846vw]">
           <img src={language === 'en' ? partnersCardEn : partnersCard} alt={t('Didukung & Diakui Oleh. Bersama Mitra Terbaik. Didukung oleh berbagai institusi dan perusahaan ternama untuk membuka lebih banyak peluang bagi masa depan siswa. Huawei, Astra, Microsoft, Cisco, AWS, Dicoding, dan Telkom Indonesia.')} width="786" height="506" loading="lazy" className="aspect-[694/456] w-full object-cover" />

@@ -3,7 +3,6 @@
 @import './styles/typography.css';
 
 @theme {
-  --font-jakarta: 'Plus Jakarta Sans', 'Jakarta Fallback', Arial, sans-serif;
   --font-poppins: 'Poppins', Arial, sans-serif;
   --font-inter: 'Inter', Arial, sans-serif;
   --font-main: 'Inter', 'Poppins', system-ui, sans-serif;
