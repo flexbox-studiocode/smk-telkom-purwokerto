@@ -1,8 +1,8 @@
 # Local Google Fonts
 
-Inter v20 (300–900), Poppins v24 (300–900), Plus Jakarta Sans v12 (400–800).
+Inter v20 (300–900) and Poppins v24 (300–900). Plus Jakarta Sans v12 files stay on disk but are no longer registered or used; Poppins is the public-site font.
 
-The active Latin stylesheet registers the original Jakarta variable font as 200–800 and Inter as 100–900, matching their actual fvar axes. Poppins retains its original static files at 300/400/500/600/700/800. One 27,348-byte Jakarta file is preloaded; other fonts load when used. Its local Arial fallback uses measured metrics: 103.36% size adjustment, 100.42% ascent, 21.48% descent, and zero line gap. Original OFL licenses remain alongside the files.
+The active Latin stylesheet registers Inter as 100–900, matching its fvar axes, and Poppins with its original static files at 300/400/500/600/700/800. One Poppins 500 Latin file is preloaded; other fonts load when used. Original OFL licenses remain alongside the files.
 
 Downloaded from the Google Fonts CSS2 response used by the application on 2026-10-03. Original WOFF2 bytes remain unchanged. The active `font-faces-optimized.css` declares the verified variable ranges and static weights; `font-faces.css` preserves the complete original subset catalog.
 
@@ -10,6 +10,6 @@ The four program detail frames use Arimo for their overview. The original Arimo 
 
 The NextTel game uses Pixelify Sans v3 (Latin, variable 400–700) from `fonts.gstatic.com/s/pixelifysans/v3/`. Its font face is declared in `src/styles/nexttel-game.css`, so it only loads on the NextTel page, and it uses the [Pixelify Sans license](Pixelify-OFL.txt).
 
-`sources.json` records original gstatic URLs and SHA-256 hashes. Each family retains its SIL Open Font License in the adjacent `*-OFL.txt`. Binary font files are served separately by Vite: unused subsets and weights are not embedded into the critical stylesheet. The shared HTML entry preloads only the canonical Jakarta Latin face.
+`sources.json` records original gstatic URLs and SHA-256 hashes. Each family retains its SIL Open Font License in the adjacent `*-OFL.txt`. Binary font files are served separately by Vite: unused subsets and weights are not embedded into the critical stylesheet. The shared HTML entry preloads only the Poppins 500 Latin face.
 
 These files are intentional runtime assets, including the subsets that are not requested by the current Indonesian/English homepage. Preserve them when cleaning assets; removing them changes the original glyph coverage.

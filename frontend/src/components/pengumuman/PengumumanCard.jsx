@@ -17,7 +17,7 @@ const PengumumanCard = ({ item }) => {
   const { t, locale } = useLanguage();
 
   return (
-  <article className="relative isolate overflow-hidden rounded-xl bg-[#ce2a45] p-4 font-[family-name:var(--font-jakarta)] sm:px-[2.91%] sm:pt-[3.56%] sm:pb-[5.91%]">
+  <article className="relative isolate overflow-hidden rounded-xl bg-[#ce2a45] p-4 font-[family-name:var(--font-poppins)] sm:px-[2.91%] sm:pt-[3.56%] sm:pb-[5.91%]">
     {/* Motif diekspor dari lapisan gambar Figma; tetap mengikuti ukuran kartu. */}
     <img src={cardPattern} alt="" aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover" />
     <div className="grid grid-cols-[76px_minmax(0,1fr)] items-start gap-4 sm:grid-cols-[17.05%_minmax(0,1fr)] sm:gap-[6.08%]">

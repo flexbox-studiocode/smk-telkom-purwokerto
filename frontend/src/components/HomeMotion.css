@@ -3,7 +3,7 @@
   display: block;
   width: max(100%, 900px);
   height: auto;
-  font-family: var(--font-jakarta);
+  font-family: var(--font-poppins);
   font-size: 48px;
   font-weight: 800;
   fill: white;
@@ -13,7 +13,7 @@
 .home-innovation { padding-block: clamp(1.5rem, 4vw, 4rem) clamp(3rem, 6vw, 6rem); }
 .home-innovation > div { container-type: inline-size; }
 .home-innovation-title {
-  font-family: var(--font-jakarta);
+  font-family: var(--font-poppins);
   font-weight: 600;
   font-size: var(--text-figma-display);
   line-height: normal;

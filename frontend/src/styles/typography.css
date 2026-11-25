@@ -1,14 +1,14 @@
 .public-site {
-  --font-sans: var(--font-jakarta);
-  --font-heading: var(--font-jakarta);
-  font-family: var(--font-jakarta);
+  --font-sans: var(--font-poppins);
+  --font-heading: var(--font-poppins);
+  font-family: var(--font-poppins);
 }
 
 .site-navbar > nav, .site-footer .footer-content, .footer-bottom-bar > div { container-type: inline-size; }
 .site-navbar .navbar-link { font-size: clamp(.8125rem, 1.04cqw, .9375rem); font-weight: 600; line-height: normal; letter-spacing: .03em; }
 .site-navbar .navbar-cta { font-size: clamp(.875rem, 1.378cqw, 1.5rem); font-weight: 600; line-height: normal; letter-spacing: var(--tracking-figma-copy); }
 .site-navbar .language-toggle { font-size: clamp(.75rem, 1.378cqw, 1.5rem); font-weight: 500; line-height: normal; letter-spacing: .01em; }
-.site-navbar .navbar-dropdown-enter a { font-family: var(--font-jakarta); }
+.site-navbar .navbar-dropdown-enter a { font-family: var(--font-poppins); }
 .site-navbar #mobile-nav :is(a, button) { font-weight: 600; line-height: normal; letter-spacing: var(--tracking-figma-copy); }
 
 /* Keep longer English labels inside the existing desktop navigation. */
@@ -22,8 +22,8 @@
   .site-navbar .navbar-cta { letter-spacing: var(--tracking-figma-label); }
 }
 
-.site-footer .footer-brand-name { font-family: var(--font-jakarta); font-size: clamp(1rem, 2.172cqw, 2.25rem); font-weight: 800; line-height: normal; letter-spacing: var(--tracking-figma-heading); }
-.site-footer .footer-link-heading { font-family: var(--font-jakarta); font-size: clamp(.875rem, 1.207cqw, 1.25rem); font-weight: 800; line-height: normal; }
+.site-footer .footer-brand-name { font-family: var(--font-poppins); font-size: clamp(1rem, 2.172cqw, 2.25rem); font-weight: 800; line-height: normal; letter-spacing: var(--tracking-figma-heading); }
+.site-footer .footer-link-heading { font-family: var(--font-poppins); font-size: clamp(.875rem, 1.207cqw, 1.25rem); font-weight: 800; line-height: normal; }
 .site-footer .footer-link-list, .site-footer .footer-link-list a, .site-footer .footer-contact-list, .site-footer .footer-tagline { font-size: clamp(.75rem, .966cqw, 1rem); font-weight: 500; line-height: 1.5625; }
 .footer-bottom-bar > div > * { font-size: clamp(.6875rem, .966cqw, 1rem); font-weight: 400; line-height: normal; }
 
