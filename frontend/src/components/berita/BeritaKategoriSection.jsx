@@ -2,10 +2,11 @@ import { useSiteSettings } from '../../context/SiteSettingsContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatPublicDate } from '../../utils/publicContent';
 import { useMemo } from 'react';
-import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { kategoriBerita } from '../../data/dummyData';
 import ContentImage from '../ContentImage';
+import sekolahLogo from '../../assets/landing/beranda-navbar-logo.png';
 import SearchResultStatus from '../SearchResultStatus';
 
 const BeritaKategoriSection = ({ items = [], children }) => {
@@ -73,90 +74,108 @@ const BeritaKategoriSection = ({ items = [], children }) => {
 
   return (
     <>
-    <section id="kategori-berita" className="bg-white py-8 lg:py-12">
+    <section id="kategori-berita" className="bg-white py-8 lg:py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="font-heading text-xl sm:text-2xl font-extrabold text-dark-900">
-          {t(kategoriBerita.title)}
-        </h2>
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+          <h2 className="font-heading text-xl font-bold tracking-tight text-dark-900 sm:text-2xl">
+            {t(kategoriBerita.title)}
+          </h2>
 
-        {/* Chip kategori + pencarian + urutan */}
-        <div className="mt-5 flex flex-wrap items-center gap-2">
-          {kategoriChips.map((c) => (
-            <button
-              key={c}
-              type="button"
-              onClick={() => applyFilter('kategori', c, 'Semua')}
-              aria-pressed={chip === c}
-              className={`rounded-full border px-3.5 py-1.5 text-[11px] font-semibold transition-colors ${
-                chip === c
-                  ? 'border-primary bg-primary text-white'
-                  : 'border-dark-200 bg-white text-dark-600 hover:border-primary hover:text-primary'
-              }`}
-            >
-              {t(c)}
-            </button>
-          ))}
+          {/* Pencarian + urutan */}
+          <div className="flex w-full items-center gap-2 sm:w-auto">
+            <label className="relative min-w-0 flex-1 sm:flex-none">
+              <span className="sr-only">{t(kategoriBerita.searchPlaceholder)}</span>
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-dark-400" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => applyFilter('q', e.target.value)}
+                placeholder={t(kategoriBerita.searchPlaceholder)}
+                className="w-full rounded-full border border-dark-200 bg-white py-2 pl-8 pr-3 text-xs text-dark-700 outline-none transition-colors placeholder:text-dark-400 focus:border-primary sm:w-48"
+              />
+            </label>
 
-          <label className="relative ml-auto">
-            <span className="sr-only">{t(kategoriBerita.searchPlaceholder)}</span>
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-dark-400" />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => applyFilter('q', e.target.value)}
-              placeholder={t(kategoriBerita.searchPlaceholder)}
-              className="w-40 rounded-full border border-dark-200 py-1.5 pl-8 pr-3 text-[11px] font-medium tracking-figma-copy text-dark-700 outline-none transition-colors placeholder:text-dark-400 focus:border-primary"
-            />
-          </label>
-
-          <label>
-            <span className="sr-only">{t("Urutkan berita")}</span>
-            <select
-              value={sort}
-              onChange={(e) => applyFilter('sort', e.target.value, 'terbaru')}
-              className="rounded-full border border-dark-200 px-3 py-1.5 text-[11px] font-medium tracking-figma-copy text-dark-600 outline-none transition-colors focus:border-primary"
-            >
-              {kategoriBerita.sortOptions.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {t(o.label)}
-                </option>
-              ))}
-            </select>
-          </label>
+            <label>
+              <span className="sr-only">{t("Urutkan berita")}</span>
+              <select
+                value={sort}
+                onChange={(e) => applyFilter('sort', e.target.value, 'terbaru')}
+                className="rounded-full border border-dark-200 bg-white px-3 py-2 text-xs text-dark-600 outline-none transition-colors focus:border-primary"
+              >
+                {kategoriBerita.sortOptions.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {t(o.label)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
         </div>
+
+        {/* Chip kategori: hanya muncul bila ada lebih dari satu kategori nyata */}
+        {kategoriChips.length > 0 && (
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            {kategoriChips.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => applyFilter('kategori', c, 'Semua')}
+                aria-pressed={chip === c}
+                className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+                  chip === c
+                    ? 'border-primary bg-primary text-white'
+                    : 'border-dark-200 bg-white text-dark-600 hover:border-primary hover:text-primary'
+                }`}
+              >
+                {t(c)}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Kartu berita */}
         {shown.length > 0 ? (
-          <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {shown.map((n) => (
               <article
-                key={n.title}
-                className="group flex flex-col overflow-hidden rounded-xl border border-dark-100 bg-white shadow-card transition-transform hover:-translate-y-1"
+                key={n.slug || n.title}
+                className="group relative flex flex-col overflow-hidden rounded-2xl border border-dark-100 bg-white shadow-[0_1px_2px_rgba(17,24,39,0.04),0_4px_16px_-6px_rgba(17,24,39,0.08)] transition-[box-shadow,transform,border-color] duration-300 hover:-translate-y-0.5 hover:border-dark-200 hover:shadow-[0_2px_4px_rgba(17,24,39,0.04),0_12px_28px_-10px_rgba(17,24,39,0.16)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/60"
               >
-                <div className="relative overflow-hidden">
+                <div className="relative overflow-hidden bg-dark-50">
                   <ContentImage
                     src={n.image}
                     alt={t(n.title)}
-                    className="w-full aspect-[16/10] object-cover object-top transition-transform duration-500 group-hover:scale-110"
+                    className="aspect-[16/10] w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                     loading="lazy"
+                    placeholder={(
+                      <>
+                        <img src={sekolahLogo} alt="" aria-hidden="true" className="h-7 w-auto opacity-40 grayscale" />
+                        <span className="text-xs text-dark-400">{t('Foto belum tersedia')}</span>
+                      </>
+                    )}
                   />
-                  <span className="absolute bottom-1.5 left-1.5 rounded bg-primary px-1.5 py-0.5 text-[11px] font-semibold tracking-figma-copy text-white">
+                  <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold leading-none text-primary shadow-sm">
                     {t(n.kategori)}
                   </span>
                 </div>
 
-                <div className="flex flex-1 flex-col px-3 py-3">
-                  <h3 className="font-heading text-[11px] font-bold leading-snug text-dark-900">
+                <div className="flex flex-1 flex-col p-4 sm:p-5">
+                  <p className="flex items-center gap-1.5 text-xs text-dark-500">
+                    <time dateTime={n.iso} className="shrink-0">{formatPublicDate(n.iso, { month: 'short' }, locale)}</time>
+                    <span aria-hidden="true" className="text-dark-300 lg:max-xl:hidden">&bull;</span>
+                    <span className="truncate lg:max-xl:hidden">{t(n.author)}</span>
+                  </p>
+                  <h3 className="mt-2 line-clamp-3 font-heading text-base font-semibold leading-snug text-dark-900 transition-colors group-hover:text-primary">
                     {t(n.title)}
                   </h3>
-                  <p className="mt-1.5 text-xs font-medium tracking-figma-copy text-dark-500">
-                    {formatPublicDate(n.iso, {}, locale)} &nbsp;·&nbsp; {t(n.author)}
-                  </p>
-                  <p className="mt-1.5 text-[11px] font-medium leading-[normal] tracking-figma-copy text-dark-500">{t(n.excerpt)}</p>
+                  <p className="mt-2 line-clamp-3 text-[13px] leading-relaxed text-dark-600">{t(n.excerpt)}</p>
                   <Link
                     to={`/berita/${n.slug}`}
-                    className="mt-auto pt-3 text-[11px] font-extrabold tracking-figma-copy text-primary hover:underline"
-                  >{t("Baca Selengkapnya")}</Link>
+                    className="mt-auto inline-flex items-center gap-1.5 pt-4 text-[13px] font-semibold text-primary after:absolute after:inset-0 after:content-[''] focus-visible:outline-none"
+                  >
+                    {t("Baca Selengkapnya")}
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
+                  </Link>
                 </div>
               </article>
             ))}
@@ -181,7 +200,7 @@ const BeritaKategoriSection = ({ items = [], children }) => {
             type="button"
             onClick={() => setShownCount(shownCount + perPage)}
             disabled={!hasMore}
-            className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-white px-4 py-2 text-[11px] font-extrabold tracking-figma-copy text-primary transition-colors hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-primary"
+            className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-white px-5 py-2 text-xs font-semibold text-primary transition-colors hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-primary"
           >
             {t(kategoriBerita.ctaText)}
           </button>
