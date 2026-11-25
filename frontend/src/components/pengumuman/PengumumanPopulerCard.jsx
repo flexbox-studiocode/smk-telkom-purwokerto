@@ -19,8 +19,8 @@ const PengumumanPopulerCard = ({ items = [], tampilkanLihatSemua = true }) => {
   const { t, locale } = useLanguage();
   return (
   <div className="rounded-xl bg-white p-4 font-[family-name:var(--font-poppins)] shadow-card">
-    <div className="flex items-center justify-between gap-3">
-      <h2 className="text-[16.63px] font-extrabold leading-[normal] tracking-[.05em] text-dark-900">{t("Pengumuman Terbaru")}</h2>
+    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+      <h2 className="grow basis-[min-content] text-[16.63px] font-extrabold leading-[normal] tracking-[.05em] text-dark-900">{t("Pengumuman Terbaru")}</h2>
       {tampilkanLihatSemua && (
         <Link
           to="/pengumuman/populer"
