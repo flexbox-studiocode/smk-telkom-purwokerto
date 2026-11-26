@@ -12,7 +12,7 @@ export async function loadEdgeHandler(feature, env) {
     const file = path.resolve(import.meta.dirname, '../../..', 'supabase/functions', feature, 'index.ts');
     let source = fs.readFileSync(file, 'utf8');
     source = source.replace(/from\s+(['"])(\.[^'"]+)\1/g, (_, quote, spec) => `from ${quote}${pathToFileURL(path.resolve(path.dirname(file), spec)).href}${quote}`);
-    source = 'const Deno = globalThis.Deno;\n' + stripTypeScriptTypes(source, { mode: 'transform', sourceMap: false });
+    source = 'const Deno = globalThis.Deno;\n' + stripTypeScriptTypes(source);
     await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}#${crypto.randomUUID()}`);
     return handler;
   } finally { globalThis.Deno = previous; }
