@@ -112,9 +112,11 @@ aiRouter.post('/stela/session', nexaSessionLimit, asyncHandler(async (req, res) 
 
 aiRouter.post('/stela', wajibSesiNexa, stelaLimit, asyncHandler(async (req, res) => {
   const { pertanyaan } = z.object({ pertanyaan: z.string().trim().min(1).max(500) }).parse(req.body);
-  if (process.env.STELA_AKTIF === 'false') return res.status(503).json({ error: 'NEXA sedang nonaktif.', code: 'config' });
+  // Sumber kebenaran tunggal adalah resolveAiConfig: baris database Admin menang,
+  // dan STELA_AKTIF hanya berlaku pada fallback environment (tanpa baris database).
   const config = await resolveAiConfig('stela');
-  if (config?.disabled) return res.status(503).json({ error: 'NEXA sedang nonaktif.', code: 'config' });
+  if (config?.disabled || config?.enabled === false) return res.status(503).json({ error: 'NEXA sedang nonaktif.', code: 'config' });
+  if (config?.error) return res.status(503).json({ error: 'Konfigurasi NEXA tidak dapat dibaca. Hubungi administrator.', code: 'config' });
   if (!config?.apiKey) return res.status(503).json({ error: 'NEXA belum dikonfigurasi oleh administrator.', code: 'config' });
   if (!(await reserveQuota('stela', DAILY_LIMITS.stela))) return res.status(429).json({ error: 'Kuota NEXA hari ini sudah habis.', code: 'quota_exhausted' });
 
