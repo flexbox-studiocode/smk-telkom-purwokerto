@@ -83,6 +83,22 @@ after(async () => {
   await closeDatabase();
 });
 
+test('GET mengembalikan objek status kosong untuk layanan yang belum dikonfigurasi', async () => {
+  await prisma.aiProviderConfig.deleteMany();
+  invalidateAiConfigCache();
+  const admin = await loginAdmin();
+  const res = await admin.request('/api/admin/ai-settings');
+  assert.equal(res.status, 200);
+  assert.equal(res.body.data.length, 2);
+  for (const item of res.body.data) {
+    assert.ok(['stela', 'nexttel'].includes(item.service), 'setiap entri punya service');
+    assert.equal(item.configured, false);
+    assert.equal(item.enabled, false);
+    assert.equal(item.encryptedApiKey, undefined, 'tidak ada ciphertext');
+    assert.equal(item.provider, null);
+  }
+});
+
 test('konfigurasi pertama tanpa API key ditolak dan tidak membuat baris', async () => {
   await prisma.aiProviderConfig.deleteMany();
   invalidateAiConfigCache();
