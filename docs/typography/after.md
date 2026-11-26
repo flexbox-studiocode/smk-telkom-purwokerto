@@ -1,5 +1,7 @@
 # Laporan tipografi Figma
 
+> Catatan 25 November 2026: Plus Jakarta Sans dan token `--font-jakarta` dihapus pada PR #196. Teks yang memakainya kini dirender dengan Poppins. Konfigurasi aktif ada di [README.md](README.md#current-configuration-25-november-2026). Laporan di bawah ini adalah catatan historis.
+
 Audit MCP mencatat 33 frame berteks dan 185 kombinasi gaya. Nilai sumber dan audit awal per komponen ada di [inventaris Figma](figma-all-frame-styles.json), [audit umum](README.md), [audit akademik](academics-before.md), [audit fasilitas dan konten](content-facilities-before.md), serta [pengukuran sebelum perubahan](verification-before.md). Baseline kode adalah `fa6fb19`.
 
 ## Before dan after

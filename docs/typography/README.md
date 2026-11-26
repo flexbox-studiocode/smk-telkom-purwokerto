@@ -1,4 +1,20 @@
-# Figma typography audit — 5 November 2026
+# Typography
+
+## Current configuration (25 November 2026)
+
+Plus Jakarta Sans was removed in PR #196. Text that used it now renders in Poppins, and the audit sizes, weights, line heights and tracking stay as they were. The 5 November audit below documents the Jakarta targets and is now history.
+
+| Scope | Font |
+|---|---|
+| Public site (`.public-site`), login and dashboard | Poppins 300–800 via `--font-poppins`, which sets `--font-sans` and `--font-heading` |
+| Default outside those scopes (`body`) | `--font-main`: Inter, then Poppins |
+| Intentional Inter exceptions | Active breadcrumb item (`hero.css`, `nexttel.css`) and the School Tour action links in `FacilitiesSection.css` (Figma Inter 800) |
+| Other exceptions | Arimo for the program detail overview (`jurusan-detail.css`), Pixelify Sans for the NextTel game (`nexttel-game.css`) |
+| Loading | `src/assets/fonts/font-faces-optimized.css` registers Inter variable 100–900 and Poppins static 300/400/500/600/700/800, all with `font-display: swap`. `index.html` preloads Poppins 500. The Jakarta files stay on disk but are not registered or bundled |
+
+`/spmb/masuk`, `/spmb/daftar`, `/lupa-sandi` and `/ketentuan-spmb` redirect to the external PPDB site, which uses its own fonts.
+
+# Figma typography audit — 5 November 2026 (historical, Jakarta targets)
 
 Reference: [Figma page 0:1](https://www.figma.com/design/ca2iX76GpJSr0QC7Qyv9RV/Figma-MCP?node-id=0-1&m=dev). Baseline commit: fa6fb19. The complete style inventory covers all 33 text-bearing frames and 185 distinct combinations of family, weight, size, line height, letter spacing, and alignment. `figma-all-frame-styles.json` preserves the source values and per-frame counts.
 

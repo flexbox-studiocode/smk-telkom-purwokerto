@@ -22,7 +22,7 @@ Dokumen ini adalah **Phase 1 (Visual Audit)** dari master prompt
 | Navbar | `src/components/Navbar.jsx` | `sticky top-0 z-[60]`, tinggi `h-16` (mobile) / `lg:h-[88px]`. |
 | NEXA | `src/components/stela/StelaWidget.jsx` | `fixed bottom-4 right-4 z-50`, tombol 48–56 px; sudah menyembunyikan diri saat scroll di mobile (`max-sm:… translate-y-6 opacity-0`). |
 | Token warna | `src/index.css` | `--color-primary #c8102e`, `dark-50…900`, `primary-50…900`. |
-| Tipografi | `src/styles/typography.css`, `src/index.css` | `.public-site` memakai Plus Jakarta Sans (variable 200–800) untuk sans & heading. Tidak ada CSS khusus halaman privasi. |
+| Tipografi | `src/styles/typography.css`, `src/index.css` | `.public-site` memakai Poppins (300–800) untuk sans & heading (Plus Jakarta Sans dihapus pada PR #196). Tidak ada CSS khusus halaman privasi. |
 | Scroll offset global | `src/index.css` | `:where(main section[id]) { scroll-margin-top: 6rem }` — hanya berlaku untuk `<section id>`, bukan div anchor. |
 
 ---
