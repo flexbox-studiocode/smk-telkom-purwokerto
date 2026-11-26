@@ -5,9 +5,10 @@ import { prisma } from '../db.js';
 import { requireAdmin, requireAuth } from '../middleware/auth.js';
 import { asyncHandler, badRequest, parsePagination } from '../utils/http.js';
 import { AI_CONFIG_ENCRYPTION_VERSION, decryptAiApiKey, encryptAiApiKey } from '../services/aiConfigCrypto.js';
-import { callAiProvider, validateProviderConfig } from '../services/aiProvider.js';
+import { callAiProvider, listAiProviderModels, validateProviderConfig, verifyAiProviderApiKey } from '../services/aiProvider.js';
+import { listAiProviders, requireAiProvider } from '../services/aiProviderRegistry.js';
 import { AiProviderError, adminMessageForCode, httpStatusForCode, logProviderEvent } from '../services/aiErrors.js';
-import { invalidateAiConfigCache } from '../services/aiRuntimeConfig.js';
+import { invalidateAiConfigCache, resolveAiConfig } from '../services/aiRuntimeConfig.js';
 
 export const adminRouter = express.Router();
 adminRouter.use(requireAuth, requireAdmin);
@@ -21,6 +22,21 @@ const aiConfigSchema = z.object({
   enabled: z.boolean().optional(),
 });
 const aiTestLimit = rateLimit({ windowMs: 60 * 1000, limit: 5, standardHeaders: true, legacyHeaders: false, message: { error: 'Terlalu banyak uji koneksi. Coba lagi nanti.', code: 'rate_limited' } });
+// Discovery dan verifikasi memanggil API provider berbayar, jadi dibatasi ketat
+// dan terpisah dari uji koneksi agar kuota admin tidak habis karena klik ganda.
+const aiDiscoveryLimit = rateLimit({ windowMs: 60 * 1000, limit: 10, standardHeaders: true, legacyHeaders: false, message: { error: 'Terlalu banyak permintaan daftar model. Coba lagi nanti.', code: 'rate_limited' } });
+const aiVerifyLimit = rateLimit({ windowMs: 60 * 1000, limit: 10, standardHeaders: true, legacyHeaders: false, message: { error: 'Terlalu banyak verifikasi API key. Coba lagi nanti.', code: 'rate_limited' } });
+
+// ID provider WAJIB melewati registry allowlist sebelum apa pun disentuh.
+const aiProviderSchema = z.string().trim().min(1).max(40).superRefine((value, ctx) => {
+  try { requireAiProvider(value); } catch { ctx.addIssue({ code: 'custom', message: 'Provider tidak didukung.' }); }
+});
+const aiProviderBodySchema = z.object({
+  provider: aiProviderSchema,
+  endpoint: z.string().trim().max(2048).optional().or(z.literal('')),
+  model: z.string().trim().max(180).optional().or(z.literal('')),
+  apiKey: z.string().trim().max(4096).optional().or(z.literal('')),
+});
 const aiPublic = (row) => row ? { service: row.feature, provider: row.provider, endpoint: row.endpoint, model: row.model, enabled: row.enabled, configured: Boolean(row.encryptedApiKey), encryptionVersion: row.encryptionVersion, updatedAt: row.updatedAt } : null;
 // Kontrak GET: selalu satu objek per layanan. Layanan yang belum dikonfigurasi
 // mengembalikan status kosong (configured:false), bukan null, agar klien tidak
@@ -30,6 +46,64 @@ const aiPublicEmpty = (service) => ({ service, provider: null, endpoint: null, m
 adminRouter.get('/ai-settings', asyncHandler(async (_req, res) => {
   const rows = await prisma.aiProviderConfig.findMany({ orderBy: { feature: 'asc' } });
   res.json({ data: ['stela', 'nexttel'].map((service) => aiPublic(rows.find((row) => row.feature === service) || null) ?? aiPublicEmpty(service)) });
+}));
+
+// Metadata provider untuk UI. Tidak memuat endpoint/key/model tersimpan.
+adminRouter.get('/ai-settings/providers', asyncHandler(async (_req, res) => {
+  res.json({ data: listAiProviders() });
+}));
+
+// Mengambil API key efektif untuk suatu layanan tanpa pernah mengembalikannya.
+// Urutan: key yang sedang diketik di form -> key tersimpan -> fallback env.
+async function resolveAdminApiKey(service, body, { requiredMessage }) {
+  if (body.apiKey) return body.apiKey;
+  const existing = await prisma.aiProviderConfig.findUnique({ where: { feature: service } });
+  if (existing?.encryptedApiKey) {
+    try { return decryptAiApiKey(existing.encryptedApiKey); } catch { throw badRequest('API key tersimpan tidak dapat didekripsi. Masukkan API key baru.'); }
+  }
+  const fallback = await resolveAiConfig(service);
+  if (fallback?.apiKey) return fallback.apiKey;
+  throw badRequest(requiredMessage);
+}
+
+// Discovery model: dipanggil backend supaya API key tidak pernah menyentuh browser.
+adminRouter.post('/ai-settings/:service/models', aiDiscoveryLimit, asyncHandler(async (req, res) => {
+  const service = aiServiceSchema.parse(req.params.service);
+  const body = aiProviderBodySchema.parse(req.body);
+  const adapter = requireAiProvider(body.provider);
+  if (!adapter.supportsModelList) {
+    return res.status(200).json({ data: { service, provider: adapter.id, supported: false, models: [] } });
+  }
+  const apiKey = await resolveAdminApiKey(service, body, { requiredMessage: 'API key wajib diisi untuk mengambil daftar model.' });
+  let normalized;
+  try { normalized = validateProviderConfig({ provider: body.provider, endpoint: body.endpoint, model: body.model || 'placeholder' }); } catch (error) { throw badRequest(error.message, undefined); }
+  try {
+    const result = await listAiProviderModels({ ...normalized, apiKey }, { timeoutMs: 12000 });
+    res.json({ data: { service, provider: adapter.id, supported: result.supported, models: result.models } });
+  } catch (error) {
+    const code = error instanceof AiProviderError ? error.code : 'PROVIDER_UNAVAILABLE';
+    logProviderEvent('warn', 'ai_models_failed', { provider: normalized.provider, model: normalized.model, code, status: error?.status || 0, requestId: error?.requestId });
+    res.status(httpStatusForCode(code)).json({ error: adminMessageForCode(code), code });
+  }
+}));
+
+// Verifikasi API key: hanya memastikan kredensial diterima provider, tidak
+// menjalankan prompt percakapan penuh seperti uji koneksi.
+adminRouter.post('/ai-settings/:service/verify', aiVerifyLimit, asyncHandler(async (req, res) => {
+  const service = aiServiceSchema.parse(req.params.service);
+  const body = aiProviderBodySchema.parse(req.body);
+  const adapter = requireAiProvider(body.provider);
+  const apiKey = await resolveAdminApiKey(service, body, { requiredMessage: 'API key wajib diisi untuk verifikasi.' });
+  let normalized;
+  try { normalized = validateProviderConfig({ provider: body.provider, endpoint: body.endpoint, model: body.model || 'placeholder' }); } catch (error) { throw badRequest(error.message, undefined); }
+  try {
+    const result = await verifyAiProviderApiKey({ ...normalized, apiKey }, { timeoutMs: 12000 });
+    res.json({ data: { service, provider: adapter.id, verified: true, method: result.method, modelCount: result.modelCount ?? null } });
+  } catch (error) {
+    const code = error instanceof AiProviderError ? error.code : 'PROVIDER_UNAVAILABLE';
+    logProviderEvent('warn', 'ai_verify_failed', { provider: normalized.provider, model: normalized.model, code, status: error?.status || 0, requestId: error?.requestId });
+    res.status(httpStatusForCode(code)).json({ error: adminMessageForCode(code), code });
+  }
 }));
 
 adminRouter.put('/ai-settings/:service', asyncHandler(async (req, res) => {
