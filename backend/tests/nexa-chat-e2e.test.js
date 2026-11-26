@@ -89,8 +89,8 @@ async function mulaiSesi() {
   assert.ok(jar.get('nexa_session'), 'cookie nexa_session diterima');
 }
 
-const mockGemini = (text) => async (url) => {
-  providerCalls.push({ url: String(url) });
+const mockGemini = (text) => async (url, options) => {
+  providerCalls.push({ url: String(url), auth: options?.headers?.['x-goog-api-key'] });
   return Response.json({ candidates: [{ content: { parts: [{ text }] } }] });
 };
 
@@ -110,7 +110,7 @@ test('konfigurasi database menjawab chat walau STELA_AKTIF=false', async () => {
   assert.equal(chat.body.reply, 'SMK Telkom Purwokerto memiliki jurusan RPL, TKJ, dan PG.');
   assert.equal(chat.body.sumber, 'provider');
   assert.equal(providerCalls.length, 1);
-  assert.ok(providerCalls[0].url.includes('key-database-nexa'), 'key database dipakai, bukan env');
+  assert.ok(providerCalls[0].auth === 'key-database-nexa', 'key database dipakai melalui header, bukan URL/env');
 });
 
 test('pertanyaan lanjutan membawa history percakapan ke provider', async () => {
@@ -170,7 +170,7 @@ test('fallback environment dipakai saat tidak ada baris database', async () => {
   const chat = await request('/api/ai/stela', { method: 'POST', body: { pertanyaan: 'Halo' } });
   if (chat.status === 429) return;
   assert.equal(chat.status, 200, JSON.stringify(chat.body));
-  assert.ok(providerCalls[0].url.includes('key-environment'), 'key environment dipakai');
+  assert.ok(providerCalls[0].auth === 'key-environment', 'key environment dipakai melalui header');
 });
 
 test('layanan nonaktif mengembalikan status jelas', async () => {

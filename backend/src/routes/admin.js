@@ -6,6 +6,7 @@ import { requireAdmin, requireAuth } from '../middleware/auth.js';
 import { asyncHandler, badRequest, parsePagination } from '../utils/http.js';
 import { AI_CONFIG_ENCRYPTION_VERSION, decryptAiApiKey, encryptAiApiKey } from '../services/aiConfigCrypto.js';
 import { callAiProvider, validateProviderConfig } from '../services/aiProvider.js';
+import { AiProviderError, adminMessageForCode, httpStatusForCode, logProviderEvent } from '../services/aiErrors.js';
 import { invalidateAiConfigCache } from '../services/aiRuntimeConfig.js';
 
 export const adminRouter = express.Router();
@@ -106,9 +107,15 @@ adminRouter.post('/ai-settings/:service/test', aiTestLimit, asyncHandler(async (
     await callAiProvider({ ...normalized, apiKey }, [{ role: 'user', content: 'Balas singkat: koneksi berhasil.' }], { timeoutMs: 10000, testOnly: true });
   } catch (error) {
     // Jangan pernah mengembalikan pesan mentah provider (dapat memuat detail endpoint/header).
-    const timeout = error?.name === 'TimeoutError' || /timeout/i.test(error?.message || '');
-    console.error(JSON.stringify({ level: 'warn', event: 'ai_test_failed', service, code: timeout ? 'provider_timeout' : 'provider_failed' }));
-    return res.status(timeout ? 504 : 502).json({ error: timeout ? 'Koneksi timeout. Periksa endpoint dan coba lagi.' : 'Koneksi gagal. Periksa provider, model, endpoint, dan API key.', code: timeout ? 'provider_timeout' : 'provider_failed' });
+    const code = error instanceof AiProviderError ? error.code : 'PROVIDER_UNAVAILABLE';
+    logProviderEvent('warn', 'ai_test_failed', {
+      provider: normalized.provider,
+      model: normalized.model,
+      code,
+      status: error?.status || 0,
+      requestId: error?.requestId,
+    });
+    return res.status(httpStatusForCode(code)).json({ error: adminMessageForCode(code), code });
   }
   res.json({ data: { service, message: 'Koneksi berhasil.' } });
 }));

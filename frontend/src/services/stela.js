@@ -116,10 +116,10 @@ export const tanyaStela = async (pesan, { signal, language = 'id' } = {}) => {
     if (error?.category) throw error;
     const mapped = new Error(error?.message || PESAN_STELA_GAGAL, { cause: error });
     if (error?.code === 'session_required') mapped.category = KATEGORI_GALAT.SESSION;
-    else if (error?.code === 'quota_exhausted') mapped.category = KATEGORI_GALAT.RATE_LIMIT;
-    else if (error?.code === 'provider_timeout') mapped.category = KATEGORI_GALAT.TRANSIENT;
-    else if (error?.code === 'config') mapped.category = KATEGORI_GALAT.CONFIG;
-    else if (error?.code === 'provider_failed') mapped.category = KATEGORI_GALAT.TRANSIENT;
+    else if (['quota_exhausted', 'QUOTA_EXCEEDED', 'RATE_LIMITED'].includes(error?.code)) mapped.category = KATEGORI_GALAT.RATE_LIMIT;
+    else if (['PROVIDER_TIMEOUT', 'PROVIDER_UNAVAILABLE', 'INVALID_PROVIDER_RESPONSE'].includes(error?.code)) mapped.category = KATEGORI_GALAT.TRANSIENT;
+    else if (['API_KEY_INVALID', 'PERMISSION_DENIED', 'MODEL_NOT_FOUND', 'INVALID_ENDPOINT', 'INVALID_REQUEST', 'DECRYPTION_FAILED', 'CREDENTIAL_MISSING', 'CONFIG_DISABLED', 'config'].includes(error?.code)) mapped.category = KATEGORI_GALAT.CONFIG;
+    else if (error?.code === 'provider_timeout' || error?.code === 'provider_failed') mapped.category = KATEGORI_GALAT.TRANSIENT;
     throw mapped;
   }
 };

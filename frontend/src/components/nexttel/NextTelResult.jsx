@@ -57,7 +57,32 @@ const NextTelResult = ({ result, explanation, loading, error, onRetry, onRestart
               <tbody>{result.ranking.map(([code, score]) => (
                 <tr key={code} className="border-t border-dark-200">
                   <th scope="row" className="py-4 font-normal"><abbr title={t(LABELS[code])} className="no-underline">{code}</abbr></th>
-                  <td className="py-4 text-right font-semibold">{score}</td>
+                  <td className="py-4">
+                    {(() => {
+                      const maxScore = Number(result.maxScoreByMajor?.[code] ?? result.maxScore ?? 24);
+                      const safeMax = Number.isFinite(maxScore) && maxScore > 0 ? maxScore : 24;
+                      const safeScore = Number.isFinite(Number(score)) ? Math.max(0, Number(score)) : 0;
+                      const percentage = Math.min(100, Math.max(0, (safeScore / safeMax) * 100));
+                      return (
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between gap-3 font-semibold text-dark-800">
+                            <span>{safeScore} / {safeMax}</span>
+                            <span>{Math.round(percentage)}%</span>
+                          </div>
+                          <div
+                            className="h-2.5 w-full overflow-hidden rounded-full bg-dark-200"
+                            role="progressbar"
+                            aria-label={`${t(LABELS[code])}: ${Math.round(percentage)}%`}
+                            aria-valuenow={Math.round(percentage)}
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                          >
+                            <div className="h-full rounded-full bg-primary transition-[width] duration-500 ease-out" style={{ width: `${percentage}%` }} />
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </td>
                 </tr>
               ))}</tbody>
             </table>
