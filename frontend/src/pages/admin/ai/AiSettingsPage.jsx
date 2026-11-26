@@ -17,7 +17,9 @@ const ERROR_SAFE = 'Gagal memproses konfigurasi AI. Periksa data, koneksi, dan p
 const formatDate = (value) => value ? new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value)) : 'Belum pernah diperbarui';
 
 export function ServiceCard({ service, settings, onChanged }) {
-  const config = settings.find((item) => item.service === service.key);
+  // Backend mengembalikan null untuk layanan yang belum pernah dikonfigurasi.
+  // Jangan biarkan respons kosong menjatuhkan seluruh route dashboard.
+  const config = (Array.isArray(settings) ? settings : []).find((item) => item?.service === service.key);
   const [editing, setEditing] = useState(false);
   const [showKey, setShowKey] = useState(false);
   const [busy, setBusy] = useState('');
@@ -40,23 +42,34 @@ export function ServiceCard({ service, settings, onChanged }) {
   }, [editing, config, service.key]);
 
   const update = (field, value) => setForm((current) => ({ ...current, [field]: value }));
+  // Field key sengaja kosong saat editor dibuka. Bila Admin tidak mengetik key baru,
+  // jangan kirim string kosong: backend harus mempertahankan key lama.
+  const payload = () => {
+    const { apiKey, ...rest } = form;
+    const body = { ...rest, endpoint: rest.endpoint?.trim() || '' };
+    if (apiKey.trim()) body.apiKey = apiKey.trim();
+    return body;
+  };
   const safeAction = async (action, successText) => {
     setBusy(action);
     setMessage(null);
     try {
-      if (action === 'save') await saveAiSettings(service.key, form);
-      else if (action === 'test') await testAiConnection(service.key, form);
+      if (action === 'save') await saveAiSettings(service.key, payload());
+      else if (action === 'test') await testAiConnection(service.key, payload());
       else if (action === 'toggle') await setAiServiceStatus(service.key, !config?.enabled);
       else if (action === 'remove') {
-        if (!window.confirm('API key tersimpan akan dihapus. Konfigurasi environment lama dapat menjadi fallback NEXA. Lanjutkan?')) return;
+        if (!window.confirm('API key tersimpan akan dihapus dan layanan NEXA/NextTel dinonaktifkan. Simpan API key baru untuk mengaktifkan kembali. Lanjutkan?')) return;
         await removeAiApiKey(service.key);
       }
       setMessage({ type: 'success', text: successText });
       if (action === 'save') { setEditing(false); setForm((current) => ({ ...current, apiKey: '' })); }
       await onChanged();
     } catch (error) {
+      // Pesan dari backend aman ditampilkan (tanpa header/API key), selain itu pakai teks umum.
+      const aman = error?.status && typeof error?.message === 'string' && error.message.trim() ? error.message : '';
       const timeout = error?.code === 'provider_timeout';
-      setMessage({ type: 'error', text: action === 'test' ? (timeout ? 'Koneksi timeout. Periksa endpoint dan coba lagi.' : 'Koneksi gagal. Periksa provider, model, endpoint, dan API key.') : ERROR_SAFE });
+      const fallback = action === 'test' ? (timeout ? 'Koneksi timeout. Periksa endpoint dan coba lagi.' : 'Koneksi gagal. Periksa provider, model, endpoint, dan API key.') : ERROR_SAFE;
+      setMessage({ type: 'error', text: aman || fallback });
     } finally {
       setBusy('');
     }
@@ -86,7 +99,7 @@ export function ServiceCard({ service, settings, onChanged }) {
           </div>
           <div className="mt-5 flex flex-wrap gap-2 border-t border-dark-100 pt-4">
             <button type="button" onClick={() => setEditing(true)} className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white hover:bg-primary-800"><KeyRound className="h-4 w-4" />{config?.provider ? 'Konfigurasi / Ganti API key' : 'Konfigurasi'}</button>
-            <button type="button" disabled={!config?.configured || busy !== ''} onClick={() => safeAction('toggle', config?.enabled ? 'Layanan berhasil dinonaktifkan.' : 'Layanan berhasil diaktifkan.')} className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-dark-200 px-4 py-2 text-xs font-bold text-dark-700 hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-50">{busy === 'toggle' ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}{config?.enabled ? 'Nonaktifkan' : 'Aktifkan'}</button>
+            <button type="button" disabled={!config?.configured || busy !== ''} onClick={() => safeAction('toggle', config?.enabled ? 'Layanan berhasil dinonaktifkan.' : 'Layanan berhasil diaktifkan.')} title={config?.configured ? undefined : 'Simpan API key terlebih dahulu'} className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-dark-200 px-4 py-2 text-xs font-bold text-dark-700 hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-50">{busy === 'toggle' ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}{config?.enabled ? 'Nonaktifkan' : 'Aktifkan'}</button>
             {config?.configured && <button type="button" disabled={busy !== ''} onClick={() => safeAction('remove', 'API key dihapus; layanan dinonaktifkan.')} className="min-h-10 rounded-lg px-3 py-2 text-xs font-bold text-red-700 hover:bg-red-50">Hapus API key</button>}
           </div>
         </div>
@@ -105,7 +118,7 @@ export function ServiceCard({ service, settings, onChanged }) {
           <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-dark-100 p-3"><input type="checkbox" checked={form.enabled} onChange={(event) => update('enabled', event.target.checked)} className="mt-0.5 h-4 w-4 accent-primary" /><span><span className="block text-sm font-bold text-dark-800">Aktifkan layanan</span><span className="mt-0.5 block text-xs leading-relaxed text-dark-500">{service.enabledHint}</span></span></label>
           <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-900"><ShieldCheck className="mr-1.5 inline h-4 w-4 align-text-bottom" />API key dienkripsi dan disimpan di server. Nilai rahasia tidak dapat dilihat kembali melalui dashboard.</div>
           <div className="flex flex-col gap-2 border-t border-dark-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
-            <button type="button" disabled={busy !== '' || !form.apiKey} onClick={() => safeAction('test', 'Koneksi berhasil.')} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-dark-200 px-4 py-2 text-xs font-bold text-dark-700 hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-50">{busy === 'test' ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Wifi className="h-4 w-4" />}Uji koneksi</button>
+            <button type="button" disabled={busy !== '' || (!form.apiKey.trim() && !config?.configured)} title={!form.apiKey.trim() && !config?.configured ? 'Masukkan API key untuk menguji koneksi' : undefined} onClick={() => safeAction('test', 'Koneksi berhasil.')} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-dark-200 px-4 py-2 text-xs font-bold text-dark-700 hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-50">{busy === 'test' ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Wifi className="h-4 w-4" />}Uji koneksi</button>
             <div className="flex gap-2"><button type="button" disabled={busy !== ''} onClick={() => setEditing(false)} className="min-h-10 rounded-lg border border-dark-200 px-4 py-2 text-xs font-bold text-dark-600 hover:bg-dark-50">Batal</button><button type="submit" disabled={busy !== ''} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2 text-xs font-bold text-white hover:bg-primary-800 disabled:opacity-60">{busy === 'save' ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}Simpan</button></div>
           </div>
         </form>

@@ -77,6 +77,16 @@ try {
   assert.ok(nexttelHtml.includes('Belum dikonfigurasi'), 'status kosong NextTel jujur');
   assert.ok(nexttelHtml.includes('Nonaktif'), 'status nonaktif tampil');
 
+  // Regresi: backend mengembalikan null untuk layanan yang belum dikonfigurasi.
+  // Halaman harus tetap render, bukan crash di ServiceCard (`null.service`).
+  const nullSettings = [null, null];
+  const nullHtml = renderToStaticMarkup(
+    React.createElement(MemoryRouter, null,
+      React.createElement(page.ServiceCard, { service: services[0], settings: nullSettings, onChanged: async () => {} }),
+    ),
+  );
+  assert.ok(nullHtml.includes('NEXA AI') && nullHtml.includes('Belum dikonfigurasi'), 'kartu layanan kosong tetap render');
+
   const combined = loadingHtml + nexaHtml + nexttelHtml;
   for (const secret of ['sk-', 'AIza', 'gsk_', 'Bearer ']) {
     assert.ok(!combined.includes(secret), `markup tidak boleh memuat pola kredensial: ${secret}`);
