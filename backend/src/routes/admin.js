@@ -21,10 +21,14 @@ const aiConfigSchema = z.object({
 });
 const aiTestLimit = rateLimit({ windowMs: 60 * 1000, limit: 5, standardHeaders: true, legacyHeaders: false, message: { error: 'Terlalu banyak uji koneksi. Coba lagi nanti.', code: 'rate_limited' } });
 const aiPublic = (row) => row ? { service: row.feature, provider: row.provider, endpoint: row.endpoint, model: row.model, enabled: row.enabled, configured: Boolean(row.encryptedApiKey), encryptionVersion: row.encryptionVersion, updatedAt: row.updatedAt } : null;
+// Kontrak GET: selalu satu objek per layanan. Layanan yang belum dikonfigurasi
+// mengembalikan status kosong (configured:false), bukan null, agar klien tidak
+// perlu menebak bentuk respons. Tidak ada secret pada bentuk ini.
+const aiPublicEmpty = (service) => ({ service, provider: null, endpoint: null, model: null, enabled: false, configured: false, updatedAt: null });
 
 adminRouter.get('/ai-settings', asyncHandler(async (_req, res) => {
   const rows = await prisma.aiProviderConfig.findMany({ orderBy: { feature: 'asc' } });
-  res.json({ data: ['stela', 'nexttel'].map((service) => aiPublic(rows.find((row) => row.feature === service) || null)) });
+  res.json({ data: ['stela', 'nexttel'].map((service) => aiPublic(rows.find((row) => row.feature === service) || null) ?? aiPublicEmpty(service)) });
 }));
 
 adminRouter.put('/ai-settings/:service', asyncHandler(async (req, res) => {
