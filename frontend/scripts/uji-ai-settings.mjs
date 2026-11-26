@@ -78,7 +78,17 @@ try {
   assert.ok(nexttelHtml.includes('NextTel'), 'kartu NextTel tampil');
   assert.ok(nexttelHtml.includes('Scoring lokal selalu aktif'), 'peringatan scoring lokal NextTel tampil');
   assert.ok(nexttelHtml.includes('Belum dikonfigurasi'), 'status kosong NextTel jujur');
-  assert.ok(nexttelHtml.includes('Nonaktif'), 'status nonaktif tampil');
+  assert.ok(nexttelHtml.includes('API key belum dikonfigurasi'), 'status tanpa key dibedakan dari nonaktif');
+
+  // Status layanan mencerminkan kondisi sebenarnya, bukan sekadar tersimpan.
+  const statusOf = (row) => renderToStaticMarkup(React.createElement(MemoryRouter, null, React.createElement(page.ServiceCard, { service: services[0], settings: [{ service: 'stela', provider: 'gemini', model: 'gemini-2.5-flash', configured: true, ...row }], onChanged: async () => {} })));
+  assert.ok(statusOf({ enabled: true, lastCheckCode: 'OK' }).includes('Aktif · terverifikasi'));
+  assert.ok(statusOf({ enabled: true, lastCheckCode: null }).includes('Aktif · belum terverifikasi'));
+  assert.ok(statusOf({ enabled: true, lastCheckCode: 'API_KEY_INVALID' }).includes('API key tidak valid'));
+  assert.ok(statusOf({ enabled: true, lastCheckCode: 'MODEL_NOT_FOUND' }).includes('Model tidak tersedia'));
+  assert.ok(statusOf({ enabled: true, lastCheckCode: 'PROVIDER_UNAVAILABLE' }).includes('Gangguan koneksi provider'));
+  assert.ok(statusOf({ enabled: false, lastCheckCode: 'OK' }).includes('Nonaktif'));
+  assert.ok(statusOf({ enabled: true, displayName: 'Asisten Sekolah' }).includes('Asisten Sekolah'), 'nama layanan kustom tampil');
 
   // Multi-provider: kartu menampilkan label ramah untuk provider non-Gemini/OpenAI
   // lama, dan tetap render tanpa prop `providers` (memakai daftar cadangan).
@@ -123,6 +133,9 @@ try {
   }
   assert.ok(pageSource.includes("type={showKey ? 'text' : 'password'}"), 'input API key memakai tipe password');
   assert.ok(!pageSource.includes('dangerouslySetInnerHTML'), 'halaman tidak menyisipkan HTML mentah');
+  assert.ok(!pageSource.includes('window.confirm'), 'konfirmasi memakai modal dashboard, bukan dialog native');
+  // Regresi: form tidak boleh di-reset oleh efek yang bergantung pada data pengaturan.
+  assert.ok(!pageSource.includes('if (editing)'), 'form tidak di-reset saat pengaturan dimuat ulang');
 
   // Service memakai endpoint admin yang benar.
   for (const endpoint of [
