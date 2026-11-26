@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { prestasiUnggulan } from '../../data/dummyData';
 import ContentImage from '../ContentImage';
+import { summarizeText } from '../../utils/summarizeText';
 
 const PrestasiUnggulanSection = ({ items = [] }) => {
   const { t } = useLanguage();
@@ -13,6 +14,9 @@ const PrestasiUnggulanSection = ({ items = [] }) => {
   const sourceItems = items.slice(0, 4);
   const selected = active % sourceItems.length;
   const featured = sourceItems[selected];
+  // `lead` adalah pembuka singkat bila tersedia. `desc` dipakai sebagai
+  // fallback untuk data lama/rich text yang belum punya lead terpisah.
+  const featuredSummary = summarizeText(featured?.lead || featured?.desc);
   const others = sourceItems
     .map((item, i) => ({ item, i }))
     .filter(({ i }) => i !== selected);
@@ -37,9 +41,11 @@ const PrestasiUnggulanSection = ({ items = [] }) => {
             <h3 className="mt-3 max-w-xl font-heading text-[clamp(1.25rem,2.296cqw,2.5rem)] font-extrabold tracking-[.05em] leading-snug text-dark-900">
               {t(featured.title)}
             </h3>
-            <p className="mt-3 max-w-xl text-[clamp(.75rem,.918cqw,1rem)] font-medium tracking-[.12em] leading-normal text-dark-600">
-              {t(featured.lead || featured.desc)}
-            </p>
+            {featuredSummary && (
+              <p className="mt-3 max-w-xl text-[clamp(.75rem,.918cqw,1rem)] font-medium tracking-[.08em] leading-relaxed text-dark-600">
+                {t(featuredSummary)}
+              </p>
+            )}
             <Link
               to={`/prestasi/${featured.slug}`}
               className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full border border-primary/40 px-4 py-2 text-[clamp(.75rem,.861cqw,.9375rem)] font-extrabold tracking-[.12em] text-primary transition-colors hover:bg-primary hover:text-white focus-visible:outline-2 focus-visible:outline-primary"
