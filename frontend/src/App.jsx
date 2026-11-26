@@ -60,6 +60,7 @@ const WordPressLibraryPage = lazy(() => import('./pages/admin/wordpress/WordPres
 const WordPressAuditPage = lazy(() => import('./pages/admin/wordpress/WordPressAuditPage'));
 const AdminBkkPage = lazy(() => import('./pages/admin/bkk/BkkPage'));
 const KalenderAdminPage = lazy(() => import('./pages/admin/kalender/KalenderAdminPage'));
+const AiSettingsPage = lazy(() => import('./pages/admin/ai/AiSettingsPage'));
 const SpmbInformationPage = lazy(() => import('./pages/admin/spmb/SpmbInformationPage'));
 const AdminPpdbPage = lazy(() => import('./pages/admin/ppdb/PPDBPage'));
 const SpmbInternalGate = lazy(() => import('./pages/dashboard/SpmbInternalGate'));
@@ -245,6 +246,7 @@ const App = () => {
               <Route path="wordpress/audit/:id" element={<WordPressAuditPage />} />
               <Route path="bkk" element={<AdminBkkPage />} />
               <Route path="kalender" element={<KalenderAdminPage />} />
+              <Route path="pengaturan-ai" element={<AiSettingsPage />} />
               {/* Menu Pengaturan dihapus dari dashboard; bookmark lama diarahkan ke beranda dashboard. */}
               <Route path="pengaturan" element={<Navigate to="/dashboard" replace />} />
             </Route>

@@ -14,6 +14,7 @@ import {
   Megaphone,
   Newspaper,
   Trophy,
+  Bot,
 } from 'lucide-react';
 import Logo from '../Logo';
 import { adminMenu, adminSekolah } from '../../data/dummyData';
@@ -36,6 +37,7 @@ const ikon = {
   wordpressImport: FileUp,
   wordpressLibrary: Library,
   wordpressAudit: ClipboardCheck,
+  pengaturanAi: Bot,
 };
 
 // Status aktif grup menu dihitung dari satu hook useLocation, sehingga tidak ada
