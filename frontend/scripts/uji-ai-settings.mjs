@@ -23,10 +23,13 @@ const server = await createServer({
       if (id === '\0qa-ai-settings-service') {
         return `
           export const getAiSettings = async () => [];
+          export const getAiProviders = async () => [];
           export const saveAiSettings = async () => ({});
           export const setAiServiceStatus = async () => ({});
           export const removeAiApiKey = async () => ({});
           export const testAiConnection = async () => ({});
+          export const listAiModels = async () => ({ models: [] });
+          export const verifyAiApiKey = async () => ({ verified: true });
         `;
       }
     },
@@ -77,6 +80,27 @@ try {
   assert.ok(nexttelHtml.includes('Belum dikonfigurasi'), 'status kosong NextTel jujur');
   assert.ok(nexttelHtml.includes('Nonaktif'), 'status nonaktif tampil');
 
+  // Multi-provider: kartu menampilkan label ramah untuk provider non-Gemini/OpenAI
+  // lama, dan tetap render tanpa prop `providers` (memakai daftar cadangan).
+  const providerMeta = [
+    { id: 'openai', label: 'OpenAI', requiresEndpoint: true, supportsModelList: true, defaultEndpoint: 'https://api.openai.com/v1' },
+    { id: 'gemini', label: 'Google Gemini', requiresEndpoint: false, supportsModelList: true, defaultEndpoint: 'https://generativelanguage.googleapis.com/v1beta/models' },
+    { id: 'anthropic', label: 'Anthropic', requiresEndpoint: false, supportsModelList: false, defaultEndpoint: 'https://api.anthropic.com/v1' },
+    { id: 'deepseek', label: 'DeepSeek', requiresEndpoint: false, supportsModelList: true, defaultEndpoint: 'https://api.deepseek.com' },
+    { id: 'qwen', label: 'Qwen (Alibaba DashScope)', requiresEndpoint: false, supportsModelList: true, defaultEndpoint: 'https://dashscope.aliyuncs.com/compatible-mode/v1' },
+    { id: 'custom-openai', label: 'Custom OpenAI-compatible', requiresEndpoint: true, supportsModelList: true, defaultEndpoint: null },
+  ];
+  const anthropicSettings = [
+    { service: 'stela', provider: 'anthropic', endpoint: 'https://api.anthropic.com/v1', model: 'claude-3-5-haiku-latest', enabled: true, configured: true, updatedAt: '2026-11-20T08:00:00.000Z' },
+  ];
+  const anthropicHtml = renderToStaticMarkup(
+    React.createElement(MemoryRouter, null,
+      React.createElement(page.ServiceCard, { service: services[0], settings: anthropicSettings, providers: providerMeta, onChanged: async () => {} }),
+    ),
+  );
+  assert.ok(anthropicHtml.includes('Anthropic'), 'label provider non-lama tampil ramah');
+  assert.ok(anthropicHtml.includes('claude-3-5-haiku-latest'), 'model provider non-lama tampil');
+
   // Regresi: backend mengembalikan null untuk layanan yang belum dikonfigurasi.
   // Halaman harus tetap render, bukan crash di ServiceCard (`null.service`).
   const nullSettings = [null, null];
@@ -107,6 +131,9 @@ try {
     "api.patch(`/api/admin/ai-settings/${encodeURIComponent(service)}/status`, { enabled })",
     "api.delete(`/api/admin/ai-settings/${encodeURIComponent(service)}/key`)",
     "api.post(`/api/admin/ai-settings/${encodeURIComponent(service)}/test`, payload)",
+    "api.get('/api/admin/ai-settings/providers')",
+    "api.post(`/api/admin/ai-settings/${encodeURIComponent(service)}/models`, payload)",
+    "api.post(`/api/admin/ai-settings/${encodeURIComponent(service)}/verify`, payload)",
   ]) {
     assert.ok(serviceSource.includes(endpoint), `service memanggil: ${endpoint}`);
   }
