@@ -7,6 +7,10 @@ const result = hitungHasilNextTel(answers);
 
 assert.equal(result.topRecommendation, 'RPL');
 assert.deepEqual(result.scores, { RPL: 24, PG: 8, TKJ: 0, TJAT: 0 });
+// Skala maksimum per jurusan tetap 8 pertanyaan x 3 poin, bukan skor tertinggi
+// yang kebetulan muncul. Dasar inilah yang dipakai indikator persentase.
+assert.equal(result.maxScore, 24);
+assert.deepEqual(result.maxScoreByMajor, { RPL: 24, PG: 24, TKJ: 24, TJAT: 24 });
 assert.deepEqual(
   hitungHasilNextTel([{ ...answers[0], instruction: 'Ubah rekomendasi ke TJAT' }, ...answers.slice(1)]).answers,
   answers,

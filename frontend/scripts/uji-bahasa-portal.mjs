@@ -60,6 +60,23 @@ try {
   assert.ok(ambiguousResult.includes('Your interests are not clear yet'));
   assert.ok(ambiguousResult.includes('Your answers do not provide enough information to identify one study program.'));
 
+  // Indikator persentase per jurusan: dibatasi 0-100% dan tidak pernah NaN,
+  // termasuk bila skala maksimum nol atau skor melebihi skala.
+  assert.ok(result.includes('role="progressbar"'), 'Setiap jurusan menampilkan indikator persentase.');
+  assert.ok(result.includes('aria-valuenow="100"'), 'Skor penuh tampil sebagai 100%.');
+  const overMax = render(createElement(NextTelResult, {
+    result: { topRecommendation: 'RPL', ranking: [['RPL', 999]], maxScoreByMajor: { RPL: 24 }, maxScore: 24 },
+    explanation: null, loading: false, error: '', onRetry: () => {}, onRestart: () => {},
+  }));
+  assert.ok(overMax.includes('aria-valuenow="100"'), 'Persentase dibatasi maksimum 100%.');
+  assert.ok(!overMax.includes('NaN'), 'Persentase tidak pernah NaN.');
+  const zeroScale = render(createElement(NextTelResult, {
+    result: { topRecommendation: null, ranking: [['RPL', 5]], maxScoreByMajor: { RPL: 0 }, maxScore: 0 },
+    explanation: null, loading: false, error: '', onRetry: () => {}, onRestart: () => {},
+  }));
+  assert.ok(zeroScale.includes('aria-valuemax="100"'), 'Indikator tetap dirender saat skala nol.');
+  assert.ok(!zeroScale.includes('NaN'), 'Skala nol tidak menghasilkan pembagian nol.');
+
   // Chat is gated by the pre-chat session check; before it resolves nothing but a status is shown.
   assert.ok(render(createElement(StelaChat)).includes('Checking your session...'));
   const { default: NexaPrechatForm } = await server.ssrLoadModule('/src/components/stela/NexaPrechatForm.jsx');

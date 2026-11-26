@@ -77,5 +77,8 @@ export function hitungHasilNextTel(answers) {
   const highest = ranking[0][1];
   const tied = ranking.filter(([, score]) => score === highest).length > 1;
   const topRecommendation = highest > 0 && !tied ? ranking[0][0] : null;
-  return { answers: normalizedAnswers, scores, ranking, topRecommendation, maxScore: Math.max(...Object.values(scores), 1), hasSignal: highest > 0, ambiguous: !topRecommendation, freeTextSignals };
+  // Setiap jurusan menerima maksimal 3 poin dari masing-masing 8 pertanyaan.
+  // Free-text memakai sinyal bonus dan tidak mengubah skala pilihan standar.
+  const maxScoreByMajor = Object.fromEntries(MAJOR_ORDER.map((major) => [major, QUESTION_IDS.length * 3]));
+  return { answers: normalizedAnswers, scores, ranking, topRecommendation, maxScore: QUESTION_IDS.length * 3, maxScoreByMajor, hasSignal: highest > 0, ambiguous: !topRecommendation, freeTextSignals };
 }
