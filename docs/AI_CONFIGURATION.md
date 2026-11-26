@@ -14,9 +14,11 @@ Mesin skor NextTel tetap berjalan lokal. Konfigurasi provider tidak mengubah del
 | Identifier | Provider | Endpoint bawaan | Discovery model |
 | --- | --- | --- | --- |
 | `gemini` | Google Gemini | `https://generativelanguage.googleapis.com/v1beta/models` | Ya |
-| `openai` | OpenAI | Masukkan endpoint (`https://api.openai.com/v1` lazim dipakai) | Ya |
-| `anthropic` | Anthropic | `https://api.anthropic.com/v1` | Tidak; isi model manual |
+| `openai` | OpenAI | `https://api.openai.com/v1` | Ya (model reasoning o-series/gpt-5 memakai `max_completion_tokens`) |
+| `anthropic` | Anthropic | `https://api.anthropic.com/v1` | Ya (`GET /v1/models`) |
 | `deepseek` | DeepSeek | `https://api.deepseek.com` | Ya |
+| `openrouter` | OpenRouter | `https://openrouter.ai/api/v1` | Ya |
+| `groq` | Groq | `https://api.groq.com/openai/v1` | Ya |
 | `qwen` | Qwen / Alibaba DashScope | `https://dashscope.aliyuncs.com/compatible-mode/v1` | Ya |
 | `custom-openai` | Custom OpenAI-compatible | Wajib diisi admin | Bergantung endpoint |
 
@@ -64,7 +66,8 @@ Jangan commit file `.env`, API key, database dump, atau ciphertext produksi.
 - Bila Admin mengganti provider, masukkan key baru kecuali key lama memang kompatibel dengan provider tujuan dan Admin sengaja memilih memakainya.
 - Bila key tersimpan gagal didekripsi, Admin diminta memasukkan key baru.
 - Layanan tidak dapat diaktifkan (`PATCH .../status` `enabled=true`) sebelum ada key tersimpan.
-- Uji koneksi memakai konfigurasi yang sedang diedit. Bila field key dikosongkan, server memakai key tersimpan agar tombol tetap berguna tanpa menyimpan ulang.
+- Uji koneksi, verifikasi, dan muat daftar model memakai konfigurasi yang sedang diedit tanpa menyimpan apa pun. Bila field key dikosongkan, server memakai key tersimpan; key tersimpan tidak pernah ditimpa string kosong.
+- Nama layanan (`display_name`) hanya label. ID internal `stela`/`nexttel` tetap menjadi kunci routing dan integrasi.
 
 ## Keamanan penyimpanan
 
@@ -94,10 +97,14 @@ Semua endpoint memakai session admin dan CSRF. `service` hanya `stela` atau `nex
 
 Browser **tidak pernah** memanggil provider langsung. UI mengirim form ke backend; backend mengambil key sementara dari input atau ciphertext tersimpan, lalu menambahkan header autentikasi vendor. API key tidak dimasukkan ke URL, query parameter, respons, atau log.
 
-- **Muat daftar model** memakai endpoint daftar model provider dan membatasi respons maksimal 200 entri unik.
-- **Verifikasi API key** terpisah dari **Uji koneksi**. Provider yang mendukung discovery diverifikasi melalui daftar model. Anthropic memakai satu prompt minimal karena discovery model tidak tersedia secara universal.
-- **Uji koneksi** mengirim prompt sederhana ke model yang sedang dipilih.
-- Discovery dibatasi 10 request/menit, verifikasi 10 request/menit, uji koneksi 5 request/menit.
+- **Muat daftar model** memakai endpoint daftar model provider, menyaring model non-chat (embedding, gambar, suara, moderasi), dan membatasi respons maksimal 200 entri unik. Model ID asli ditampilkan; model tetap dapat diisi manual.
+- **Uji koneksi** memastikan endpoint provider terjangkau. Respons HTTP apa pun berarti jaringan berfungsi; bila provider menolak key, hasilnya "terjangkau, tetapi ditolak" beserta alasannya.
+- **Verifikasi API key** mengirim satu prompt kecil ke model terpilih: membuktikan key valid DAN model dapat dipakai. Bila yang diverifikasi adalah konfigurasi tersimpan, hasilnya direkam di `last_check_code`/`last_checked_at`.
+- Discovery, verifikasi, dan uji koneksi masing-masing dibatasi 10 request/menit.
+
+### Status layanan
+
+Dashboard membedakan: *Aktif · terverifikasi*, *Aktif · belum terverifikasi* (disimpan tetapi belum diverifikasi sejak diubah), *Nonaktif*, *API key belum dikonfigurasi*, *API key tidak valid*, *Model tidak tersedia*, dan *Gangguan koneksi provider*. Status juga diperbarui oleh hasil chat NEXA/penjelasan NextTel terakhir. Menyimpan konfigurasi tidak pernah dianggap sebagai bukti koneksi.
 
 ## Proteksi endpoint provider
 
@@ -147,8 +154,8 @@ Setelah `AI_CONFIG_ENCRYPTION_KEY` diubah, **restart backend**.
 1. Buka **Dashboard → Pengaturan AI** sebagai admin.
 2. Pilih provider. Isi endpoint untuk `custom-openai`; endpoint default boleh dikosongkan pada provider lain.
 3. Masukkan API key baru, atau kosongkan field untuk memakai key tersimpan.
-4. Klik **Verifikasi API key**. Bila didukung, klik **Muat daftar model**, lalu pilih/isi model.
-5. Klik **Uji koneksi** untuk model terpilih.
+4. Klik **Muat daftar model**, lalu ketik untuk mencari dan pilih model (atau isi manual).
+5. Klik **Uji koneksi** (endpoint terjangkau) lalu **Verifikasi API key** (key + model).
 6. Simpan konfigurasi, kemudian aktifkan layanan bila siap.
 7. Jika provider gagal, NEXA mengembalikan error aman. NextTel mengembalikan narasi fallback; rekomendasi lokal tetap tersedia.
 
