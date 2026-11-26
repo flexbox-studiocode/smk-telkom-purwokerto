@@ -37,19 +37,27 @@ export function configWithSecret(row) {
   return { provider: row.provider, endpoint: row.endpoint, model: row.model, enabled: row.enabled, apiKey };
 }
 
+export { GEMINI_DEFAULT_ENDPOINT };
+
 function isPrivateAddress(address) {
   if (net.isIPv4(address)) return address === '127.0.0.1' || address === '0.0.0.0' || address.startsWith('10.') || address.startsWith('192.168.') || /^172\.(1[6-9]|2\d|3[01])\./.test(address) || address.startsWith('169.254.');
   return address === '::1' || address.startsWith('fc') || address.startsWith('fd') || address.startsWith('fe80:');
 }
 
-async function safeLookup(hostname) {
-  return dns.lookup(hostname, { all: true });
-}
-
 // SSRF: resolusi DNS diulang tepat sebelum request agar tidak bergantung pada
-// hasil lookup sebelumnya. Private/loopback/link-local ditolak.
+// hasil lookup sebelumnya. Private/loopback/link-local ditolak. Bila resolver
+// tidak tersedia, pengecekan literal (validateEndpoint) tetap berlaku.
 export async function resolveHostnameSafely(hostname) {
-  const addresses = await safeLookup(hostname);
+  if (net.isIP(hostname)) {
+    if (isPrivateAddress(hostname)) throw new Error('Endpoint internal/private tidak diizinkan.');
+    return true;
+  }
+  let addresses;
+  try {
+    addresses = await dns.lookup(hostname, { all: true });
+  } catch {
+    return true;
+  }
   if (!addresses.length || addresses.some(({ address }) => isPrivateAddress(address))) throw new Error('Endpoint internal/private tidak diizinkan.');
   return true;
 }

@@ -7,27 +7,13 @@ import { hashToken, randomToken } from '../utils/crypto.js';
 import { prechatSchema } from '../modules/stela/prechat.mjs';
 import { hitungHasilNextTel } from '../modules/nexttel/scoring.mjs';
 import { KONTEN_SEKOLAH } from '../modules/stela/konten-sekolah.mjs';
+import { resolveAiConfig } from '../services/aiRuntimeConfig.js';
+import { callAiProvider } from '../services/aiProvider.js';
+import { hasilPenjelasan, jelaskanHasil } from '../modules/nexttel/explanation.js';
 
 export const aiRouter = express.Router();
 
-function hasilPenjelasan(result, language = 'id') {
-  const en = language === 'en';
-  const labels = { RPL: 'Rekayasa Perangkat Lunak (RPL)', PG: 'Pengembangan Game (PG)', TKJ: 'Teknik Komputer dan Jaringan (TKJ)', TJAT: 'Teknik Jaringan Akses Telekomunikasi (TJAT)' };
-  const label = labels[result.topRecommendation];
-  return label
-    ? {
-      explanation: en
-        ? `Based on your answers, the highest score is ${label}. This is a learning guide, not an admission decision.`
-        : `Berdasarkan jawabanmu, skor tertinggi adalah ${label}. Hasil ini adalah panduan belajar, bukan keputusan penerimaan.`,
-      strengths: [en ? `Your strongest interest is ${label}.` : `Minatmu paling kuat pada ${label}.`],
-      learningSuggestions: [en ? `Try a beginner project related to ${label}.` : `Coba proyek pemula yang berkaitan dengan ${label}.`],
-    }
-    : {
-      explanation: en ? 'Your interests do not point to one program yet.' : 'Minatmu belum menunjukkan satu jurusan yang paling jelas.',
-      strengths: [en ? 'Your answers are still balanced.' : 'Jawabanmu masih seimbang.'],
-      learningSuggestions: [en ? 'Try software, game, networking, or telecommunications activities.' : 'Coba kegiatan di bidang software, game, jaringan, atau telekomunikasi.'],
-    };
-}
+export { hasilPenjelasan };
 
 const DAILY_LIMITS = { stela: Number(process.env.STELA_MAKS_PER_HARI || 200), nexttel: Number(process.env.NEXTTEL_MAKS_PER_HARI || 200) };
 
@@ -67,16 +53,6 @@ export async function reserveQuota(feature, limit, dayOverride) {
 const stelaLimit = rateLimit({ windowMs: 60 * 1000, limit: Number(process.env.STELA_MAKS_PER_IP || 5), standardHeaders: true, legacyHeaders: false });
 const nexttelLimit = rateLimit({ windowMs: 60 * 1000, limit: Number(process.env.NEXTTEL_MAKS_PER_IP || 10), standardHeaders: true, legacyHeaders: false });
 
-function stelaConfig() {
-  const providerUrl = process.env.STELA_PROVIDER_URL;
-  const apiKey = process.env.STELA_API_KEY || process.env.GEMINI_API_KEY || process.env.NINEROUTER_KEY;
-  if (!apiKey) return null;
-  if (providerUrl) return { kind: 'openai', url: providerUrl, apiKey, model: process.env.STELA_MODEL || process.env.NINEROUTER_MODEL || 'default' };
-  return { kind: 'gemini', url: 'https://generativelanguage.googleapis.com/v1beta/models', apiKey, model: process.env.STELA_MODEL || 'gemini-2.5-flash' };
-}
-
-// Profil dikirim sebagai data JSON satu baris (bukan instruksi). Nama dan nomor HP
-// sengaja tidak ikut: tidak diperlukan untuk menjawab.
 function profilKonteks(sesi) {
   if (!sesi) return '';
   const profil = { kategori: sesi.category, asal: sesi.organization, usia: sesi.age };
@@ -90,29 +66,10 @@ export function buildPrompt(history, sesi) {
   ];
 }
 
+// Kompatibilitas nama lama: pemanggilan provider kini melalui adapter bersama.
 async function callProvider(config, messages) {
-  const signal = AbortSignal.timeout(25000);
-  if (config.kind === 'gemini') {
-    const contents = messages.filter((m) => m.role !== 'system').map((m) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] }));
-    const res = await fetch(`${config.url}/${config.model}:generateContent?key=${encodeURIComponent(config.apiKey)}`, {
-      method: 'POST', signal, headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ systemInstruction: { parts: [{ text: messages.find((m) => m.role === 'system')?.content || '' }] }, contents, generationConfig: { temperature: 0.4, maxOutputTokens: 800 } }),
-    });
-    if (!res.ok) throw new Error(`provider_${res.status}`);
-    const data = await res.json();
-    const text = data?.candidates?.[0]?.content?.parts?.map((p) => p.text).join('').trim();
-    if (!text) throw new Error('provider_empty');
-    return text;
-  }
-  const res = await fetch(config.url, {
-    method: 'POST', signal, headers: { 'content-type': 'application/json', authorization: `Bearer ${config.apiKey}` },
-    body: JSON.stringify({ model: config.model, messages, temperature: 0.4, max_tokens: 800 }),
-  });
-  if (!res.ok) throw new Error(`provider_${res.status}`);
-  const data = await res.json();
-  const text = data?.choices?.[0]?.message?.content?.trim();
-  if (!text) throw new Error('provider_empty');
-  return text;
+  if (!config?.apiKey) throw new Error('provider_unavailable');
+  return callAiProvider(config, messages, { timeoutMs: 25000 });
 }
 
 // Sesi tamu NEXA. Token acak disimpan di cookie httpOnly, hanya hash-nya yang
@@ -156,8 +113,9 @@ aiRouter.post('/stela/session', nexaSessionLimit, asyncHandler(async (req, res) 
 aiRouter.post('/stela', wajibSesiNexa, stelaLimit, asyncHandler(async (req, res) => {
   const { pertanyaan } = z.object({ pertanyaan: z.string().trim().min(1).max(500) }).parse(req.body);
   if (process.env.STELA_AKTIF === 'false') return res.status(503).json({ error: 'NEXA sedang nonaktif.', code: 'config' });
-  const config = stelaConfig();
-  if (!config) return res.status(503).json({ error: 'NEXA belum dikonfigurasi oleh administrator.', code: 'config' });
+  const config = await resolveAiConfig('stela');
+  if (config?.disabled) return res.status(503).json({ error: 'NEXA sedang nonaktif.', code: 'config' });
+  if (!config?.apiKey) return res.status(503).json({ error: 'NEXA belum dikonfigurasi oleh administrator.', code: 'config' });
   if (!(await reserveQuota('stela', DAILY_LIMITS.stela))) return res.status(429).json({ error: 'Kuota NEXA hari ini sudah habis.', code: 'quota_exhausted' });
 
   let history = [];
@@ -190,5 +148,6 @@ aiRouter.post('/nexttel', nexttelLimit, asyncHandler(async (req, res) => {
   if (!(await reserveQuota('nexttel', DAILY_LIMITS.nexttel))) return res.status(429).json({ error: 'Kuota NextTel hari ini sudah habis.', code: 'quota_exhausted' });
   const result = hitungHasilNextTel(answers);
   if (!result) throw badRequest('Jawaban tidak valid.');
-  res.json({ ...hasilPenjelasan(result, language || 'id'), data: result });
+  const explanation = await jelaskanHasil(result, language || 'id');
+  res.json({ ...explanation, data: result });
 }));
