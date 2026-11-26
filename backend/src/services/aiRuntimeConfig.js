@@ -1,6 +1,6 @@
 import { prisma } from '../db.js';
 import { decryptAiApiKey } from './aiConfigCrypto.js';
-import { resolveHostnameSafely, validateEndpoint } from './aiProvider.js';
+import { normalizeProvider, resolveHostnameSafely, validateEndpoint } from './aiProvider.js';
 
 const CACHE_TTL_MS = 15_000;
 const cache = new Map();
@@ -33,12 +33,13 @@ async function readDatabaseConfig(service) {
   let row;
   try { row = await prisma.aiProviderConfig.findUnique({ where: { feature: service } }); } catch { return { source: 'unavailable' }; }
   if (!row) return null;
-  if (!row.enabled) return { source: 'database', disabled: true, provider: row.provider, model: row.model };
+  if (!row.enabled) return { source: 'database', disabled: true, provider: normalizeProvider(row.provider), model: row.model };
   let apiKey = null;
   if (row.encryptedApiKey) {
-    try { apiKey = decryptAiApiKey(row.encryptedApiKey); } catch { return { source: 'database', error: 'decryption_failed', provider: row.provider, model: row.model }; }
+    try { apiKey = decryptAiApiKey(row.encryptedApiKey); } catch { return { source: 'database', error: 'decryption_failed', provider: normalizeProvider(row.provider), model: row.model }; }
   }
-  return { source: 'database', provider: row.provider, endpoint: row.endpoint, model: row.model, apiKey, enabled: true };
+  const provider = normalizeProvider(row.provider);
+  return { source: 'database', provider, endpoint: row.endpoint, model: row.model, apiKey, enabled: true };
 }
 
 /**
