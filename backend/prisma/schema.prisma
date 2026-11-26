@@ -409,6 +409,21 @@ model AiDailyAttempt {
   @@map("ai_daily_attempts")
 }
 
+model AiProviderConfig {
+  id                String     @id @default(uuid()) @db.Char(36)
+  feature           AiFeature  @unique
+  provider          String     @db.VarChar(40)
+  endpoint          String?    @db.VarChar(2048)
+  model             String     @db.VarChar(180)
+  encryptedApiKey   String?    @map("encrypted_api_key") @db.Text
+  encryptionVersion String?    @map("encryption_version") @db.VarChar(20)
+  enabled           Boolean    @default(false)
+  updatedBy         String?    @map("updated_by") @db.Char(36)
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+  @@map("ai_provider_configs")
+}
+
 model SiteVisitor {
   visitorHash String   @map("visitor_hash") @db.VarChar(128)
   day         DateTime @db.Date

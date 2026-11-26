@@ -2,6 +2,18 @@ import { app } from './app.js';
 import { env } from './config/env.js';
 import { closeDatabase } from './db.js';
 import { hapusSesiNexaKedaluwarsa } from './routes/ai.js';
+import { validateAiEncryptionKey } from './services/aiConfigCrypto.js';
+
+// Validasi key enkripsi saat startup bila tersedia. Tidak mematikan proses
+// supaya migrasi tetap aman; bila key tidak valid, penyimpanan API key dari
+// dashboard akan ditolak dengan pesan yang jelas.
+if (env.AI_CONFIG_ENCRYPTION_KEY) {
+  try { validateAiEncryptionKey(); } catch (error) {
+    console.error(JSON.stringify({ level: 'error', event: 'ai_config_key_invalid', message: error.message }));
+  }
+} else {
+  console.warn(JSON.stringify({ level: 'warn', event: 'ai_config_key_missing', message: 'AI_CONFIG_ENCRYPTION_KEY belum diset; penyimpanan API key AI melalui dashboard dinonaktifkan.' }));
+}
 
 const server = app.listen(env.PORT, () => {
   console.log(`Backend listening on http://localhost:${env.PORT}`);

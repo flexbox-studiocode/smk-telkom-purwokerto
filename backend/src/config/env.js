@@ -6,6 +6,7 @@ const schema = z.object({
   PORT: z.coerce.number().int().min(1).max(65535).default(3000),
   DATABASE_URL: z.string().min(1),
   SESSION_SECRET: z.string().min(32),
+  AI_CONFIG_ENCRYPTION_KEY: z.preprocess((value) => value === '' ? undefined : value, z.string().min(32).optional()),
   FRONTEND_URL: z.string().url().default('http://localhost:5173'),
   UPLOAD_ROOT: z.string().optional(),
   // Absolute public base URL of this backend, used to build media URLs.
