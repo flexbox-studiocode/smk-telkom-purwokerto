@@ -42,7 +42,36 @@ Jangan commit file `.env`, API key, database dump, atau ciphertext produksi.
 2. Bila database belum memiliki baris, NEXA memakai fallback environment lama.
 3. NextTel memakai provider hanya bila ada konfigurasi NextTel atau variabel `NEXTTEL_*` khusus.
 4. Bila admin menonaktifkan layanan database, fallback environment untuk layanan itu tidak dipakai.
-5. Menghapus API key menonaktifkan baris database. NEXA dapat memakai fallback environment lama lagi; NextTel selalu tetap memberi hasil scoring lokal dan narasi fallback.
+5. Menghapus API key menonaktifkan baris database (`enabled=false`, key = `null`). Selama baris disabled itu ada, fallback environment untuk layanan tersebut **tidak** dipakai. Admin harus menyimpan key baru untuk mengaktifkan kembali. NextTel selalu tetap memberi hasil scoring lokal dan narasi fallback.
+
+## Aturan penyimpanan (PUT)
+
+- Konfigurasi pertama kali **wajib** menyertakan API key.
+- Bila Admin mengubah provider/model/endpoint tanpa mengetik ulang API key, key lama dipertahankan (field key boleh dikosongkan). Field key tidak pernah diisi nilai palsu/masked, dan string kosong tidak mengirim `apiKey`, sehingga key lama tidak tertimpa.
+- Bila key tersimpan gagal didekripsi, Admin diminta memasukkan key baru.
+- Layanan tidak dapat diaktifkan (`PATCH .../status` `enabled=true`) sebelum ada key tersimpan.
+- Uji koneksi memakai konfigurasi yang sedang diedit. Bila field key dikosongkan, server memakai key tersimpan agar tombol uji tetap berguna tanpa menyimpan ulang.
+
+## Setup lokal
+
+```bash
+# 1. Backend
+cd backend
+cp .env.example .env               # isi DATABASE_URL, SESSION_SECRET, dll.
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+# tempel hasilnya ke AI_CONFIG_ENCRYPTION_KEY di .env
+npx prisma migrate deploy          # atau `npx prisma migrate dev` saat pengembangan
+npx prisma generate                # bila Prisma Client belum digenerate
+npm run dev                        # restart backend setelah mengubah .env
+
+# 2. Frontend (terminal lain)
+cd frontend
+npm run dev                        # http://localhost:5173
+```
+
+Setelah `AI_CONFIG_ENCRYPTION_KEY` diubah, **restart backend**. Jangan menaruh key ini
+di environment `VITE_*` frontend. API key provider tidak pernah dimasukkan ke `.env`
+bila Admin memakai dashboard; dashboard adalah jalur yang disarankan.
 
 ## Penyimpanan rahasia
 

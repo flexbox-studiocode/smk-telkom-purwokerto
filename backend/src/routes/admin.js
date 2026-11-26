@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { prisma } from '../db.js';
 import { requireAdmin, requireAuth } from '../middleware/auth.js';
 import { asyncHandler, badRequest, parsePagination } from '../utils/http.js';
-import { AI_CONFIG_ENCRYPTION_VERSION, encryptAiApiKey } from '../services/aiConfigCrypto.js';
+import { AI_CONFIG_ENCRYPTION_VERSION, decryptAiApiKey, encryptAiApiKey } from '../services/aiConfigCrypto.js';
 import { callAiProvider, validateProviderConfig } from '../services/aiProvider.js';
 import { invalidateAiConfigCache } from '../services/aiRuntimeConfig.js';
 
@@ -32,11 +32,19 @@ adminRouter.put('/ai-settings/:service', asyncHandler(async (req, res) => {
   const body = aiConfigSchema.parse(req.body);
   let normalized;
   try { normalized = validateProviderConfig(body); } catch (error) { throw badRequest(error.message, undefined); }
+  const existing = await prisma.aiProviderConfig.findUnique({ where: { feature: service } });
+
+  // Konfigurasi pertama wajib menyertakan API key. Saat mengganti model/provider,
+  // key lama dipertahankan bila field key sengaja dikosongkan oleh Admin.
+  if (!body.apiKey && !existing?.encryptedApiKey) throw badRequest('API key wajib diisi saat konfigurasi pertama kali.');
+  if (!body.apiKey && existing?.encryptedApiKey) {
+    try { decryptAiApiKey(existing.encryptedApiKey); } catch { throw badRequest('API key tersimpan tidak dapat didekripsi. Masukkan API key baru.'); }
+  }
+
   let encryptedApiKey;
   if (body.apiKey) {
     try { encryptedApiKey = encryptAiApiKey(body.apiKey); } catch (error) { throw badRequest(error.message, undefined); }
   }
-  const existing = await prisma.aiProviderConfig.findUnique({ where: { feature: service } });
   const data = {
     feature: service,
     provider: normalized.provider,
@@ -57,6 +65,9 @@ adminRouter.put('/ai-settings/:service', asyncHandler(async (req, res) => {
 adminRouter.patch('/ai-settings/:service/status', asyncHandler(async (req, res) => {
   const service = aiServiceSchema.parse(req.params.service);
   const { enabled } = z.object({ enabled: z.boolean() }).parse(req.body);
+  const existing = await prisma.aiProviderConfig.findUnique({ where: { feature: service } });
+  if (!existing) throw badRequest('Konfigurasi layanan belum tersedia.');
+  if (enabled && !existing.encryptedApiKey) throw badRequest('Layanan tidak dapat diaktifkan sebelum API key disimpan.');
   const row = await prisma.aiProviderConfig.update({ where: { feature: service }, data: { enabled, updatedBy: req.user.id } });
   invalidateAiConfigCache();
   res.json({ data: aiPublic(row) });
@@ -64,9 +75,14 @@ adminRouter.patch('/ai-settings/:service/status', asyncHandler(async (req, res) 
 
 adminRouter.delete('/ai-settings/:service/key', asyncHandler(async (req, res) => {
   const service = aiServiceSchema.parse(req.params.service);
+  const existing = await prisma.aiProviderConfig.findUnique({ where: { feature: service } });
+  if (!existing) throw badRequest('Konfigurasi layanan belum tersedia.');
+  // Menghapus key menonaktifkan baris database. Selama baris ini ada dan disabled,
+  // fallback environment TIDAK dipakai (aturan: konfigurasi database yang disabled
+  // tetap disabled). Admin dapat menyimpan key baru untuk mengaktifkan kembali.
   const row = await prisma.aiProviderConfig.update({ where: { feature: service }, data: { encryptedApiKey: null, enabled: false, updatedBy: req.user.id } });
   invalidateAiConfigCache();
-  res.json({ data: aiPublic(row), fallback: { environment: true } });
+  res.json({ data: aiPublic(row), fallback: { environment: false } });
 }));
 
 adminRouter.post('/ai-settings/:service/test', aiTestLimit, asyncHandler(async (req, res) => {
@@ -74,12 +90,21 @@ adminRouter.post('/ai-settings/:service/test', aiTestLimit, asyncHandler(async (
   const body = aiConfigSchema.parse(req.body);
   let normalized;
   try { normalized = validateProviderConfig(body); } catch (error) { throw badRequest(error.message, undefined); }
-  if (!body.apiKey) throw badRequest('API key wajib diisi untuk uji koneksi.', undefined);
+  // Uji memakai konfigurasi yang sedang diedit. Bila Admin tidak mengetik key baru,
+  // pakai key tersimpan agar tombol uji tetap berguna tanpa menyimpan ulang.
+  let apiKey = body.apiKey;
+  if (!apiKey) {
+    const existing = await prisma.aiProviderConfig.findUnique({ where: { feature: service } });
+    if (!existing?.encryptedApiKey) throw badRequest('API key wajib diisi untuk uji koneksi.');
+    try { apiKey = decryptAiApiKey(existing.encryptedApiKey); } catch { throw badRequest('API key tersimpan tidak dapat didekripsi. Masukkan API key baru.'); }
+  }
   try {
-    await callAiProvider({ ...normalized, apiKey: body.apiKey }, [{ role: 'user', content: 'Balas singkat: koneksi berhasil.' }], { timeoutMs: 10000, testOnly: true });
+    await callAiProvider({ ...normalized, apiKey }, [{ role: 'user', content: 'Balas singkat: koneksi berhasil.' }], { timeoutMs: 10000, testOnly: true });
   } catch (error) {
+    // Jangan pernah mengembalikan pesan mentah provider (dapat memuat detail endpoint/header).
     const timeout = error?.name === 'TimeoutError' || /timeout/i.test(error?.message || '');
-    return res.status(timeout ? 504 : 502).json({ error: 'Koneksi gagal. Periksa provider, model, endpoint, dan API key.', code: timeout ? 'provider_timeout' : 'provider_failed' });
+    console.error(JSON.stringify({ level: 'warn', event: 'ai_test_failed', service, code: timeout ? 'provider_timeout' : 'provider_failed' }));
+    return res.status(timeout ? 504 : 502).json({ error: timeout ? 'Koneksi timeout. Periksa endpoint dan coba lagi.' : 'Koneksi gagal. Periksa provider, model, endpoint, dan API key.', code: timeout ? 'provider_timeout' : 'provider_failed' });
   }
   res.json({ data: { service, message: 'Koneksi berhasil.' } });
 }));
