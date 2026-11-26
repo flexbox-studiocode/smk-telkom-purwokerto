@@ -1,4 +1,5 @@
-import { resolveAiConfig } from '../../services/aiRuntimeConfig.js';
+import { noteRuntimeResult, resolveAiConfig } from '../../services/aiRuntimeConfig.js';
+import { AiProviderError } from '../../services/aiErrors.js';
 import { callAiProvider } from '../../services/aiProvider.js';
 
 const LABELS = { RPL: 'Rekayasa Perangkat Lunak (RPL)', PG: 'Pengembangan Game (PG)', TKJ: 'Teknik Komputer dan Jaringan (TKJ)', TJAT: 'Teknik Jaringan Akses Telekomunikasi (TJAT)' };
@@ -42,8 +43,11 @@ export async function jelaskanHasil(result, language = 'id') {
   if (!config?.apiKey || config.disabled) return { ...fallback, explanationSource: 'fallback' };
   try {
     const text = await callAiProvider(config, buildMessages(result, language), { timeoutMs: 15000 });
+    noteRuntimeResult('nexttel', config, 'OK');
     return { ...fallback, explanation: text, explanationSource: 'provider' };
-  } catch {
+  } catch (error) {
+    // Scoring lokal tetap dikembalikan; status hanya dicatat untuk dashboard.
+    if (error instanceof AiProviderError) noteRuntimeResult('nexttel', config, error.code);
     return { ...fallback, explanationSource: 'fallback' };
   }
 }

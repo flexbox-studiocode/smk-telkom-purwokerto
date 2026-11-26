@@ -3,14 +3,26 @@
 import { defineAdapter, DEFAULT_MAX_OUTPUT_TOKENS, joinEndpoint } from '../aiProviderShared.js';
 import { AiProviderError, AI_ERROR_CODES } from '../aiErrors.js';
 
-export function buildOpenAiBody(messages, { model, maxOutputTokens = DEFAULT_MAX_OUTPUT_TOKENS } = {}) {
-  return {
+// Model reasoning OpenAI (o1/o3/o4/gpt-5*) menolak max_tokens dan temperature
+// selain default; parameter yang benar adalah max_completion_tokens.
+export const isOpenAiReasoningModel = (model) => /^(o\d|gpt-5)/i.test(String(model ?? ''));
+
+export function buildOpenAiBody(messages, { model, maxOutputTokens = DEFAULT_MAX_OUTPUT_TOKENS, reasoningParams = false } = {}) {
+  const body = {
     model,
     messages: messages.map((m) => ({ role: m.role, content: String(m.content ?? '') })),
-    temperature: 0.4,
-    max_tokens: maxOutputTokens,
     stream: false,
   };
+  if (reasoningParams && isOpenAiReasoningModel(model)) {
+    // Token reasoning ikut memakai budget; effort rendah menjaga jawaban terisi.
+    // ponytail: effort tetap 'low'; jadikan pengaturan bila admin butuh kualitas lebih.
+    body.max_completion_tokens = Math.max(maxOutputTokens, 2048);
+    body.reasoning_effort = 'low';
+  } else {
+    body.temperature = 0.4;
+    body.max_tokens = maxOutputTokens;
+  }
+  return body;
 }
 
 export function parseOpenAiResponse(data) {
@@ -19,11 +31,12 @@ export function parseOpenAiResponse(data) {
   const text = Array.isArray(content)
     ? content.filter((part) => part?.type === 'text' && typeof part.text === 'string').map((part) => part.text).join('').trim()
     : typeof content === 'string' ? content.trim() : '';
-  if (!text) throw new AiProviderError(AI_ERROR_CODES.INVALID_PROVIDER_RESPONSE, { reason: 'empty_choice' });
+  const finish = data?.choices?.[0]?.finish_reason;
+  if (!text) throw new AiProviderError(AI_ERROR_CODES.INVALID_PROVIDER_RESPONSE, { reason: finish ? `finish:${finish}` : 'empty_choice' });
   return text;
 }
 
-export function createOpenAiCompatibleAdapter({ id, label, defaultEndpoint = null, requiresEndpoint = !defaultEndpoint }) {
+export function createOpenAiCompatibleAdapter({ id, label, defaultEndpoint = null, requiresEndpoint = !defaultEndpoint, reasoningParams = false, extraHeaders = {} }) {
   return defineAdapter({
     id,
     label,
@@ -35,8 +48,8 @@ export function createOpenAiCompatibleAdapter({ id, label, defaultEndpoint = nul
       return {
         url: joinEndpoint(config.endpoint, '/chat/completions'),
         method: 'POST',
-        headers: { 'content-type': 'application/json', authorization: `Bearer ${config.apiKey}` },
-        body: buildOpenAiBody(messages, { model: config.model, maxOutputTokens }),
+        headers: { 'content-type': 'application/json', authorization: `Bearer ${config.apiKey}`, ...extraHeaders },
+        body: buildOpenAiBody(messages, { model: config.model, maxOutputTokens, reasoningParams }),
       };
     },
     parseChatResponse: parseOpenAiResponse,
@@ -53,7 +66,21 @@ export const openAiAdapter = createOpenAiCompatibleAdapter({
   id: 'openai',
   label: 'OpenAI',
   defaultEndpoint: 'https://api.openai.com/v1',
-  requiresEndpoint: true,
+  reasoningParams: true,
+});
+
+export const openRouterAdapter = createOpenAiCompatibleAdapter({
+  id: 'openrouter',
+  label: 'OpenRouter',
+  defaultEndpoint: 'https://openrouter.ai/api/v1',
+  // Header atribusi opsional yang direkomendasikan OpenRouter.
+  extraHeaders: { 'x-title': 'SMK Telkom Purwokerto' },
+});
+
+export const groqAdapter = createOpenAiCompatibleAdapter({
+  id: 'groq',
+  label: 'Groq',
+  defaultEndpoint: 'https://api.groq.com/openai/v1',
 });
 
 export const deepseekAdapter = createOpenAiCompatibleAdapter({

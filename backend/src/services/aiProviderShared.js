@@ -10,6 +10,7 @@ import {
   AI_ERROR_CODES,
   classifyProviderError,
   logProviderEvent,
+  providerErrorDetail,
   newRequestId,
 } from './aiErrors.js';
 
@@ -100,7 +101,10 @@ export async function sendProviderRequest(adapter, request, { timeoutMs, provide
     let bodyText = '';
     try { bodyText = (await response.text()).slice(0, 2000); } catch { bodyText = ''; }
     const code = classifyProviderError({ status: response.status, providerText: bodyText, hint: adapter.hint });
-    throw new AiProviderError(code, { status: response.status, provider, model, requestId });
+    // Semua nilai header (termasuk API key) disensor dari pesan provider.
+    const detail = providerErrorDetail(bodyText, Object.values(request.headers || {}));
+    logProviderEvent('warn', `${eventPrefix}_http_error`, { provider, model, status: response.status, code, detail, requestId, ms: Date.now() - startedAt });
+    throw new AiProviderError(code, { status: response.status, provider, model, requestId, detail });
   }
 
   try {
@@ -171,26 +175,59 @@ export async function listModels(adapter, config, { timeoutMs = 15000, skipDnsCh
   const seen = new Set();
   for (const item of Array.isArray(models) ? models : []) {
     const id = String(item?.id ?? '').trim();
-    if (!id || seen.has(id)) continue;
+    if (!id || seen.has(id) || !isChatModelId(id)) continue;
     seen.add(id);
     unique.push({ id, label: item?.label ? String(item.label) : id });
     if (unique.length >= MAX_MODELS) break;
   }
+  unique.sort((a, b) => a.id.localeCompare(b.id));
   return { supported: true, models: unique };
 }
 
+// Daftar model provider memuat model embedding, gambar, suara, moderasi, dll.
+// yang tidak dapat dipakai untuk chat. Filter berdasarkan id karena tidak
+// semua provider mengirim metadata kapabilitas.
+const NON_CHAT_MODEL = /(embed|tts|whisper|dall-e|gpt-image|imagen|veo|-image|image-|aqa|moderation|transcribe|realtime|audio|speech|rerank|guard|sora|computer-use|robotics|-live|babbage|davinci|lyria)/i;
+export const isChatModelId = (id) => !NON_CHAT_MODEL.test(String(id));
+
+// Respons kosong karena batas token tercapai tetap membuktikan model menerima
+// permintaan; dipakai oleh uji/verifikasi yang sengaja memakai budget kecil.
+const isTruncatedEmpty = (error) => error instanceof AiProviderError
+  && error.code === AI_ERROR_CODES.INVALID_PROVIDER_RESPONSE
+  && /^finish:(MAX_TOKENS|length|max_tokens)/i.test(error.reason || '');
+
 /**
- * Memverifikasi API key tanpa menyimpan apa pun.
- * Bila provider mendukung daftar model, cukup daftar model (murah). Bila tidak,
- * kirim satu permintaan minimal ke model terpilih.
+ * Uji koneksi: memastikan endpoint provider dapat dijangkau dan merespons.
+ * Respons HTTP apa pun (termasuk 401) berarti jaringan/endpoint berfungsi;
+ * hanya kegagalan jaringan, DNS, timeout, atau endpoint terlarang yang gagal.
+ * Tidak pernah menyimpan atau mengubah konfigurasi.
  */
-export async function verifyApiKey(adapter, config, { timeoutMs = 12000, skipDnsCheck = false } = {}) {
+export async function testConnection(adapter, config, { timeoutMs = 10000, skipDnsCheck = false } = {}) {
   if (!config?.apiKey) throw new AiProviderError(AI_ERROR_CODES.CREDENTIAL_MISSING, { provider: adapter.id, model: config?.model });
-  if (adapter.supportsModelList) {
-    const result = await listModels(adapter, config, { timeoutMs, skipDnsCheck });
-    return { verified: true, method: 'model_list', modelCount: result.models.length };
+  try {
+    if (adapter.supportsModelList) await listModels(adapter, config, { timeoutMs, skipDnsCheck });
+    else await generateResponse(adapter, config, [{ role: 'user', content: 'ping' }], { timeoutMs, skipDnsCheck, maxOutputTokens: VERIFY_MAX_OUTPUT_TOKENS, testOnly: true });
+    return { reachable: true, accepted: true };
+  } catch (error) {
+    if (isTruncatedEmpty(error)) return { reachable: true, accepted: true };
+    if (error instanceof AiProviderError && error.status > 0) {
+      return { reachable: true, accepted: false, code: error.code, detail: error.detail };
+    }
+    throw error;
   }
-  await generateResponse(adapter, config, [{ role: 'user', content: 'ping' }], { timeoutMs, skipDnsCheck, maxOutputTokens: VERIFY_MAX_OUTPUT_TOKENS, testOnly: true });
+}
+
+/**
+ * Verifikasi API key: kredensial diterima DAN model terpilih benar-benar dapat
+ * dipakai, dibuktikan dengan satu permintaan generate minimal ke model itu.
+ */
+export async function verifyApiKey(adapter, config, { timeoutMs = 20000, skipDnsCheck = false } = {}) {
+  if (!config?.apiKey) throw new AiProviderError(AI_ERROR_CODES.CREDENTIAL_MISSING, { provider: adapter.id, model: config?.model });
+  try {
+    await generateResponse(adapter, config, [{ role: 'user', content: 'Balas satu kata: siap.' }], { timeoutMs, skipDnsCheck, testOnly: true });
+  } catch (error) {
+    if (!isTruncatedEmpty(error)) throw error;
+  }
   return { verified: true, method: 'generate' };
 }
 
@@ -217,7 +254,7 @@ export function defineAdapter(spec) {
   const adapter = { ...spec, defaultEndpoint: spec.defaultEndpoint ?? null };
   adapter.validateConfig = (input) => validateConfigFor(adapter, input);
   adapter.generateResponse = (config, messages, opts) => generateResponse(adapter, config, messages, opts);
-  adapter.testConnection = (config, opts = {}) => generateResponse(adapter, config, [{ role: 'user', content: 'Balas singkat: koneksi berhasil.' }], { ...opts, testOnly: true });
+  adapter.testConnection = (config, opts) => testConnection(adapter, config, opts);
   adapter.listModels = (config, opts) => listModels(adapter, config, opts);
   adapter.verifyApiKey = (config, opts) => verifyApiKey(adapter, config, opts);
   adapter.normalizeError = (error) => (error instanceof AiProviderError ? error.code : AI_ERROR_CODES.PROVIDER_UNAVAILABLE);

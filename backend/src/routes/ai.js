@@ -7,7 +7,7 @@ import { hashToken, randomToken } from '../utils/crypto.js';
 import { prechatSchema } from '../modules/stela/prechat.mjs';
 import { hitungHasilNextTel } from '../modules/nexttel/scoring.mjs';
 import { KONTEN_SEKOLAH } from '../modules/stela/konten-sekolah.mjs';
-import { resolveAiConfig } from '../services/aiRuntimeConfig.js';
+import { noteRuntimeResult, resolveAiConfig } from '../services/aiRuntimeConfig.js';
 import { callAiProvider } from '../services/aiProvider.js';
 import { AiProviderError, AI_ERROR_CODES, httpStatusForCode, logProviderEvent, visitorMessageForCode } from '../services/aiErrors.js';
 import { hasilPenjelasan, jelaskanHasil } from '../modules/nexttel/explanation.js';
@@ -166,15 +166,18 @@ aiRouter.post('/stela', wajibSesiNexa, stelaLimit, asyncHandler(async (req, res)
 
   try {
     const reply = await callProvider(config, buildPrompt(history, req.nexaSession));
+    noteRuntimeResult('stela', config, 'OK');
     res.json({ reply, sumber: 'provider' });
   } catch (error) {
     const code = error instanceof AiProviderError ? error.code : AI_ERROR_CODES.PROVIDER_UNAVAILABLE;
+    noteRuntimeResult('stela', config, code);
     logProviderEvent('error', 'stela_provider_failed', {
       provider: config.provider,
       model: config.model,
       code,
       status: error?.status || 0,
       requestId: error?.requestId,
+      detail: error?.detail,
     });
     res.status(httpStatusForCode(code)).json({ error: visitorMessageForCode(code), code });
   }

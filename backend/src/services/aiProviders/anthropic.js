@@ -24,7 +24,7 @@ export function parseAnthropicResponse(data) {
     .map((block) => block.text)
     .join('')
     .trim();
-  if (!text) throw new AiProviderError(AI_ERROR_CODES.INVALID_PROVIDER_RESPONSE, { reason: 'empty_content' });
+  if (!text) throw new AiProviderError(AI_ERROR_CODES.INVALID_PROVIDER_RESPONSE, { reason: data?.stop_reason ? `finish:${data.stop_reason}` : 'empty_content' });
   return text;
 }
 
@@ -34,9 +34,8 @@ export const anthropicAdapter = defineAdapter({
   hint: 'anthropic',
   requiresEndpoint: false,
   defaultEndpoint: DEFAULT_ENDPOINT,
-  // Anthropic models endpoint is not universally available for every account,
-  // so discovery is explicitly unsupported; verification uses cheap generation.
-  supportsModelList: false,
+  // GET /v1/models tersedia untuk setiap API key Anthropic.
+  supportsModelList: true,
   buildChatRequest(config, messages, { maxOutputTokens }) {
     return {
       url: joinEndpoint(config.endpoint, '/messages'),
@@ -50,6 +49,16 @@ export const anthropicAdapter = defineAdapter({
     };
   },
   parseChatResponse: parseAnthropicResponse,
+  buildModelsRequest(config) {
+    return {
+      url: `${joinEndpoint(config.endpoint, '/models')}?limit=1000`,
+      method: 'GET',
+      headers: { 'x-api-key': config.apiKey, 'anthropic-version': ANTHROPIC_VERSION },
+    };
+  },
+  parseModelsResponse(data) {
+    return (data?.data ?? []).map((m) => ({ id: m.id, label: m.display_name || m.id }));
+  },
 });
 
 export default anthropicAdapter;

@@ -5,7 +5,9 @@ import { geminiAdapter } from './aiProviders/gemini.js';
 import {
   customOpenAiAdapter,
   deepseekAdapter,
+  groqAdapter,
   openAiAdapter,
+  openRouterAdapter,
   qwenAdapter,
 } from './aiProviders/openaiCompatible.js';
 import { anthropicAdapter } from './aiProviders/anthropic.js';
@@ -15,6 +17,8 @@ const ADAPTERS = Object.freeze([
   geminiAdapter,
   anthropicAdapter,
   deepseekAdapter,
+  openRouterAdapter,
+  groqAdapter,
   qwenAdapter,
   customOpenAiAdapter,
 ]);

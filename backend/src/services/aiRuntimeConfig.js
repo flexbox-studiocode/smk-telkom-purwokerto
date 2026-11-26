@@ -39,7 +39,31 @@ async function readDatabaseConfig(service) {
     try { apiKey = decryptAiApiKey(row.encryptedApiKey); } catch { return { source: 'database', error: 'decryption_failed', provider: normalizeProvider(row.provider), model: row.model }; }
   }
   const provider = normalizeProvider(row.provider);
-  return { source: 'database', provider, endpoint: row.endpoint, model: row.model, apiKey, enabled: true };
+  return { source: 'database', provider, endpoint: row.endpoint, model: row.model, apiKey, enabled: true, lastCheckCode: row.lastCheckCode };
+}
+
+// Kode yang menggambarkan kondisi konfigurasi (bukan gangguan per-permintaan
+// seperti timeout). Hanya kode ini, plus 'OK', yang direkam sebagai status.
+const STATUS_CODES = new Set(['OK', 'API_KEY_INVALID', 'PERMISSION_DENIED', 'MODEL_NOT_FOUND', 'QUOTA_EXCEEDED', 'INVALID_ENDPOINT', 'INVALID_REQUEST', 'PROVIDER_UNAVAILABLE', 'DECRYPTION_FAILED']);
+
+/**
+ * Merekam hasil pemeriksaan terakhir terhadap konfigurasi TERSIMPAN suatu
+ * layanan. Raw SQL dipakai agar updated_at (waktu admin mengubah konfigurasi)
+ * tidak ikut berubah. Kegagalan rekam tidak boleh menggagalkan permintaan.
+ */
+export async function recordAiCheck(service, code) {
+  if (!STATUS_CODES.has(code)) return;
+  try {
+    await prisma.$executeRaw`UPDATE ai_provider_configs SET last_check_code = ${code}, last_checked_at = ${new Date()} WHERE feature = ${service}`;
+    const cached = cache.get(service)?.value;
+    if (cached && cached.source === 'database') cached.lastCheckCode = code;
+  } catch { /* status hanya informatif */ }
+}
+
+/** Rekam hasil runtime (chat/penjelasan) hanya bila statusnya berubah. */
+export function noteRuntimeResult(service, config, code) {
+  if (config?.source !== 'database' || config.lastCheckCode === code) return;
+  void recordAiCheck(service, code);
 }
 
 /**

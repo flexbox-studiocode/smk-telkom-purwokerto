@@ -26,6 +26,13 @@ export function geminiDisableThinking(model) {
   return /(^|\/)gemini-[\d.]+-flash($|-lite)/.test(name) || /(^|\/)gemini-flash($|-lite)/.test(name);
 }
 
+// Gemini 3+ menolak thinkingBudget 0 ("invalid argument") dan memakai
+// thinkingLevel; 'minimal' adalah setara "nonaktif" pada model Flash 3.x.
+export function geminiMinimalThinking(model) {
+  const major = Number(/gemini-(\d+)/.exec(String(model ?? '').toLowerCase())?.[1]);
+  return major >= 3 ? { thinkingLevel: 'minimal' } : { thinkingBudget: 0 };
+}
+
 export function buildGeminiBody(messages, { model, maxOutputTokens = DEFAULT_MAX_OUTPUT_TOKENS } = {}) {
   const system = messages.filter((m) => m.role === 'system').map((m) => String(m.content ?? '')).join('\n\n').trim();
   const contents = messages
@@ -33,7 +40,7 @@ export function buildGeminiBody(messages, { model, maxOutputTokens = DEFAULT_MAX
     .map((m) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: String(m.content) }] }));
   const body = { contents, generationConfig: { temperature: 0.4, maxOutputTokens } };
   if (system) body.systemInstruction = { parts: [{ text: system }] };
-  if (geminiDisableThinking(model)) body.generationConfig.thinkingConfig = { thinkingBudget: 0 };
+  if (geminiDisableThinking(model)) body.generationConfig.thinkingConfig = geminiMinimalThinking(model);
   return body;
 }
 
@@ -80,7 +87,10 @@ export const geminiAdapter = defineAdapter({
     return { url: url.toString(), method: 'GET', headers: { 'x-goog-api-key': config.apiKey } };
   },
   parseModelsResponse(data) {
-    return (data?.models ?? []).map((m) => ({
+    // Hanya model yang mendukung generateContent (chat/teks).
+    return (data?.models ?? [])
+      .filter((m) => !Array.isArray(m.supportedGenerationMethods) || m.supportedGenerationMethods.includes('generateContent'))
+      .map((m) => ({
       id: String(m.name ?? '').replace(/^models\//i, ''),
       label: m.displayName || undefined,
     }));

@@ -88,6 +88,14 @@ test('Gemini: model pro tidak diberi thinkingBudget 0 (tidak didukung)', () => {
   assert.equal(body.generationConfig.thinkingConfig, undefined);
 });
 
+test('Gemini 3+: thinking diminimalkan lewat thinkingLevel, bukan thinkingBudget 0', () => {
+  const body = (model) => buildGeminiBody([{ role: 'user', content: 'x' }], { model }).generationConfig.thinkingConfig;
+  assert.deepEqual(body('gemini-3.5-flash-lite'), { thinkingLevel: 'minimal' });
+  assert.deepEqual(body('models/gemini-3.5-flash'), { thinkingLevel: 'minimal' });
+  assert.deepEqual(body('gemini-2.5-flash-lite'), { thinkingBudget: 0 });
+  assert.equal(body('gemini-3.5-pro'), undefined);
+});
+
 test('Gemini: budget output cukup besar agar jawaban tidak kosong', async () => {
   const calls = captureFetch(() => Response.json({ candidates: [{ content: { parts: [{ text: 'ok' }] } }] }));
   await callAiProvider(config(), [{ role: 'user', content: 'x' }], { skipDnsCheck: true });
