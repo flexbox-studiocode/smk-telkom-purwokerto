@@ -142,6 +142,35 @@ test('admin menyimpan konfigurasi: API key terenkripsi dan tidak pernah dikembal
   assert.equal((await prisma.aiProviderConfig.findUnique({ where: { feature: 'stela' } })).encryptedApiKey, null);
 });
 
+test('NEXA dan NextTel disimpan terpisah, GET hanya mengembalikan metadata aman', async () => {
+  const admin = makeClient();
+  await login(admin, ADMIN_EMAIL);
+  const secrets = { stela: 'sk-nexa-terpisah', nexttel: 'sk-nexttel-terpisah' };
+  for (const [service, apiKey] of Object.entries(secrets)) {
+    const res = await admin.request(`/api/admin/ai-settings/${service}`, {
+      method: 'PUT',
+      body: JSON.stringify({ provider: 'gemini', model: 'gemini-2.5-flash', apiKey, enabled: true }),
+    });
+    assert.equal(res.status, 200, JSON.stringify(res.body));
+  }
+  const rows = await prisma.aiProviderConfig.findMany({ orderBy: { feature: 'asc' } });
+  assert.equal(rows.length, 2);
+  assert.notEqual(rows[0].encryptedApiKey, rows[1].encryptedApiKey, 'setiap layanan menyimpan secret sendiri');
+
+  const fetched = await admin.request('/api/admin/ai-settings');
+  assert.equal(fetched.status, 200);
+  assert.equal(fetched.body.data.length, 2);
+  for (const item of fetched.body.data) {
+    assert.equal(item.configured, true);
+    assert.ok(item.encryptionVersion, 'hanya versi enkripsi, bukan ciphertext, boleh dikembalikan');
+    assert.equal(item.encryptedApiKey, undefined);
+    assert.equal(item.updatedBy, undefined);
+    assert.equal(item.id, undefined);
+  }
+  const serialized = JSON.stringify(fetched.body);
+  for (const secret of Object.values(secrets)) assert.ok(!serialized.includes(secret));
+});
+
 test('uji koneksi dengan endpoint internal ditolak sebelum request keluar', async () => {
   const admin = makeClient();
   await login(admin, ADMIN_EMAIL);

@@ -21,6 +21,7 @@
     "stela:uji": "node scripts/uji-stela.mjs",
     "ninerouter:uji": "node scripts/uji-ninerouter.mjs",
     "ai:benchmark": "node scripts/benchmark-ai.mjs",
+    "ai:uji": "node scripts/uji-ai-settings.mjs",
     "aset:bersihkan": "node scripts/bersihkan-latar.mjs",
     "aset:ringankan": "node scripts/ringankan-aset.mjs",
     "aset:optimum": "node scripts/optimalkan-aset-berat.mjs",
