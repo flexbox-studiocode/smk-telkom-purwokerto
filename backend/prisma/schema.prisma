@@ -412,12 +412,17 @@ model AiDailyAttempt {
 model AiProviderConfig {
   id                String     @id @default(uuid()) @db.Char(36)
   feature           AiFeature  @unique
+  displayName       String?    @map("display_name") @db.VarChar(80)
   provider          String     @db.VarChar(40)
   endpoint          String?    @db.VarChar(2048)
   model             String     @db.VarChar(180)
   encryptedApiKey   String?    @map("encrypted_api_key") @db.Text
   encryptionVersion String?    @map("encryption_version") @db.VarChar(20)
   enabled           Boolean    @default(false)
+  // Hasil pemeriksaan terakhir terhadap konfigurasi tersimpan: 'OK' atau kode
+  // AiProviderError. null = belum pernah diverifikasi sejak terakhir diubah.
+  lastCheckCode     String?    @map("last_check_code") @db.VarChar(40)
+  lastCheckedAt     DateTime?  @map("last_checked_at")
   updatedBy         String?    @map("updated_by") @db.Char(36)
   createdAt         DateTime   @default(now()) @map("created_at")
   updatedAt         DateTime   @updatedAt @map("updated_at")

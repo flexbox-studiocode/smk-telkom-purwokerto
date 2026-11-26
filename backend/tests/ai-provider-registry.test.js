@@ -5,7 +5,7 @@ import { buildAnthropicBody, parseAnthropicResponse } from '../src/services/aiPr
 import { buildOpenAiBody, parseOpenAiResponse } from '../src/services/aiProviders/openaiCompatible.js';
 
 test('registry memuat semua provider resmi tanpa rantai if/else', () => {
-  assert.deepEqual(AI_PROVIDER_IDS, ['openai', 'gemini', 'anthropic', 'deepseek', 'qwen', 'custom-openai']);
+  assert.deepEqual(AI_PROVIDER_IDS, ['openai', 'gemini', 'anthropic', 'deepseek', 'openrouter', 'groq', 'qwen', 'custom-openai']);
   for (const id of AI_PROVIDER_IDS) {
     const adapter = getAiProvider(id);
     assert.equal(adapter.id, id);
@@ -19,7 +19,7 @@ test('registry memuat semua provider resmi tanpa rantai if/else', () => {
   }
   assert.equal(getAiProvider('not-allowed'), null);
   assert.equal(getAiProvider('google-gemini').id, 'gemini');
-  assert.equal(listAiProviders().length, 6);
+  assert.equal(listAiProviders().length, 8);
 });
 
 test('adapter OpenAI-compatible normalisasi request dan respons', () => {
@@ -28,6 +28,15 @@ test('adapter OpenAI-compatible normalisasi request dan respons', () => {
   assert.equal(body.max_tokens, 128);
   assert.equal(parseOpenAiResponse({ choices: [{ message: { content: 'ok' } }] }), 'ok');
   assert.equal(parseOpenAiResponse({ choices: [{ message: { content: [{ type: 'text', text: 'ok' }] } }] }), 'ok');
+});
+
+test('adapter OpenAI memakai max_completion_tokens untuk model reasoning', () => {
+  const reasoning = buildOpenAiBody([{ role: 'user', content: 'hai' }], { model: 'gpt-5-mini', maxOutputTokens: 128, reasoningParams: true });
+  assert.equal(reasoning.max_tokens, undefined);
+  assert.equal(reasoning.temperature, undefined);
+  assert.ok(reasoning.max_completion_tokens >= 128);
+  const chat = buildOpenAiBody([{ role: 'user', content: 'hai' }], { model: 'gpt-4o-mini', maxOutputTokens: 128, reasoningParams: true });
+  assert.equal(chat.max_tokens, 128);
 });
 
 test('adapter Anthropic memakai Messages API headers dan body', () => {

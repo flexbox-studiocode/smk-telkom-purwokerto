@@ -80,7 +80,10 @@ export const geminiAdapter = defineAdapter({
     return { url: url.toString(), method: 'GET', headers: { 'x-goog-api-key': config.apiKey } };
   },
   parseModelsResponse(data) {
-    return (data?.models ?? []).map((m) => ({
+    // Hanya model yang mendukung generateContent (chat/teks).
+    return (data?.models ?? [])
+      .filter((m) => !Array.isArray(m.supportedGenerationMethods) || m.supportedGenerationMethods.includes('generateContent'))
+      .map((m) => ({
       id: String(m.name ?? '').replace(/^models\//i, ''),
       label: m.displayName || undefined,
     }));

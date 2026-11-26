@@ -119,7 +119,7 @@ test('daftar provider hanya metadata aman dan butuh admin', async () => {
 
   const res = await admin.request('/api/admin/ai-settings/providers');
   assert.equal(res.status, 200);
-  assert.deepEqual(res.body.data.map((item) => item.id), ['openai', 'gemini', 'anthropic', 'deepseek', 'qwen', 'custom-openai']);
+  assert.deepEqual(res.body.data.map((item) => item.id), ['openai', 'gemini', 'anthropic', 'deepseek', 'openrouter', 'groq', 'qwen', 'custom-openai']);
   for (const item of res.body.data) {
     assert.equal(item.apiKey, undefined);
     assert.equal(typeof item.supportsModelList, 'boolean');
@@ -187,55 +187,71 @@ test('discovery menolak endpoint internal (SSRF)', async () => {
   assert.ok(!JSON.stringify(res.body).includes('127.0.0.1:9000'), 'pesan tidak membocorkan endpoint internal');
 });
 
-test('provider tanpa dukungan daftar model mengembalikan supported:false', async () => {
-  const calls = stubProvider(() => Response.json({ data: [] }));
+test('discovery Anthropic memakai GET /v1/models dengan header resmi', async () => {
+  const calls = stubProvider(() => Response.json({ data: [{ id: 'claude-sonnet-4-5', display_name: 'Claude Sonnet 4.5' }] }));
   const res = await admin.request('/api/admin/ai-settings/stela/models', {
     method: 'POST',
     body: JSON.stringify({ provider: 'anthropic', apiKey: SECRET }),
   });
   assert.equal(res.status, 200, JSON.stringify(res.body));
-  assert.equal(res.body.data.supported, false);
-  assert.deepEqual(res.body.data.models, []);
-  assert.equal(calls.length, 0, 'tidak ada request jaringan untuk provider tanpa discovery');
+  assert.equal(res.body.data.supported, true);
+  assert.deepEqual(res.body.data.models, [{ id: 'claude-sonnet-4-5', label: 'Claude Sonnet 4.5' }]);
+  assert.equal(calls.length, 1);
+  assert.ok(calls[0].url.startsWith('https://api.anthropic.com/v1/models'));
+  assert.equal(calls[0].options.headers['x-api-key'], SECRET);
+  assert.ok(calls[0].options.headers['anthropic-version']);
 });
 
-test('verifikasi API key memakai daftar model untuk provider yang mendukung', async () => {
-  const calls = stubProvider(() => Response.json({ models: [{ name: 'models/gemini-2.5-flash' }] }));
+test('discovery hanya menampilkan model chat yang kompatibel', async () => {
+  stubProvider(() => Response.json({ models: [
+    { name: 'models/gemini-2.5-flash', supportedGenerationMethods: ['generateContent'] },
+    { name: 'models/text-embedding-004', supportedGenerationMethods: ['embedContent'] },
+    { name: 'models/gemini-2.5-flash-preview-tts', supportedGenerationMethods: ['generateContent'] },
+    { name: 'models/gemini-2.5-flash-image', supportedGenerationMethods: ['generateContent'] },
+  ] }));
+  const res = await admin.request('/api/admin/ai-settings/stela/models', { method: 'POST', body: JSON.stringify({ provider: 'gemini', apiKey: SECRET }) });
+  assert.equal(res.status, 200, JSON.stringify(res.body));
+  assert.deepEqual(res.body.data.models.map((m) => m.id), ['gemini-2.5-flash']);
+});
+
+test('verifikasi API key menguji akses ke model terpilih', async () => {
+  const calls = stubProvider(() => Response.json({ candidates: [{ content: { parts: [{ text: 'siap' }] } }] }));
   const res = await admin.request('/api/admin/ai-settings/stela/verify', {
     method: 'POST',
-    body: JSON.stringify({ provider: 'gemini', apiKey: SECRET }),
+    body: JSON.stringify({ provider: 'gemini', apiKey: SECRET, model: 'gemini-2.5-flash' }),
   });
   assert.equal(res.status, 200, JSON.stringify(res.body));
   assert.equal(res.body.data.verified, true);
-  assert.equal(res.body.data.method, 'model_list');
+  assert.equal(res.body.data.model, 'gemini-2.5-flash');
   assert.equal(calls.length, 1);
+  assert.ok(calls[0].url.endsWith('/gemini-2.5-flash:generateContent'));
   assert.ok(!JSON.stringify(res.body).includes(SECRET));
 });
 
-test('verifikasi provider tanpa discovery mengirim satu prompt minimal', async () => {
+test('verifikasi Anthropic mengirim satu prompt minimal', async () => {
   const calls = stubProvider(() => Response.json({ content: [{ type: 'text', text: 'pong' }] }));
   const res = await admin.request('/api/admin/ai-settings/stela/verify', {
     method: 'POST',
     body: JSON.stringify({ provider: 'anthropic', apiKey: SECRET, model: 'claude-3-5-haiku-latest' }),
   });
   assert.equal(res.status, 200, JSON.stringify(res.body));
-  assert.equal(res.body.data.method, 'generate');
+  assert.equal(res.body.data.verified, true);
   assert.equal(calls.length, 1);
   const sent = JSON.parse(calls[0].options.body);
-  assert.ok(sent.max_tokens <= 32, 'verifikasi memakai budget token minimal');
+  assert.ok(sent.max_tokens <= 256, 'verifikasi memakai budget token kecil');
   assert.equal(calls[0].options.headers['x-api-key'], SECRET);
 });
 
-test('kegagalan verifikasi tidak membocorkan pesan mentah provider', async () => {
+test('kegagalan verifikasi menyensor API key dari pesan provider', async () => {
   stubProvider(() => new Response(JSON.stringify({ error: { status: 'UNAUTHENTICATED', message: `API key not valid: ${SECRET}` } }), { status: 401 }));
   const res = await admin.request('/api/admin/ai-settings/stela/verify', {
     method: 'POST',
-    body: JSON.stringify({ provider: 'gemini', apiKey: SECRET }),
+    body: JSON.stringify({ provider: 'gemini', apiKey: SECRET, model: 'gemini-2.5-flash' }),
   });
   assert.equal(res.status, 502, JSON.stringify(res.body));
   assert.equal(res.body.code, 'API_KEY_INVALID');
-  assert.ok(!JSON.stringify(res.body).includes(SECRET));
-  assert.ok(!/api key not valid/i.test(JSON.stringify(res.body)), 'pesan mentah provider tidak diteruskan');
+  assert.ok(!JSON.stringify(res.body).includes(SECRET), 'API key tidak pernah ada di respons');
+  assert.equal(res.body.detail, 'API key not valid: [disensor]', 'admin menerima alasan provider yang sudah disensor');
 });
 
 test('verifikasi tanpa key sama sekali ditolak 400', async () => {

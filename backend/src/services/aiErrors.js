@@ -28,7 +28,7 @@ export const AI_ERROR_CODES = Object.freeze({
 const FALLBACK_CODE = AI_ERROR_CODES.PROVIDER_UNAVAILABLE;
 
 export class AiProviderError extends Error {
-  constructor(code, { status = 0, provider, model, requestId, reason, cause } = {}) {
+  constructor(code, { status = 0, provider, model, requestId, reason, detail, cause } = {}) {
     const safeCode = Object.hasOwn(AI_ERROR_CODES, code) ? code : FALLBACK_CODE;
     super(safeCode);
     this.name = 'AiProviderError';
@@ -40,8 +40,47 @@ export class AiProviderError extends Error {
     // `reason` adalah penanda internal non-rahasia (mis. finishReason provider),
     // aman untuk log tetapi tidak pernah diteruskan ke pengunjung.
     this.reason = reason;
+    // `detail` adalah pesan provider yang sudah disensor (redactSecrets). Hanya
+    // untuk admin; pengunjung tidak pernah menerimanya.
+    this.detail = detail;
     if (cause !== undefined) this.cause = cause;
   }
+}
+
+// "Model X tidak ada" hanya bila teks provider memang menyebut model yang
+// tidak ditemukan. Galat parameter seperti "thinking budget is not supported
+// for this model" atau "Unknown name ..." tetap INVALID_REQUEST; sebelumnya
+// keduanya ikut terbaca MODEL_NOT_FOUND sehingga NEXA menampilkan "Model NEXA
+// belum tersedia" padahal modelnya ada.
+function mentionsMissingModel(text) {
+  return /models?\/?[\w.:/-]*\s+(is\s+)?not found|model[^.]{0,80}(not found|does not exist|no longer available|has been (deprecated|retired|shut down))|(unknown|invalid|unsupported) model\b|model_not_found/.test(text);
+}
+
+// Mengambil pesan galat provider dari badan respons JSON/teks, lalu menyensor
+// semua nilai rahasia. Hasilnya aman ditampilkan ke admin dan ditulis ke log.
+export function redactSecrets(text, secrets = []) {
+  let out = String(text ?? '');
+  for (const secret of secrets) {
+    if (typeof secret === 'string' && secret.length >= 8) out = out.split(secret).join('[disensor]');
+  }
+  return out
+    .replace(/AIza[0-9A-Za-z_-]{20,}/g, '[disensor]')
+    .replace(/\b(sk|gsk|xai|or)-[A-Za-z0-9_-]{12,}/g, '[disensor]')
+    .replace(/Bearer\s+[^\s"']+/gi, 'Bearer [disensor]')
+    .replace(/([?&](key|api_key|apikey|token)=)[^&\s"']+/gi, '$1[disensor]');
+}
+
+export function providerErrorDetail(bodyText, secrets) {
+  const raw = String(bodyText ?? '').trim();
+  if (!raw) return undefined;
+  let message = raw;
+  try {
+    const data = JSON.parse(raw);
+    const first = Array.isArray(data) ? data[0] : data;
+    message = first?.error?.message || first?.message || (typeof first?.error === 'string' ? first.error : '') || raw;
+  } catch { /* bukan JSON: pakai teks apa adanya */ }
+  const clean = redactSecrets(String(message).replace(/\s+/g, ' ').trim(), secrets);
+  return clean.length > 300 ? `${clean.slice(0, 297)}...` : clean;
 }
 
 // Pemetaan status/teks provider -> kode internal. `hint` adalah salah satu dari
@@ -70,7 +109,7 @@ export function classifyProviderError({ status = 0, providerText = '', hint = 'g
     if (googleStatus === 'UNAVAILABLE' || googleStatus === 'INTERNAL') return AI_ERROR_CODES.PROVIDER_UNAVAILABLE;
     if (googleStatus === 'INVALID_ARGUMENT' || googleStatus === 'FAILED_PRECONDITION') {
       if (has(/api.?key/)) return AI_ERROR_CODES.API_KEY_INVALID;
-      if (has(/model/) && has(/not found|not supported|unknown|does not exist/)) return AI_ERROR_CODES.MODEL_NOT_FOUND;
+      if (mentionsMissingModel(text)) return AI_ERROR_CODES.MODEL_NOT_FOUND;
       return AI_ERROR_CODES.INVALID_REQUEST;
     }
   }
@@ -110,7 +149,7 @@ export function classifyProviderError({ status = 0, providerText = '', hint = 'g
   }
   if (status === 400) {
     if (has(/api.?key/) && has(/invalid|not valid|expired|missing/)) return AI_ERROR_CODES.API_KEY_INVALID;
-    if (has(/model/) && has(/not found|unknown|unsupported|does not exist|not supported/)) return AI_ERROR_CODES.MODEL_NOT_FOUND;
+    if (mentionsMissingModel(text)) return AI_ERROR_CODES.MODEL_NOT_FOUND;
     return AI_ERROR_CODES.INVALID_REQUEST;
   }
   if (status >= 500) return AI_ERROR_CODES.PROVIDER_UNAVAILABLE;
@@ -173,6 +212,7 @@ export function logProviderEvent(level, event, info = {}) {
     status: info.status ?? null,
     code: info.code ?? null,
     reason: info.reason ?? null,
+    detail: info.detail ?? null,
     requestId: info.requestId ?? null,
     ms: Number.isFinite(info.ms) ? info.ms : null,
     ts: new Date().toISOString(),

@@ -92,7 +92,8 @@ test('endpoint internal/private ditolak (SSRF)', () => {
 });
 
 test('validasi provider menolak konfigurasi tidak lengkap', () => {
-  assert.throws(() => validateProviderConfig({ provider: 'openai', model: 'gpt-4o-mini' }), /Endpoint/);
+  assert.throws(() => validateProviderConfig({ provider: 'custom-openai', model: 'gpt-4o-mini' }), /Endpoint/);
+  assert.equal(validateProviderConfig({ provider: 'openai', model: 'gpt-4o-mini' }).endpoint, 'https://api.openai.com/v1');
   assert.throws(() => validateProviderConfig({ provider: 'openai', endpoint: 'https://api.example.com/v1', model: '' }), /Model/);
   assert.throws(() => validateProviderConfig({ provider: 'tidak-ada', endpoint: 'https://api.example.com/v1', model: 'x' }), /Provider/);
   const gemini = validateProviderConfig({ provider: 'gemini', model: 'gemini-2.5-flash' });
